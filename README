@@ -1,0 +1,100 @@
+Czuwaj!
+
+
+
+OPIS
+--------------------------------------------------------------------------------
+
+To jest prosta demonstracja zarloka w Qt4. Program nie ma wszystkich ficzerków,
+na które bylismy umawiani, a to ze względu na to, że czas miałem ograniczony
+i  skupiałem się głównie na dopracowaniu tego co jest aby działało bez zarzutów.
+Nie ma więc drukowania stanu magazynu (albo drukowania czegokolowiek) ale jest
+np parser danych. Parser działa dla danych wyświetlanych, będzie też działał dla
+danych wprowadzanych do formularza tylko muszę to napisać.
+
+
+
+WYMAGANIA
+--------------------------------------------------------------------------------
+
+Do skompilowania potrzeba (w nawiasie opisana moja konfiguracja):
+
+- gcc (gcc-4.5.1)
+- >=cmake-2.6 (cmake-2.8.1)
+- gmake/make
+- Qt4 (Qt4-4.7.1)
+- SQLite3 (sqlite-3.7.3)
+
+
+
+INSTALACJA (dla Linuksa, powłoka bash)
+--------------------------------------------------------------------------------
+
+Tworzymy katalog na źródła ($[prefix} to dowolna ścieżka dostępu, można
+wyeksportować sobie to zmienną:
+	export zarlok_src=${HOME}/project/zarlok
+Nie kopiuj poleceń bezmyślnie!):
+
+	mkdir ${zarlok_src} -p
+	cd ${zarlok_src}
+	git clone git://github.com/wnt-zhp/zarlock-cpp.git .
+
+Tworzymy katalog w którym będziemy budować (można to też zrobić w ${zarlok_src}
+ale po co śmiecić?)"
+
+	mkdir ${zarlok_src}/build -p
+	cd ${zarlok_src}/build
+
+Wywołujemy cmake:
+
+	cmake ..	# lub cmake ${zarlok_src}
+
+Kiedy cmake skończy swoją pracę bez błędów, zostanie stworzony plik Makefile,
+uruchamiamy polecenie make (lub gmake)
+
+	gmake
+
+Jeśli nie brakuje nam w systemie żadnych bibliotek to program się skompuluje
+poprawnie (zignorujcie ostrzeżenia - jestem ich świadom), można program
+uruchomić poleceniem: zarlok [baza_danych.db]
+
+	./zarlok oboz.db
+
+co spowoduje automatyczne stworzenie bazy danych, lub po prostu
+
+	./zarlok
+
+co spowoduje uruchomienie programu bez żadnej bazy danych, którą musimy stworzyć
+w programie (menu 'Baza danych').
+
+Jeśli chcemy mieć dostęp do żarłoka z każdego miejsca systemu, eksportujemy
+zmienną PATH
+
+	export PATH=${zarlok_src}/build:${PATH}
+
+możemy dodać ten wpis do własnego ~/.bashrc
+
+Obszerniejsza dokumentacja klas i funkcji dostępna jest poprzez doxygen (lub
+patrząć w pliki). Żeby wygenerować dokumentacje wykonujemy
+
+	cd ${zarlok_src}
+	doxygen
+
+Stworzony zostanie katalog doc/html, a w nim mnóstwo plików, gdzie
+najistotniejszy dla nas to index.html. Możemy go otworzyć za pomocą waszej
+ulubionej przęglodarki, np opery:
+
+opera ${zarlok_src}/doc/html/index.html
+
+
+
+OUTRO
+--------------------------------------------------------------------------------
+
+Zapraszam do zapoznania się, wszelkie sugestie i komentarze, albo:
+1) zostawić na readmine (wskazane)
+2) na maila rafal.lalik@zhp.net.pl z tagiem w temacie [zarlok] 9w przypadku
+   braku konta na readmine
+
+Powodzenia i miłej zabawy!
+Rafał
