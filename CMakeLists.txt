@@ -8,7 +8,7 @@ set (CMAKE_CXX_FLAGS "-O2 -pipe -Wall -W -DQT_GUI_LIB")
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/db src/models)
 
-set(zarlok_FORMS src/ui/MainWindow.ui src/ui/insert_product_form.ui src/ui/insert_product_frame.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui)
+set(zarlok_FORMS src/ui/MainWindow.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui)
 set(zarlok_SRCS src/DataParser.cpp src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/gui/BatchTableView.cpp src/gui/ProductsTableView.cpp src/gui/AddProductsRecordWidget.cpp src/gui/AddBatchRecordWidget.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 
 qt4_automoc(${zarlok_SRCS})
