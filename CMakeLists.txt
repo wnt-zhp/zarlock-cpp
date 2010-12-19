@@ -6,10 +6,16 @@ set (CMAKE_CXX_FLAGS "-O2 -pipe -Wall -W -DQT_GUI_LIB")
 # set (CMAKE_CXX_FLAGS "-march=core2 -O2 -pipe -Wall -W -DQT_GUI_LIB")
 # set (CMAKE_EXE_LINKER_FLAGS "-Wl,-O1 -Wl,-rpath,/usr/lib64/qt4")
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/db src/models)
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS src/ui/MainWindow.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui)
-set(zarlok_SRCS src/DataParser.cpp src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/gui/BatchTableView.cpp src/gui/ProductsTableView.cpp src/gui/AddProductsRecordWidget.cpp src/gui/AddBatchRecordWidget.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
+
+set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp)
+set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
+set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp)
+set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp)
+set(zarlok_src_misc_SRCS src/DataParser.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
+set(zarlok_SRCS ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
 
 qt4_automoc(${zarlok_SRCS})
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS})

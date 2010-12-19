@@ -24,6 +24,7 @@ using namespace std;
 
 #include <QAbstractTableModel>
 #include <QDate>
+#include <QTime>
 #include <QColor>
 
 #include "BatchTableModel.h"
@@ -60,10 +61,13 @@ BatchTableModel::~BatchTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole || role == Qt::StatusTipRole)
+// 	QTime t;
+// 	std::cout << "++ BatchTableModel::data\n" << t.currentTime().toString("hh:mm:ss.zzz").toStdString() << endl;
+// 	PR(idx.column()); PR(idx.row()); PR(role);
+	if (role == Qt::EditRole or role == Qt::StatusTipRole)
 		return raw(idx);
 
-	if (role == Qt::DisplayRole || role == Qt::BackgroundRole)
+	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
 		return display(idx, role);
 
 	int col = idx.column();

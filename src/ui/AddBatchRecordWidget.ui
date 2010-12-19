@@ -19,12 +19,12 @@
      <property name="title">
       <string>Add new record</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
      <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0">
       <item row="0" column="1">
        <widget class="QComboBox" name="combo_products">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
         <property name="insertPolicy">
          <enum>QComboBox::NoInsert</enum>
         </property>
@@ -33,33 +33,33 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_products">
         <property name="text">
-         <string>Product</string>
+         <string>&amp;Product</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_qty">
         <property name="text">
-         <string>Quantity</string>
+         <string>&amp;Quantity</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_price">
         <property name="text">
-         <string>Price</string>
+         <string>P&amp;rice</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_book">
         <property name="text">
-         <string>Booking</string>
+         <string>&amp;Booking</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="edit_qty">
+       <widget class="QtyInput" name="edit_qty">
         <property name="placeholderText">
          <string>quantity</string>
         </property>
@@ -68,7 +68,7 @@
       <item row="2" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="edit_price">
+         <widget class="PriceInput" name="edit_price">
           <property name="placeholderText">
            <string>price</string>
           </property>
@@ -80,14 +80,14 @@
            <enum>Qt::RightToLeft</enum>
           </property>
           <property name="text">
-           <string>Unit price</string>
+           <string>U&amp;nit price</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="edit_book">
+       <widget class="DateInput" name="edit_book">
         <property name="placeholderText">
          <string>booking time</string>
         </property>
@@ -96,54 +96,54 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_name">
         <property name="text">
-         <string>Spec</string>
+         <string>&amp;Spec</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_unit">
         <property name="text">
-         <string>Unit</string>
+         <string>&amp;Unit</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QLabel" name="label_invoice">
         <property name="text">
-         <string>Invoice</string>
+         <string>&amp;Invoice</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
        <widget class="QLabel" name="label_expiry">
         <property name="text">
-         <string>Expiry</string>
+         <string>&amp;Expiry</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QLineEdit" name="edit_spec">
+       <widget class="TextInput" name="edit_spec">
         <property name="placeholderText">
          <string>specificator</string>
         </property>
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QLineEdit" name="edit_unit">
+       <widget class="UnitInput" name="edit_unit">
         <property name="placeholderText">
          <string>unit</string>
         </property>
        </widget>
       </item>
       <item row="2" column="3">
-       <widget class="QLineEdit" name="edit_invoice">
+       <widget class="TextInput" name="edit_invoice">
         <property name="placeholderText">
          <string>invoice number</string>
         </property>
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QLineEdit" name="edit_expiry">
+       <widget class="DateInput" name="edit_expiry">
         <property name="placeholderText">
          <string>expiry date</string>
         </property>
@@ -178,10 +178,40 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DateInput</class>
+   <extends>QLineEdit</extends>
+   <header>DateInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>UnitInput</class>
+   <extends>QLineEdit</extends>
+   <header>UnitInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PriceInput</class>
+   <extends>QLineEdit</extends>
+   <header>PriceInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtyInput</class>
+   <extends>QLineEdit</extends>
+   <header>QtyInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TextInput</class>
+   <extends>QLineEdit</extends>
+   <header>TextInput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>combo_products</tabstop>
   <tabstop>edit_spec</tabstop>

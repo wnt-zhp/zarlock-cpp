@@ -24,7 +24,7 @@ public:
 	zarlok(const QString & file = QString(), QWidget * parent = NULL);
 	virtual ~zarlok();
 	
-	void show_window(const QString &);
+// 	void show_window(const QString &);
 
 private:
 	void activateUi(bool activate = true);
@@ -37,6 +37,8 @@ private slots:
 	void add_batch_record(bool newrec = true);
 	void about();
 
+	void set_filter(const QString & str);
+
 private:
 	Database & db;
 	QDataWidgetMapper * dwm_prod;
@@ -47,6 +49,7 @@ private:
 	ProductsTableModel * model_prod;
 	BatchTableModel * model_batch;
 	QSqlRelationalDelegate * model_batch_delegate;
+	QSqlQueryModel * model_batchbyid;
 
 	QDialog pop;
 	AddProductsRecordWidget * aprw;

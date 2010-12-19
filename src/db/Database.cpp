@@ -19,11 +19,12 @@
 #include <iostream>
 
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 #include <QtSql/QSqlRecord>
 #include <QtGui/QMessageBox>
 
 #include "Database.h"
-#include <QSqlError>
+
 
 using namespace std;
 
@@ -53,6 +54,8 @@ Database::Database() : tab_products(NULL), tab_batch(NULL) {
 }
 
 Database::~Database() {
+	cout << "++ Destroy Database instance\n";
+
 	if (tab_products) delete tab_products;
 	if (tab_batch) delete tab_batch;
 
@@ -123,6 +126,7 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 bool Database::close_database() {
 	if (db.isOpen())
 		db.close();
+	return true;
 }
 
 /**

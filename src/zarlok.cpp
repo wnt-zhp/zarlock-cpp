@@ -1,4 +1,5 @@
 #include "zarlok.h"
+#include "globals.h"
 
 #include <QtGui/QLabel>
 #include <QtGui/QMenu>
@@ -12,11 +13,6 @@
 #include <QItemSelectionModel>
 #include <QAbstractItemView>
 
-#include <iostream>
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
-
-using namespace std;
-
 // public members
 
 /**
@@ -26,9 +22,10 @@ using namespace std;
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok(const QString & file, QWidget * parent) : QMainWindow(parent), db(Database::Instance()), dwm_prod(NULL), model_prod(NULL), model_batch_delegate(NULL) {
+zarlok::zarlok(const QString & file, QWidget * parent) : QMainWindow(parent), db(Database::Instance()), dwm_prod(NULL),
+	model_prod(NULL), model_batch_delegate(NULL), model_batchbyid(NULL) {
     setupUi(this);
-	this->setWindowTitle(tr("Zarlok by Rafal Lalik [R&D version], 11.2010"));
+	this->setWindowTitle(tr("Zarlok by Rafal Lalik [pre-demo version], 11.2010"));
 
 	widget_add_products->setVisible(false);
 	widget_add_batch->setVisible(false);
@@ -50,6 +47,9 @@ zarlok::zarlok(const QString & file, QWidget * parent) : QMainWindow(parent), db
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
 
+//	Filtrowanie na razie działa źle, robione na szybko. Trzeba przemyśleć sprawę i zająć się tym później.
+// 	connect(table_products,  SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
+
 	if (!file.isEmpty()) {
 		openDB(false, file);
 	}
@@ -59,6 +59,15 @@ zarlok::~zarlok() {
 	if (model_batch_delegate) delete model_batch_delegate;
 	if (aprw) delete aprw;
 	if (abrw) delete abrw;
+}
+
+void zarlok::set_filter(const QString& str) {
+	QString q("select \"spec\", \"curr_qty\" from batch");
+	q.append(str);
+	if (table_batchbyid->model() != NULL) {
+		((QSqlQueryModel *)table_batchbyid->model())->setQuery(q);
+// 		model_batchbyid->setQuery(q);
+	}
 }
 
 // private members
@@ -71,18 +80,20 @@ zarlok::~zarlok() {
  * @return void
  **/
 void zarlok::activateUi(bool activate) {
+	std::cout << "++ zarlok::activateUi\n";
+
 	MainTab->setVisible(true);
 	MainTab->setEnabled(activate);
 
 	if (activate) {
 		// products
-		if (model_prod = db.CachedProducts()) {
+		if ((model_prod = db.CachedProducts())) {
 			table_products->setModel(model_prod);
 			table_products->show();
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
 		}
 		// batch
-		if (model_batch = db.CachedBatch()){
+		if ((model_batch = db.CachedBatch())){
 			table_batch->setModel(model_batch);
 			if (model_batch_delegate) delete model_batch_delegate;
 			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
@@ -90,6 +101,9 @@ void zarlok::activateUi(bool activate) {
 			table_batch->show();
 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 			abrw->update_model();
+			
+// 			table_batchbyid->setModel(model_batch);
+// 			table_batchbyid->show();
 		}
 
 // 		table_products->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -104,6 +118,13 @@ void zarlok::activateUi(bool activate) {
 // 		dwm_prod->setModel(model_prod);
 // 		dwm_prod->addMapping(edit_products, 1);
 // 		dwm_prod->toFirst();
+
+// 		if (model_batchbyid != NULL) delete model_batchbyid;
+// 		if (model_batchbyid = new QSqlQueryModel()) {
+// 			model_batchbyid->setQuery("select \"spec\", \"curr_qty\" from batch");
+// 			table_batchbyid->setModel(model_batchbyid);
+// 			table_batchbyid->show();
+// 		}
 	}
 }
 
@@ -115,6 +136,7 @@ void zarlok::activateUi(bool activate) {
  * @return bool
  **/
 void zarlok::openDB(bool recreate, const QString & file) {
+	std::cout << "++ zarlok::openDB()\n";
 	QString fn;
 	if (file.isEmpty()) {
 		if (recreate) {

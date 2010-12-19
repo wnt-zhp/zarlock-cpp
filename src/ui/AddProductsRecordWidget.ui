@@ -28,7 +28,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="edit_name"/>
+       <widget class="TextInput" name="edit_name">
+        <property name="placeholderText">
+         <string>name</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_unit">
@@ -38,7 +42,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="edit_unit"/>
+       <widget class="UnitInput" name="edit_unit">
+        <property name="placeholderText">
+         <string>unit</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_expiry">
@@ -48,7 +56,11 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="edit_expiry"/>
+       <widget class="DateInput" name="edit_expiry">
+        <property name="placeholderText">
+         <string>expiry date</string>
+        </property>
+       </widget>
       </item>
       <item row="4" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -83,6 +95,23 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DateInput</class>
+   <extends>QLineEdit</extends>
+   <header>DateInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>UnitInput</class>
+   <extends>QLineEdit</extends>
+   <header>UnitInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TextInput</class>
+   <extends>QLineEdit</extends>
+   <header>TextInput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>edit_name</tabstop>
   <tabstop>edit_unit</tabstop>

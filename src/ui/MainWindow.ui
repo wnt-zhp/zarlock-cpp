@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -79,7 +79,11 @@
          </layout>
         </item>
         <item row="0" column="1">
-         <widget class="QTableWidget" name="tableWidget"/>
+         <widget class="QTableView" name="table_batchbyid">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -205,12 +209,12 @@
   <customwidget>
    <class>ProductsTableView</class>
    <extends>QTableView</extends>
-   <header location="global">ProductsTableView.h</header>
+   <header>ProductsTableView.h</header>
   </customwidget>
   <customwidget>
    <class>BatchTableView</class>
    <extends>QTableView</extends>
-   <header location="global">BatchTableView.h</header>
+   <header>BatchTableView.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

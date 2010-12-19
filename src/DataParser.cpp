@@ -16,18 +16,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-using namespace std;
-
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
-
+#include "globals.h"
 
 #include "DataParser.h"
 
 #include <QRegExp>
 
-bool DataParser::price(const QString & data, double & price, double & tax) {
-	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)[ \t]?([p\\+][ \t]?(22|15|7)\%?)?\\s*$");
+bool DataParser::text(const QString & data, QString & text_formated) {
+// 	QRegExp rx("^\\s*[a-zA-Z0-9\,\.;:-_]\\s*$");
+	QRegExp rx("^.+$");
+
+// 	PR(rx.indexIn(data));
+// 	PR(rx.cap(0).toStdString());
+// 	PR(rx.cap(1).toStdString());
+// 	PR(rx.cap(2).toStdString());
+// 	PR(rx.cap(3).toStdString());
+
+	rx.indexIn(data);
+	if (!rx.cap(0).isEmpty()) {
+		text_formated = data;
+		return true;
+	}
+	return false;
+}
+
+bool DataParser::quantity(const QString & data, double & qty_formated) {
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*$");
 
 // 	PR(rx.indexIn(data));
 // 	PR(rx.cap(0).toStdString());
@@ -38,14 +52,67 @@ bool DataParser::price(const QString & data, double & price, double & tax) {
 
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
-		price = rx.cap(1).toFloat();
-		tax = rx.cap(4).toFloat();
+		qty_formated = rx.cap(1).toDouble();
 		return true;
 	}
 	return false;
 }
 
-bool DataParser::date(const QString & data, QDate & date, const QDate & ref) {
+bool DataParser::quantity(const QString & data, QString & qty_formated) {
+	double quantity;
+	
+	bool status = DataParser::quantity(data, quantity);
+	qty_formated.sprintf("%.2f", quantity);
+
+	return status;
+}
+
+bool DataParser::price(const QString & data, double & price_formated, double & tax_formated) {
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*([p\\+]\\s*(22|15|7)\%?)?\\s*$");
+
+// 	PR(rx.indexIn(data));
+// 	PR(rx.cap(0).toStdString());
+// 	PR(rx.cap(1).toStdString());
+// 	PR(rx.cap(2).toStdString());
+// 	PR(rx.cap(3).toStdString());
+// 	PR(rx.cap(4).toStdString());
+
+	rx.indexIn(data);
+	if (!rx.cap(0).isEmpty()) {
+		price_formated = rx.cap(1).toDouble();
+		tax_formated = rx.cap(4).toDouble();
+		return true;
+	}
+	return false;
+}
+
+bool DataParser::price(const QString & data, QString & price_formated) {
+	double price, tax;
+	
+	bool status = DataParser::price(data, price, tax);
+	price_formated.sprintf("%.2f zl", price*(100.0+tax)/100.0);
+
+	return status;
+}
+
+bool DataParser::unit(const QString & data, QString & unit_formated) {
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*(ml|l|mg|g|kg|szt)?\\s*$");
+
+// 	PR(rx.indexIn(data));
+// 	PR(rx.cap(0).toStdString());
+// 	PR(rx.cap(1).toStdString());
+// 	PR(rx.cap(2).toStdString());
+// 	PR(rx.cap(3).toStdString());
+
+	rx.indexIn(data);
+	if (!rx.cap(0).isEmpty()) {
+		unit_formated.sprintf("%.2f %s", rx.cap(1).toDouble(), rx.cap(3).toStdString().c_str());
+		return true;
+	}
+	return false;
+}
+
+bool DataParser::date(const QString & data, QDate & date_formated, const QDate & ref) {
 	QRegExp rx1("^\\s*([+-]\\d+|0)\\s*$");
 	QRegExp rx2("^\\s*dzis\\s*$");
 	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
@@ -73,19 +140,28 @@ bool DataParser::date(const QString & data, QDate & date, const QDate & ref) {
 	rx2.indexIn(data);
 	rx3.indexIn(data);
 	if (!rx1.cap(0).isEmpty()) {
-		date = ref.addDays(rx1.cap(0).toInt());
+		date_formated = ref.addDays(rx1.cap(0).toInt());
 		return true;
 	} else if (!rx2.cap(0).isEmpty()) {
-		date = QDate::currentDate();
+		date_formated = QDate::currentDate();
 		return true;
 	} else if (!rx3.cap(0).isEmpty()) {
-		date = QDate::currentDate();
-		int day = rx3.cap(1).isEmpty() ? date.day() : rx3.cap(1).toInt();
-		int month = rx3.cap(3).isEmpty() ? date.month() : rx3.cap(3).toInt();
-		int year = rx3.cap(5).isEmpty() ? date.year() : rx3.cap(5).toInt();
-		date.setDate(year, month, day);
+		date_formated = QDate::currentDate();
+		int day = rx3.cap(1).isEmpty() ? date_formated.day() : rx3.cap(1).toInt();
+		int month = rx3.cap(3).isEmpty() ? date_formated.month() : rx3.cap(3).toInt();
+		int year = rx3.cap(5).isEmpty() ? date_formated.year() : rx3.cap(5).toInt();
+		date_formated.setDate(year, month, day);
 // 		PR(date.toString("dd/MM/yyyy").toStdString());
-		return date.isValid();
+		return date_formated.isValid();
 	}
 	return false;
+}
+
+bool DataParser::date(const QString & data, QString & date_formated, const QDate & ref) {
+	QDate date;
+	bool status = DataParser::date(data,  date, ref);
+
+	date_formated = date.toString("dd/MM/yyyy");
+
+	return status;
 }

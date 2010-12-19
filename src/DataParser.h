@@ -25,8 +25,14 @@
 
 class DataParser {
 public:
-	static bool price(const QString & data, double & price, double & tax);
-	static bool date(const QString & data, QDate & date, const QDate & ref = QDate::currentDate());
+	static bool text(const QString & data, QString & text_formated);
+	static bool quantity(const QString & data, double & qty_formated);
+	static bool quantity(const QString & data, QString & qty_formated);
+	static bool price(const QString & data, double & price_formated, double & tax_formated);
+	static bool price(const QString & data, QString & price_formated);
+	static bool unit(const QString & data, QString & unit_formated);
+	static bool date(const QString & data, QDate & date_formated, const QDate & ref = QDate::currentDate());
+	static bool date(const QString & data, QString & date_formated, const QDate & ref = QDate::currentDate());
 };
 
 #endif // DATAPARSER_H
