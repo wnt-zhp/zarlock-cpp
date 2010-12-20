@@ -161,13 +161,14 @@ void AddBatchRecordWidget::update_model() {
 	completer_book = new QCompleter(edit_book);
 	completer_expiry = new QCompleter(edit_expiry);
 
-	completer_spec->setModel(Database::Instance().CachedBatch());
-	completer_qty->setModel(Database::Instance().CachedBatch());
-	completer_unit->setModel(Database::Instance().CachedBatch());
-	completer_price->setModel(Database::Instance().CachedBatch());
-	completer_invoice->setModel(Database::Instance().CachedBatch());
-	completer_book->setModel(Database::Instance().CachedBatch());
-	completer_expiry->setModel(Database::Instance().CachedBatch());
+	Database & db = Database::Instance();
+	completer_spec->setModel(db.CachedBatch());
+	completer_qty->setModel(db.CachedBatch());
+	completer_unit->setModel(db.CachedBatch());
+	completer_price->setModel(db.CachedBatch());
+	completer_invoice->setModel(db.CachedBatch());
+	completer_book->setModel(db.CachedBatch());
+	completer_expiry->setModel(db.CachedBatch());
 
 	completer_spec->setCompletionColumn(BatchTableModel::HSpec);
 	completer_qty->setCompletionColumn(BatchTableModel::HCurQty);
@@ -200,6 +201,7 @@ void AddBatchRecordWidget::update_model() {
 	edit_invoice->setCompleter(completer_invoice);
 	edit_book->setCompleter(completer_book);
 	edit_expiry->setCompleter(completer_expiry);
+	lineEdit->setCompleter(completer_spec);
 }
 
 

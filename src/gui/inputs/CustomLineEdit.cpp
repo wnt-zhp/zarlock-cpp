@@ -33,6 +33,7 @@ bool CustomLineEdit::ok() {
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
+	std::cout << "CustomLineEdit::focusOutEvent\n";
 	this->setFont(globals::font_display);
 
 	rawtext = QLineEdit::text();
@@ -41,7 +42,7 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 	} else if (!verify(rawtext)) {
 		placeholdertext = tr("Parser error!");
 	}
-
+PR(rawtext.toStdString());
 	edit_mode = false;
 	QLineEdit::setText(placeholdertext);
     if (ev != NULL)
@@ -49,13 +50,19 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 }
 
 void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
-	edit_mode = true;
-	this->setFont(globals::font_edit);
-	QLineEdit::setText(rawtext);
+	std::cout << "CustomLineEdit::focusInEvent\n";
+	if (!edit_mode) {				// bez tego if'a wyskakuje ponowny focusInEvent i psuje zawartość inputa
+		QLineEdit::setFont(globals::font_edit);
+		QLineEdit::setText(rawtext);
+	}
 	QLineEdit::focusInEvent(ev);
+	edit_mode = true;
 }
 
 bool CustomLineEdit::verify(const QString & t) {
+	std::cout << "CustomLineEdit::verify\n";
+	PR(edit_mode);
+	PR(t.toStdString());
 	if (!edit_mode)
 		return false;
 

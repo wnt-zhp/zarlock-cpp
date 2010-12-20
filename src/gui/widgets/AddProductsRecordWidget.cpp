@@ -104,9 +104,10 @@ void AddProductsRecordWidget::update_model() {
 	completer_unit = new QCompleter(edit_unit);
 	completer_expiry = new QCompleter(edit_expiry);
 
-	completer_name->setModel(Database::Instance().CachedProducts());
-	completer_unit->setModel(Database::Instance().CachedProducts());
-	completer_expiry->setModel(Database::Instance().CachedProducts());
+	Database & db = Database::Instance();
+	completer_name->setModel(db.CachedProducts());
+	completer_unit->setModel(db.CachedProducts());
+	completer_expiry->setModel(db.CachedProducts());
 
 	completer_name->setCompletionColumn(ProductsTableModel::HName);
 	completer_unit->setCompletionColumn(ProductsTableModel::HUnit);
