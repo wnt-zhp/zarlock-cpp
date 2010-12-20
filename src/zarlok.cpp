@@ -91,6 +91,7 @@ void zarlok::activateUi(bool activate) {
 			table_products->setModel(model_prod);
 			table_products->show();
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
+			aprw->update_model();
 		}
 		// batch
 		if ((model_batch = db.CachedBatch())){
