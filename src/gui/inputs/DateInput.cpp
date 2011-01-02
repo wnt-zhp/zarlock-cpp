@@ -22,11 +22,42 @@
 #include "DateInput.h"
 
 DateInput::DateInput(QWidget * parent) : CustomLineEdit(parent) {
+	std::cout << "++ DateInput::DateInput\n";
 	setPlaceholderText(tr("Expiry date"));
+	data_ref = NULL;
+}
+
+DateInput::~DateInput() {
+	if (data_ref != NULL)
+		delete data_ref;
+}
+
+void DateInput::setDateReferenceObj(const DateInput * ref) {
+	if (data_ref != NULL)
+		delete data_ref;
+	data_ref = ref;
+}
+
+const QDate DateInput::date() const {
+	QDate d;
+	PR(displaytext.toStdString());
+	d = QDate::fromString(displaytext, "dd/MM/yyyy");
+	PR(d.toString("dd/MM/yyyy").toStdString());
+/*	if (DataParser::date(rawtext, d, data_ref->date())) {
+		return d;
+	}*/
+	return d;
 }
 
 bool DateInput::verifyText(const QString & raw, QString & placeholder) {
-	if (DataParser::date(raw, placeholder)) {
+	QDate ref;
+	if (data_ref == NULL)
+		ref = QDate::currentDate();
+	else
+		ref = data_ref->date();
+
+	PR(QDate::currentDate().toString("dd/MM/yyyy").toStdString());
+	if (DataParser::date(raw, placeholder, ref)) {
 		return true;
 	}
 	return false;

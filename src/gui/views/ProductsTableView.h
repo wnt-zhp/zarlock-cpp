@@ -21,8 +21,8 @@
 #define PRODUCTSTABLEVIEW_H
 
 #include <QtGui/QTableView>
+#include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
-#include <QtCore/QVector>
 
 #include "Database.h"
 
@@ -50,7 +50,7 @@ private slots:
 	void filterRecords(const QModelIndex & index);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* );
+    void contextMenuEvent(QContextMenuEvent*);
 
 private:
 	Database & db;

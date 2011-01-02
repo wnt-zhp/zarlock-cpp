@@ -17,7 +17,6 @@
 */
 
 #include "globals.h"
-
 #include "DataParser.h"
 
 #include <QRegExp>
@@ -151,7 +150,7 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 		int month = rx3.cap(3).isEmpty() ? date_formated.month() : rx3.cap(3).toInt();
 		int year = rx3.cap(5).isEmpty() ? date_formated.year() : rx3.cap(5).toInt();
 		date_formated.setDate(year, month, day);
-// 		PR(date.toString("dd/MM/yyyy").toStdString());
+// 		PR(date_formated.toString("dd/MM/yyyy").toStdString());
 		return date_formated.isValid();
 	}
 	return false;

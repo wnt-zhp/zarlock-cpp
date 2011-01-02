@@ -7,19 +7,13 @@
 #include <QtGui/QAction>
 #include <QtGui/QMessageBox>
 
-#include <QSqlRelationalDelegate>
-
 #include <QFileDialog>
-#include <QItemSelectionModel>
-#include <QAbstractItemView>
+// #include <QPrintDialog>
 
 #include <QPrinter>
-#include <QPrintDialog>
-#include <QPainter>
 
-#include <QTextDocument>
+// #include <QTextDocument>
 #include <QTextTable>
-#include <QTextCursor>
 #include <QAbstractTextDocumentLayout>
 
 // public members
@@ -182,6 +176,7 @@ void zarlok::openDB(bool recreate, const QString & file) {
  **/
 void zarlok::saveDB() {
 	model_batch->submitAll();
+	PR(model_batch->query().executedQuery().toStdString());
 	model_prod->submitAll();
 }
 

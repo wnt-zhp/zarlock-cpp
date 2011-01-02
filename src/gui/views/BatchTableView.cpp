@@ -16,14 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
 #include "BatchTableView.h"
-#include <QtGui/QContextMenuEvent>
+
 #include <QHeaderView>
-
-#include <iostream>
-using namespace std;
-
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
 
 /**
  * @brief Standardowy konstruktor, żaden szał.

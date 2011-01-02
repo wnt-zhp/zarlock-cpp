@@ -26,10 +26,16 @@ class DateInput : public CustomLineEdit {
 Q_OBJECT
 public:
     DateInput(QWidget * parent);
+	virtual ~DateInput();
+
+	const QDate date() const;
+	void setDateReferenceObj(const DateInput * ref);
 
 private slots:
 	bool verifyText(const QString &, QString & );
 
+private:
+	const DateInput * data_ref;
 };
 
 #endif // DATEINPUT_H

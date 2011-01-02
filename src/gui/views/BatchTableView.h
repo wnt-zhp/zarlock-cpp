@@ -21,6 +21,7 @@
 #define BATCHTABLEVIEW_H
 
 #include <QtGui/QTableView>
+#include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
 #include "Database.h"

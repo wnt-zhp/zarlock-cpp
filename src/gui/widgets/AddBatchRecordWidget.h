@@ -21,7 +21,6 @@
 #define ADDBATCHRECORDWIDGET_H
 
 #include <QCompleter>
-// #include <QPalette>
 
 #include "ui_AddBatchRecordWidget.h"
 
@@ -50,10 +49,7 @@ private:
 	QCompleter * completer_price;
 	QCompleter * completer_invoice;
 	QCompleter * completer_book;
-	QCompleter * completer_expiry;
-	
-	QPalette palette_ok;
-	QPalette palette_bad;
+	QCompleter * completer_expiry;	
 };
 
 #endif // ADDBATCHRECORDWIDGET_H

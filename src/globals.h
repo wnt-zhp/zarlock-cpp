@@ -7,6 +7,8 @@
 #include <QtGui/QPalette>
 #include <QtGui/QFont>
 
+#include "Logger.h"
+
 namespace globals {
 	extern QPalette palette_ok;
 	extern QPalette palette_bad;

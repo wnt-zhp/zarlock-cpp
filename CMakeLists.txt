@@ -51,7 +51,7 @@ set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/Pro
 set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
 set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp)
 set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp)
-set(zarlok_src_misc_SRCS src/DataParser.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
+set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
 

@@ -23,14 +23,6 @@
 #include "ui_AddProductsRecordWidget.h"
 
 #include <QCompleter>
-#include <QValidator>
-
-class Validat01: public QValidator {
-public:
-    virtual State validate(QString& , int& ) const  {
-		return Invalid;
-	}
-};
 
 class AddProductsRecordWidget : public QWidget, public Ui::APRWidget {
 Q_OBJECT
@@ -53,7 +45,6 @@ private slots:
 	void validateAdd();
 
 private:
-	Validat01 * vvv;
 	QCompleter * completer_name;
 	QCompleter * completer_unit;
 	QCompleter * completer_expiry;

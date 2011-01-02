@@ -16,24 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
 #include "AddBatchRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
-
-#include <QDate>
-#include <QTextStream>
-#include <QStandardItemModel>
-#include <QListView>
-#include <iostream>
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
-
-using namespace std;
 
 AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL) {
 	setupUi(parent);
-	cout << "++ AddBatchRecordWidget::AddBatchRecordWidget\n";
+	std::cout << "++ AddBatchRecordWidget::AddBatchRecordWidget\n";
 
 	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
@@ -51,8 +43,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	connect(edit_book, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
-	palette_bad.setColor(QPalette::Base, Qt::red);
-	palette_ok.setColor(QPalette::Base, Qt::green);
+	edit_expiry->setDateReferenceObj(edit_book);
 }
 
 AddBatchRecordWidget::~AddBatchRecordWidget() {
@@ -66,20 +57,21 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 }
 
 bool AddBatchRecordWidget::insert_record() {
-	cout << "++ AddBatchRecordWidget::insert_record()\n";
+	std::cout << "++ AddBatchRecordWidget::insert_record()\n";
 	Database & db = Database::Instance();
 	ProductsTableModel * ptm = db.CachedProducts();
 	BatchTableModel * btm = db.CachedBatch();
 
 	int idx = combo_products->currentIndex();
 	int prod_id = ptm->data(ptm->index(idx, 0)).toInt();
+
+	// proce
 	double price, tax;
 	DataParser::price(edit_price->text(), price, tax);
 	QString uprice;
-	PR(price/edit_qty->text().toDouble()); PR(tax);
 	uprice.sprintf("%.2f+%d", price/edit_qty->text().toDouble(), int(tax));
+	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
-// 	edit_price->text().toDouble()/edit_qty->text().toDouble();
 
 	int row = btm->rowCount();
 	btm->insertRows(row, 1);
@@ -92,7 +84,7 @@ bool AddBatchRecordWidget::insert_record() {
 	btm->setData(btm->index(row, BatchTableModel::HPrice), unitprice);
 	btm->setData(btm->index(row, BatchTableModel::HCurQty), edit_qty->text());
 	btm->setData(btm->index(row, BatchTableModel::HInvoice), edit_invoice->text());
-	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text());
+	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
 	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
 	btm->setData(btm->index(row, BatchTableModel::HDesc), QString(":)"));
 	bool status = btm->submitAll();
@@ -103,7 +95,7 @@ bool AddBatchRecordWidget::insert_record() {
 }
 
 void AddBatchRecordWidget::clear_form() {
-	cout << "++ AddBatchRecordWidget::clear_form()\n";
+	std::cout << "++ AddBatchRecordWidget::clear_form()\n";
 	edit_spec->clear();
 	edit_unit->clear();
 	edit_expiry->clear();

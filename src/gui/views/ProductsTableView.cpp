@@ -16,15 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
 #include "ProductsTableView.h"
-#include <qheaderview.h>
-#include <QtGui/QContextMenuEvent>
+
 #include <QHeaderView>
-
-#include <iostream>
-using namespace std;
-
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
 
 /**
  * @brief Standardowy konstruktor, żaden szał.
@@ -46,7 +41,7 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
 
-	connect(this, SIGNAL(clicked(QModelIndex)),  this, SLOT(filterRecords(QModelIndex)));
+	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(filterRecords(QModelIndex)));
 }
 
 /**

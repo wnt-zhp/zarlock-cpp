@@ -1,12 +1,7 @@
 #ifndef zarlok_H
 #define zarlok_H
 
-#include <QtGui/QMainWindow>
 #include <QtGui/QDataWidgetMapper>
-#include <QtGui/QDialog>
-#include <QtGui/QMenu>
-#include <QtCore/QString>
-#include <QtSql/QSqlRelationalDelegate>
 
 #include <QtSql>
 
@@ -45,15 +40,11 @@ private:
 	Database & db;
 	QDataWidgetMapper * dwm_prod;
 
-// 	QSqlTableModel * model_prod;
-// 	QSqlTableModel * model_batch;
-
 	ProductsTableModel * model_prod;
 	BatchTableModel * model_batch;
 	QSqlRelationalDelegate * model_batch_delegate;
 	QSqlQueryModel * model_batchbyid;
 
-	QDialog pop;
 	AddProductsRecordWidget * aprw;
 	AddBatchRecordWidget * abrw;
 };

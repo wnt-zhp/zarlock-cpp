@@ -20,12 +20,9 @@
 
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
-#include <QtSql/QSqlRecord>
 #include <QtGui/QMessageBox>
 
-#include <QResource>
 #include <QFile>
-#include <QTextStream>
 
 #include "Database.h"
 #include "globals.h"
@@ -140,6 +137,7 @@ bool Database::rebuild_models() {
 	tab_batch = new BatchTableModel;
 	tab_batch->setTable("batch");
 	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
+	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
 	if (!tab_batch->select()) {
 		QMessageBox::critical(0, "Błąd bazy danych", tab_batch->lastError().text(), QMessageBox::Abort);
 		return false;

@@ -20,7 +20,6 @@
 #ifndef DATAPARSER_H
 #define DATAPARSER_H
 
-#include <QString>
 #include <QDate>
 
 class DataParser {

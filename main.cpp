@@ -20,7 +20,7 @@ int main(int argc, char ** argv, char ** env) {
 // 	globals::font_ok.setBold(false);
 	globals::font_display.setItalic(false);
 // 	globals::font_bad.setBold(true);
-PR(argv[0]); PR(env[0]); PR(env[1]);
+
     QApplication app(argc, argv);
 
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";

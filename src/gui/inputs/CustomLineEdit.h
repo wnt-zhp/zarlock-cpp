@@ -20,7 +20,7 @@
 #ifndef CUSTOMLINEEDIT_H
 #define CUSTOMLINEEDIT_H
 
-#include <qt4/QtGui/QLineEdit>
+#include <QtGui/QLineEdit>
 
 
 class CustomLineEdit : public QLineEdit {
@@ -34,7 +34,7 @@ public:
 
 	bool ok();
 	
-	inline virtual QString text() const { return rawtext; }
+	inline virtual QString text(bool placeholdertext = false) const { return placeholdertext ? displaytext : rawtext; }
 	inline virtual void setText(const QString & t) { rawtext = t; }
 
 protected:

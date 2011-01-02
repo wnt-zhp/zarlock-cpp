@@ -16,12 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#include <iostream>
-using namespace std;
-
-#define PR(x) cout << "++DEBUG: " << #x << " = |" << x << "|\n";
-
 #include <QAbstractTableModel>
 #include <QDate>
 #include <QTime>
@@ -61,9 +55,6 @@ BatchTableModel::~BatchTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-// 	QTime t;
-// 	std::cout << "++ BatchTableModel::data\n" << t.currentTime().toString("hh:mm:ss.zzz").toStdString() << endl;
-// 	PR(idx.column()); PR(idx.row()); PR(role);
 	if (role == Qt::EditRole or role == Qt::StatusTipRole)
 		return raw(idx);
 
@@ -109,8 +100,6 @@ bool BatchTableModel::select() {
 	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
 	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice No."));
 
-	setRelation(HProdId, QSqlRelation("products", "id", "name"));
-
     return QSqlTableModel::select();
 }
 
@@ -142,10 +131,24 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 		}
 	}
 
-	if (idx.column() == HExpire or idx.column() == HBook) {
+	if (idx.column() == HBook) {
 		QString data = idx.data(Qt::EditRole).toString();
 		QDate date;
 		if (DataParser::date(data, date)) {
+			QString var;
+			return date.toString("dd/MM/yyyy");
+		} else {
+			if (role == Qt::BackgroundRole)
+				return QColor(Qt::red);
+			else
+				return QVariant(tr("Parser error!"));
+		}
+	}
+	
+	if (idx.column() == HExpire) {
+		QString data = idx.data(Qt::EditRole).toString();
+		QDate date;
+		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
 			QString var;
 			return date.toString("dd/MM/yyyy");
 		} else {
