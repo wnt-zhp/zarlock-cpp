@@ -186,14 +186,6 @@ void AddBatchRecordWidget::update_model() {
 	completer_book->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_expiry->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 
-// 	completer_spec->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_qty->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_unit->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_price->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_invoice->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_book->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-// 	completer_expiry->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-
 	edit_spec->setCompleter(completer_spec);
 	edit_qty->setCompleter(completer_qty);
 	edit_unit->setCompleter(completer_unit);
@@ -201,7 +193,6 @@ void AddBatchRecordWidget::update_model() {
 	edit_invoice->setCompleter(completer_invoice);
 	edit_book->setCompleter(completer_book);
 	edit_expiry->setCompleter(completer_expiry);
-	lineEdit->setCompleter(completer_spec);
 }
 
 

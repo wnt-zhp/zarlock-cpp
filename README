@@ -45,24 +45,27 @@ ale po co śmiecić?)"
 	mkdir ${zarlok_src}/build -p
 	cd ${zarlok_src}/build
 
-Wywołujemy cmake:
+Wywołujemy cmake podajać jednocześnie, gdzie ma być on zainstalowany, za pomocą zmiennej CMAKE_INSTALL_PREFIX
 
-	cmake ..	# lub cmake ${zarlok_src}
-
+	cmake .. -DCMAKE_INSTALL_PREFIX=${HOME}/usr -DCMAKE_BUILD_TYPE=Release
+	
 Kiedy cmake skończy swoją pracę bez błędów, zostanie stworzony plik Makefile,
-uruchamiamy polecenie make (lub gmake)
+uruchamiamy polecenie make (lub gmake) (g)make install
 
 	gmake
+	gmake install
+
+W przypadku instalacji do katalogu systemowego może byc konieczne skorzystanie z uprawnień root-a.
 
 Jeśli nie brakuje nam w systemie żadnych bibliotek to program się skompuluje
 poprawnie (zignorujcie ostrzeżenia - jestem ich świadom), można program
 uruchomić poleceniem: zarlok [baza_danych.db]
 
-	./zarlok oboz.db
+	export PATH=${HOME}/usr/bin:${PATH} zarlok oboz.db
 
 co spowoduje automatyczne stworzenie bazy danych, lub po prostu
 
-	./zarlok
+	export PATH=${HOME}/usr/bin:${PATH} zarlok
 
 co spowoduje uruchomienie programu bez żadnej bazy danych, którą musimy stworzyć
 w programie (menu 'Baza danych').
@@ -70,9 +73,19 @@ w programie (menu 'Baza danych').
 Jeśli chcemy mieć dostęp do żarłoka z każdego miejsca systemu, eksportujemy
 zmienną PATH
 
-	export PATH=${zarlok_src}/build:${PATH}
+	export PATH=${HOME}/usr/bin:${PATH}
 
-możemy dodać ten wpis do własnego ~/.bashrc
+możemy dodać ten wpis do własnego ~/.bashrc a nastepnie przeładować profil w każdym katalogu
+
+	. ~/.bashrc
+
+Czynność tę wykonujemy tylko na aktualnie użytkownych powłokach, po przelogowaniu albo włączeniu
+nowego okna terminala czynność ta wykona się automatycznie - można to sprawdzić za pomocą polecenia
+
+	env $PATH
+
+Jeśli zobaczymy tam wpis ${HOME}/usr/bin (gdzie ${HOME} bedzie naszym katalogim domowym) to znaczy,
+że wszystko jest w porządku.
 
 Obszerniejsza dokumentacja klas i funkcji dostępna jest poprzez doxygen (lub
 patrząć w pliki). Żeby wygenerować dokumentacje wykonujemy

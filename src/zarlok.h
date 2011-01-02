@@ -33,6 +33,8 @@ private slots:
 	inline void createDB() { openDB(true, QString()); };
 	void openDB(bool recreate = false, const QString & file = QString());
 	void saveDB();
+	void printReport();
+
 	void add_prod_record(bool newrec = true);
 	void add_batch_record(bool newrec = true);
 	void about();

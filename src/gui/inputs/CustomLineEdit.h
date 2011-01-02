@@ -44,8 +44,8 @@ private slots:
 	bool verify(const QString &);
 
 protected:
-	QString placeholdertext, rawtext;
+	QString displaytext, rawtext;
 	bool edit_mode, is_ok;
 };
 
-#endif // CUSTOMLINEEDIT_H
+#endif // CUSTOMLINEEDI

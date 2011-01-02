@@ -23,7 +23,12 @@
 #include <QtSql/QSqlRecord>
 #include <QtGui/QMessageBox>
 
+#include <QResource>
+#include <QFile>
+#include <QTextStream>
+
 #include "Database.h"
+#include "globals.h"
 
 
 using namespace std;
@@ -84,35 +89,20 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 // 		return false;
 	}
 
-	QSqlQuery query;
-	
-	if (recreate)
-		query.exec("DROP TABLE IF EXISTS products)");
-		query.exec("CREATE TABLE IF NOT EXISTS 'products' ("
-				   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-				   "name VARCHAR(50) UNIQUE,"
-				   "unit VARCHAR(50),"
-				   "expire VARCHAR(20)"
-				   ")");
-	if (recreate)
-		query.exec("DROP TABLE IF EXISTS batch)");
-		query.exec("CREATE TABLE IF NOT EXISTS 'batch' ("
-				   "id INTEGER PRIMARY KEY AUTOINCREMENT, "		// id
-				   "prod_id INTEGER, "							// id produktu ->products.id
-				   "spec VARCHAR(50),"							// specyfikacja
-				   "price VARCHAR(20),"							// cena
-				   "unit VARCHAR(50),"							// jednostka
-				   "start_qty FLOAT,"							// ilosc poczatkowa
-				   "booking VARCHAR(20),"						// data ksiegowania
-				   "expire VARCHAR(20),"						// data waznosci
-				   "curr_qty FLOAT,"							// aktualna ilosc
-				   "date VARCHAR(20),"								// data dodania wpisu
-				   "desc TEXT,"									// opis uzytkownika
-				   "invoice_no VARCHAR(200)"					// numer faktury
-				   ")");
+	if (recreate) {
+// 		QFile dbresfile(":/resources/database.sql");
+		QFile dbresfile(":/resources/test_data.sql");
+		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			PR(false);
+			return false;
+		}
 
-// 		query.exec("INSERT into products VALUES(0, 'ryz', '250mg', 100)");
-// 		query.exec("INSERT into batch VALUES(0, 0, 'sypany', '2', '250mg', 10, 0, 100, 7, 0, 'ryz,ryzek,ryzuszek', 1234567890)");
+		QSqlQuery query;
+		while (!dbresfile.atEnd()) {
+			QString line = dbresfile.readLine();
+			query.exec(line.fromUtf8(line.toStdString().c_str()));
+		}
+	}
 
 	rebuild_models();
 	return true;

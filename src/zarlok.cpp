@@ -13,6 +13,15 @@
 #include <QItemSelectionModel>
 #include <QAbstractItemView>
 
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPainter>
+
+#include <QTextDocument>
+#include <QTextTable>
+#include <QTextCursor>
+#include <QAbstractTextDocumentLayout>
+
 // public members
 
 /**
@@ -38,6 +47,7 @@ zarlok::zarlok(const QString & file, QWidget * parent) : QMainWindow(parent), db
 	connect(actionOpenDB, SIGNAL(triggered(bool)), this, SLOT(openDB()));
 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
+	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printReport()));
 
 	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(add_prod_record(bool)));
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
@@ -50,8 +60,10 @@ zarlok::zarlok(const QString & file, QWidget * parent) : QMainWindow(parent), db
 //	Filtrowanie na razie działa źle, robione na szybko. Trzeba przemyśleć sprawę i zająć się tym później.
 // 	connect(table_products,  SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
+	PR(!file.isEmpty());
 	if (!file.isEmpty()) {
-		openDB(false, file);
+		QFile inf(file);
+		openDB(!inf.open(QIODevice::ReadOnly), file);
 	}
 }
 
@@ -156,6 +168,7 @@ void zarlok::openDB(bool recreate, const QString & file) {
 	PR(fn.toStdString());
 
 	if (!fn.isEmpty()) {
+		PR(recreate);
 		if (db.open_database(fn, recreate)) {
 			activateUi();
 		}
@@ -171,6 +184,89 @@ void zarlok::saveDB() {
 	model_batch->submitAll();
 	model_prod->submitAll();
 }
+
+void zarlok::printReport() {
+// 	QPrinter printer;
+// 
+// 	QPrintDialog *dialog = new QPrintDialog(&printer, this);
+// 	dialog->setWindowTitle(tr("Print Document"));
+// 	if (editor->textCursor().hasSelection())
+// 		dialog->addEnabledOption(QAbstractPrintDialog::PrintSelection);
+// 	if (dialog->exec() != QDialog::Accepted)
+// 		return;
+
+// 	int numberOfPages = 2;
+
+	// Prepare printer
+	QPrinter printer(QPrinter::HighResolution);
+	printer.setPaperSize(QPrinter::A4);
+// 	printer.setOrientation(QPrinter::Landscape);
+	printer.setOutputFileName("print.pdf");
+
+	// Prepare document
+	QTextDocument doc;
+	QTextCursor cur(&doc);
+	cur.movePosition(QTextCursor::Start);
+
+	// Products table preparation
+
+	cur.insertHtml("<div style='width: 100%; text-align: center;'>Summary of products in the camp storage</div>");
+	cur.insertHtml("<hr /><br />");
+	cur.insertText(tr("Products list"));
+
+// 	cur.insertHtml("<span style=\"width: 200px; text-align: right; border: 1px solid red;\">Data</span>");
+// 	cur.insertHtml("<br /><em>Data</em>");
+
+	int p_rows = model_prod->rowCount();
+	int p_cols = model_prod->columnCount();
+
+	QTextTableFormat tabf;
+	tabf.setBorderStyle(QTextFrameFormat::BorderStyle_Outset);
+	tabf.setBorder(1);
+	tabf.setCellSpacing(0);
+	tabf.setCellPadding(5);
+	tabf.setAlignment(Qt::AlignTop);
+	tabf.setWidth(QTextLength(QTextLength::PercentageLength, 100));
+
+	QTextTable * products_table = cur.insertTable(p_rows, p_cols, tabf);
+
+	for (int i = 0; i < p_rows; i++) {
+		for (int j = 0; j < p_cols; j++) {
+			QTextCursor cur = products_table->cellAt(i, j).firstCursorPosition();
+			cur.insertText(model_prod->index(i, j).data().toString());
+		}
+	}
+
+// 	QPainter painter(&printer);
+// 	QAbstractTextDocumentLayout * lay = report.documentLayout();
+// 	lay->setPaintDevice(painter.device());
+// 	report.setHtml("htmlcontent");
+// 	report.drawContents(&painter/*, printer.pageRect()*/);
+
+	// Print document
+	doc.print(&printer);
+
+// 	QPainter painter;
+// 	painter.begin(&printer);
+// 
+// 	for (int page = 0; page < numberOfPages; ++page) {
+// 		// Use the painter to draw on the page.
+// 		painter.drawText(0, 0, trUtf8("text próbny"));
+// // 		report.drawContents(&painter, QRectF(10, 10, 100, 100));
+// 		report.drawContents(&painter, printer.paperRect());
+// // 		report.print(&printer);
+// // db.CachedProducts()
+// // 		painter.draw
+// 		if (page != numberOfPages-1)
+// 			printer.newPage();
+// 	}
+// 	painter.end();
+
+// 	QPrintDialog * dialog = new QPrintDialog(&printer, this);
+// 	dialog->show();
+// 	delete dialog;
+}
+
 
 void zarlok::add_prod_record(bool newrec) {
 	if (newrec) {

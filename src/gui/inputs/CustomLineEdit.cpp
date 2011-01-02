@@ -38,20 +38,21 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 
 	rawtext = QLineEdit::text();
 	if (rawtext.isEmpty()) {
-		placeholdertext.clear();
+		displaytext.clear();
 	} else if (!verify(rawtext)) {
-		placeholdertext = tr("Parser error!");
+		displaytext = tr("Parser error!");
 	}
-PR(rawtext.toStdString());
+
 	edit_mode = false;
-	QLineEdit::setText(placeholdertext);
+	QLineEdit::setText(displaytext);
     if (ev != NULL)
 		QLineEdit::focusOutEvent(ev);
 }
 
 void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
-	std::cout << "CustomLineEdit::focusInEvent\n";
-	if (!edit_mode) {				// bez tego if'a wyskakuje ponowny focusInEvent i psuje zawartość inputa
+	// bez tego if'a kiedy znika popup completera to wywoływany
+	// jest ponowny focusInEvent i psuje zawartość inputa
+	if (!edit_mode) {
 		QLineEdit::setFont(globals::font_edit);
 		QLineEdit::setText(rawtext);
 	}
@@ -61,12 +62,11 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 
 bool CustomLineEdit::verify(const QString & t) {
 	std::cout << "CustomLineEdit::verify\n";
-	PR(edit_mode);
-	PR(t.toStdString());
+
 	if (!edit_mode)
 		return false;
 
-	if (verifyText(t, placeholdertext)) {
+	if (verifyText(t, displaytext)) {
 		this->setPalette(globals::palette_ok);
 		is_ok = true;
 	} else {

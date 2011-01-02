@@ -1,32 +1,77 @@
 project(zarlok)
-cmake_minimum_required(VERSION 2.6)
-find_package(Qt4 REQUIRED)
-
-set (CMAKE_CXX_FLAGS "-O2 -pipe -Wall -W -DQT_GUI_LIB")
+cmake_minimum_required(VERSION 2.8)
+set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB")
 # set (CMAKE_CXX_FLAGS "-march=core2 -O2 -pipe -Wall -W -DQT_GUI_LIB")
 # set (CMAKE_EXE_LINKER_FLAGS "-Wl,-O1 -Wl,-rpath,/usr/lib64/qt4")
+add_definitions(-Wall)
+find_package(Qt4 REQUIRED)
+
+# QT4_ADD_BINRESOURCES(outfiles inputfile ... )
+# Oryginal QT4_ADD_RESOURCES Macro modified
+# by me for special purpose
+macro (QT4_ADD_BINRESOURCES outfiles )
+  QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
+
+  FOREACH (it ${rcc_files})
+    GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
+    GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
+    GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
+    SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/${outfilename}.rcc)
+    #  parse file for dependencies 
+    #  all files are absolute paths or relative to the location of the qrc file
+    FILE(READ "${infile}" _RC_FILE_CONTENTS)
+    STRING(REGEX MATCHALL "<file[^<]+" _RC_FILES "${_RC_FILE_CONTENTS}")
+    SET(_RC_DEPENDS)
+    FOREACH(_RC_FILE ${_RC_FILES})
+      STRING(REGEX REPLACE "^<file[^>]*>" "" _RC_FILE "${_RC_FILE}")
+      IF(NOT IS_ABSOLUTE "${_RC_FILE}")
+        SET(_RC_FILE "${rc_path}/${_RC_FILE}")
+      ENDIF(NOT IS_ABSOLUTE "${_RC_FILE}")
+      SET(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
+    ENDFOREACH(_RC_FILE)
+    ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+      COMMAND ${QT_RCC_EXECUTABLE}
+      ARGS ${rcc_options} -binary -name ${outfilename} -o ${outfile} ${infile}
+      MAIN_DEPENDENCY ${infile}
+      DEPENDS ${_RC_DEPENDS})
+    SET(${outfiles} ${${outfiles}} ${outfile})
+  ENDFOREACH (it)
+endmacro (QT4_ADD_BINRESOURCES)
+
+configure_file(config.h.in config.h @ONLY)
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS src/ui/MainWindow.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui)
+set(zarlok_db_RESOURCES src/database.qrc)
+set(zarlok_db_RESOURCES_RCC database.rcc)
 
 set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp)
 set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
 set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp)
 set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp)
 set(zarlok_src_misc_SRCS src/DataParser.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
-set(zarlok_SRCS ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
+set(zarlok_INCS config.h)
+set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
 
 qt4_automoc(${zarlok_SRCS})
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS})
+qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
+
+# add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
+add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC})
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS})
-
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
 
-# add_subdirectory(src/ui)
-# add_subdirectory(src/gui)
 
+
+# installation
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/database.rcc DESTINATION share/${CMAKE_PROJECT_NAME}/resources)
+install(TARGETS zarlok DESTINATION bin)
+
+# messages
 MESSAGE(STATUS "<<< Configuration >>>
 Build type      ${CMAKE_BUILD_TYPE}
 Install path    ${CMAKE_INSTALL_PREFIX}

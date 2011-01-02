@@ -155,6 +155,8 @@
     <addaction name="actionOpenDB"/>
     <addaction name="actionSaveDB"/>
     <addaction name="separator"/>
+    <addaction name="actionPrintReport"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Pomoc">
@@ -202,6 +204,14 @@
   <action name="actionAbout">
    <property name="text">
     <string>&amp;O Żarłoku</string>
+   </property>
+  </action>
+  <action name="actionPrintReport">
+   <property name="text">
+    <string>Drukuj raport</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

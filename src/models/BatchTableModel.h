@@ -49,6 +49,4 @@ private:
 	QVariant raw(const QModelIndex & idx) const;
 };
 
-// a.krempowski@gmail.com
-
 #endif // BATCHTABLEMODEL_H
