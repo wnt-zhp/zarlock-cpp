@@ -87,18 +87,28 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	}
 
 	if (recreate) {
-// 		QFile dbresfile(":/resources/database.sql");
-		QFile dbresfile(":/resources/test_data.sql");
+		QSqlQuery query;
+
+		QFile dbresfile(":/resources/database.sql");
 		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
 			PR(false);
 			return false;
 		}
-
-		QSqlQuery query;
 		while (!dbresfile.atEnd()) {
 			QString line = dbresfile.readLine();
 			query.exec(line.fromUtf8(line.toStdString().c_str()));
 		}
+
+		QFile dbtestfile(":/resources/test_data.sql");
+		if (!dbtestfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			PR(false);
+			return false;
+		}
+		while (!dbtestfile.atEnd()) {
+			QString line = dbtestfile.readLine();
+			query.exec(line.fromUtf8(line.toStdString().c_str()));
+		}
+
 	}
 
 	rebuild_models();
@@ -128,7 +138,7 @@ bool Database::rebuild_models() {
 	tab_products->setTable("products");
 	tab_products->setEditStrategy(QSqlTableModel::OnManualSubmit);
 	if (!tab_products->select()) {
-		QMessageBox::critical(0, "Błąd bazy danych", tab_products->lastError().text(), QMessageBox::Abort);
+		QMessageBox::critical(0, QObject::tr("Database error"), tab_products->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
@@ -139,7 +149,17 @@ bool Database::rebuild_models() {
 	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
 	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
 	if (!tab_batch->select()) {
-		QMessageBox::critical(0, "Błąd bazy danych", tab_batch->lastError().text(), QMessageBox::Abort);
+		QMessageBox::critical(0, QObject::tr("Database error"), tab_batch->lastError().text(), QMessageBox::Abort);
+		return false;
+	}
+
+	if (tab_distributor) delete tab_distributor;
+	tab_distributor = new DistributorTableModel;
+	tab_distributor->setTable("distributor");
+	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
+	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "spec"));
+	if (!tab_distributor->select()) {
+		QMessageBox::critical(0, QObject::tr("Database error"), tab_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 

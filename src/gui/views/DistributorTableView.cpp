@@ -17,7 +17,7 @@
 */
 
 #include "globals.h"
-#include "BatchTableView.h"
+#include "DistributorTableView.h"
 
 #include <QHeaderView>
 
@@ -28,7 +28,7 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Database::Instance()) {
+DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent), db(Database::Instance()) {
 	// Popup menu dla akcji usuwania rekordu z bazy.
 	removeRec = new QAction(tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
@@ -55,7 +55,7 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Databa
  * @brief Destruktor. Usuwamy wszystko co stworzone operatorem new.
  *
  **/
-BatchTableView::~BatchTableView() {
+DistributorTableView::~DistributorTableView() {
 	delete removeRec;
 	delete addRec;
 }
@@ -69,14 +69,14 @@ BatchTableView::~BatchTableView() {
  * @param model model z danycmi do wyświetlania
  * @return void
  **/
-void BatchTableView::setModel(QAbstractItemModel * model) {
+void DistributorTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
-	hideColumn(BatchTableModel::HId);
-// 	hideColumn(BatchTableModel::HProdId);
-	hideColumn(BatchTableModel::HRegDate);
-	hideColumn(BatchTableModel::HDesc);
-	hideColumn(BatchTableModel::HUsedQty);
+	hideColumn(DistributorTableModel::HId);
+	hideColumn(DistributorTableModel::HRegDate);
+	hideColumn(DistributorTableModel::HReason3);
+// 	hideColumn(DistributorTableModel::HDesc);
+// 	hideColumn(DistributorTableModel::HUsedQty);
 }
 
 /**
@@ -85,7 +85,7 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
  * @param event typ zdarzenia
  * @return void
  **/
-void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
+void DistributorTableView::contextMenuEvent(QContextMenuEvent * event) {
 	// Liczba zaznaczonych itemów. Ze względu na politykę znaznaczania - całe wiersze,
 	// liczba itemów jest wielokrotnością liczby wyświetlanych kolumn.
 
@@ -95,8 +95,8 @@ void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
 		pmenu_del.exec(event->globalPos());
 	// A jeśli nie mamy żadnych itemów to znaczy, że kliknęliśmy w wolnym polu tabeli
 	// i chcemy coś dodać.
-	else
-		pmenu_add.exec(event->globalPos());
+// 	else
+// 		pmenu_add.exec(event->globalPos());
 
 	// Przesyłamy event do dalszego przetwarzania
 	QAbstractScrollArea::contextMenuEvent(event);
@@ -105,22 +105,22 @@ void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
 /**
  * @brief Usuwanie rekordów z bazy. Jako, że ze względu na politykę wybierania itemów
  * (wiersze a nie pojedyncze), żeby nie usuwać tych samych wierszy, filtrujemy wszystko
- * przez jedną wybraną kolumnę, np BatchTableModel::HSpec.
+ * przez jedną wybraną kolumnę, np DistributorTableModel::HSpec.
  * Ze względu na politykę zaywierdzania danych QSqlTableModel::onManualSubmit, dane nie
  * znikają od razu z modelu (więc nie mamy problemu z indeksami) ale dopiero kiedy
  * wywołane zostanie submitAll()
  *
  * @return void
  **/
-void BatchTableView::removeRecord() {
+void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
 /*		PR((*it).column());
 		PR((*it).row());*/
-		if ((*it).column() == BatchTableModel::HSpec)
+		if ((*it).column() == DistributorTableModel::HQty)
 			model()->removeRow((*it).row());
 	}
 	((QSqlTableModel *)model())->submitAll();
 }
 
-#include "BatchTableView.moc"
+#include "DistributorTableView.moc"

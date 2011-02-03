@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2010  Rafał Lalik <rafal.lalik@ph.tum.de>
+    Copyright (C) <year>  <name of author>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,24 +17,36 @@
 */
 
 
-#ifndef DATEINPUT_H
-#define DATEINPUT_H
+#ifndef ADDDISTRIBUTERECORDWIDGET_H
+#define ADDDISTRIBUTERECORDWIDGET_H
 
-#include "CustomLineEdit.h"
+#include <QCompleter>
 
-class DateInput : public CustomLineEdit {
+#include "ui_AddDistributorRecordWidget.h"
+
+class AddDistributorRecordWidget : public QWidget, public Ui::ADRWidget {
 Q_OBJECT
 public:
-    DateInput(QWidget * parent);
+	AddDistributorRecordWidget(QWidget * parent = NULL);
+	virtual ~AddDistributorRecordWidget();
 
-	const QDate date() const;
-	void setDateReferenceObj(const DateInput * ref);
+signals:
+	void canceled(bool);
+
+public slots:
+	void update_model();
 
 private slots:
-	bool verifyText(const QString &, QString & );
+	bool insert_record();
+	void clear_form();
+	void cancel_form();
+	void validateAdd();
 
 private:
-	const DateInput * data_ref;
+	QCompleter * completer_qty;
+	QCompleter * completer_date;
+	QCompleter * completer_reason;
+	QCompleter * completer_reason2;
 };
 
-#endif // DATEINPUT_H
+#endif // ADDDISTRIBUTERECORDWIDGET_H

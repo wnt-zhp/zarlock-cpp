@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BATCHTABLEMODEL_H
-#define BATCHTABLEMODEL_H
+#ifndef DISTRIBUTORTABLEMODEL_H
+#define DISTRIBUTORTABLEMODEL_H
 
 #include <QtSql/QSqlRelationalTableModel>
 
@@ -27,19 +27,19 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class BatchTableModel : public QSqlRelationalTableModel {
+class DistributorTableModel : public QSqlRelationalTableModel {
 Q_OBJECT
 public:
-	BatchTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
-// 	BatchTableModel(QSqlTableModel & dd);
+	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
+// 	DistributorTableModel(QSqlTableModel & dd);
 
-	virtual ~BatchTableModel();
+	virtual ~DistributorTableModel();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     virtual bool select();
 
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HDesc, HInvoice };
+	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };
 
 public slots:
 	void filterDB(const QString &);
@@ -50,4 +50,4 @@ private:
 	QVariant raw(const QModelIndex & idx) const;
 };
 
-#endif // BATCHTABLEMODEL_H
+#endif // DISTRIBUTORTABLEMODEL_H

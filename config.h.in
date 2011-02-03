@@ -4,4 +4,9 @@
 #define PREFIX "@CMAKE_INSTALL_PREFIX@"
 #define SHARE "/share/@CMAKE_PROJECT_NAME@"
 
+#define ZARLOK_HOME			"/.zarlok/"
+#define ZARLOK_DB			"/db/"
+#define ZARLOK_REPORTS		"/reports/"
+
+#define DB_EXT ".db"
 #endif /*__CONFIG_H__*/

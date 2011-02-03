@@ -159,8 +159,6 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 bool DataParser::date(const QString & data, QString & date_formated, const QDate & ref) {
 	QDate date;
 	bool status = DataParser::date(data,  date, ref);
-
 	date_formated = date.toString("dd/MM/yyyy");
-
 	return status;
 }

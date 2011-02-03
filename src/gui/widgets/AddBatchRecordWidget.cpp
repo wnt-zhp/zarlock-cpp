@@ -25,7 +25,6 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL) {
 	setupUi(parent);
-	std::cout << "++ AddBatchRecordWidget::AddBatchRecordWidget\n";
 
 	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
@@ -57,7 +56,6 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 }
 
 bool AddBatchRecordWidget::insert_record() {
-	std::cout << "++ AddBatchRecordWidget::insert_record()\n";
 	Database & db = Database::Instance();
 	ProductsTableModel * ptm = db.CachedProducts();
 	BatchTableModel * btm = db.CachedBatch();
@@ -82,7 +80,7 @@ bool AddBatchRecordWidget::insert_record() {
 	btm->setData(btm->index(row, BatchTableModel::HStaQty), edit_qty->text());
 	btm->setData(btm->index(row, BatchTableModel::HUnit), edit_unit->text());
 	btm->setData(btm->index(row, BatchTableModel::HPrice), unitprice);
-	btm->setData(btm->index(row, BatchTableModel::HCurQty), edit_qty->text());
+	btm->setData(btm->index(row, BatchTableModel::HUsedQty), edit_qty->text());
 	btm->setData(btm->index(row, BatchTableModel::HInvoice), edit_invoice->text());
 	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
 	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
@@ -95,7 +93,6 @@ bool AddBatchRecordWidget::insert_record() {
 }
 
 void AddBatchRecordWidget::clear_form() {
-	std::cout << "++ AddBatchRecordWidget::clear_form()\n";
 	edit_spec->clear();
 	edit_unit->clear();
 	edit_expiry->clear();
@@ -163,7 +160,7 @@ void AddBatchRecordWidget::update_model() {
 	completer_expiry->setModel(db.CachedBatch());
 
 	completer_spec->setCompletionColumn(BatchTableModel::HSpec);
-	completer_qty->setCompletionColumn(BatchTableModel::HCurQty);
+	completer_qty->setCompletionColumn(BatchTableModel::HUsedQty);
 	completer_unit->setCompletionColumn(BatchTableModel::HUnit);
 	completer_price->setCompletionColumn(BatchTableModel::HPrice);
 	completer_invoice->setCompletionColumn(BatchTableModel::HInvoice);

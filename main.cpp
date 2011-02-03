@@ -12,7 +12,7 @@ namespace globals {
 	QFont font_display = QFont();
 }
 
-int main(int argc, char ** argv, char ** env) {
+int main(int argc, char ** argv/*, char ** env*/) {
 	globals::palette_ok.setColor(QPalette::Base, Qt::green);
 	globals::palette_bad.setColor(QPalette::Base, Qt::red);
 
@@ -26,11 +26,22 @@ int main(int argc, char ** argv, char ** env) {
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";
 	PR(resource_database.toStdString());
 	if (!QResource::registerResource(resource_database)) {
-			QMessageBox::critical(0, QObject::tr("Cannot find Database resources"),
+			QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 									QObject::tr("Unable to find a database resources in ") +
-									resource_database +
-									QObject::tr("n\nCheck your installation and try to run again.\n"
-									   "Click Close to exit."), QMessageBox::Close);
+									resource_database + "\n" +
+									QObject::tr("Check your installation and try to run again.\n"
+									"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QString reports_database = PREFIX SHARE "/resources/reports.rcc";
+	PR(reports_database.toStdString());
+	if (!QResource::registerResource(reports_database)) {
+			QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+									QObject::tr("Unable to find a reports resources in ") +
+									reports_database + "\n" +
+									QObject::tr("Check your installation and try to run again.\n"
+									"Click Close to exit."), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
@@ -38,7 +49,7 @@ int main(int argc, char ** argv, char ** env) {
 	if (argc > 1) {
 		arg_file = argv[1];
 	}
-    zarlok foo(arg_file);
-    foo.show();
+    zarlok foo;
+//     foo.show();
     return app.exec();
 }

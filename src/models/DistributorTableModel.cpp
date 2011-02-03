@@ -24,7 +24,7 @@
 #include <QColor>
 #include <QStringBuilder>
 
-#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
 #include "DataParser.h"
 
 /**
@@ -33,7 +33,7 @@
  * @param parent rodzic
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
-BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
+DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
 	
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged(QModelIndex,QModelIndex)));
 }
@@ -42,7 +42,7 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlRelation
  * @brief I tu też nic.
  *
  **/
-BatchTableModel::~BatchTableModel() {
+DistributorTableModel::~DistributorTableModel() {
 }
 
 /**
@@ -59,18 +59,18 @@ BatchTableModel::~BatchTableModel() {
  * @return QVariant zwraca żądanie (QVariant to taki uniwersalny pojemnik na wiele typów danych:
  * QString, QColor QIcon,itp.
  **/
-QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole or role == Qt::StatusTipRole)
-		return raw(idx);
-
-	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
-		return display(idx, role);
-
-	int col = idx.column();
-	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit))
-		return Qt::AlignRight;
-	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
-		return Qt::AlignCenter;
+QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
+// 	if (role == Qt::EditRole or role == Qt::StatusTipRole)
+// 		return raw(idx);
+// 
+// 	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
+// 		return display(idx, role);
+// 
+// 	int col = idx.column();
+// 	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit))
+// 		return Qt::AlignRight;
+// 	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
+// 		return Qt::AlignCenter;
 
 	return QSqlRelationalTableModel::data(idx, role);
 }
@@ -83,7 +83,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
  * @param role przypisana im rola
  * @return bool stan dodania/aktualizacji
  **/
-bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
+bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
     return QSqlRelationalTableModel::setData(index, value, role);
 }
 
@@ -93,19 +93,15 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
  *
  * @return bool stan otwarcia tabeli
  **/
-bool BatchTableModel::select() {
+bool DistributorTableModel::select() {
 	setHeaderData(HId,		Qt::Horizontal, QObject::tr("ID"));
-	setHeaderData(HProdId,	Qt::Horizontal, QObject::tr("Product"));
-	setHeaderData(HSpec,	Qt::Horizontal, QObject::tr("Specificator"));
-	setHeaderData(HPrice,	Qt::Horizontal, QObject::tr("Price"));
-	setHeaderData(HUnit,	Qt::Horizontal, QObject::tr("Unit"));
-	setHeaderData(HStaQty,	Qt::Horizontal, QObject::tr("Quantity"));
-	setHeaderData(HBook,	Qt::Horizontal, QObject::tr("Booking"));
-	setHeaderData(HExpire,	Qt::Horizontal, QObject::tr("Expiry date"));
-	setHeaderData(HUsedQty,	Qt::Horizontal, QObject::tr("Used"));
+	setHeaderData(HBatchId,	Qt::Horizontal, QObject::tr("Product"));
+	setHeaderData(HQty,		Qt::Horizontal, QObject::tr("Quantity"));
+	setHeaderData(HDistDate,Qt::Horizontal, QObject::tr("Distributing date"));
 	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
-	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
-	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice No."));
+	setHeaderData(HReason,	Qt::Horizontal, QObject::tr("Main reason"));
+	setHeaderData(HReason2,	Qt::Horizontal, QObject::tr("Sub reason"));
+	setHeaderData(HReason3,	Qt::Horizontal, QObject::tr("Extra reason"));
 
     return QSqlTableModel::select();
 }
@@ -118,57 +114,57 @@ bool BatchTableModel::select() {
  * @param role przypisana rola
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
-QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
-	if (idx.column() == HSpec) {
-		QString name = this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString();
-		return name;
-	}
-
-	if (idx.column() == HPrice) {
-		QString data = idx.data(Qt::EditRole).toString(); 
-		double price, tax;
-		if (DataParser::price(data, price, tax)) {
-			QString var;
-			return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-
-	if (idx.column() == HBook) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date)) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-	
-	if (idx.column() == HExpire) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-
-	if (idx.column() == HStaQty) {
-		return QString(index(idx.row(), int(HUsedQty)).data().toString() % QString(tr(" of ")) % raw(idx).toString());
-	}
+QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
+// 	if (idx.column() == HSpec) {
+// 		QString name = this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString();
+// 		return name;
+// 	}
+// 
+// 	if (idx.column() == HPrice) {
+// 		QString data = idx.data(Qt::EditRole).toString(); 
+// 		double price, tax;
+// 		if (DataParser::price(data, price, tax)) {
+// 			QString var;
+// 			return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
+// 		} else {
+// 			if (role == Qt::BackgroundRole)
+// 				return QColor(Qt::red);
+// 			else
+// 				return QVariant(tr("Parser error!"));
+// 		}
+// 	}
+// 
+// 	if (idx.column() == HBook) {
+// 		QString data = idx.data(Qt::EditRole).toString();
+// 		QDate date;
+// 		if (DataParser::date(data, date)) {
+// 			QString var;
+// 			return date.toString("dd/MM/yyyy");
+// 		} else {
+// 			if (role == Qt::BackgroundRole)
+// 				return QColor(Qt::red);
+// 			else
+// 				return QVariant(tr("Parser error!"));
+// 		}
+// 	}
+// 	
+// 	if (idx.column() == HExpire) {
+// 		QString data = idx.data(Qt::EditRole).toString();
+// 		QDate date;
+// 		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
+// 			QString var;
+// 			return date.toString("dd/MM/yyyy");
+// 		} else {
+// 			if (role == Qt::BackgroundRole)
+// 				return QColor(Qt::red);
+// 			else
+// 				return QVariant(tr("Parser error!"));
+// 		}
+// 	}
+// 
+// 	if (idx.column() == HStaQty) {
+// 		return QString(index(idx.row(), int(HUsedQty)).data().toString() % QString(tr(" of ")) % raw(idx).toString());
+// 	}
 
 	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
 }
@@ -179,7 +175,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
  * @param idx indeks
  * @return QVariant
  **/
-QVariant BatchTableModel::raw(const QModelIndex & idx) const {
+QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
 // 	if (idx.column() == HSpec) {
 // 		return QSqlRelationalTableModel::data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString();
 // 	}
@@ -192,17 +188,17 @@ QVariant BatchTableModel::raw(const QModelIndex & idx) const {
  *
  * @param f filtr
  **/
-void BatchTableModel::filterDB(const QString & f) {
+void DistributorTableModel::filterDB(const QString & f) {
 	QString filter = "";
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
 }
 
-void BatchTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
-	PR(topleft.row()); PR(topleft.column());
-	PR(bottomright.row()); PR(bottomright.column());
+void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
+// 	PR(topleft.row()); PR(topleft.column());
+// 	PR(bottomright.row()); PR(bottomright.column());
 }
 
 
-#include "BatchTableModel.moc"
+#include "DistributorTableModel.moc"

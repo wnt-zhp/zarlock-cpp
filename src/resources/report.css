@@ -1,0 +1,35 @@
+
+body {
+	color:			black;
+	text-align:		center;
+}
+
+div {
+	width:			100%;
+}
+
+.date {
+	width:			100%;
+	border:			1px solid red;
+}
+
+.header {
+	margin-top:		80px;
+	margin-bottom:	50px;
+	width:			100%;
+	font-size:		large;
+}
+
+.maincont {
+	width:			80%;
+	border-style:	solid;
+	border-color:	red;
+}
+
+.maincont thead td {
+	text-align:		left;
+/* 	padding-left:	10px; */
+/* 	text-indent:	10px; */
+	border-bottom:	1px solid black;
+	font-weight:	bold;
+}

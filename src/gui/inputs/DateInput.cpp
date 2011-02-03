@@ -22,19 +22,11 @@
 #include "DateInput.h"
 
 DateInput::DateInput(QWidget * parent) : CustomLineEdit(parent) {
-	std::cout << "++ DateInput::DateInput\n";
 	setPlaceholderText(tr("Expiry date"));
 	data_ref = NULL;
 }
 
-DateInput::~DateInput() {
-	if (data_ref != NULL)
-		delete data_ref;
-}
-
 void DateInput::setDateReferenceObj(const DateInput * ref) {
-	if (data_ref != NULL)
-		delete data_ref;
 	data_ref = ref;
 }
 

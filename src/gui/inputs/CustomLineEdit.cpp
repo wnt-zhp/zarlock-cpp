@@ -22,9 +22,6 @@
 #include "CustomLineEdit.h"
 
 CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
-	std::cout << "++ CustomLineEdit::CustomLineEdit\n";
-	qWarning("qWarning: ++ CustomLineEdit::CustomLineEdit\n");
-	qDebug("qDebug: ++ CustomLineEdit::CustomLineEdit\n");
 	connect(this, SIGNAL(textChanged(QString)), this, SLOT(verify(QString)));
 }
 
@@ -36,7 +33,6 @@ bool CustomLineEdit::ok() {
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
-// 	std::cout << "CustomLineEdit::focusOutEvent\n";
 	this->setFont(globals::font_display);
 
 	rawtext = QLineEdit::text();
@@ -64,8 +60,6 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 }
 
 bool CustomLineEdit::verify(const QString & t) {
-// 	std::cout << "CustomLineEdit::verify\n";
-
 	if (!edit_mode)
 		return false;
 

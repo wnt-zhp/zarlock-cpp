@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -134,6 +134,19 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_dist">
+       <attribute name="title">
+        <string>&amp;Distribute</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+        <item>
+         <widget class="DistributorTableView" name="table_dist"/>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_add_distributor" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -144,7 +157,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuBaza_danych">
@@ -195,7 +208,7 @@
   </action>
   <action name="actionQuit">
    <property name="text">
-    <string>&amp;Zakończ</string>
+    <string>&amp;Exit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -203,7 +216,7 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;O Żarłoku</string>
+    <string>Ab&amp;out</string>
    </property>
   </action>
   <action name="actionPrintReport">
@@ -226,9 +239,13 @@
    <extends>QTableView</extends>
    <header>BatchTableView.h</header>
   </customwidget>
+  <customwidget>
+   <class>DistributorTableView</class>
+   <extends>QTableView</extends>
+   <header>DistributorTableView.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>MainTab</tabstop>
   <tabstop>edit_filter_prod</tabstop>
   <tabstop>button_add_prod</tabstop>
   <tabstop>table_products</tabstop>

@@ -1,0 +1,1186 @@
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass memoir
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman bookman
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Specyfikacja programu Zarlock
+\end_layout
+
+\begin_layout Author
+Jacek Bzdak
+\end_layout
+
+\begin_layout Chapter
+Ogólne zachowania 
+\end_layout
+
+\begin_layout Section
+Baza danych 
+\end_layout
+
+\begin_layout Subsection
+Robocza baza danych 
+\end_layout
+
+\begin_layout Standard
+Program ma roboczą bazę danych, zmiany są persystowane
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Czyli zapisane do pamięci trwałej --- na dysk.
+\end_layout
+
+\end_inset
+
+ po każdej operacji.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Położenie roboczej bazy danych
+\end_layout
+
+\begin_layout Standard
+Robocza baza danych jest położona w: 
+\family typewriter
+$ZARLOCK_HOME/zarlock/prod/zarlock.db
+\family default
+, gdzie 
+\family typewriter
+$ZARLOCK_HOME
+\begin_inset Index
+status collapsed
+
+\begin_layout Plain Layout
+
+\family typewriter
+ZARLOCK_HOME
+\end_layout
+
+\end_inset
+
+
+\family default
+ znaczy:
+\end_layout
+
+\begin_layout Description
+linux 
+\family typewriter
+$HOME
+\end_layout
+
+\begin_layout Description
+windows Jest zmienna (albo to jest w rejestrze) która trafia w 
+\begin_inset Quotes eld
+\end_inset
+
+Moje dokumenty
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Do decyzji: 
+\end_layout
+
+\begin_layout Plain Layout
+Może lepiej przechowywać w katalogu programu? 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Operacje na roboczej bazie danych 
+\end_layout
+
+\begin_layout Description
+backup Zapisanie zawartości roboczej bazy danych do pliku 
+\end_layout
+
+\begin_layout Description
+odczyt
+\begin_inset space ~
+\end_inset
+
+backupu Odczyt backupu i nadpisanie nim roboczej bazy danych 
+\end_layout
+
+\begin_layout Description
+czyszczenie Kasowanie zawartości roboczej bazy danych.
+\end_layout
+
+\begin_layout Subsubsection
+Backup 
+\end_layout
+
+\begin_layout Standard
+Kopie zapasowe roboczej bazy danych przechowywane są w katalogu 
+\family typewriter
+$ZARLOCK_HOME/backup
+\family default
+.
+ Każdy plik z kopią ma nazwę postaci: back{yyyy-mm-dd}_{nn}.db, gdzie: 
+\end_layout
+
+\begin_layout Description
+yyyy-mm-dd to data utworzenia backupu
+\end_layout
+
+\begin_layout Description
+nn numer backupu danego dnia
+\end_layout
+
+\begin_layout Standard
+Kopie zapasowe są zapisywane w następujących sytuacjach:
+\end_layout
+
+\begin_layout Itemize
+Przy zamykaniu programu.
+ 
+\end_layout
+
+\begin_layout Itemize
+Przed nadpisaniem bazy danych 
+\end_layout
+
+\begin_layout Chapter
+Specyfikacja GUI
+\end_layout
+
+\begin_layout Section
+Produkt
+\end_layout
+
+\begin_layout Standard
+Produkt to taki platoński ideał.
+ Poszczególne partie należące do produktu są zasadniczo na siebie wymienne
+ (nie ma znaczenia czy na śniadanei pójdzie jogurt trukawkowy czy waniliowy
+ --- w jadłospisie stoi jogurt) .
+\end_layout
+
+\begin_layout Subsection
+Pola: 
+\end_layout
+
+\begin_layout Description
+nazwa unikalna nazwa
+\end_layout
+
+\begin_layout Description
+data
+\begin_inset space ~
+\end_inset
+
+ważności ilość dni jaką produkt jest ważny domyślnie
+\end_layout
+
+\begin_layout Description
+jednostka domyślna jednostka
+\end_layout
+
+\begin_layout Subsection
+Przykłady produktów:
+\end_layout
+
+\begin_layout Itemize
+Chleb (data ważności 3 dni; jednostka sztuka)
+\end_layout
+
+\begin_layout Itemize
+Dżem (data ważności nieistotne; jednostka słoik) 
+\end_layout
+
+\begin_layout Subsection
+Jednostka 
+\end_layout
+
+\begin_layout Subsubsection
+Widget 
+\end_layout
+
+\begin_layout Standard
+Combo box podpowiadający jednostki które już są w bazie danych (zarówbo
+ produktów i partii).
+ Patrz opis na 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Samouzupełniające-combo-boxy"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Zasady parsowania 
+\end_layout
+
+\begin_layout Standard
+Co wpiszesz to jest 
+\end_layout
+
+\begin_layout Subsection
+Data ważności
+\end_layout
+
+\begin_layout Subsubsection
+Widget
+\end_layout
+
+\begin_layout Standard
+Text field
+\end_layout
+
+\begin_layout Subsubsection
+Zasady parsowania 
+\end_layout
+
+\begin_layout Standard
+Liczba ma być.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Semantyka
+\end_layout
+
+\begin_layout Standard
+Domyślna ilość dni przez które partie danego produktu będą ważne.
+ Jeśli jest puste (w db 
+\family typewriter
+NULL
+\family default
+) to partia ma puste pole na datę ważności.
+ 
+\end_layout
+
+\begin_layout Section
+Partia
+\end_layout
+
+\begin_layout Standard
+Konkretna partia stuffu który trafił do magazynu.
+ 
+\end_layout
+
+\begin_layout Subsection
+Pola
+\end_layout
+
+\begin_layout Description
+specyfikator Coś co odróżnia partie od siebie.
+ W Chleb baltonowski i chleb razowy --- baltonowski i razowy to specyfikatory.
+ 
+\end_layout
+
+\begin_layout Description
+cena cena jednostkowa z VAT
+\end_layout
+
+\begin_layout Description
+ilość
+\begin_inset space ~
+\end_inset
+
+początkowa ile jednostek było na początku (pole typu float) 
+\end_layout
+
+\begin_layout Description
+ilość
+\begin_inset space ~
+\end_inset
+
+bierzące ile jest w magazynie
+\end_layout
+
+\begin_layout Description
+booking
+\begin_inset space ~
+\end_inset
+
+date data przyjścia do magazynu
+\end_layout
+
+\begin_layout Description
+expiry
+\begin_inset space ~
+\end_inset
+
+date data przydatności do spożycia 
+\end_layout
+
+\begin_layout Description
+opis opis --- pole do wyszukiwania
+\end_layout
+
+\begin_layout Description
+numer
+\begin_inset space ~
+\end_inset
+
+faktury pole tekstowe --- może być puste (czasem faktura nie dochodzi i
+ spisy są z natury)
+\end_layout
+
+\begin_layout Subsubsection
+Specyfikator 
+\end_layout
+
+\begin_layout Paragraph
+Widget
+\end_layout
+
+\begin_layout Standard
+Combobox co się sam uzupełnia 
+\end_layout
+
+\begin_layout Paragraph
+Reguły parsowania 
+\end_layout
+
+\begin_layout Standard
+Brak 
+\end_layout
+
+\begin_layout Subsubsection
+Cena 
+\end_layout
+
+\begin_layout Paragraph
+Widget 
+\end_layout
+
+\begin_layout Standard
+Pole tekstowe 
+\end_layout
+
+\begin_layout Paragraph
+Reguły parsowania
+\end_layout
+
+\begin_layout Description
+
+\backslash
+d+([.,]?
+\backslash
+d+) liczba 
+\end_layout
+
+\begin_layout Description
+
+\backslash
+d+([.,]?
+\backslash
+d+)
+\begin_inset space ~
+\end_inset
+
+([p
+\backslash
++](22)|(15)|(7)%?) Czylu 15 + 7 znaczy 15zł + 7%VAT
+\end_layout
+
+\begin_layout Standard
+Jeśli jest ustawione że podajemy ceny za całą partię (a nie jednostkowe)
+ cena wpisana jest dzielona przez ilość jednostek.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Ilość początkowa
+\end_layout
+
+\begin_layout Paragraph
+Reguły parsowania
+\end_layout
+
+\begin_layout Standard
+Więcej niż zero! 
+\end_layout
+
+\begin_layout Standard
+Podczas edycji nie wolno zmienić ilości początkiowej tak żeby się okazało
+ że ilość bierząca jest ujemna
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Ja bym to ograniczenie wrzucił w bazke i potem łapał w GUI
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Ilość bierząca
+\end_layout
+
+\begin_layout Standard
+Read only 
+\end_layout
+
+\begin_layout Subsubsection
+Boking date 
+\end_layout
+
+\begin_layout Standard
+Patrz parsowanie dat 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Parsowanie-dat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Parsowanie 
+\end_layout
+
+\begin_layout Standard
+Może być wpisane wstecz i w przód.
+ Musi być mniejsze niz expiry_date
+\end_layout
+
+\begin_layout Subsubsection
+Expiry date 
+\end_layout
+
+\begin_layout Standard
+Patrz parsowanie dat 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Parsowanie-dat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Parsowanie 
+\end_layout
+
+\begin_layout Standard
+Może być wpisane wstecz i w przód.
+ Musi być większe niż booking_date
+\end_layout
+
+\begin_layout Subsubsection
+Jedostka 
+\end_layout
+
+\begin_layout Standard
+Samouzupełniający combobox 
+\end_layout
+
+\begin_layout Paragraph
+Zasady parsowania
+\end_layout
+
+\begin_layout Standard
+Wsio ugodno: 
+\end_layout
+
+\begin_layout Standard
+Sztuka, kilogram, bohenek
+\end_layout
+
+\begin_layout Section
+Wyprowadzenie 
+\end_layout
+
+\begin_layout Subsection
+Pola
+\end_layout
+
+\begin_layout Description
+partia partia do której wyprowadzamy 
+\end_layout
+
+\begin_layout Description
+ilosc ilość -- big_decimal 
+\end_layout
+
+\begin_layout Description
+data data wyprowadzenia
+\end_layout
+
+\begin_layout Description
+create_date data utworzenia wyprowadzenia
+\end_layout
+
+\begin_layout Description
+tytułem Powód wyprowadzenia
+\end_layout
+
+\begin_layout Description
+danie danie do którego przypisano wyprowadzenie --- opcjonalne(!)
+\end_layout
+
+\begin_layout Description
+powod_wyprowadzenia enum opisujący powód wyprowadzenia
+\end_layout
+
+\begin_layout Subsection
+Wydawanie 
+\end_layout
+
+\begin_layout Standard
+Można wydać produkt bez przypisania do dania.
+ Trzeba gdzieś dać taką opcję :) 
+\end_layout
+
+\begin_layout Section
+Powod wyprowadzenia 
+\end_layout
+
+\begin_layout Standard
+Encja opisująca powód wyprowadzenia.
+ Nowe powody wyprowadzenia dodaje programista.
+ 
+\end_layout
+
+\begin_layout Standard
+Pola: 
+\end_layout
+
+\begin_layout Description
+powód
+\begin_inset space ~
+\end_inset
+
+wyprowadzenia opis 
+\end_layout
+
+\begin_layout Description
+wliczanie
+\begin_inset space ~
+\end_inset
+
+do
+\begin_inset space ~
+\end_inset
+
+stawek boolean.
+ Czy wliczamy dane wyprowadzenie do stawki żywnościowej.
+ 
+\end_layout
+
+\begin_layout Standard
+Powody wyprowadzenia: 
+\end_layout
+
+\begin_layout Description
+Minął
+\begin_inset space ~
+\end_inset
+
+termin mija termin ważności
+\end_layout
+
+\begin_layout Description
+Nieświeży zestarzał się 
+\end_layout
+
+\begin_layout Description
+Na
+\begin_inset space ~
+\end_inset
+
+cele
+\begin_inset space ~
+\end_inset
+
+programowe 
+\end_layout
+
+\begin_layout Description
+Na
+\begin_inset space ~
+\end_inset
+
+posilek
+\end_layout
+
+\begin_layout Standard
+Powód 'na posiłek' dodawany jest automatycznie i nie da się ustawić z poziomu
+ Gui.
+ 
+\end_layout
+
+\begin_layout Section
+Dzien 
+\end_layout
+
+\begin_layout Standard
+Dzień obozu.
+ Musi być metoda dodania en masse całego obozu dni.
+ 
+\end_layout
+
+\begin_layout Standard
+Pola:
+\end_layout
+
+\begin_layout Description
+id id dnia
+\end_layout
+
+\begin_layout Description
+date data 
+\end_layout
+
+\begin_layout Description
+ilosc
+\begin_inset space ~
+\end_inset
+
+osob ilość osób na terenie 
+\end_layout
+
+\begin_layout Standard
+Dzień po utworzeniu ma standardowo cztery nieusuwalne posiłki: śniadanie,
+ obiad, podwieczorek, kolację.
+ 
+\end_layout
+
+\begin_layout Section
+Ilość osób na terenie 
+\end_layout
+
+\begin_layout Standard
+Jak to rozwiążesz w bazie danych to Twoja zabawka.
+ Może być zagnieżdżone w dniu, może być oddzielna encja.
+ 
+\end_layout
+
+\begin_layout Standard
+Pola:
+\end_layout
+
+\begin_layout Description
+uczestnicy ilość uczestników 
+\end_layout
+
+\begin_layout Description
+kadra ilość kadry
+\end_layout
+
+\begin_layout Description
+inni ilość innych 
+\end_layout
+
+\begin_layout Section
+Posilek 
+\end_layout
+
+\begin_layout Standard
+Posilek.
+ 
+\end_layout
+
+\begin_layout Description
+nazwa Label posiłku
+\end_layout
+
+\begin_layout Description
+dodatkowy czy jest to posiłek dodatkowy 
+\end_layout
+
+\begin_layout Description
+dzien łącze do dnia 
+\end_layout
+
+\begin_layout Standard
+Posiłki standardowe nie są dodatkowe, posiłki które dodaje użytkownik są
+ dodatkowe.
+ 
+\end_layout
+
+\begin_layout Section
+Danie 
+\end_layout
+
+\begin_layout Standard
+Danie.
+ 
+\end_layout
+
+\begin_layout Description
+nazwa nazwa 
+\end_layout
+
+\begin_layout Section
+Dane statyczne 
+\end_layout
+
+\begin_layout Standard
+Każdy obóz ma następujące dane statyczne (wrzuć w głupią tabelkę konfigową).
+\end_layout
+
+\begin_layout Description
+komendant Imie i nazwisko komendanta
+\end_layout
+
+\begin_layout Description
+kwatermistrz Imie i nazwisko kwatermistrza
+\end_layout
+
+\begin_layout Description
+Nazwa
+\begin_inset space ~
+\end_inset
+
+obozu Nazwa oboz
+\end_layout
+
+\begin_layout Description
+Stawka
+\begin_inset space ~
+\end_inset
+
+żywnościowa 
+\end_layout
+
+\begin_layout Description
+budżet
+\begin_inset space ~
+\end_inset
+
+żywnościowy
+\end_layout
+
+\begin_layout Section
+Zachowania --- posiłki 
+\end_layout
+
+\begin_layout Standard
+Dla mnie rozwiążanie z wersji Java jest niezadowalające.
+ Więc liczę na inwencję.
+ 
+\end_layout
+
+\begin_layout Standard
+Na pewno musisz spełnić następujące wymagania: 
+\end_layout
+
+\begin_layout Itemize
+Przy każdym dniu masz podaną stawkę dzienną 
+\end_layout
+
+\begin_layout Itemize
+Przy każdym posiłku masz podaną stawkę za posiłek 
+\end_layout
+
+\begin_layout Itemize
+Przy daniu też! 
+\end_layout
+
+\begin_layout Itemize
+W głównym oknie programu masz napis w stylu: Wydano XX z YYY zł (ZZZ% budżetu)
+\end_layout
+
+\begin_layout Subsection
+Wydawanie na dania 
+\end_layout
+
+\begin_layout Standard
+Są dwie metody wydawania na danie: uproszczona i pełna.
+ 
+\end_layout
+
+\begin_layout Description
+uproszczona Masz combo boza podajesz w nim dane w formacie 'nazwa_produktu
+ --- specyfikator [jednostka]' program to parsuje przeszukuje nazę danych
+ i wyświetla pasujące wejścia w formacie: 'nazwa_produktu --- specyfikator
+ [jednostka] : ilość_dostępna'.
+ Po wybraniu jakiegoś wejścia w CB aktwyuje się text field w którym wpisujesz
+ ilość wydaną.
+ 
+\end_layout
+
+\begin_layout Description
+pełna Ze stanu magazynu wybierasz partię którą wydajesz i wpisujesz ilość
+\end_layout
+
+\begin_layout Subsubsection
+Opis metody uproszczonej 
+\end_layout
+
+\begin_layout Standard
+Algorytm powinien: 
+\end_layout
+
+\begin_layout Itemize
+Wybierać w bazie danych tylko partie które: są na stanie (jest ich więcej
+ niż zero; dzień posiłku jest >= dzień dodania partii), są danego dnia ważne.
+ 
+\end_layout
+
+\begin_layout Itemize
+Łączyć partie które mają takie same parametry.
+ To znaczy: jeśli są w magazynie trzy partie 'chleb --- baltonowski [bochenek]'
+ którch jest odpowiednio 2 3 i 5 bochenków to w ComboBoxie pojawia jedno
+ wyprowadzenie które ma 10 sztuk.
+ 
+\end_layout
+
+\begin_layout Itemize
+Jedno kliknięcie usera może powodować wydanie wielu partii.
+ Przy czym najpierw wydawane są te z któtszą datą przydatności.
+ 
+\end_layout
+
+\begin_layout Section
+Ogólne
+\end_layout
+
+\begin_layout Subsection
+Arytmetyka 
+\end_layout
+
+\begin_layout Standard
+Zmiennoprzecinkowa obliczenia robimy z dokładnością do 2 miejsc po przecinku.
+ 
+\end_layout
+
+\begin_layout Itemize
+W javie BigDecimal 
+\end_layout
+
+\begin_layout Itemize
+W pythonie decimal 
+\end_layout
+
+\begin_layout Itemize
+W C++/QT na pewno są do tego klasy
+\end_layout
+
+\begin_layout Itemize
+Ważne żeby zaokrąglać wartości koło zera.
+ Tj żeby nie było tak że po filtrowaniu na ilość więszą od zera pojawiały
+ się partie z ilością 0.0 bo w bazie danych jest tego 0.0001 kg z reszt w
+ dzieleniu.
+ 
+\end_layout
+
+\begin_layout Subsection
+Ogólne zasady
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Ogólne-zasady"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Ogólna zasada działania widgetów jest taka.
+ Po wyjściu z okienka widzisz wartość sparsowaną przez program.
+ Jak do niego wrócisz pracujesz na tym co wprowdziłeś.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wpisujesz jakąś wartość np.
+ +5
+\end_layout
+
+\begin_layout Itemize
+po wyjściu program zamienia to na datęi wyświetla 21.08.2010
+\end_layout
+
+\begin_layout Itemize
+po powrocie do okienka masz znów +5
+\end_layout
+
+\begin_layout Subsection
+Daty
+\end_layout
+
+\begin_layout Subsubsection
+Parsowanie dat
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Parsowanie-dat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Daty parsowane są według takiej metody: 
+\end_layout
+
+\begin_layout Description
+[+-]
+\backslash
+d +- ileś dni od określonej daty
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Normalnie jest to dziś, są wyjątki
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+dzi[śs] dziś
+\end_layout
+
+\begin_layout Description
+
+\backslash
+d
+\backslash
+d? data w bierzącym miesiącu
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Może lepiej zmieńmy na najbliższa data z takim dniem miesiąca.
+ 01 wpisane 27.07 znaczy 01.08 a nie 01.07 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+
+\backslash
+d
+\backslash
+d[.;,-]
+\backslash
+d
+\backslash
+d([.;,-]
+\backslash
+d
+\backslash
+d)? Data w formacie DD-MM(-YY)? Różne separatory są ważne nie ma co się
+ ograniczać.
+\end_layout
+
+\begin_layout Description
+słownie dziś jutro po jutrze...
+\end_layout
+
+\begin_layout Subsubsection
+Zachowanie widgeta
+\end_layout
+
+\begin_layout Standard
+Szczególnie ważne jest tutaj zachowanie z 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Ogólne-zasady"
+
+\end_inset
+
+! Bo jak będzie ryfa z wprowadzaniem dat to będzie kompletna ryfa! 
+\end_layout
+
+\begin_layout Subsection
+Samouzupełniające combo boxy
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Samouzupełniające-combo-boxy"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Działają troszkę jak smart seach w googlach.
+ 
+\end_layout
+
+\begin_layout Standard
+Wpisujesz w pole tekstowe 
+\begin_inset Quotes eld
+\end_inset
+
+C
+\begin_inset Quotes erd
+\end_inset
+
+ a w popupie pojawiają się: 
+\end_layout
+
+\begin_layout Itemize
+Chleb
+\end_layout
+
+\begin_layout Itemize
+Cukierki
+\end_layout
+
+\begin_layout Itemize
+Cukinia
+\end_layout
+
+\begin_layout Itemize
+Celnika nerki 
+\end_layout
+
+\begin_layout Standard
+Generalnie robimy to kwerendą 
+\family typewriter
+LIKE
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Uwaga implementacyjna 
+\end_layout
+
+\begin_layout Standard
+Jest szansa że koleś będzie wpusywać szybciej niż będzie się odświerzać
+ gui.
+ 
+\end_layout
+
+\begin_layout Standard
+W Javie implementacja była z gruba taka: 
+\end_layout
+
+\begin_layout Itemize
+Wyszukania były robione w wątkach background <- to zostaje! 
+\end_layout
+
+\begin_layout Itemize
+Jeśli jest bierzące wyszukiwanie w toku nie odpalamy następnego a zapisujemy
+ do jednoelementowej kolejki (potencjalnie coś tam nadpisując) 
+\end_layout
+
+\begin_layout Itemize
+Przy wyjściu z wyszukania sprawdzamy czy w kolejce coś jest --- wtedy kasujemy
+ kolejkę i odpalamy to wyszkiwanie od zera.
+ 
+\end_layout
+
+\begin_layout Subsection
+Ogólne przemyślenia
+\end_layout
+
+\begin_layout Standard
+Jak najwięcej logiki wrzucaj w bazę danych (triggery//constrainty) --- tylko
+ je potem cholera łap! 
+\end_layout
+
+\begin_layout Subsection
+Raporty
+\end_layout
+
+\begin_layout Itemize
+Stan magazynu na dzień
+\end_layout
+
+\begin_layout Itemize
+To co wyszło danego dnia 
+\end_layout
+
+\begin_layout Itemize
+Kartoteki magazynowe czyli: Bierzemy wszystkie partie produktu o tej samej
+ cenie i wypluwamy po kolei ile czego na stan weszło/zeszło.
+ 
+\end_layout
+
+\begin_layout Chapter
+Raporty 
+\end_layout
+
+\begin_layout Section
+Zasadnicze rozwiązania 
+\end_layout
+
+\begin_layout Standard
+Wygenerowanie dokumentacji na dowolny dzień i na cały obóz to jedno kliknięcie,
+ oddzielnie jednym kliknięciem generujesz też kartoteki.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

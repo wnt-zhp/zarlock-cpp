@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ADRWidget</class>
+ <widget class="QWidget" name="ADRWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>242</width>
+    <height>236</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Add new record</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_products">
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_products">
+        <property name="text">
+         <string>Product</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_qty">
+        <property name="text">
+         <string>Quantity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_reason2">
+        <property name="text">
+         <string>Opt.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QtyInput" name="edit_qty">
+        <property name="placeholderText">
+         <string>quantity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="TextInput" name="edit_reason2">
+        <property name="placeholderText">
+         <string>additional reason</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="TextInput" name="edit_reason">
+        <property name="placeholderText">
+         <string>reason</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_reason">
+        <property name="text">
+         <string>Reason</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="DateInput" name="edit_date">
+        <property name="placeholderText">
+         <string>distribute date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_date">
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="action_add">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>&amp;Add</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="action_clear">
+       <property name="text">
+        <string>C&amp;lear</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DateInput</class>
+   <extends>QLineEdit</extends>
+   <header>DateInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TextInput</class>
+   <extends>QLineEdit</extends>
+   <header>TextInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtyInput</class>
+   <extends>QLineEdit</extends>
+   <header>QtyInput.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>combo_products</tabstop>
+  <tabstop>edit_qty</tabstop>
+  <tabstop>edit_reason2</tabstop>
+  <tabstop>action_add</tabstop>
+  <tabstop>action_clear</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

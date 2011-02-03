@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2010  Rafał Lalik <rafal.lalik@ph.tum.de>
+    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,24 +17,29 @@
 */
 
 
-#ifndef DATEINPUT_H
-#define DATEINPUT_H
+#ifndef DBBROWSER_H
+#define DBBROWSER_H
 
-#include "CustomLineEdit.h"
+#include "ui_DatabaseBrowser.h"
 
-class DateInput : public CustomLineEdit {
+class DBBrowser : public QWidget, public Ui::DatabaseBrowser {
 Q_OBJECT
-public:
-    DateInput(QWidget * parent);
-
-	const QDate date() const;
-	void setDateReferenceObj(const DateInput * ref);
-
-private slots:
-	bool verifyText(const QString &, QString & );
+public slots:
+	void dbb_list_selected(QListWidgetItem * item);
+	void dbb_new_clicked(bool);
 
 private:
-	const DateInput * data_ref;
+	void reload_list(int sort = 0, int order = 0);
+
+signals:
+	void dbb_database(QString & dbname);
+
+private:
+	enum sortflags { s_name = 0, s_time, s_size };
+	enum orderflags { o_asc = 0, o_dsc };
+public:
+    DBBrowser();
+    virtual ~DBBrowser();
 };
 
-#endif // DATEINPUT_H
+#endif // DBBROWSER_H

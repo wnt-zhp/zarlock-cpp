@@ -24,6 +24,7 @@
 
 #include "ProductsTableModel.h"
 #include "BatchTableModel.h"
+#include "DistributorTableModel.h"
 
 /**
  * @brief Klasa obsługuję całą komunikację z bazą danych oraz tworzenie/otwieranie/zamykanie. Jest singletonem.
@@ -40,8 +41,9 @@ public:
 	bool open_database(const QString & dbfile, bool recreate = false);
 	bool close_database();
 
-	ProductsTableModel * CachedProducts() { return tab_products; }
-	BatchTableModel * CachedBatch() { return tab_batch; }
+	inline ProductsTableModel * CachedProducts() { return tab_products; }
+	inline BatchTableModel * CachedBatch() { return tab_batch; }
+	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
 
 private:
 	bool rebuild_models();
@@ -49,8 +51,10 @@ private:
 private:
 	static Database * dbi;
 	QSqlDatabase db;
+
 	ProductsTableModel * tab_products;
 	BatchTableModel * tab_batch;
+	DistributorTableModel * tab_distributor;
 };
 
 #endif // DATABASE_H

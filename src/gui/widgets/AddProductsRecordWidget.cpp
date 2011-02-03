@@ -24,7 +24,6 @@
 AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidget(),
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {
 	setupUi(parent);
-	std::cout << "++ AddProductsRecordWidget::AddProductsRecordWidget\n";
 
 	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
@@ -50,7 +49,6 @@ void AddProductsRecordWidget::setVisible(bool visible) {
 }
 
 bool AddProductsRecordWidget::insert_record() {
-	std::cout << "++ AddProductsRecordWidget::insert_record()\n";
 	Database & db = Database::Instance();
 	QSqlTableModel * tm = db.CachedProducts();
 // 	PR(&db);
@@ -74,7 +72,6 @@ bool AddProductsRecordWidget::insert_record() {
 }
 
 void AddProductsRecordWidget::clear_form() {
-	std::cout << "++ AddProductsRecordWidget::clear_form()\n";
 	edit_name->clear();
 	edit_unit->clear();
 	edit_expiry->clear();

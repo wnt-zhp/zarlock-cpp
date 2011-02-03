@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2010  Rafał Lalik <rafal.lalik@ph.tum.de>
+    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,24 +17,19 @@
 */
 
 
-#ifndef DATEINPUT_H
-#define DATEINPUT_H
+#ifndef DBREPORTS_H
+#define DBREPORTS_H
 
-#include "CustomLineEdit.h"
+#include <QDate>
+#include <QString>
 
-class DateInput : public CustomLineEdit {
-Q_OBJECT
+class DBReports {
 public:
-    DateInput(QWidget * parent);
+	DBReports();
+	virtual ~DBReports();
 
-	const QDate date() const;
-	void setDateReferenceObj(const DateInput * ref);
-
-private slots:
-	bool verifyText(const QString &, QString & );
-
-private:
-	const DateInput * data_ref;
+	static void printDailyReport(const QString & dbname, const QDate & date);
+	
 };
 
-#endif // DATEINPUT_H
+#endif // DBREPORTS_H
