@@ -45,11 +45,11 @@ int main(int argc, char ** argv/*, char ** env*/) {
 		exit(EXIT_FAILURE);
 	}
 
-	QString arg_file;
+	QString arg_dbname;
 	if (argc > 1) {
-		arg_file = argv[1];
+		arg_dbname = argv[1];
 	}
-    zarlok foo;
+    zarlok foo(arg_dbname);
 //     foo.show();
     return app.exec();
 }

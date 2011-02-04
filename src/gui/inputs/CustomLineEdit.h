@@ -26,11 +26,11 @@
 class CustomLineEdit : public QLineEdit {
 Q_OBJECT
 public:
-    CustomLineEdit(QWidget * parent);
-    virtual ~CustomLineEdit();
+	CustomLineEdit(QWidget * parent);
+	virtual ~CustomLineEdit();
 
-    virtual void focusOutEvent(QFocusEvent* );
-    virtual void focusInEvent(QFocusEvent* );
+	virtual void focusOutEvent(QFocusEvent* );
+	virtual void focusInEvent(QFocusEvent* );
 
 	bool ok();
 	

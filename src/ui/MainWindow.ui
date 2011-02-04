@@ -140,7 +140,11 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
         <item>
-         <widget class="DistributorTableView" name="table_dist"/>
+         <widget class="DistributorTableView" name="table_dist">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QWidget" name="widget_add_distributor" native="true"/>

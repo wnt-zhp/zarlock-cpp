@@ -21,14 +21,14 @@
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
 public:
-	zarlok();
+	zarlok(const QString & dbname);
 	virtual ~zarlok();
 	
 private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void openDB(QString & dbname);
+	void openDB(const QString & dbname);
 	void saveDB();
 	void closeDB();
 	void printDailyReport();

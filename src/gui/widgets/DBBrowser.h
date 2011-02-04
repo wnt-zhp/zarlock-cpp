@@ -28,11 +28,14 @@ public slots:
 	void dbb_list_selected(QListWidgetItem * item);
 	void dbb_new_clicked(bool);
 
+	bool createDBName(const QString & dbname);
+	bool openDBName(const QString & dbname);
+
 private:
 	void reload_list(int sort = 0, int order = 0);
 
 signals:
-	void dbb_database(QString & dbname);
+	void dbb_database(const QString & dbname);
 
 private:
 	enum sortflags { s_name = 0, s_time, s_size };

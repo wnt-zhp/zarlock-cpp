@@ -111,8 +111,7 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 
 	}
 
-	rebuild_models();
-	return true;
+	return rebuild_models();
 }
 
 /**

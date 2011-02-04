@@ -37,6 +37,7 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
 // 	edit_date->setDateReferenceObj(edit_book);
+	edit_reason2->enableEmpty();
 }
 
 AddDistributorRecordWidget::~AddDistributorRecordWidget() {
@@ -59,7 +60,7 @@ bool AddDistributorRecordWidget::insert_record() {
 // 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
 	btm->setData(btm->index(row, DistributorTableModel::HBatchId), prod_id);
 	btm->setData(btm->index(row, DistributorTableModel::HQty), edit_qty->text());
-	btm->setData(btm->index(row, DistributorTableModel::HDistDate), edit_date->text());
+	btm->setData(btm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
 	btm->setData(btm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
 	btm->setData(btm->index(row, DistributorTableModel::HReason), edit_reason->text());
 	btm->setData(btm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
@@ -86,7 +87,7 @@ void AddDistributorRecordWidget::validateAdd() {
 // 	PR(combo_products->currentIndex());
 
 	if (edit_qty->ok() and edit_date->ok() and
-		edit_reason->ok() and edit_reason2->ok()) {
+		edit_reason->ok() /*and edit_reason2->ok()*/) {
 		action_add->setEnabled(true);
 	} else {
 		action_add->setEnabled(false);

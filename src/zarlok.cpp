@@ -28,12 +28,11 @@
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok() : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
+zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
 	model_prod(NULL), model_batch_delegate(NULL), 
 	model_dist_delegate(NULL), model_batchbyid(NULL) {
 
 	dbb = new DBBrowser();
-	dbb->show();
 
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik [pre-demo version], 11.2010"));
@@ -48,7 +47,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
 
 	activateUi(false);
 
-	connect(dbb, SIGNAL(dbb_database(QString&)), this, SLOT(openDB(QString&)));
+	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(closeDB()));
 
@@ -62,6 +61,14 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
 	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(add_batch_record(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
+
+	PR(dbb);
+	if (dbname.isEmpty())
+		dbb->show();
+	else {
+// 		openDB(dbname);
+		dbb->openDBName(dbname);
+	}
 }
 
 zarlok::~zarlok() {
@@ -149,12 +156,12 @@ void zarlok::activateUi(bool activate) {
  * @param file nazwa pliku do otwarcia
  * @return bool
  **/
-void zarlok::openDB(QString & dbname) {
+void zarlok::openDB(const QString & dbname) {
 	dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
 					dbname + QString(".db");
 	this->dbname = dbname;
-	db.open_database(dbfile, false);
-	activateUi(true);
+	bool ret = db.open_database(dbfile, false);
+	activateUi(ret);
 }
 
 /**

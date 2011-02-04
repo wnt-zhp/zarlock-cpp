@@ -24,7 +24,7 @@
 
 class DataParser {
 public:
-	static bool text(const QString & data, QString & text_formated);
+	static bool text(const QString & data, QString & text_formated, bool allow_empty = false);
 	static bool quantity(const QString & data, double & qty_formated);
 	static bool quantity(const QString & data, QString & qty_formated);
 	static bool price(const QString & data, double & price_formated, double & tax_formated);

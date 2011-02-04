@@ -152,6 +152,8 @@
  <tabstops>
   <tabstop>combo_products</tabstop>
   <tabstop>edit_qty</tabstop>
+  <tabstop>edit_date</tabstop>
+  <tabstop>edit_reason</tabstop>
   <tabstop>edit_reason2</tabstop>
   <tabstop>action_add</tabstop>
   <tabstop>action_clear</tabstop>

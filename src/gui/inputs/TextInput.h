@@ -26,10 +26,14 @@ class TextInput : public CustomLineEdit {
 Q_OBJECT
 public:
     TextInput(QWidget * parent);
+	
+	inline void enableEmpty(bool en = true) { allow_empty = en; }
 
 private slots:
 	bool verifyText(const QString &, QString & );
 
+private:
+	bool allow_empty;
 };
 
 #endif // TEXTINPUT_H

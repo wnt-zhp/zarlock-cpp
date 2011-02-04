@@ -21,9 +21,10 @@
 
 #include <QRegExp>
 
-bool DataParser::text(const QString & data, QString & text_formated) {
+bool DataParser::text(const QString & data, QString & text_formated, bool allow_empty) {
 // 	QRegExp rx("^\\s*[a-zA-Z0-9\,\.;:-_]\\s*$");
-	QRegExp rx("^.+$");
+	QString regexp = allow_empty ? ".*" : "^.+$";
+	QRegExp rx(regexp);
 
 // 	PR(rx.indexIn(data));
 // 	PR(rx.cap(0).toStdString());

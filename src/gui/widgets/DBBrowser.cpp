@@ -50,8 +50,7 @@ DBBrowser::~DBBrowser() {
 
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
 	QString dbname = item->data(Qt::DisplayRole).toString();
-// 	PR(dbname.toStdString());
-	emit dbb_database(dbname);
+	openDBName(dbname);
 }
 
 void DBBrowser::reload_list(int sort, int order) {
@@ -91,47 +90,71 @@ void DBBrowser::reload_list(int sort, int order) {
 	}
 }
 
-void DBBrowser::dbb_new_clicked(bool) {
-// 	Ui::NewDatabase * dialog = new Ui::NewDatabase();
-// 	dialog->exec();
-	while (true) {
+bool DBBrowser::openDBName(const QString& dbname) {
+	QFile dbfile(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
+					dbname + QString(".db"));
 
-	QString name = QInputDialog::getText(this, tr("New database"), tr("New database name"));
+	if  (dbfile.exists())
+// 	PR(dbname.toStdString());
+		emit dbb_database(dbname);
+	else {
+		QMessageBox msgBox;
+		msgBox.setText(tr("The database name %1 doesn't exists!").arg(dbname));
+		msgBox.setInformativeText("Do you want to create new database?");
+		msgBox.setIcon(QMessageBox::Warning);
+		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::Yes);
+		int ret = msgBox.exec();
+		if (ret == QMessageBox::Yes) {
+			createDBName(dbname);
+			emit dbb_database(dbname);
+		}
+	}
+}
 
-	if (name.isEmpty()) {
+bool DBBrowser::createDBName(const QString & dbname) {
+	if (dbname.isEmpty()) {
 		QMessageBox msgBox;
 		msgBox.setText(tr("The database name is empty."));
 		msgBox.setIcon(QMessageBox::Warning);
 		msgBox.exec();
 	} else {
-		QString fname = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
-						name + QString(".db");
-		PR(fname.toStdString());
-		QFile file(fname);
+		QString dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
+						dbname + QString(".db");
+		PR(dbfile.toStdString());
+		QFile file(dbfile);
 		if (file.exists()) {
 			QMessageBox msgBox;
-			msgBox.setText(tr("The database name already exists."));
+			msgBox.setText(tr("The database name '%1' already exists.").arg(dbname));
 			msgBox.setInformativeText("Do you want to overwrite existing database?");
-			msgBox.setIcon(QMessageBox::Warning);
-			msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-			msgBox.setDefaultButton(QMessageBox::Save);
+			msgBox.setIcon(QMessageBox::Critical);
+			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+			msgBox.setDefaultButton(QMessageBox::Yes);
 			int ret = msgBox.exec();
 
 			if (ret == QMessageBox::Cancel)
-				break;
-			if (ret == QMessageBox::Discard)
-				continue;
+				return true;
+			if (ret == QMessageBox::No)
+				return false;
 			file.open(QIODevice::ReadWrite | QIODevice::Truncate);
 		} else {
 			file.open(QIODevice::ReadWrite);
 		}
 		file.close();
 		Database & db = Database::Instance();
-		db.open_database(fname, true);
+		db.open_database(dbfile, true);
 		db.close_database();
 	}
-	break;
+	return true;
+}
 
+void DBBrowser::dbb_new_clicked(bool) {
+// 	Ui::NewDatabase * dialog = new Ui::NewDatabase();
+// 	dialog->exec();
+	while (true) {
+		QString dbname = QInputDialog::getText(this, tr("New database"), tr("New database name"));
+		bool ret = createDBName(dbname);
+		if (ret) break;
 	}
 
 	reload_list();

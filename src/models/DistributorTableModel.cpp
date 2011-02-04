@@ -60,17 +60,17 @@ DistributorTableModel::~DistributorTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
-// 	if (role == Qt::EditRole or role == Qt::StatusTipRole)
-// 		return raw(idx);
-// 
-// 	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
-// 		return display(idx, role);
-// 
-// 	int col = idx.column();
-// 	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit))
-// 		return Qt::AlignRight;
-// 	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
-// 		return Qt::AlignCenter;
+	if (role == Qt::EditRole or role == Qt::StatusTipRole)
+		return raw(idx);
+
+	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
+		return display(idx, role);
+
+	int col = idx.column();
+	if (role == Qt::TextAlignmentRole and (col == HQty))
+		return Qt::AlignRight + Qt::AlignCenter;
+	if (role == Qt::TextAlignmentRole and (col == HDistDate))
+		return Qt::AlignCenter;
 
 	return QSqlRelationalTableModel::data(idx, role);
 }
@@ -134,33 +134,33 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 // 		}
 // 	}
 // 
-// 	if (idx.column() == HBook) {
-// 		QString data = idx.data(Qt::EditRole).toString();
-// 		QDate date;
-// 		if (DataParser::date(data, date)) {
-// 			QString var;
-// 			return date.toString("dd/MM/yyyy");
-// 		} else {
-// 			if (role == Qt::BackgroundRole)
-// 				return QColor(Qt::red);
-// 			else
-// 				return QVariant(tr("Parser error!"));
-// 		}
-// 	}
-// 	
-// 	if (idx.column() == HExpire) {
-// 		QString data = idx.data(Qt::EditRole).toString();
-// 		QDate date;
-// 		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
-// 			QString var;
-// 			return date.toString("dd/MM/yyyy");
-// 		} else {
-// 			if (role == Qt::BackgroundRole)
-// 				return QColor(Qt::red);
-// 			else
-// 				return QVariant(tr("Parser error!"));
-// 		}
-// 	}
+	if (idx.column() == HRegDate) {
+		QString data = idx.data(Qt::EditRole).toString();
+		QDate date;
+		if (DataParser::date(data, date)) {
+			QString var;
+			return date.toString("dd/MM/yyyy");
+		} else {
+			if (role == Qt::BackgroundRole)
+				return QColor(Qt::red);
+			else
+				return QVariant(tr("Parser error!"));
+		}
+	}
+	
+	if (idx.column() == HDistDate) {
+		QString data = idx.data(Qt::EditRole).toString();
+		QDate date;
+		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
+			QString var;
+			return date.toString("dd/MM/yyyy");
+		} else {
+			if (role == Qt::BackgroundRole)
+				return QColor(Qt::red);
+			else
+				return QVariant(tr("Parser error!"));
+		}
+	}
 // 
 // 	if (idx.column() == HStaQty) {
 // 		return QString(index(idx.row(), int(HUsedQty)).data().toString() % QString(tr(" of ")) % raw(idx).toString());
