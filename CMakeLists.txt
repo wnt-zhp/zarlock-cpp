@@ -85,6 +85,11 @@ Project:	${CMAKE_PROJECT_NAME}
 
 Build type      ${CMAKE_BUILD_TYPE}
 Install path    ${CMAKE_INSTALL_PREFIX}
+Compiler:
+C		${CMAKE_C_COMPILER}
+C++		${CMAKE_CXX_COMPILER}
+Linker:
+Ld		${CMAKE_LINKER}
 Compiler flags:
 C               ${CMAKE_C_FLAGS}
 C++             ${CMAKE_CXX_FLAGS}
