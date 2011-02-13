@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set zarlok_src=`pwd`
 mkdir %zarlok_src%/build
 cd %zarlok_src%/build
