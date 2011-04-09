@@ -17,18 +17,22 @@
 */
 
 
-#ifndef DBREPORTS_H
-#define DBREPORTS_H
+#ifndef MAINTABWIDGET_H
+#define MAINTABWIDGET_H
 
-#include <QDate>
-#include <QString>
+#include <QTabWidget>
 
-class DBReports {
+
+class MainTabWidget : public QTabWidget {
+Q_OBJECT
 public:
-	DBReports();
-	virtual ~DBReports();
+    explicit MainTabWidget(QWidget* parent = 0);
+    virtual ~MainTabWidget();
 
-	static void printDailyReport(const QString & dbname, const QDate & date);
+private slots:
+	void changeEvent(QEvent &);
+private:
+
 };
 
-#endif // DBREPORTS_H
+#endif // MAINTABWIDGET_H

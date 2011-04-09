@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>747</width>
-    <height>236</height>
+    <height>182</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,28 +33,28 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_products">
         <property name="text">
-         <string>&amp;Product</string>
+         <string>Product</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_qty">
         <property name="text">
-         <string>&amp;Quantity</string>
+         <string>Quantity</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_price">
         <property name="text">
-         <string>P&amp;rice</string>
+         <string>Price</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_book">
         <property name="text">
-         <string>&amp;Booking</string>
+         <string>Booking</string>
         </property>
        </widget>
       </item>
@@ -96,28 +96,28 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_name">
         <property name="text">
-         <string>&amp;Spec</string>
+         <string>Spec</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_unit">
         <property name="text">
-         <string>&amp;Unit</string>
+         <string>Unit</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QLabel" name="label_invoice">
         <property name="text">
-         <string>&amp;Invoice</string>
+         <string>Invoice</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
        <widget class="QLabel" name="label_expiry">
         <property name="text">
-         <string>&amp;Expiry</string>
+         <string>Expiry</string>
         </property>
        </widget>
       </item>
@@ -189,6 +189,16 @@
    <header>DateInput.h</header>
   </customwidget>
   <customwidget>
+   <class>TextInput</class>
+   <extends>QLineEdit</extends>
+   <header>TextInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtyInput</class>
+   <extends>QLineEdit</extends>
+   <header>QtyInput.h</header>
+  </customwidget>
+  <customwidget>
    <class>UnitInput</class>
    <extends>QLineEdit</extends>
    <header>UnitInput.h</header>
@@ -197,16 +207,6 @@
    <class>PriceInput</class>
    <extends>QLineEdit</extends>
    <header>PriceInput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QtyInput</class>
-   <extends>QLineEdit</extends>
-   <header>QtyInput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>TextInput</class>
-   <extends>QLineEdit</extends>
-   <header>TextInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

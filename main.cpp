@@ -26,22 +26,33 @@ int main(int argc, char ** argv/*, char ** env*/) {
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";
 	PR(resource_database.toStdString());
 	if (!QResource::registerResource(resource_database)) {
-			QMessageBox::critical(0, QObject::tr("Cannot find resources"),
-									QObject::tr("Unable to find a database resources in ") +
-									resource_database + "\n" +
-									QObject::tr("Check your installation and try to run again.\n"
-									"Click Close to exit."), QMessageBox::Close);
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+								QObject::tr("Unable to find a database resources in ") +
+								resource_database + "\n" +
+								QObject::tr("Check your installation and try to run again.\n"
+								"Click Close to exit."), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
-	QString reports_database = PREFIX SHARE "/resources/reports.rcc";
-	PR(reports_database.toStdString());
-	if (!QResource::registerResource(reports_database)) {
-			QMessageBox::critical(0, QObject::tr("Cannot find resources"),
-									QObject::tr("Unable to find a reports resources in ") +
-									reports_database + "\n" +
-									QObject::tr("Check your installation and try to run again.\n"
-									"Click Close to exit."), QMessageBox::Close);
+	QString resource_reports = PREFIX SHARE "/resources/reports.rcc";
+	PR(resource_reports.toStdString());
+	if (!QResource::registerResource(resource_reports)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+								QObject::tr("Unable to find a reports resources in ") +
+								resource_reports + "\n" +
+								QObject::tr("Check your installation and try to run again.\n"
+								"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QString resource_icons = PREFIX SHARE "/resources/icons.rcc";
+	PR(resource_icons.toStdString());
+	if (!QResource::registerResource(resource_icons)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+								QObject::tr("Unable to find a icons resources in ") +
+								resource_icons + "\n" +
+								QObject::tr("Check your installation and try to run again.\n"
+								"Click Close to exit."), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 

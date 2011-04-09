@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TabProductsWidget</class>
+ <widget class="QWidget" name="TabProductsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>786</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="2">
+    <layout class="QVBoxLayout" name="ProductsLayout">
+     <item>
+      <layout class="QHBoxLayout" name="FilterLayout" stretch="0,0">
+       <item>
+        <widget class="QLineEdit" name="edit_filter_prod">
+         <property name="placeholderText">
+          <string>filter</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="button_add_prod">
+         <property name="text">
+          <string>A&amp;dd</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="ProductsTableView" name="table_products">
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>25</number>
+       </attribute>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>20</number>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="widget_add_products" native="true"/>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="2">
+    <widget class="QTableView" name="table_batchbyid">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ProductsTableView</class>
+   <extends>QTableView</extends>
+   <header>ProductsTableView.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

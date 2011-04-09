@@ -44,26 +44,30 @@ configure_file(config.h.in config.h @ONLY)
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS src/ui/MainWindow.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui src/ui/DatabaseBrowser.ui src/ui/AddDistributorRecordWidget.ui)
+set(zarlok_widget_FORMS src/ui/TabProductsWidget.ui src/ui/TabBatchWidget.ui src/ui/TabDistributorWidget.ui)
 set(zarlok_db_RESOURCES src/database.qrc)
 set(zarlok_db_RESOURCES_RCC database.rcc)
 set(zarlok_reports_RESOURCES src/reports.qrc)
 set(zarlok_reports_RESOURCES_RCC reports.rcc)
+set(zarlok_icons_RESOURCES src/icons.qrc)
+set(zarlok_icons_RESOURCES_RCC icons.rcc)
 
 set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp src/gui/views/DistributorTableView.cpp)
 set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
-set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp src/gui/widgets/DBBrowser.cpp src/gui/widgets/AddDistributorRecordWidget.cpp)
+set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp src/gui/widgets/DBBrowser.cpp src/gui/widgets/AddDistributorRecordWidget.cpp src/gui/widgets/TabProductsWidget.cpp src/gui/widgets/TabBatchWidget.cpp src/gui/widgets/TabDistributorWidget.cpp src/gui/widgets/MainTabWidget.cpp)
 set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/models/DistributorTableModel.cpp)
 set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
 
 qt4_automoc(${zarlok_SRCS})
-qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS})
+qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS})
 qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
 qt4_add_binresources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES} OPTIONS -binary)
+qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTIONS -binary)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
-add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC})
+add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC})
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS})
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
@@ -74,6 +78,7 @@ target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
+				${CMAKE_CURRENT_BINARY_DIR}/icons.rcc
 				DESTINATION share/${CMAKE_PROJECT_NAME}/resources
 )
 
@@ -86,10 +91,10 @@ Project:	${CMAKE_PROJECT_NAME}
 Build type      ${CMAKE_BUILD_TYPE}
 Install path    ${CMAKE_INSTALL_PREFIX}
 Compiler:
-C		${CMAKE_C_COMPILER}
-C++		${CMAKE_CXX_COMPILER}
+C				${CMAKE_C_COMPILER}
+C++				${CMAKE_CXX_COMPILER}
 Linker:
-Ld		${CMAKE_LINKER}
+Ld				${CMAKE_LINKER}
 Compiler flags:
 C               ${CMAKE_C_FLAGS}
 C++             ${CMAKE_CXX_FLAGS}

@@ -8,11 +8,12 @@
 #include "Database.h"
 #include "DBBrowser.h"
 
-#include "AddProductsRecordWidget.h"
-#include "AddBatchRecordWidget.h"
 #include "AddDistributorRecordWidget.h"
 
-#include "ProductsTableModel.h"
+#include "TabProductsWidget.h"
+#include "TabBatchWidget.h"
+#include "TabDistributorWidget.h"
+
 #include "BatchTableModel.h"
 #include "DistributorTableModel.h"
 
@@ -33,30 +34,26 @@ private slots:
 	void closeDB();
 	void printDailyReport();
 
-	void add_prod_record(bool newrec = true);
-	void add_batch_record(bool newrec = true);
 	void about();
 
-	void set_filter(const QString & str);
+	void tabChanged(int index);
+	void db2update();
 
 private:
 	QString dbname, dbfile;
 	Database & db;
 	QDataWidgetMapper * dwm_prod;
 
-	ProductsTableModel * model_prod;
-	BatchTableModel * model_batch;
-	DistributorTableModel * model_dist;
-
-	QSqlRelationalDelegate * model_batch_delegate;
-	QSqlRelationalDelegate * model_dist_delegate;
-	QSqlQueryModel * model_batchbyid;
-
-	AddProductsRecordWidget * aprw;
-	AddBatchRecordWidget * abrw;
-	AddDistributorRecordWidget * adrw;
+	TabProductsWidget * tpw;
+	TabBatchWidget * tbw;
+	TabDistributorWidget * tdw;
 
 	DBBrowser * dbb;
+
+	QAction * actionQuit;
+	QAction * actionAbout;
+	QAction * actionPrintReport;
+	QAction * actionSaveDB;
 };
 
 #endif // zarlok_H

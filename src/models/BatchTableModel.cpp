@@ -34,12 +34,11 @@
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
 BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
-	
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged(QModelIndex,QModelIndex)));
 }
 
 /**
- * @brief I tu też nic.
+ * @brief Luck, I'm your father!
  *
  **/
 BatchTableModel::~BatchTableModel() {
@@ -101,7 +100,7 @@ bool BatchTableModel::select() {
 	setHeaderData(HUnit,	Qt::Horizontal, QObject::tr("Unit"));
 	setHeaderData(HStaQty,	Qt::Horizontal, QObject::tr("Quantity"));
 	setHeaderData(HBook,	Qt::Horizontal, QObject::tr("Booking"));
-	setHeaderData(HExpire,	Qt::Horizontal, QObject::tr("Expiry date"));
+	setHeaderData(HExpire,	Qt::Horizontal, QObject::tr("Expiry"));
 	setHeaderData(HUsedQty,	Qt::Horizontal, QObject::tr("Used"));
 	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
 	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));

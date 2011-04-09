@@ -4,6 +4,8 @@
 #include <iostream>
 #define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "|\n";
 
+#define INFO if (true)
+
 #include <QtGui/QPalette>
 #include <QtGui/QFont>
 

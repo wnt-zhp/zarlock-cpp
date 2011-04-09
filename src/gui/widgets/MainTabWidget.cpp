@@ -16,19 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
+#include "MainTabWidget.h"
 
-#ifndef DBREPORTS_H
-#define DBREPORTS_H
+MainTabWidget::MainTabWidget(QWidget* parent): QTabWidget(parent) {
 
-#include <QDate>
-#include <QString>
+}
 
-class DBReports {
-public:
-	DBReports();
-	virtual ~DBReports();
+MainTabWidget::~MainTabWidget() {
 
-	static void printDailyReport(const QString & dbname, const QDate & date);
-};
+}
 
-#endif // DBREPORTS_H
+void MainTabWidget::changeEvent(QEvent& ) {
+	PR(13);
+}
+
+#include "MainTabWidget.moc"

@@ -17,13 +17,13 @@ danych wprowadzanych do formularza tylko muszę to napisać.
 WYMAGANIA
 --------------------------------------------------------------------------------
 
-Do skompilowania potrzeba (w nawiasie opisana moja konfiguracja):
+Do skompilowania potrzeba (w nawiasie opisana moja obecna konfiguracja):
 
-- gcc (gcc-4.5.1)
-- >=cmake-2.6 (cmake-2.8.1)
-- gmake/make
-- Qt4 (Qt4-4.7.1)
-- SQLite3 (sqlite-3.7.3)
+- gcc (gcc-4.5.2)
+- >=cmake-2.6 (cmake-2.8.4)
+- gmake/make (make-3.82)
+- Qt4 (Qt-4.7.2)
+- SQLite3 (sqlite-3.7.5)
 
 
 
@@ -32,7 +32,9 @@ INSTALACJA (dla Linuksa, powłoka bash)
 
 Tworzymy katalog na źródła ($[prefix} to dowolna ścieżka dostępu, można
 wyeksportować sobie to zmienną:
+
 	export zarlok_src=${HOME}/project/zarlok
+
 Nie kopiuj poleceń bezmyślnie!):
 
 	mkdir ${zarlok_src} -p
@@ -59,16 +61,15 @@ W przypadku instalacji do katalogu systemowego może byc konieczne skorzystanie 
 
 Jeśli nie brakuje nam w systemie żadnych bibliotek to program się skompuluje
 poprawnie (zignorujcie ostrzeżenia - jestem ich świadom), można program
-uruchomić poleceniem: zarlok [baza_danych.db]
+uruchomić poleceniem: zarlok [nazwa_bazy_danych_bez_rozszerzenia]
 
-	export PATH=${HOME}/usr/bin:${PATH} zarlok oboz.db
+	export PATH=${HOME}/usr/bin:${PATH} zarlok oboz
 
 co spowoduje automatyczne stworzenie bazy danych, lub po prostu
 
 	export PATH=${HOME}/usr/bin:${PATH} zarlok
 
-co spowoduje uruchomienie programu bez żadnej bazy danych, którą musimy stworzyć
-w programie (menu 'Baza danych').
+co spowoduje uruchomienie programu bez żadnej bazy danych, którą musimy stworzyć.
 
 Jeśli chcemy mieć dostęp do żarłoka z każdego miejsca systemu, eksportujemy
 zmienną PATH
@@ -97,7 +98,7 @@ Stworzony zostanie katalog doc/html, a w nim mnóstwo plików, gdzie
 najistotniejszy dla nas to index.html. Możemy go otworzyć za pomocą waszej
 ulubionej przęglodarki, np opery:
 
-opera ${zarlok_src}/doc/html/index.html
+	opera ${zarlok_src}/doc/html/index.html
 
 
 
@@ -106,7 +107,7 @@ OUTRO
 
 Zapraszam do zapoznania się, wszelkie sugestie i komentarze, albo:
 1) zostawić na readmine (wskazane)
-2) na maila rafal.lalik@zhp.net.pl z tagiem w temacie [zarlok] 9w przypadku
+2) na maila rafal.lalik@zhp.net.pl z tagiem w temacie [zarlok] w przypadku
    braku konta na readmine
 
 Powodzenia i miłej zabawy!

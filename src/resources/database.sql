@@ -6,4 +6,4 @@ DROP TABLE IF EXISTS batch;
 CREATE TABLE IF NOT EXISTS batch ( id INTEGER PRIMARY KEY AUTOINCREMENT, prod_id INTEGER, spec VARCHAR(50), price VARCHAR(20), unit VARCHAR(50), start_qty FLOAT, booking VARCHAR(20), expire VARCHAR(20), used_qty FLOAT, date VARCHAR(20), desc TEXT, invoice_no VARCHAR(200) );
 
 DROP TABLE IF EXISTS distributor;
-CREATE TABLE IF NOT EXISTS distributor ( id INTEGER PRIMARY KEY AUTOINCREMENT, prod_id INTEGER, quantity FLOAT, distdate VARCHAR(20), registered VARCHAR(20), reason VARCHAR(100), reason2 VARCHAR(100), reason3 INTEGER );
+CREATE TABLE IF NOT EXISTS distributor ( id INTEGER PRIMARY KEY AUTOINCREMENT, batch_id INTEGER, quantity FLOAT, distdate VARCHAR(20), registered VARCHAR(20), reason VARCHAR(100), reason2 VARCHAR(100), reason3 INTEGER );

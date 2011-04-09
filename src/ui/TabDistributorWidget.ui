@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TabDistributorWidget</class>
+ <widget class="QWidget" name="TabDistributorWidget">
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="DistributorTableView" name="table_dist">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget_add_distributor" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DistributorTableView</class>
+   <extends>QTableView</extends>
+   <header>DistributorTableView.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

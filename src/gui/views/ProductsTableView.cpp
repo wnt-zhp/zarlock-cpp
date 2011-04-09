@@ -42,6 +42,7 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	pmenu_add.addAction(addRec);
 
 	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(filterRecords(QModelIndex)));
+	this->setEditTriggers(0);
 }
 
 /**

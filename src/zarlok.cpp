@@ -12,12 +12,7 @@
 #include <QtGui/QMessageBox>
 
 #include <QFileDialog>
-// #include <QPrintDialog>
-
-
-// #include <QTextDocument>
-// #include <QTextTable>
-// #include <QAbstractTextDocumentLayout>
+#include <QToolBar>
 
 // public members
 
@@ -28,39 +23,52 @@
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
-	model_prod(NULL), model_batch_delegate(NULL), 
-	model_dist_delegate(NULL), model_batchbyid(NULL) {
-
-	dbb = new DBBrowser();
-
+zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL) {
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik [pre-demo version], 11.2010"));
 
-	widget_add_products->setVisible(false);
-	widget_add_batch->setVisible(false);
-	widget_add_distributor->setVisible(true);
+	dbb = new DBBrowser();
+	tpw = new TabProductsWidget();
+	tbw = new TabBatchWidget();
+	tdw = new TabDistributorWidget();
 
-	aprw = new AddProductsRecordWidget(widget_add_products);
-	abrw = new AddBatchRecordWidget(widget_add_batch);
-	adrw = new AddDistributorRecordWidget(widget_add_distributor);
+	MainTab->addTab(tpw, "Products");
+	MainTab->addTab(tbw, "Stock");
+	MainTab->addTab(tdw, "Distribute");
+
+	MainTab->setTabPosition(QTabWidget::North);
+
+	QToolBar * toolbar;
+	toolbar = addToolBar(tr("Main"));
+	toolbar->setMovable(false);
+	toolbar->setIconSize(QSize(32, 32));
+
+	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), toolbar);
+	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), toolbar);
+	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), toolbar);
+	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), toolbar);
+
+	actionSaveDB->setEnabled(false);
+
+	toolbar->addAction(actionQuit);
+	toolbar->addAction(actionPrintReport);
+	toolbar->addSeparator();
+	toolbar->addAction(actionSaveDB);
+	toolbar->addSeparator();
+	toolbar->addAction(actionAbout);
 
 	activateUi(false);
 
+	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
 	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
+
 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(closeDB()));
 
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
-	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(add_prod_record(bool)));
-	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
-	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
-
-	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(add_batch_record(bool)));
-	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
+// 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
 	PR(dbb);
 	if (dbname.isEmpty())
@@ -73,20 +81,6 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 zarlok::~zarlok() {
 	saveDB();
-
-	if (model_batch_delegate) delete model_batch_delegate;
-	if (aprw) delete aprw;
-	if (abrw) delete abrw;
-	if (adrw) delete adrw;
-}
-
-void zarlok::set_filter(const QString& str) {
-	QString q("select \"spec\", \"curr_qty\" from batch");
-	q.append(str);
-	if (table_batchbyid->model() != NULL) {
-		((QSqlQueryModel *)table_batchbyid->model())->setQuery(q);
-// 		model_batchbyid->setQuery(q);
-	}
 }
 
 // private members
@@ -102,36 +96,14 @@ void zarlok::activateUi(bool activate) {
 	dbb->setVisible(!activate);
 	this->setVisible(activate);
 	MainTab->setVisible(activate);
-// 	MainTab->setVisible(true);
+// 	MainTab->setVisible(true);	activateUi(false);
 	MainTab->setEnabled(activate);
 
+	tpw->activateUi(activate);
+	tbw->activateUi(activate);
+	tdw->activateUi(activate);
+
 	if (activate) {
-		// products
-		if ((model_prod = db.CachedProducts())) {
-			table_products->setModel(model_prod);
-			table_products->show();
-			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
-			aprw->update_model();
-		}
-		// batch
-		if ((model_batch = db.CachedBatch())){
-			table_batch->setModel(model_batch);
-			if (model_batch_delegate) delete model_batch_delegate;
-			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
-			table_batch->setItemDelegate(model_batch_delegate);
-			table_batch->show();
-			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
-			abrw->update_model();
-		}
-		if ((model_dist = db.CachedDistributor())){
-			table_dist->setModel(model_dist);
-			if (model_dist_delegate) delete model_dist_delegate;
-			model_dist_delegate = new QSqlRelationalDelegate(table_dist);
-			table_dist->setItemDelegate(model_dist_delegate);
-			table_dist->show();
-			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_dist, SLOT(filterDB(QString)));
-			adrw->update_model();
-		}
 // 		table_products->resizeColumnsToContents();
 // 		table_batch->resizeColumnsToContents();
 // 		if (dwm_prod) delete dwm_prod;
@@ -170,9 +142,13 @@ void zarlok::openDB(const QString & dbname) {
  * @return bool - wynik wykonania QTableModel::submitAll()
  **/
 void zarlok::saveDB() {
-	/*if (model_dist->isDirty())*/ model_dist->submitAll();
-	/*if (model_batch->isDirty())*/ model_batch->submitAll();
-	/*if (model_prod->isDirty())*/ model_prod->submitAll();
+// 	/*if (model_dist->isDirty())*/ model_dist->submitAll();
+// 	/*if (model_batch->isDirty())*/ model_batch->submitAll();
+// 	/*if (model_prod->isDirty())*/ model_prod->submitAll();
+	db.CachedProducts()->submitAll();
+	db.CachedBatch()->submitAll();
+	db.CachedDistributor()->submitAll();
+	actionSaveDB->setEnabled(false);
 }
 
 /**
@@ -183,32 +159,10 @@ void zarlok::saveDB() {
 void zarlok::closeDB() {
 	saveDB();
 	db.close_database();
-	activateUi(false);
 }
 
 void zarlok::printDailyReport() {
 	DBReports::printDailyReport(dbname, QDate::currentDate());
-}
-
-
-void zarlok::add_prod_record(bool newrec) {
-	if (newrec) {
-// 		table_products->setVisible(false);
-		widget_add_products->setVisible(true);
-	} else {
-// 		table_products->setVisible(true);
-		widget_add_products->setVisible(false);
-	}
-}
-
-void zarlok::add_batch_record(bool newrec) {
-	if (newrec) {
-// 		table_products->setVisible(false);
-		widget_add_batch->setVisible(true);
-	} else {
-// 		table_products->setVisible(true);
-		widget_add_batch->setVisible(false);
-	}
 }
 
 void zarlok::about() {
@@ -216,6 +170,31 @@ void zarlok::about() {
      QMessageBox::about(this, tr("About Menu"),
              tr("The <b>Menu</b> example shows how to create "
                 "menu-bar menus and context menus."));
+}
+
+void zarlok::tabChanged(int index) {
+	PR(index);
+	if (actionSaveDB->isEnabled()) {
+		QMessageBox msgBox;
+		msgBox.setText(tr("Your haven't save your changes in database. Your new data will be lost."));
+		msgBox.setInformativeText("Do you really want to change tab?");
+		msgBox.setIcon(QMessageBox::Warning);
+		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::No);
+		int ret = msgBox.exec();
+		if (ret == QMessageBox::No) {
+			return;
+		} else {
+// 			MainTab->setCurrentIndex(index);
+		}
+	} else {
+// 		MainTab->setCurrentIndex(index);
+	}
+}
+
+void zarlok::db2update() {
+	PR(true);
+	actionSaveDB->setEnabled(true);
 }
 
 #include "zarlok.moc"

@@ -72,6 +72,21 @@ bool AddBatchRecordWidget::insert_record() {
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
 	int row = btm->rowCount();
+
+	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
+		<< row << ","
+		<< prod_id << ","
+		<< edit_spec->text().toStdString() << ","
+		<< edit_expiry->text().toStdString() << ","
+		<< edit_qty->text().toStdString() << ","
+		<< edit_unit->text().toStdString() << ","
+		<< unitprice.toStdString() << ","
+		<< edit_qty->text().toStdString() << ","
+		<< edit_invoice->text().toStdString() << ","
+		<< edit_book->text(true).toStdString() << ","
+		<< QDate::currentDate().toString("dd/MM/yyyy").toStdString() << ","
+		<< QString(":)").toStdString() << " );" << std::endl;
+
 	btm->insertRows(row, 1);
 // 	btm->setData(btm->index(row, BatchTableModel::HId), row);
 	btm->setData(btm->index(row, BatchTableModel::HProdId), prod_id);
@@ -85,11 +100,11 @@ bool AddBatchRecordWidget::insert_record() {
 	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
 	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
 	btm->setData(btm->index(row, BatchTableModel::HDesc), QString(":)"));
-	bool status = btm->submitAll();
+// 	bool status = btm->submitAll();
 
 // 	clear_form();
 	edit_spec->setFocus();
-	return status;
+	return true /*status*/;
 }
 
 void AddBatchRecordWidget::clear_form() {

@@ -77,6 +77,7 @@ void DBBrowser::reload_list(int sort, int order) {
 	}
 
 	QDir dir(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
+
 	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 	dir.setSorting(QDir::SortFlag(sflag));
 
@@ -94,10 +95,10 @@ bool DBBrowser::openDBName(const QString& dbname) {
 	QFile dbfile(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
 					dbname + QString(".db"));
 
-	if  (dbfile.exists())
+	if  (dbfile.exists()) {
 // 	PR(dbname.toStdString());
 		emit dbb_database(dbname);
-	else {
+	} else {
 		QMessageBox msgBox;
 		msgBox.setText(tr("The database name %1 doesn't exists!").arg(dbname));
 		msgBox.setInformativeText("Do you want to create new database?");
@@ -106,10 +107,11 @@ bool DBBrowser::openDBName(const QString& dbname) {
 		msgBox.setDefaultButton(QMessageBox::Yes);
 		int ret = msgBox.exec();
 		if (ret == QMessageBox::Yes) {
-			createDBName(dbname);
-			emit dbb_database(dbname);
+			if (createDBName(dbname))
+				emit dbb_database(dbname);
 		}
 	}
+	return true;
 }
 
 bool DBBrowser::createDBName(const QString & dbname) {
@@ -118,9 +120,15 @@ bool DBBrowser::createDBName(const QString & dbname) {
 		msgBox.setText(tr("The database name is empty."));
 		msgBox.setIcon(QMessageBox::Warning);
 		msgBox.exec();
+		return false;
 	} else {
+		QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
+		if (!dbsavepath.exists())
+			dbsavepath.mkpath(dbsavepath.absolutePath());
+
 		QString dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
 						dbname + QString(".db");
+// 		dbfile.
 		PR(dbfile.toStdString());
 		QFile file(dbfile);
 		if (file.exists()) {

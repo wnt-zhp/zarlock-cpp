@@ -45,13 +45,13 @@ Database & Database::Instance() {
 		dbi = new Database();
 		cout << "++ Create Database instance\n";
 	} else {
-		cout << "++ Use existing Database instance\n";
+// 		cout << "++ Use existing Database instance\n";
 	}
 
 	return *dbi;
 }
 
-Database::Database() : tab_products(NULL), tab_batch(NULL) {
+Database::Database() : /*QObject(),*/ tab_products(NULL), tab_batch(NULL), tab_distributor(NULL) {
 	db = QSqlDatabase::addDatabase("QSQLITE");
 }
 
@@ -60,6 +60,7 @@ Database::~Database() {
 
 	if (tab_products) delete tab_products;
 	if (tab_batch) delete tab_batch;
+	if (tab_distributor) delete tab_distributor;
 
 	if (db.isOpen())
 		db.close();
@@ -77,13 +78,13 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	db.setDatabaseName(dbfile);
 	bool ok = db.open();
 	if (!ok) {
-// 		QMessageBox::critical(0, qApp->tr("Cannot create database"),
-// 							  qApp->tr("Unable to establish a database connection.\n"
-// 									   "This application needs SQLite support. Please read "
-// 									   "the Qt SQL driver documentation for information how "
-// 									   "to build it.\n\n"
-// 									   "Click Close to exit."), QMessageBox::Close);
-// 		return false;
+// 		QMessageBox::critical(0, tr("Cannot create database"),
+// 							  tr("Unable to establish a database connection.\n"
+// 								   "This application needs SQLite support. Please read "
+// 								   "the Qt SQL driver documentation for information how "
+// 								   "to build it.\n\n"
+// 								   "Click Close to exit."), QMessageBox::Close);
+		return false;
 	}
 
 	if (recreate) {
@@ -108,7 +109,6 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 			QString line = dbtestfile.readLine();
 			query.exec(line.fromUtf8(line.toStdString().c_str()));
 		}
-
 	}
 
 	return rebuild_models();
@@ -156,11 +156,39 @@ bool Database::rebuild_models() {
 	tab_distributor = new DistributorTableModel;
 	tab_distributor->setTable("distributor");
 	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
-	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "spec"));
+	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "id"/*"spec"*/));
 	if (!tab_distributor->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), tab_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
+	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+
 	return true;
 }
+
+bool Database::updateBatchQty() {
+}
+
+bool Database::updateBatchQty(const int pid) {
+	QSqlQuery qDist("SELECT quantity FROM distributor WHERE batch_id=?;");
+	qDist.bindValue(0, pid);
+	qDist.exec();
+	int qty = 0;
+	while (qDist.next()) {
+		qty += qDist.value(0).toInt();
+	}
+
+	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
+	qBatch.bindValue(0, qty);
+	qBatch.bindValue(1, pid);
+	qBatch.exec();
+}
+
+void Database::database2Update() {
+	emit databaseDirty();
+}
+
+#include "Database.moc"

@@ -49,27 +49,29 @@ AddDistributorRecordWidget::~AddDistributorRecordWidget() {
 
 bool AddDistributorRecordWidget::insert_record() {
 	Database & db = Database::Instance();
-	ProductsTableModel * ptm = db.CachedProducts();
-	DistributorTableModel * btm = db.CachedDistributor();
+	BatchTableModel * btm = db.CachedBatch();
+	DistributorTableModel * dtm = db.CachedDistributor();
 
 	int idx = combo_products->currentIndex();
-	int prod_id = ptm->data(ptm->index(idx, 0)).toInt();
+	int batch_id = btm->index(idx, 0).data().toInt();
 
-	int row = btm->rowCount();
-	btm->insertRows(row, 1);
+	int row = dtm->rowCount();
+	dtm->insertRows(row, 1);
 // 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
-	btm->setData(btm->index(row, DistributorTableModel::HBatchId), prod_id);
-	btm->setData(btm->index(row, DistributorTableModel::HQty), edit_qty->text());
-	btm->setData(btm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
-	btm->setData(btm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
-	btm->setData(btm->index(row, DistributorTableModel::HReason), edit_reason->text());
-	btm->setData(btm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
-	btm->setData(btm->index(row, DistributorTableModel::HReason3), 0);
-	bool status = btm->submitAll();
+	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
+	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
+	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
+	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
+	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
+	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
+	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), 0);
+// 	bool status = dtm->submitAll();
+
+	db.updateBatchQty(batch_id);
 
 // 	clear_form();
 	edit_qty->setFocus();
-	return status;
+	return false /*status*/;
 }
 
 void AddDistributorRecordWidget::clear_form() {

@@ -25,7 +25,9 @@
 #include <QStringBuilder>
 
 #include "DistributorTableModel.h"
+#include "BatchTableModel.h"
 #include "DataParser.h"
+#include "Database.h"
 
 /**
  * @brief Konstruktor - nic się nie dzieje.
@@ -95,7 +97,7 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
  **/
 bool DistributorTableModel::select() {
 	setHeaderData(HId,		Qt::Horizontal, QObject::tr("ID"));
-	setHeaderData(HBatchId,	Qt::Horizontal, QObject::tr("Product"));
+	setHeaderData(HBatchId,	Qt::Horizontal, QObject::tr("Batch"));
 	setHeaderData(HQty,		Qt::Horizontal, QObject::tr("Quantity"));
 	setHeaderData(HDistDate,Qt::Horizontal, QObject::tr("Distributing date"));
 	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
@@ -115,25 +117,14 @@ bool DistributorTableModel::select() {
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
-// 	if (idx.column() == HSpec) {
-// 		QString name = this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString();
-// 		return name;
-// 	}
-// 
-// 	if (idx.column() == HPrice) {
-// 		QString data = idx.data(Qt::EditRole).toString(); 
-// 		double price, tax;
-// 		if (DataParser::price(data, price, tax)) {
-// 			QString var;
-// 			return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
-// 		} else {
-// 			if (role == Qt::BackgroundRole)
-// 				return QColor(Qt::red);
-// 			else
-// 				return QVariant(tr("Parser error!"));
-// 		}
-// 	}
-// 
+	if (idx.column() == HBatchId) {
+// 		PR(idx.data(Qt::EditRole).toString().toStdString());
+		QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, 0), Qt::EditRole, idx.data(Qt::EditRole));
+		if (!qmil.isEmpty()) {
+			return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+		}
+	}
+
 	if (idx.column() == HRegDate) {
 		QString data = idx.data(Qt::EditRole).toString();
 		QDate date;
@@ -161,10 +152,6 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 				return QVariant(tr("Parser error!"));
 		}
 	}
-// 
-// 	if (idx.column() == HStaQty) {
-// 		return QString(index(idx.row(), int(HUsedQty)).data().toString() % QString(tr(" of ")) % raw(idx).toString());
-// 	}
 
 	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
 }

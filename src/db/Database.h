@@ -29,7 +29,8 @@
 /**
  * @brief Klasa obsługuję całą komunikację z bazą danych oraz tworzenie/otwieranie/zamykanie. Jest singletonem.
  **/
-class Database {
+class Database : public QObject {
+Q_OBJECT
 public:
 	static Database & Instance();
 	virtual ~Database();
@@ -41,9 +42,18 @@ public:
 	bool open_database(const QString & dbfile, bool recreate = false);
 	bool close_database();
 
+	bool updateBatchQty();
+	bool updateBatchQty(const int);
+
 	inline ProductsTableModel * CachedProducts() { return tab_products; }
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
 	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
+
+signals:
+	void databaseDirty();
+
+private slots:
+	void database2Update();
 
 private:
 	bool rebuild_models();
