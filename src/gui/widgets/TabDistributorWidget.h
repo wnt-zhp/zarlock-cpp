@@ -35,11 +35,10 @@ public:
 	TabDistributorWidget(QWidget * parent = NULL);
 	virtual ~TabDistributorWidget();
 
-public slots:
+private:
 	void activateUi(bool activate = true);
 
 private slots:
-// 	void add_batch_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
 
 private:

@@ -23,20 +23,13 @@
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL) {
+zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
+										 tpw(NULL), tbw(NULL), tdw(NULL) {
 	setupUi(this);
-	this->setWindowTitle(tr("Zarlok by Rafal Lalik [pre-demo version], 11.2010"));
+
+	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
 	dbb = new DBBrowser();
-	tpw = new TabProductsWidget();
-	tbw = new TabBatchWidget();
-	tdw = new TabDistributorWidget();
-
-	MainTab->addTab(tpw, "Products");
-	MainTab->addTab(tbw, "Stock");
-	MainTab->addTab(tdw, "Distribute");
-
-	MainTab->setTabPosition(QTabWidget::North);
 
 	QToolBar * toolbar;
 	toolbar = addToolBar(tr("Main"));
@@ -70,7 +63,6 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
-	PR(dbb);
 	if (dbname.isEmpty())
 		dbb->show();
 	else {
@@ -95,29 +87,24 @@ zarlok::~zarlok() {
 void zarlok::activateUi(bool activate) {
 	dbb->setVisible(!activate);
 	this->setVisible(activate);
-	MainTab->setVisible(activate);
-// 	MainTab->setVisible(true);	activateUi(false);
-	MainTab->setEnabled(activate);
-
-	tpw->activateUi(activate);
-	tbw->activateUi(activate);
-	tdw->activateUi(activate);
 
 	if (activate) {
-// 		table_products->resizeColumnsToContents();
-// 		table_batch->resizeColumnsToContents();
-// 		if (dwm_prod) delete dwm_prod;
-// 		dwm_prod = new QDataWidgetMapper;
-// 		dwm_prod->setModel(model_prod);
-// 		dwm_prod->addMapping(edit_products, 1);
-// 		dwm_prod->toFirst();
+		tpw = new TabProductsWidget();
+		tbw = new TabBatchWidget();
+		tdw = new TabDistributorWidget();
 
-// 		if (model_batchbyid != NULL) delete model_batchbyid;
-// 		if (model_batchbyid = new QSqlQueryModel()) {
-// 			model_batchbyid->setQuery("select \"spec\", \"curr_qty\" from batch");
-// 			table_batchbyid->setModel(model_batchbyid);
-// 			table_batchbyid->show();
-// 		}
+		MainTab->addTab(tpw, "Products");
+		MainTab->addTab(tbw, "Stock");
+		MainTab->addTab(tdw, "Distribute");
+
+		MainTab->setTabPosition(QTabWidget::North);
+
+		MainTab->setVisible(activate);
+		MainTab->setEnabled(activate);
+	} else {
+		if (tdw) delete tdw; tdw = NULL;
+		if (tbw) delete tbw; tbw = NULL;
+		if (tpw) delete tpw; tpw = NULL;
 	}
 }
 
@@ -148,6 +135,7 @@ void zarlok::saveDB() {
 	db.CachedProducts()->submitAll();
 	db.CachedBatch()->submitAll();
 	db.CachedDistributor()->submitAll();
+	db.updateBatchQty();
 	actionSaveDB->setEnabled(false);
 }
 
@@ -157,6 +145,7 @@ void zarlok::saveDB() {
  * @return bool - wynik wykonania QTableModel::submitAll()
  **/
 void zarlok::closeDB() {
+	activateUi(false);
 	saveDB();
 	db.close_database();
 }
@@ -193,7 +182,7 @@ void zarlok::tabChanged(int index) {
 }
 
 void zarlok::db2update() {
-	PR(true);
+	statusbar->showMessage(tr("You need to save your database!"));
 	actionSaveDB->setEnabled(true);
 }
 

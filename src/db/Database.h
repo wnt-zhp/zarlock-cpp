@@ -36,7 +36,7 @@ public:
 	virtual ~Database();
 private:
 	Database();
-	Database(const Database &) {};
+	Database(const Database &) : QObject(NULL) {};
 
 public:
 	bool open_database(const QString & dbfile, bool recreate = false);
@@ -49,11 +49,11 @@ public:
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
 	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
 
+public slots:
+	void database2Update();
+
 signals:
 	void databaseDirty();
-
-private slots:
-	void database2Update();
 
 private:
 	bool rebuild_models();

@@ -23,7 +23,8 @@
 #include "ui_TabBatchWidget.h"
 
 #include "Database.h"
-#include "ProductsTableModel.h"
+#include "BatchTableModel.h"
+#include "BatchTableModelProxy.h"
 #include "AddBatchRecordWidget.h"
 
 #include <QtSql>
@@ -35,18 +36,18 @@ public:
 	TabBatchWidget(QWidget * parent = NULL);
 	virtual ~TabBatchWidget();
 
-    virtual void setVisible(bool visible);
-
-public slots:
+private:
 	void activateUi(bool activate = true);
 
 private slots:
 	void add_batch_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
+	void set_filter();
 
 private:
 	Database & db;
 	BatchTableModel * model_batch;
+	BatchTableModelProxy * modelproxy_batch;
 	QSqlRelationalDelegate * model_batch_delegate;
 
 	AddBatchRecordWidget * abrw;

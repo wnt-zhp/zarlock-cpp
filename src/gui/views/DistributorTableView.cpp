@@ -120,7 +120,8 @@ void DistributorTableView::removeRecord() {
 		if ((*it).column() == DistributorTableModel::HQty)
 			model()->removeRow((*it).row());
 	}
-	((QSqlTableModel *)model())->submitAll();
+	db.database2Update();
+// 	((QSqlTableModel *)model())->submitAll();
 }
 
 #include "DistributorTableView.moc"

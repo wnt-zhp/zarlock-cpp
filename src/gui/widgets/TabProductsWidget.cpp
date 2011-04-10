@@ -29,30 +29,22 @@ TabProductsWidget::TabProductsWidget(QWidget * parent) :
 	widget_add_products->setVisible(false);
 	aprw = new AddProductsRecordWidget(widget_add_products);
 
-	activateUi(false);
+	activateUi(true);
 
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
 	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(add_prod_record(bool)));
 	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
-	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+// 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+
+	table_products->setEditTriggers(QAbstractItemView::DoubleClicked);
+// 	table_products->setAlternatingRowColors(true);
 }
 
 TabProductsWidget::~TabProductsWidget() {
+	activateUi(false);
 	if (aprw) delete aprw;
-}
-
-void TabProductsWidget::setVisible(bool visible) {
-	if (visible) {
-		activateUi(true);
-	} else {
-// 		if (model_prod->isDirty())
-			if (model_prod)
-				model_prod->submitAll();
-	}
-
-    QWidget::setVisible(visible);
 }
 
 void TabProductsWidget::set_filter(const QString & str) {

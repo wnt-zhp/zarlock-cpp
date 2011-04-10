@@ -66,7 +66,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 		return display(idx, role);
 
 	int col = idx.column();
-	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit))
+	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit or col == HStaQty))
 		return Qt::AlignRight;
 	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
 		return Qt::AlignCenter;
@@ -111,64 +111,86 @@ bool BatchTableModel::select() {
 
 /**
  * @brief Kiedy rządamy wyświetlenia danych, niektóre z nich muszą zostać sparsowane.
- * Korzystamy ze statycznych metod kalsy DataParse
+ * Korzystamy ze statycznych metod klasy DataParse
  *
  * @param idx indeks z daną do sparsowania
  * @param role przypisana rola
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
 QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
-	if (idx.column() == HSpec) {
-		QString name = this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString();
-		return name;
-	}
+	switch (role) {
+		case Qt::DisplayRole:
+			if (idx.column() == HSpec) {
+				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString());
+			}
 
-	if (idx.column() == HPrice) {
-		QString data = idx.data(Qt::EditRole).toString(); 
-		double price, tax;
-		if (DataParser::price(data, price, tax)) {
-			QString var;
-			return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
+			if (idx.column() == HPrice) {
+				QString data = idx.data(Qt::EditRole).toString(); 
+				double price, tax;
+				if (DataParser::price(data, price, tax)) {
+					QString var;
+					return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
 
-	if (idx.column() == HBook) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date)) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-	
-	if (idx.column() == HExpire) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
+			if (idx.column() == HBook) {
+				QString data = idx.data(Qt::EditRole).toString();
+				QDate date;
+				if (DataParser::date(data, date)) {
+					QString var;
+					return date.toString("yyyy-MM-dd");
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
+			
+			if (idx.column() == HExpire) {
+				QString data = idx.data(Qt::EditRole).toString();
+				QDate date;
+				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "yyyy-MM-dd"))) {
+					QString var;
+					return date.toString("yyyy-MM-dd");
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
 
-	if (idx.column() == HStaQty) {
-		return QString(index(idx.row(), int(HUsedQty)).data().toString() % QString(tr(" of ")) % raw(idx).toString());
+			if (idx.column() == HStaQty) {
+				float used = index(idx.row(), int(HUsedQty)).data().toFloat();
+				float total = raw(idx).toFloat();
+				float free = total - used;
+				QString qty;
+				return qty.sprintf("%.2f of %.2f", free, total);
+			}
+			break;
+		case Qt::BackgroundRole:
+// 			if (idx.row() % 2) {
+// 				return QColor(Qt::magenta);
+// 			} else {
+// 				return QColor(Qt::cyan);
+// 			}
+			QString today = QDate::currentDate().toString("yyyy-MM-dd");
+			QString expdate = QDate::fromString(index(idx.row(), HExpire).data().toString(), "yyyy-MM-dd").toString("yyyy-MM-dd");
+			if (today > expdate) {
+				return globals::item_expired;
+			} else if (today == expdate) {
+				return globals::item_aexpired;
+			} else {
+				return globals::item_nexpired;
+			}
+			break;
 	}
-
 	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
 }
 
@@ -202,6 +224,5 @@ void BatchTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomrig
 	PR(topleft.row()); PR(topleft.column());
 	PR(bottomright.row()); PR(bottomright.column());
 }
-
 
 #include "BatchTableModel.moc"

@@ -170,6 +170,11 @@ bool Database::rebuild_models() {
 }
 
 bool Database::updateBatchQty() {
+	QSqlQuery qBatch("SELECT id FROM batch;");
+	qBatch.exec();
+	while (qBatch.next()) {
+		updateBatchQty(qBatch.value(0).toInt());
+	}
 }
 
 bool Database::updateBatchQty(const int pid) {

@@ -23,13 +23,6 @@
       <set>Qt::AlignCenter</set>
      </property>
      <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
-      <item row="0" column="1">
-       <widget class="QComboBox" name="combo_products">
-        <property name="insertPolicy">
-         <enum>QComboBox::NoInsert</enum>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_products">
         <property name="text">
@@ -51,17 +44,64 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QtyInput" name="edit_qty">
-        <property name="placeholderText">
-         <string>quantity</string>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_reason">
+        <property name="text">
+         <string>Reason</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="TextInput" name="edit_reason2">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_date">
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,0">
+        <item>
+         <widget class="QtyInput" name="edit_qty">
+          <property name="placeholderText">
+           <string>quantity</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_max">
+          <property name="text">
+           <string>max:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_maxvalue">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="1">
+       <widget class="DateInput" name="edit_date">
         <property name="placeholderText">
-         <string>additional reason</string>
+         <string>distribute date</string>
         </property>
        </widget>
       </item>
@@ -72,24 +112,17 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_reason">
-        <property name="text">
-         <string>Reason</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="DateInput" name="edit_date">
+      <item row="4" column="1">
+       <widget class="TextInput" name="edit_reason2">
         <property name="placeholderText">
-         <string>distribute date</string>
+         <string>additional reason</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_date">
-        <property name="text">
-         <string>Date</string>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_products">
+        <property name="insertPolicy">
+         <enum>QComboBox::NoInsert</enum>
         </property>
        </widget>
       </item>

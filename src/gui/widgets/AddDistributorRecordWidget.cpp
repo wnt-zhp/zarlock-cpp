@@ -25,11 +25,14 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL) {
 	setupUi(parent);
 
+	action_add->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_clear->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogDiscardButton) );
+
 	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
 // 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
 
-// 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
+	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
@@ -61,7 +64,7 @@ bool AddDistributorRecordWidget::insert_record() {
 	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
 	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
-	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("dd/MM/yyyy"));
+	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), 0);
@@ -86,7 +89,10 @@ void AddDistributorRecordWidget::cancel_form() {
 }
 
 void AddDistributorRecordWidget::validateAdd() {
-// 	PR(combo_products->currentIndex());
+	int qtyused = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUsedQty).data().toInt();
+	int qtytotal = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HStaQty).data().toInt();
+	QString max;
+	label_maxvalue->setText(max.sprintf("%d", qtytotal-qtyused));
 
 	if (edit_qty->ok() and edit_date->ok() and
 		edit_reason->ok() /*and edit_reason2->ok()*/) {

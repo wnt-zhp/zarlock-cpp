@@ -8,6 +8,9 @@
 namespace globals {
 	QPalette palette_ok = QPalette();
 	QPalette palette_bad = QPalette();
+	QColor item_expired = QColor();
+	QColor item_aexpired = QColor();
+	QColor item_nexpired = QColor();
 	QFont font_edit = QFont();
 	QFont font_display = QFont();
 }
@@ -15,6 +18,9 @@ namespace globals {
 int main(int argc, char ** argv/*, char ** env*/) {
 	globals::palette_ok.setColor(QPalette::Base, Qt::green);
 	globals::palette_bad.setColor(QPalette::Base, Qt::red);
+	globals::item_expired.setRgb(255, 172, 172);
+	globals::item_aexpired.setRgb(243, 255, 172);
+	globals::item_nexpired.setRgb(172, 255, 172);
 
 	globals::font_edit.setItalic(true);
 // 	globals::font_ok.setBold(false);

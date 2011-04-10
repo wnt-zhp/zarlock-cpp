@@ -14,6 +14,9 @@
 namespace globals {
 	extern QPalette palette_ok;
 	extern QPalette palette_bad;
+	extern QColor item_expired;
+	extern QColor item_aexpired;
+	extern QColor item_nexpired;
 // 	extern QPalette palette_neutral;
 	extern QFont font_edit;
 	extern QFont font_display;

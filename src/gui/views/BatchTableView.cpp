@@ -18,6 +18,7 @@
 
 #include "globals.h"
 #include "BatchTableView.h"
+#include "BatchTableModelProxy.h"
 
 #include <QHeaderView>
 
@@ -72,6 +73,7 @@ BatchTableView::~BatchTableView() {
 void BatchTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
+// 	setColumnHidden(BatchTableModel::HId, true);
 	hideColumn(BatchTableModel::HId);
 // 	hideColumn(BatchTableModel::HProdId);
 	hideColumn(BatchTableModel::HRegDate);

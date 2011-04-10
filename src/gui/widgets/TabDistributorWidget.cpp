@@ -29,12 +29,14 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 	widget_add_distributor->setVisible(true);
 	adrw = new AddDistributorRecordWidget(widget_add_distributor);
 
-	activateUi(false);
+	activateUi(true);
 
-	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
+	activateUi(false);
 	if (adrw) delete adrw;
 }
 
@@ -56,21 +58,10 @@ void TabDistributorWidget::activateUi(bool activate) {
 			model_dist_delegate = new QSqlRelationalDelegate(table_dist);
 			table_dist->setItemDelegate(model_dist_delegate);
 			table_dist->show();
-// 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_dist, SLOT(filterDB(QString)));
 			adrw->update_model();
 		}
 	}
 }
-
-// void TabDistributorWidget::add_batch_record(bool newrec) {
-// 	if (newrec) {
-// // 		table_products->setVisible(false);
-// 		widget_add_batch->setVisible(true);
-// 	} else {
-// // 		table_products->setVisible(true);
-// 		widget_add_batch->setVisible(false);
-// 	}
-// }
 
 void TabDistributorWidget::edit_record(const QModelIndex& idx) {
 	if (model_dist->isDirty(idx)) {

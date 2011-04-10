@@ -33,8 +33,8 @@ void DateInput::setDateReferenceObj(const DateInput * ref) {
 const QDate DateInput::date() const {
 	QDate d;
 	PR(displaytext.toStdString());
-	d = QDate::fromString(displaytext, "dd/MM/yyyy");
-	PR(d.toString("dd/MM/yyyy").toStdString());
+	d = QDate::fromString(displaytext, "yyyy-MM-dd");
+	PR(d.toString("yyyy-MM-dd").toStdString());
 /*	if (DataParser::date(rawtext, d, data_ref->date())) {
 		return d;
 	}*/
@@ -48,7 +48,7 @@ bool DateInput::verifyText(const QString & raw, QString & placeholder) {
 	else
 		ref = data_ref->date();
 
-	PR(QDate::currentDate().toString("dd/MM/yyyy").toStdString());
+	PR(QDate::currentDate().toString("yyyy-MM-dd").toStdString());
 	if (DataParser::date(raw, placeholder, ref)) {
 		return true;
 	}

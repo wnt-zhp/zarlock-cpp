@@ -55,7 +55,7 @@ set(zarlok_icons_RESOURCES_RCC icons.rcc)
 set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp src/gui/views/DistributorTableView.cpp)
 set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
 set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp src/gui/widgets/DBBrowser.cpp src/gui/widgets/AddDistributorRecordWidget.cpp src/gui/widgets/TabProductsWidget.cpp src/gui/widgets/TabBatchWidget.cpp src/gui/widgets/TabDistributorWidget.cpp src/gui/widgets/MainTabWidget.cpp)
-set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/models/DistributorTableModel.cpp)
+set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/models/DistributorTableModel.cpp src/models/BatchTableModelProxy.cpp)
 set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
@@ -71,8 +71,6 @@ add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC} ${zarlok_repo
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS})
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
-
-
 
 # installation
 install(FILES

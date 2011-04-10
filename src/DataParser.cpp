@@ -115,7 +115,8 @@ bool DataParser::unit(const QString & data, QString & unit_formated) {
 bool DataParser::date(const QString & data, QDate & date_formated, const QDate & ref) {
 	QRegExp rx1("^\\s*([+-]\\d+|0)\\s*$");
 	QRegExp rx2("^\\s*dzis\\s*$");
-	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
+// 	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
+	QRegExp rx3("^\\s*(\\d\\d\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d))?)?\\s*$");	// dd/mm//yy
 
 // 	PR(data.toStdString());
 
@@ -134,7 +135,7 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 // 	PR(rx3.cap(4).toStdString());
 // 	PR(rx3.cap(5).toStdString());
 
-// 	PR(ref.toString("dd/MM/yyyy").toStdString());
+// 	PR(ref.toString("yyyy-MM-dd").toStdString());
 
 	rx1.indexIn(data);
 	rx2.indexIn(data);
@@ -147,11 +148,11 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 		return true;
 	} else if (!rx3.cap(0).isEmpty()) {
 		date_formated = QDate::currentDate();
-		int day = rx3.cap(1).isEmpty() ? date_formated.day() : rx3.cap(1).toInt();
+		int year = rx3.cap(1).isEmpty() ? date_formated.year() : rx3.cap(1).toInt();
 		int month = rx3.cap(3).isEmpty() ? date_formated.month() : rx3.cap(3).toInt();
-		int year = rx3.cap(5).isEmpty() ? date_formated.year() : rx3.cap(5).toInt();
+		int day = rx3.cap(5).isEmpty() ? date_formated.day() : rx3.cap(5).toInt();
 		date_formated.setDate(year, month, day);
-// 		PR(date_formated.toString("dd/MM/yyyy").toStdString());
+// 		PR(date_formated.toString("yyyy-MM-dd").toStdString());
 		return date_formated.isValid();
 	}
 	return false;
@@ -160,6 +161,6 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 bool DataParser::date(const QString & data, QString & date_formated, const QDate & ref) {
 	QDate date;
 	bool status = DataParser::date(data,  date, ref);
-	date_formated = date.toString("dd/MM/yyyy");
+	date_formated = date.toString("yyyy-MM-dd");
 	return status;
 }

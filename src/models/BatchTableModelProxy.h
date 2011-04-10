@@ -16,38 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef BATCHTABLEMODELPROXY_H
+#define BATCHTABLEMODELPROXY_H
 
-#ifndef TABPRODUCTSWIDGET_H
-#define TABPRODUCTSWIDGET_H
+#include <QtGui/QCheckBox>
+#include <QtGui/QSortFilterProxyModel>
 
-#include "ui_TabProductsWidget.h"
-
-#include "Database.h"
-#include "ProductsTableModel.h"
-#include "AddProductsRecordWidget.h"
-
-#include <QCompleter>
-
-class TabProductsWidget : public QWidget, public Ui::TabProductsWidget {
+/**
+ * @brief Klasa dziedziczy po QSortFilterProxyModel i odpowiada za
+ * sortowanie danych.
+ **/
+class BatchTableModelProxy : public QSortFilterProxyModel {
 Q_OBJECT
 public:
-	TabProductsWidget(QWidget * parent = NULL);
-	virtual ~TabProductsWidget();
+	BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
+						 const QCheckBox * nexp, QObject * parent = 0);
+						 
+	virtual ~BatchTableModelProxy();
 
 private:
-	void activateUi(bool activate = true);
-
-private slots:
-	void set_filter(const QString & str);
-	void add_prod_record(bool newrec = true);
-	void edit_record(const QModelIndex & idx);
+	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
-	Database & db;
-	ProductsTableModel * model_prod;
-	QSqlQueryModel * model_batchbyid;
-
-	AddProductsRecordWidget * aprw;
+	const QCheckBox * cb_exp;
+	const QCheckBox * cb_aexp;
+	const QCheckBox * cb_nexp;
 };
 
-#endif // TABPRODUCTSWIDGET_H
+#endif // BATCHTABLEMODELPROXY_H

@@ -22,37 +22,43 @@
 #include "DataParser.h"
 
 TabBatchWidget::TabBatchWidget(QWidget * parent) : Ui::TabBatchWidget(), db(Database::Instance()),
-	model_batch_delegate(NULL) {
+	model_batch(NULL), modelproxy_batch(NULL), model_batch_delegate(NULL) {
 
 	setupUi(this);
+PR(this);
+	QPixmap pxme(QSize(20, 20));
+	pxme.fill(globals::item_expired);
+	cb_expired->setIcon(pxme);
+	cb_expired->setChecked(true);
+	pxme.fill(globals::item_aexpired);
+	cb_aexpired->setIcon(pxme);
+	cb_aexpired->setChecked(true);
+	pxme.fill(globals::item_nexpired);
+	cb_nexpired->setIcon(pxme);
+	cb_nexpired->setChecked(true);
 
 	widget_add_batch->setVisible(false);
 	abrw = new AddBatchRecordWidget(widget_add_batch);
 
-	activateUi(false);
+	activateUi(true);
 
 	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(add_batch_record(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
 
-	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+// 	connect(cb_expired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
+// 	connect(cb_aexpired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
+// 	connect(cb_nexpired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
+	
+// 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
 }
 
 TabBatchWidget::~TabBatchWidget() {
+	activateUi(false);
 	if (model_batch_delegate) delete model_batch_delegate;
+	if (modelproxy_batch) delete modelproxy_batch;
 	if (abrw) delete abrw;
-}
-
-void TabBatchWidget::setVisible(bool visible) {
-	if (visible) {
-		activateUi(true);
-	} else {
-// 		if (model_batch->isDirty())
-		if (model_batch)
-			model_batch->submitAll();
-	}
-
-    QWidget::setVisible(visible);
 }
 
 /**
@@ -66,9 +72,19 @@ void TabBatchWidget::activateUi(bool activate) {
 // 	this->setVisible(activate);
 
 	if (activate) {
+		if (!modelproxy_batch) {
+			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired);
+			modelproxy_batch->setDynamicSortFilter(true);
+	
+			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+		}
 		// batch
 		if ((model_batch = db.CachedBatch())){
-			table_batch->setModel(model_batch);
+			modelproxy_batch->setSourceModel(model_batch);
+			table_batch->setModel(modelproxy_batch);
+
 			if (model_batch_delegate) delete model_batch_delegate;
 			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
 			table_batch->setItemDelegate(model_batch_delegate);
@@ -95,6 +111,11 @@ void TabBatchWidget::edit_record(const QModelIndex& idx) {
 	} else {
 		table_batch->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	}
+}
+
+void TabBatchWidget::set_filter() {
+	modelproxy_batch->invalidate();
+	table_batch->setModel(modelproxy_batch);
 }
 
 #include "TabBatchWidget.moc"

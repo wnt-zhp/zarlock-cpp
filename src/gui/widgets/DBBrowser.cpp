@@ -42,6 +42,11 @@ DBBrowser::DBBrowser() {
 
 	dbb_delete->setEnabled(false);
 
+	dbb_new->setIcon( dbb_new->style()->standardIcon(QStyle::SP_FileIcon) );
+	dbb_delete->setIcon( dbb_delete->style()->standardIcon(QStyle::SP_TrashIcon) );
+	dbb_quit->setIcon( dbb_quit->style()->standardIcon(QStyle::SP_DialogCloseButton) );
+	dbb_load->setIcon( dbb_load->style()->standardIcon(QStyle::SP_DialogOpenButton) );
+
 	reload_list();
 }
 

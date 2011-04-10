@@ -117,42 +117,47 @@ bool DistributorTableModel::select() {
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
-	if (idx.column() == HBatchId) {
-// 		PR(idx.data(Qt::EditRole).toString().toStdString());
-		QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, 0), Qt::EditRole, idx.data(Qt::EditRole));
-		if (!qmil.isEmpty()) {
-			return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
-		}
-	}
+	switch (role) {
+		case Qt::DisplayRole:
+			if (idx.column() == HBatchId) {
+		// 		PR(idx.data(Qt::EditRole).toString().toStdString());
+				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, 0), Qt::EditRole, idx.data(Qt::EditRole));
+				if (!qmil.isEmpty()) {
+					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+				}
+			}
 
-	if (idx.column() == HRegDate) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date)) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
+			if (idx.column() == HRegDate) {
+				QString data = idx.data(Qt::EditRole).toString();
+				QDate date;
+				if (DataParser::date(data, date)) {
+					QString var;
+					return date.toString("yyyy-MM-dd");
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
+			
+			if (idx.column() == HDistDate) {
+				QString data = idx.data(Qt::EditRole).toString();
+				QDate date;
+				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), "yyyy-MM-dd"))) {
+					QString var;
+					return date.toString("yyyy-MM-dd");
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
+			break;
+		case Qt::BackgroundRole:
+			break;
 	}
-	
-	if (idx.column() == HDistDate) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), "dd/MM/yyyy"))) {
-			QString var;
-			return date.toString("dd/MM/yyyy");
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-
 	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
 }
 
