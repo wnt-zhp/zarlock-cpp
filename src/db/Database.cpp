@@ -210,17 +210,17 @@ bool Database::updateMealCosts() {
 
 bool Database::updateMealCosts(const int mid) {
 	QSqlQuery qDist("SELECT price FROM distributor WHERE reason=?;");
-	qDist.bindValue(0, pid);
+	qDist.bindValue(0, mid);
 	qDist.exec();
-	int qty = 0;
+	int price = 0;
 	while (qDist.next()) {
-		qty += qDist.value(0).toInt();
+		price += qDist.value(0).toInt();
 	}
 
-	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
-	qBatch.bindValue(0, qty);
-	qBatch.bindValue(1, pid);
-	qBatch.exec();
+// 	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
+// 	qBatch.bindValue(0, price);
+// 	qBatch.bindValue(1, pid);
+// 	qBatch.exec();
 }
 
 // void Database::database2Update() {
