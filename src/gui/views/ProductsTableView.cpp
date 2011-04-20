@@ -40,7 +40,7 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	addRec->setToolTip(tr("Add record to database"));
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
-PR(this);
+
 	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(filterRecords(QModelIndex)));
 	this->setEditTriggers(0);
 }

@@ -25,7 +25,7 @@ TabBatchWidget::TabBatchWidget(QWidget * parent) : Ui::TabBatchWidget(), db(Data
 	model_batch(NULL), modelproxy_batch(NULL), model_batch_delegate(NULL) {
 
 	setupUi(this);
-PR(this);
+
 	QPixmap pxme(QSize(20, 20));
 	pxme.fill(globals::item_expired);
 	cb_expired->setIcon(pxme);
@@ -75,7 +75,7 @@ void TabBatchWidget::activateUi(bool activate) {
 		if (!modelproxy_batch) {
 			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired);
 			modelproxy_batch->setDynamicSortFilter(true);
-	
+
 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
 			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));

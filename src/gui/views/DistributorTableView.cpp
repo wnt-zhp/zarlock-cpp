@@ -74,9 +74,7 @@ void DistributorTableView::setModel(QAbstractItemModel * model) {
 
 	hideColumn(DistributorTableModel::HId);
 	hideColumn(DistributorTableModel::HRegDate);
-	hideColumn(DistributorTableModel::HReason3);
-// 	hideColumn(DistributorTableModel::HDesc);
-// 	hideColumn(DistributorTableModel::HUsedQty);
+// 	hideColumn(DistributorTableModel::HReason3);
 }
 
 /**
@@ -114,14 +112,19 @@ void DistributorTableView::contextMenuEvent(QContextMenuEvent * event) {
  **/
 void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
-/*		PR((*it).column());
-		PR((*it).row());*/
-		if ((*it).column() == DistributorTableModel::HQty)
+	QVector<int> rows;
+	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+		if ((*it).column() == DistributorTableModel::HBatchId) {
+			rows.push_back((*it).data(Qt::EditRole).toInt());
 			model()->removeRow((*it).row());
+		}
 	}
-	db.database2Update();
-// 	((QSqlTableModel *)model())->submitAll();
+	db.CachedDistributor()->submitAll();
+
+	for (QVector<int>::iterator it = rows.begin(); it != rows.end(); ++it) {
+		db.updateBatchQty(*it);
+	}
+	db.CachedBatch()->submitAll();
 }
 
 #include "DistributorTableView.moc"

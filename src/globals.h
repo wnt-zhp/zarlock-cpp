@@ -2,7 +2,7 @@
 #define __GLOBALS_H__
 
 #include <iostream>
-#define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "|\n";
+#define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "| in " << __FILE__ << " at line " << __LINE__ << "\n";
 
 #define INFO if (true)
 

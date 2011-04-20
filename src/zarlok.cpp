@@ -24,7 +24,7 @@
  * @param parent QMainWindow
  **/
 zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
-										 tpw(NULL), tbw(NULL), tdw(NULL) {
+										 tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
 	setupUi(this);
 
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
@@ -52,7 +52,7 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 	activateUi(false);
 
-	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
+// 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
 	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
 
 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
@@ -92,16 +92,19 @@ void zarlok::activateUi(bool activate) {
 		tpw = new TabProductsWidget();
 		tbw = new TabBatchWidget();
 		tdw = new TabDistributorWidget();
+		tmw = new TabMealWidget();
 
-		MainTab->addTab(tpw, "Products");
-		MainTab->addTab(tbw, "Stock");
-		MainTab->addTab(tdw, "Distribute");
+		MainTab->addTab(tpw, tr("Products"));
+		MainTab->addTab(tbw, tr("Stock"));
+		MainTab->addTab(tdw, tr("Distribute"));
+		MainTab->addTab(tmw, tr("Meal"));
 
 		MainTab->setTabPosition(QTabWidget::North);
 
 		MainTab->setVisible(activate);
 		MainTab->setEnabled(activate);
 	} else {
+		if (tmw) delete tmw; tmw = NULL;
 		if (tdw) delete tdw; tdw = NULL;
 		if (tbw) delete tbw; tbw = NULL;
 		if (tpw) delete tpw; tpw = NULL;
@@ -129,12 +132,10 @@ void zarlok::openDB(const QString & dbname) {
  * @return bool - wynik wykonania QTableModel::submitAll()
  **/
 void zarlok::saveDB() {
-// 	/*if (model_dist->isDirty())*/ model_dist->submitAll();
-// 	/*if (model_batch->isDirty())*/ model_batch->submitAll();
-// 	/*if (model_prod->isDirty())*/ model_prod->submitAll();
 	db.CachedProducts()->submitAll();
 	db.CachedBatch()->submitAll();
 	db.CachedDistributor()->submitAll();
+
 	db.updateBatchQty();
 	actionSaveDB->setEnabled(false);
 }

@@ -43,8 +43,17 @@ configure_file(config.h.in config.h @ONLY)
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
-set(zarlok_FORMS src/ui/MainWindow.ui src/ui/AddProductsRecordWidget.ui src/ui/AddBatchRecordWidget.ui src/ui/DatabaseBrowser.ui src/ui/AddDistributorRecordWidget.ui)
-set(zarlok_widget_FORMS src/ui/TabProductsWidget.ui src/ui/TabBatchWidget.ui src/ui/TabDistributorWidget.ui)
+set(zarlok_FORMS
+									src/ui/MainWindow.ui
+									src/ui/DatabaseBrowser.ui
+									src/ui/AddProductsRecordWidget.ui
+									src/ui/AddBatchRecordWidget.ui
+									src/ui/AddDistributorRecordWidget.ui
+									src/ui/AddMealRecordWidget.ui
+									src/ui/AddFoodRecordWidget.ui
+)
+
+set(zarlok_widget_FORMS src/ui/TabProductsWidget.ui src/ui/TabBatchWidget.ui src/ui/TabDistributorWidget.ui src/ui/TabMealWidget.ui)
 set(zarlok_db_RESOURCES src/database.qrc)
 set(zarlok_db_RESOURCES_RCC database.rcc)
 set(zarlok_reports_RESOURCES src/reports.qrc)
@@ -54,8 +63,26 @@ set(zarlok_icons_RESOURCES_RCC icons.rcc)
 
 set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp src/gui/views/DistributorTableView.cpp)
 set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
-set(zarlok_src_gui_widgets_SRCS src/gui/widgets/AddProductsRecordWidget.cpp src/gui/widgets/AddBatchRecordWidget.cpp src/gui/widgets/DBBrowser.cpp src/gui/widgets/AddDistributorRecordWidget.cpp src/gui/widgets/TabProductsWidget.cpp src/gui/widgets/TabBatchWidget.cpp src/gui/widgets/TabDistributorWidget.cpp src/gui/widgets/MainTabWidget.cpp)
-set(zarlok_src_models_SRCS src/models/BatchTableModel.cpp src/models/ProductsTableModel.cpp src/models/DistributorTableModel.cpp src/models/BatchTableModelProxy.cpp)
+set(zarlok_src_gui_widgets_SRCS
+									src/gui/widgets/AddProductsRecordWidget.cpp
+									src/gui/widgets/AddBatchRecordWidget.cpp
+									src/gui/widgets/AddDistributorRecordWidget.cpp
+									src/gui/widgets/AddMealRecordWidget.cpp
+									src/gui/widgets/AddFoodRecordWidget.cpp
+									src/gui/widgets/DBBrowser.cpp
+									src/gui/widgets/TabProductsWidget.cpp
+									src/gui/widgets/TabBatchWidget.cpp
+									src/gui/widgets/TabDistributorWidget.cpp
+									src/gui/widgets/TabMealWidget.cpp
+									src/gui/widgets/MainTabWidget.cpp
+)
+set(zarlok_src_models_SRCS
+									src/models/BatchTableModel.cpp
+									src/models/ProductsTableModel.cpp
+									src/models/DistributorTableModel.cpp
+									src/models/BatchTableModelProxy.cpp
+									src/models/MealTableModelProxy.cpp
+)
 set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})

@@ -34,11 +34,12 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+	connect(edit_qty, SIGNAL(textEdited(QString)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 	connect(edit_reason, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
+// 	connect(Database::Instance().CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
 	edit_reason2->enableEmpty();
 }
@@ -67,14 +68,15 @@ bool AddDistributorRecordWidget::insert_record() {
 	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
-	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), 0);
-// 	bool status = dtm->submitAll();
+	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RGeneral);
 
-	db.updateBatchQty(batch_id);
+	dtm->submitAll();
+	db.updateBatchQty(dtm->index(row, 1).data(Qt::EditRole).toInt());
+	btm->submitAll();
+	update_model();	
 
-// 	clear_form();
-	edit_qty->setFocus();
-	return false /*status*/;
+	combo_products->setFocus();
+	return /*status*/ true;
 }
 
 void AddDistributorRecordWidget::clear_form() {
@@ -89,13 +91,15 @@ void AddDistributorRecordWidget::cancel_form() {
 }
 
 void AddDistributorRecordWidget::validateAdd() {
-	int qtyused = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUsedQty).data().toInt();
-	int qtytotal = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HStaQty).data().toInt();
-	QString max;
-	label_maxvalue->setText(max.sprintf("%d", qtytotal-qtyused));
+	float qtyused = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUsedQty).data().toFloat();
+	float qtytotal = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
 
+	QString max;
+	label_maxvalue->setText(max.sprintf("%.2f", qtytotal-qtyused));
+
+	bool qtyvalid = edit_qty->text().toFloat() > (qtytotal-qtyused) ? false : true;
 	if (edit_qty->ok() and edit_date->ok() and
-		edit_reason->ok() /*and edit_reason2->ok()*/) {
+		edit_reason->ok() and qtyvalid /*and edit_reason2->ok()*/) {
 		action_add->setEnabled(true);
 	} else {
 		action_add->setEnabled(false);
@@ -105,12 +109,8 @@ void AddDistributorRecordWidget::validateAdd() {
 void AddDistributorRecordWidget::update_model() {
 	combo_products->setModel(Database::Instance().CachedBatch());
 	combo_products->setModelColumn(2);
+// 	PR(__LINE__);
 // 	combo_products->setEditable(true);
-
-// 	completer = new QCompleter(combo_products->model(), this);
-// 	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-// 	completer->setCompletionColumn(ProductsTableModel::HName);
-// 	combo_products->setCompleter(completer);
 
 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
@@ -143,6 +143,5 @@ void AddDistributorRecordWidget::update_model() {
 	edit_reason->setCompleter(completer_reason);
 	edit_reason2->setCompleter(completer_reason2);
 }
-
 
 #include "AddDistributorRecordWidget.moc"

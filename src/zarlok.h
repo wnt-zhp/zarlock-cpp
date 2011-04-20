@@ -13,6 +13,7 @@
 #include "TabProductsWidget.h"
 #include "TabBatchWidget.h"
 #include "TabDistributorWidget.h"
+#include "TabMealWidget.h"
 
 #include "BatchTableModel.h"
 #include "DistributorTableModel.h"
@@ -47,6 +48,7 @@ private:
 	TabProductsWidget * tpw;
 	TabBatchWidget * tbw;
 	TabDistributorWidget * tdw;
+	TabMealWidget * tmw;
 
 	DBBrowser * dbb;
 

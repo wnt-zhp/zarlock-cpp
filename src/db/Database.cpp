@@ -125,6 +125,14 @@ bool Database::close_database() {
 	return true;
 }
 
+bool Database::save_database() {
+	tab_products->submitAll();
+	tab_batch->submitAll();
+	tab_distributor->submitAll();
+	emit dbSaved();
+}
+
+
 /**
  * @brief ...
  *
@@ -162,9 +170,9 @@ bool Database::rebuild_models() {
 		return false;
 	}
 
-	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+// 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+// 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+// 	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
 
 	return true;
 }
@@ -192,8 +200,31 @@ bool Database::updateBatchQty(const int pid) {
 	qBatch.exec();
 }
 
-void Database::database2Update() {
-	emit databaseDirty();
+bool Database::updateMealCosts() {
+	QSqlQuery qMeal("SELECT id FROM meal;");
+	qMeal.exec();
+	while (qMeal.next()) {
+		updateMealCosts(qMeal.value(0).toInt());
+	}
 }
+
+bool Database::updateMealCosts(const int mid) {
+	QSqlQuery qDist("SELECT price FROM distributor WHERE reason=?;");
+	qDist.bindValue(0, pid);
+	qDist.exec();
+	int qty = 0;
+	while (qDist.next()) {
+		qty += qDist.value(0).toInt();
+	}
+
+	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
+	qBatch.bindValue(0, qty);
+	qBatch.bindValue(1, pid);
+	qBatch.exec();
+}
+
+// void Database::database2Update() {
+// 	emit databaseDirty();
+// }
 
 #include "Database.moc"
