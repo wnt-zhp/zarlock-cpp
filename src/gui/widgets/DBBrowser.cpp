@@ -23,9 +23,10 @@
 
 // endif
 
-#include "DBBrowser.h"
 #include "globals.h"
 #include "config.h"
+#include "DBBrowser.h"
+#include "DBItemWidget.h"
 
 #include <QMessageBox>
 #include <QInputDialog>
@@ -37,7 +38,7 @@
 
 DBBrowser::DBBrowser() {
 	setupUi(this);
-	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem*)));
+	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
 	connect(dbb_new, SIGNAL(clicked(bool)), this, SLOT(dbb_new_clicked(bool)));
 
 	dbb_delete->setEnabled(false);
@@ -51,10 +52,17 @@ DBBrowser::DBBrowser() {
 }
 
 DBBrowser::~DBBrowser() {
+	PR(666);
+	while (dbb_list->count()) {
+		QListWidgetItem * item = dbb_list->item(0);
+		dbb_list->removeItemWidget(item);
+		delete item;
+	}
+	PR(667);
 }
 
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
-	QString dbname = item->data(Qt::DisplayRole).toString();
+	QString dbname = item->data(Qt::UserRole).toString();
 	openDBName(dbname);
 }
 
@@ -92,7 +100,18 @@ void DBBrowser::reload_list(int sort, int order) {
 		QString fname = fileInfo.fileName();
 		int pos = fname.lastIndexOf(".db");
 		fname.remove(pos, 3);
-		dbb_list->addItem(fname);
+
+		QListWidgetItem * witem = new QListWidgetItem();
+		witem->setData(Qt::UserRole, fname);
+		witem->setSizeHint(QSize(400, 80));
+		witem->setIcon(QIcon(QPixmap(QSize(100,100))));
+		dbb_list->addItem(witem);
+
+		DBItemWidget * w = new DBItemWidget();
+		w->setDBName(fname);
+
+// 		dbb_list->setIconSize(QSize(50, 50));
+		dbb_list->setItemWidget(witem, w);
 	}
 }
 

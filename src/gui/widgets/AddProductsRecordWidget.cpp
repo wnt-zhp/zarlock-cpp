@@ -25,16 +25,16 @@ AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidg
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {
 	setupUi(parent);
 
-	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
-	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
+	action_addexit->setEnabled(false);
+	action_addnext->setEnabled(false);
+
+	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
 
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
-
-// 	vvv = new Validat01;
-// 	edit_expiry->setValidator(vvv);
 }
 
 AddProductsRecordWidget::~AddProductsRecordWidget() {
@@ -48,7 +48,7 @@ void AddProductsRecordWidget::setVisible(bool visible) {
     QWidget::setVisible(visible);
 }
 
-bool AddProductsRecordWidget::insert_record() {
+void AddProductsRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 	QSqlTableModel * tm = db.CachedProducts();
 
@@ -68,12 +68,14 @@ bool AddProductsRecordWidget::insert_record() {
 	tm->setData(tm->index(row, 1), edit_name->text());
 	tm->setData(tm->index(row, 2), edit_unit->text());
 	tm->setData(tm->index(row, 3), edit_expiry->text());
-// 	bool sttaus = tm->submitAll();
+ 	tm->submitAll();
 
 	clear_form();
-	edit_name->setFocus();
+}
 
-	return true /*status*/;
+void AddProductsRecordWidget::insert_record_and_exit() {
+	insert_record();
+	cancel_form();
 }
 
 void AddProductsRecordWidget::clear_form() {
@@ -88,9 +90,11 @@ void AddProductsRecordWidget::cancel_form() {
 
 void AddProductsRecordWidget::validateAdd() {
 	if (edit_name->ok() and edit_unit->ok() and edit_expiry->ok()) {
-		action_add->setEnabled(true);
+		action_addnext->setEnabled(true);
+		action_addexit->setEnabled(true);
 	} else {
-		action_add->setEnabled(false);
+		action_addnext->setEnabled(false);
+		action_addexit->setEnabled(false);
 	}
 }
 

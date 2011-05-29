@@ -41,20 +41,17 @@ private:
 public:
 	bool open_database(const QString & dbfile, bool recreate = false);
 	bool close_database();
-	bool save_database();
+	void save_database();
 
-	bool updateBatchQty();
-	bool updateBatchQty(const int);
+	void updateBatchQty();
+	void updateBatchQty(const int);
 
-	bool updateMealCosts();
-	bool updateMealCosts(const int);
+	void updateMealCosts();
+	void updateMealCosts(const int);
 
 	inline ProductsTableModel * CachedProducts() { return tab_products; }
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
 	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
-
-// public slots:
-// 	void database2Update();
 
 signals:
 	void databaseDirty();

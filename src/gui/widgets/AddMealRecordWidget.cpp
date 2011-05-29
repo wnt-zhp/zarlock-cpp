@@ -45,7 +45,7 @@ AddMealRecordWidget::~AddMealRecordWidget() {
 	if (completer_other) delete completer_other;
 }
 
-void AddMealRecordWidget::showW(QTreeWidgetItem * item, int column) {
+void AddMealRecordWidget::showW(QTreeWidgetItem * item, int /*column*/) {
 	if (item and item->parent())
 		return;
 
@@ -183,7 +183,7 @@ void AddMealRecordWidget::update_model() {
 	edit_other2->setCompleter(completer_other);
 }
 
-void AddMealRecordWidget::set_caldate(const QDate& date) {
+void AddMealRecordWidget::set_caldate(const QDate& /*date*/) {
 }
 
 void AddMealRecordWidget::calDayChanged() {

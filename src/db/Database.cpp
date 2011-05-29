@@ -27,9 +27,6 @@
 #include "Database.h"
 #include "globals.h"
 
-
-using namespace std;
-
 /**
  * @brief Przetrzymuję jedną instancję klasy.
  **/
@@ -43,7 +40,7 @@ Database * Database::dbi = NULL;
 Database & Database::Instance() {
 	if (!dbi) {
 		dbi = new Database();
-		cout << "++ Create Database instance\n";
+		std::cout << "++ Create Database instance\n";
 	} else {
 // 		cout << "++ Use existing Database instance\n";
 	}
@@ -56,7 +53,7 @@ Database::Database() : /*QObject(),*/ tab_products(NULL), tab_batch(NULL), tab_d
 }
 
 Database::~Database() {
-	cout << "++ Destroy Database instance\n";
+	std::cout << "++ Destroy Database instance\n";
 
 	if (tab_products) delete tab_products;
 	if (tab_batch) delete tab_batch;
@@ -111,6 +108,29 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 		}
 	}
 
+	// products
+	if (tab_products) delete tab_products;
+	tab_products = new ProductsTableModel;
+	tab_products->setTable("products");
+	tab_products->setEditStrategy(QSqlTableModel::OnFieldChange);
+
+	// batch
+	if (tab_batch) delete tab_batch;
+	tab_batch = new BatchTableModel;
+	tab_batch->setTable("batch");
+	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
+
+	if (tab_distributor) delete tab_distributor;
+	tab_distributor = new DistributorTableModel;
+	tab_distributor->setTable("distributor");
+	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "id"/*"spec"*/));
+
+	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+
 	return rebuild_models();
 }
 
@@ -125,7 +145,7 @@ bool Database::close_database() {
 	return true;
 }
 
-bool Database::save_database() {
+void Database::save_database() {
 	tab_products->submitAll();
 	tab_batch->submitAll();
 	tab_distributor->submitAll();
@@ -140,31 +160,17 @@ bool Database::save_database() {
  **/
 bool Database::rebuild_models() {
 	// products
-	if (tab_products) delete tab_products;
-	tab_products = new ProductsTableModel;
-	tab_products->setTable("products");
-	tab_products->setEditStrategy(QSqlTableModel::OnManualSubmit);
 	if (!tab_products->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), tab_products->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
 	// batch
-	if (tab_batch) delete tab_batch;
-	tab_batch = new BatchTableModel;
-	tab_batch->setTable("batch");
-	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
-	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
 	if (!tab_batch->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), tab_batch->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
-	if (tab_distributor) delete tab_distributor;
-	tab_distributor = new DistributorTableModel;
-	tab_distributor->setTable("distributor");
-	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
-	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "id"/*"spec"*/));
 	if (!tab_distributor->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), tab_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
@@ -173,11 +179,10 @@ bool Database::rebuild_models() {
 // 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
 // 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
 // 	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-
 	return true;
 }
 
-bool Database::updateBatchQty() {
+void Database::updateBatchQty() {
 	QSqlQuery qBatch("SELECT id FROM batch;");
 	qBatch.exec();
 	while (qBatch.next()) {
@@ -185,7 +190,7 @@ bool Database::updateBatchQty() {
 	}
 }
 
-bool Database::updateBatchQty(const int pid) {
+void Database::updateBatchQty(const int pid) {
 	QSqlQuery qDist("SELECT quantity FROM distributor WHERE batch_id=?;");
 	qDist.bindValue(0, pid);
 	qDist.exec();
@@ -200,7 +205,7 @@ bool Database::updateBatchQty(const int pid) {
 	qBatch.exec();
 }
 
-bool Database::updateMealCosts() {
+void Database::updateMealCosts() {
 	QSqlQuery qMeal("SELECT id FROM meal;");
 	qMeal.exec();
 	while (qMeal.next()) {
@@ -208,7 +213,7 @@ bool Database::updateMealCosts() {
 	}
 }
 
-bool Database::updateMealCosts(const int mid) {
+void Database::updateMealCosts(const int mid) {
 	QSqlQuery qDist("SELECT price FROM distributor WHERE reason=?;");
 	qDist.bindValue(0, mid);
 	qDist.exec();
@@ -222,9 +227,5 @@ bool Database::updateMealCosts(const int mid) {
 // 	qBatch.bindValue(1, pid);
 // 	qBatch.exec();
 }
-
-// void Database::database2Update() {
-// 	emit databaseDirty();
-// }
 
 #include "Database.moc"

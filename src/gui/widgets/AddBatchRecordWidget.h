@@ -37,7 +37,8 @@ public slots:
 	void update_model();
 
 private slots:
-	bool insert_record();
+	void insert_record();
+	void insert_record_and_exit();
 	void clear_form();
 	void cancel_form();
 	void validateAdd();

@@ -26,8 +26,11 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL) {
 	setupUi(parent);
 
-	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
-	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
+	action_addexit->setEnabled(false);
+	action_addnext->setEnabled(false);
+
+	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
 
 // 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
@@ -55,7 +58,7 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 	if (completer_expiry) delete completer_expiry;
 }
 
-bool AddBatchRecordWidget::insert_record() {
+void AddBatchRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 	ProductsTableModel * ptm = db.CachedProducts();
 	BatchTableModel * btm = db.CachedBatch();
@@ -104,7 +107,11 @@ bool AddBatchRecordWidget::insert_record() {
 
 // 	clear_form();
 	edit_spec->setFocus();
-	return true /*status*/;
+}
+
+void AddBatchRecordWidget::insert_record_and_exit() {
+	insert_record();
+	cancel_form();
 }
 
 void AddBatchRecordWidget::clear_form() {
@@ -133,9 +140,11 @@ void AddBatchRecordWidget::validateAdd() {
 		edit_book->ok() and edit_price->ok() and
 		edit_qty->ok() and edit_expiry->ok() and
 		edit_invoice->ok()) {
-		action_add->setEnabled(true);
+		action_addnext->setEnabled(true);
+		action_addexit->setEnabled(true);
 	} else {
-		action_add->setEnabled(false);
+		action_addnext->setEnabled(false);
+		action_addexit->setEnabled(false);
 	}
 }
 

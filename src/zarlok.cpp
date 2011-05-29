@@ -13,6 +13,7 @@
 
 #include <QFileDialog>
 #include <QToolBar>
+#include <DBItemWidget.h>
 
 // public members
 
@@ -50,6 +51,22 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 	toolbar->addSeparator();
 	toolbar->addAction(actionAbout);
 
+	QToolBar * tb2 = addToolBar(tr("Database"));
+	tb2->setAllowedAreas(Qt::RightToolBarArea);
+	tb2->setIconSize(QSize(400, 100));
+// 	QPushButton * b = new QPushButton("adasd");
+	QIcon * b = new QIcon(QPixmap(300, 80));
+// 	b->resize( 400, 100);
+// 	b->setGeometry(0, 0, 400, 100);
+	DBItemWidget * dbiw = new DBItemWidget();
+// 	b->setGeometry(0, 0, 400, 100);
+// 	dbiw->setGeometry(0, 0, 400, 100);
+// 	toolbar->addWidget(new DBItemWidget(b));
+// 	toolbar->addWidget(b);
+// 	tb2->addAction(*b, "adssad");
+// 	tb2->addAction(new QAction(dbiw));
+// 	tb2->addWidget(b);
+	tb2->addWidget(dbiw);
 	activateUi(false);
 
 // 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
@@ -63,9 +80,9 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
-	if (dbname.isEmpty())
+	if (dbname.isEmpty()) {
 		dbb->show();
-	else {
+	} else {
 // 		openDB(dbname);
 		dbb->openDBName(dbname);
 	}

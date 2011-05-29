@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,38 +17,16 @@
 */
 
 
-#ifndef ADDPRODUCTSRECORDWIDGET_H
-#define ADDPRODUCTSRECORDWIDGET_H
+#include "DBItemWidget.h"
 
-#include "ui_AddProductsRecordWidget.h"
+DBItemWidget::DBItemWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
+	if (parent == NULL)
+		setupUi(this);
+	else
+		setupUi(parent);
+}
 
-#include <QCompleter>
+DBItemWidget::~DBItemWidget() {
 
-class AddProductsRecordWidget : public QWidget, public Ui::APRWidget {
-Q_OBJECT
-public:
-	AddProductsRecordWidget(QWidget * parent = NULL);
-	virtual ~AddProductsRecordWidget();
+}
 
-    virtual void setVisible(bool visible);
-
-signals:
-	void canceled(bool);
-
-public slots:
-	void update_model();
-
-private slots:
-	void insert_record();
-	void insert_record_and_exit();
-	void clear_form();
-	void cancel_form();
-	void validateAdd();
-
-private:
-	QCompleter * completer_name;
-	QCompleter * completer_unit;
-	QCompleter * completer_expiry;
-};
-
-#endif // ADDPRODUCTSRECORDWIDGET_H

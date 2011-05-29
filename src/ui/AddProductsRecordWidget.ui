@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
+    <width>389</width>
     <height>162</height>
    </rect>
   </property>
@@ -65,19 +65,16 @@
       <item row="4" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="action_add">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
+         <widget class="QPushButton" name="action_addnext">
           <property name="text">
-           <string>&amp;Add</string>
+           <string>&amp;Save and Add next</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="action_clear">
+         <widget class="QPushButton" name="action_addexit">
           <property name="text">
-           <string>C&amp;lear</string>
+           <string>Save and &amp;Exit</string>
           </property>
          </widget>
         </item>
@@ -102,22 +99,22 @@
    <header>DateInput.h</header>
   </customwidget>
   <customwidget>
-   <class>UnitInput</class>
-   <extends>QLineEdit</extends>
-   <header>UnitInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>TextInput</class>
    <extends>QLineEdit</extends>
    <header>TextInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>UnitInput</class>
+   <extends>QLineEdit</extends>
+   <header>UnitInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>edit_name</tabstop>
   <tabstop>edit_unit</tabstop>
   <tabstop>edit_expiry</tabstop>
-  <tabstop>action_add</tabstop>
-  <tabstop>action_clear</tabstop>
+  <tabstop>action_addnext</tabstop>
+  <tabstop>action_addexit</tabstop>
  </tabstops>
  <resources/>
  <connections/>

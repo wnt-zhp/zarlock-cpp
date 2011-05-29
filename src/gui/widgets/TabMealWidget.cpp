@@ -118,7 +118,7 @@ void TabMealWidget::activateUi(bool activate) {
 	}
 }
 
-void TabMealWidget::edit_record(const QModelIndex& idx) {
+void TabMealWidget::edit_record(const QModelIndex& /*idx*/) {
 // 	if (model_dist->isDirty(idx)) {
 // 		table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
 // 	} else {
@@ -142,7 +142,7 @@ void TabMealWidget::add_mealday() {
 	amrw->showW(NULL, 0);
 }
 
-void TabMealWidget::expand_single_item(QTreeWidgetItem * item, int column) {
+void TabMealWidget::expand_single_item(QTreeWidgetItem * item, int /*column*/) {
 	if (!item->parent()) {
 		tree_meal->collapseAll();
 		tree_meal->expandItem(item);

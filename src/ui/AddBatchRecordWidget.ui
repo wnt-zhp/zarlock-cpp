@@ -155,19 +155,16 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="action_add">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
+      <widget class="QPushButton" name="action_addnext">
        <property name="text">
-        <string>&amp;Add</string>
+        <string>&amp;Save and Add next</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="action_clear">
+      <widget class="QPushButton" name="action_addexit">
        <property name="text">
-        <string>C&amp;lear</string>
+        <string>Save and &amp;Exit</string>
        </property>
       </widget>
      </item>
@@ -194,14 +191,14 @@
    <header>TextInput.h</header>
   </customwidget>
   <customwidget>
-   <class>QtyInput</class>
-   <extends>QLineEdit</extends>
-   <header>QtyInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>UnitInput</class>
    <extends>QLineEdit</extends>
    <header>UnitInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtyInput</class>
+   <extends>QLineEdit</extends>
+   <header>QtyInput.h</header>
   </customwidget>
   <customwidget>
    <class>PriceInput</class>
@@ -219,8 +216,8 @@
   <tabstop>edit_invoice</tabstop>
   <tabstop>edit_book</tabstop>
   <tabstop>edit_expiry</tabstop>
-  <tabstop>action_add</tabstop>
-  <tabstop>action_clear</tabstop>
+  <tabstop>action_addnext</tabstop>
+  <tabstop>action_addexit</tabstop>
   <tabstop>action_cancel</tabstop>
  </tabstops>
  <resources/>

@@ -21,7 +21,7 @@
 #include "Database.h"
 #include "DataParser.h"
 
-TabBatchWidget::TabBatchWidget(QWidget * parent) : Ui::TabBatchWidget(), db(Database::Instance()),
+TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(Database::Instance()),
 	model_batch(NULL), modelproxy_batch(NULL), model_batch_delegate(NULL) {
 
 	setupUi(this);
@@ -46,10 +46,12 @@ TabBatchWidget::TabBatchWidget(QWidget * parent) : Ui::TabBatchWidget(), db(Data
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
 
-// 	connect(cb_expired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
-// 	connect(cb_aexpired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
-// 	connect(cb_nexpired, SIGNAL(toggled(bool)), this, SLOT(filter_expiry()));
-	
+	connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
+	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+
+	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
 }
@@ -76,9 +78,10 @@ void TabBatchWidget::activateUi(bool activate) {
 			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired);
 			modelproxy_batch->setDynamicSortFilter(true);
 
-			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
-			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			// TODO: Co z tym zrobić?
+// 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
+// 			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+// 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 		}
 		// batch
 		if ((model_batch = db.CachedBatch())){
@@ -89,7 +92,8 @@ void TabBatchWidget::activateUi(bool activate) {
 			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
 			table_batch->setItemDelegate(model_batch_delegate);
 			table_batch->show();
-			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+			// TODO: Co z tym zrobić?
+// 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 			abrw->update_model();
 		}
 	}
