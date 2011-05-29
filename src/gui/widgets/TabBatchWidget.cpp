@@ -79,9 +79,9 @@ void TabBatchWidget::activateUi(bool activate) {
 			modelproxy_batch->setDynamicSortFilter(true);
 
 			// TODO: Co z tym zrobić?
-// 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
-// 			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-// 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 		}
 		// batch
 		if ((model_batch = db.CachedBatch())){
@@ -93,7 +93,7 @@ void TabBatchWidget::activateUi(bool activate) {
 			table_batch->setItemDelegate(model_batch_delegate);
 			table_batch->show();
 			// TODO: Co z tym zrobić?
-// 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 			abrw->update_model();
 		}
 	}

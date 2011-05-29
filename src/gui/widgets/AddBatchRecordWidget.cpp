@@ -103,9 +103,9 @@ void AddBatchRecordWidget::insert_record() {
 	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
 	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
 	btm->setData(btm->index(row, BatchTableModel::HDesc), QString(":)"));
-// 	bool status = btm->submitAll();
+	btm->submitAll();
 
-// 	clear_form();
+	clear_form();
 	edit_spec->setFocus();
 }
 
@@ -119,14 +119,13 @@ void AddBatchRecordWidget::clear_form() {
 	edit_unit->clear();
 	edit_expiry->clear();
 	edit_spec->clear();
-	edit_expiry->clear();
+// 	edit_expiry->clear();
 	edit_qty->clear();
 	edit_unit->clear();
 	edit_price->clear();
-	check_uprice->setCheckState(Qt::Checked);
-	edit_invoice->clear();
-	edit_book->clear();
-	edit_expiry->clear();
+// 	check_uprice->setCheckState(Qt::Checked);
+// 	edit_invoice->clear();
+// 	edit_book->clear();
 }
 
 void AddBatchRecordWidget::cancel_form() {

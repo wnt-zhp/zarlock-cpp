@@ -109,8 +109,6 @@ void AddDistributorRecordWidget::validateAdd() {
 void AddDistributorRecordWidget::update_model() {
 	combo_products->setModel(Database::Instance().CachedBatch());
 	combo_products->setModelColumn(2);
-// 	PR(__LINE__);
-// 	combo_products->setEditable(true);
 
 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;

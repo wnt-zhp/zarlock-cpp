@@ -112,24 +112,24 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	if (tab_products) delete tab_products;
 	tab_products = new ProductsTableModel;
 	tab_products->setTable("products");
-	tab_products->setEditStrategy(QSqlTableModel::OnFieldChange);
+	tab_products->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
 	// batch
 	if (tab_batch) delete tab_batch;
 	tab_batch = new BatchTableModel;
 	tab_batch->setTable("batch");
-	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
 	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
 
 	if (tab_distributor) delete tab_distributor;
 	tab_distributor = new DistributorTableModel;
 	tab_distributor->setTable("distributor");
-	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
 	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "id"/*"spec"*/));
 
-	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
+// 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
+// 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
+// 	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
 
 	return rebuild_models();
 }
@@ -176,9 +176,6 @@ bool Database::rebuild_models() {
 		return false;
 	}
 
-// 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-// 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
-// 	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(database2Update()));
 	return true;
 }
 

@@ -68,7 +68,9 @@ void AddProductsRecordWidget::insert_record() {
 	tm->setData(tm->index(row, 1), edit_name->text());
 	tm->setData(tm->index(row, 2), edit_unit->text());
 	tm->setData(tm->index(row, 3), edit_expiry->text());
- 	tm->submitAll();
+ 	if (!tm->submitAll()) {
+		std::cerr << "QUERY Error!\n";
+	}
 
 	clear_form();
 }

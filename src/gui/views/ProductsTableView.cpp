@@ -120,12 +120,12 @@ void ProductsTableView::contextMenuEvent(QContextMenuEvent * event) {
 void ProductsTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
-		PR((*it).column());
-		PR((*it).row());
+// 		PR((*it).column());
+// 		PR((*it).row());
 		if ((*it).column() == ProductsTableModel::HName)
 			model()->removeRow((*it).row());
 	}
-	((QSqlTableModel *)model())->submitAll();
+	db.CachedProducts()->submitAll();
 }
 
 #include "ProductsTableView.moc"

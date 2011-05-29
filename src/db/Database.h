@@ -57,7 +57,7 @@ signals:
 	void databaseDirty();
 	void dbSaved();
 
-private:
+private slots:
 	bool rebuild_models();
 
 private:

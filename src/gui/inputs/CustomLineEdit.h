@@ -32,6 +32,8 @@ public:
 	virtual void focusOutEvent(QFocusEvent* );
 	virtual void focusInEvent(QFocusEvent* );
 
+	virtual void clear();
+
 	bool ok();
 	
 	inline virtual QString text(bool placeholdertext = false) const { return placeholdertext ? displaytext : rawtext; }

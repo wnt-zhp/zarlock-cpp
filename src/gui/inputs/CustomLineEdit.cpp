@@ -73,4 +73,10 @@ bool CustomLineEdit::verify(const QString & t) {
 	return is_ok;
 }
 
+void CustomLineEdit::clear() {
+	rawtext.clear();
+	is_ok = false;
+	QLineEdit::clear();
+}
+
 #include "CustomLineEdit.moc"

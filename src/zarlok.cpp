@@ -55,7 +55,7 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 	tb2->setAllowedAreas(Qt::RightToolBarArea);
 	tb2->setIconSize(QSize(400, 100));
 // 	QPushButton * b = new QPushButton("adasd");
-	QIcon * b = new QIcon(QPixmap(300, 80));
+// 	QIcon * b = new QIcon(QPixmap(300, 80));
 // 	b->resize( 400, 100);
 // 	b->setGeometry(0, 0, 400, 100);
 	DBItemWidget * dbiw = new DBItemWidget();
