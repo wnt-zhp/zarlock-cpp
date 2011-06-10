@@ -61,7 +61,9 @@ Database::~Database() {
 
 	if (db.isOpen())
 		db.close();
-	QSqlDatabase::removeDatabase("QSQLITE");
+	db.removeDatabase("QSQLITE");
+// 	QSqlDatabase::removeDatabase("QSQLITE");
+	delete dbi;
 }
 
 /**
@@ -75,12 +77,12 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	db.setDatabaseName(dbfile);
 	bool ok = db.open();
 	if (!ok) {
-// 		QMessageBox::critical(0, tr("Cannot create database"),
-// 							  tr("Unable to establish a database connection.\n"
-// 								   "This application needs SQLite support. Please read "
-// 								   "the Qt SQL driver documentation for information how "
-// 								   "to build it.\n\n"
-// 								   "Click Close to exit."), QMessageBox::Close);
+		QMessageBox::critical(0, tr("Cannot create database"),
+							  tr("Unable to establish a database connection.\n"
+								   "This application needs SQLite support. Please read "
+								   "the Qt SQL driver documentation for information how "
+								   "to build it.\n\n"
+								   "Click Close to exit."), QMessageBox::Close);
 		return false;
 	}
 

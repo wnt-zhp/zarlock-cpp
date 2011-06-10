@@ -20,6 +20,8 @@
 #ifndef DBBROWSER_H
 #define DBBROWSER_H
 
+#include "zarlok.h"
+
 #include "ui_DatabaseBrowser.h"
 
 class DBBrowser : public QWidget, public Ui::DatabaseBrowser {
@@ -28,11 +30,12 @@ public:
     DBBrowser(bool firstrun);
     virtual ~DBBrowser();
 
-	void browser();
-
 public slots:
 	void dbb_list_selected(QListWidgetItem * item);
 	void dbb_new_clicked(bool);
+
+	bool openZarlock();
+	bool closeZarlock();
 
 	bool createDBFile(const QString & dbname);
 	bool openDBFile(const QString & dbname);
@@ -51,7 +54,11 @@ signals:
 private:
 	enum sortflags { s_name = 0, s_time, s_size };
 	enum orderflags { o_asc = 0, o_dsc };
+
+	QString dbname, dbfile;
 	QString recentDB;
+	Database & db;
+	zarlok * z;
 };
 
 #endif // DBBROWSER_H

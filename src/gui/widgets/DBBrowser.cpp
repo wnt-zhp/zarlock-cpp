@@ -25,7 +25,6 @@
 
 #include "globals.h"
 #include "config.h"
-#include "zarlok.h"
 
 #include "DBBrowser.h"
 #include "DBItemWidget.h"
@@ -38,12 +37,13 @@
 
 #include "Database.h"
 
-DBBrowser::DBBrowser(bool firstrun) {
+DBBrowser::DBBrowser(bool firstrun) : db(Database::Instance()) {
 	this->setVisible(false);
 
 	setupUi(this);
 	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
 	connect(dbb_new, SIGNAL(clicked(bool)), this, SLOT(dbb_new_clicked(bool)));
+	connect(dbb_quit, SIGNAL(clicked(bool)), this, SLOT(close()));
 
 	dbb_delete->setEnabled(false);
 
@@ -64,32 +64,38 @@ DBBrowser::DBBrowser(bool firstrun) {
 		recentDB = globals::appSettings->value("RecentDatabase").toString();
 		globals::appSettings->endGroup();
 	}
+
+	if (!recentDB.isEmpty())
+		openDBFile(recentDB);
 }
 
 DBBrowser::~DBBrowser() {
-	PR(666);
 	while (dbb_list->count()) {
 		QListWidgetItem * item = dbb_list->item(0);
 		dbb_list->removeItemWidget(item);
 		delete item;
 	}
-	PR(667);
 }
 
-void DBBrowser::browser() {
-	QString ddbb = recentDB;
+bool DBBrowser::openZarlock() {
+	this->setVisible(false);
+	z = new zarlok("");
+	z->show();
+// 	connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
+	connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+}
 
-	while(true) {
-		if (!ddbb.isEmpty()) {
-			this->setVisible(false);
-			zarlok().show();
-		}
-	}
+bool DBBrowser::closeZarlock() {
+// 	disconnect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
+	disconnect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+	delete z;
+	z = NULL;
+	this->setVisible(true);
 }
 
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
 	QString dbname = item->data(Qt::UserRole).toString();
-	openDBName(dbname);
+	openDBFile(dbname);
 }
 
 void DBBrowser::reload_list(int sort, int order) {
@@ -124,20 +130,30 @@ void DBBrowser::reload_list(int sort, int order) {
 	for (int i = 0; i < list.size(); ++i) {
 		QFileInfo fileInfo = list.at(i);
 		QString fname = fileInfo.fileName();
-		int pos = fname.lastIndexOf(".db");
+		int pos = fname.lastIndexOf(".db", -3);
+		if (pos < 0)
+			continue;
 		fname.remove(pos, 3);
+
+		QFile infoFile(dir.absoluteFilePath(fname % ".info"));
+		QString finfo = fname;
+		if (infoFile.exists()) {
+			infoFile.open(QIODevice::ReadOnly);
+			finfo = QString::fromUtf8(infoFile.readAll());
+			infoFile.close();
+		}
 
 		QListWidgetItem * witem = new QListWidgetItem();
 		witem->setData(Qt::UserRole, fname);
-		witem->setSizeHint(QSize(400, 80));
-		witem->setIcon(QIcon(QPixmap(QSize(100,100))));
+		witem->setText(finfo);
+		witem->setSizeHint(QSize(0, 60));
+		witem->setIcon(QIcon(QPixmap(QSize(60,60))));
 		dbb_list->addItem(witem);
 
-		DBItemWidget * w = new DBItemWidget();
-		w->setDBName(fname);
-
-// 		dbb_list->setIconSize(QSize(50, 50));
-		dbb_list->setItemWidget(witem, w);
+// 		DBItemWidget * w = new DBItemWidget();
+// 		w->setDBName(finfo);
+// // 		dbb_list->setIconSize(QSize(50, 50));
+// 		dbb_list->setItemWidget(witem, w);
 	}
 }
 
@@ -146,8 +162,7 @@ bool DBBrowser::openDBFile(const QString& dbname) {
 					dbname + QString(".db"));
 
 	if  (dbfile.exists()) {
-// 	PR(dbname.toStdString());
-		emit dbb_database(dbname);
+		openDB(dbfile.fileName());
 	} else {
 		QMessageBox msgBox;
 		msgBox.setText(tr("The database name %1 doesn't exists!").arg(dbname));
@@ -157,8 +172,9 @@ bool DBBrowser::openDBFile(const QString& dbname) {
 		msgBox.setDefaultButton(QMessageBox::Yes);
 		int ret = msgBox.exec();
 		if (ret == QMessageBox::Yes) {
-			if (createDBFile(dbname))
-				emit dbb_database(dbname);
+			if (createDBFile(dbname)) {
+				openDB(dbfile.fileName());
+			}
 		} else
 			return false;
 	}
@@ -173,19 +189,22 @@ bool DBBrowser::openDBFile(const QString& dbname) {
 bool DBBrowser::createDBFile(const QString & dbname) {
 	if (dbname.isEmpty()) {
 		QMessageBox msgBox;
-		msgBox.setText(tr("The database name is empty."));
-		msgBox.setIcon(QMessageBox::Warning);
+		msgBox.setText(tr("The database name is empty"));
+		msgBox.setIcon(QMessageBox::Critical);
 		msgBox.exec();
 		return false;
 	} else {
+		QString safename = dbname;
+		safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
 		QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
 		if (!dbsavepath.exists())
 			dbsavepath.mkpath(dbsavepath.absolutePath());
 
 		QString dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
-						dbname + QString(".db");
+						safename + QString(".db");
+		QString dbifile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
+						safename + QString(".info");
 // 		dbfile.
-		PR(dbfile.toStdString());
 		QFile file(dbfile);
 		if (file.exists()) {
 			QMessageBox msgBox;
@@ -200,11 +219,16 @@ bool DBBrowser::createDBFile(const QString & dbname) {
 				return true;
 			if (ret == QMessageBox::No)
 				return false;
-			file.open(QIODevice::ReadWrite | QIODevice::Truncate);
-		} else {
-			file.open(QIODevice::ReadWrite);
-		}
+		} 
+		
+		file.open(QIODevice::ReadWrite | QIODevice::Truncate);
 		file.close();
+
+		file.setFileName(dbifile);
+		file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+		file.write(dbname.toUtf8());
+		file.close();
+
 		Database & db = Database::Instance();
 		db.open_database(dbfile, true);
 		db.close_database();
@@ -219,11 +243,10 @@ bool DBBrowser::createDBFile(const QString & dbname) {
  * @param file nazwa pliku do otwarcia
  * @return bool
  **/
-void DBBrowser::openDB(const QString & dbname) {
-	dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
-					dbname + QString(".db");
+void DBBrowser::openDB(const QString & dbfile) {
 	bool ret = db.open_database(dbfile, false);
-	activateUi(ret);
+	openZarlock();
+// 	activateUi(ret);
 }
 
 /**
@@ -237,7 +260,7 @@ void DBBrowser::saveDB() {
 	db.CachedDistributor()->submitAll();
 
 	db.updateBatchQty();
-	actionSaveDB->setEnabled(false);
+// 	actionSaveDB->setEnabled(false);
 }
 
 /**
@@ -246,21 +269,16 @@ void DBBrowser::saveDB() {
  * @return bool - wynik wykonania QTableModel::submitAll()
  **/
 void DBBrowser::closeDB() {
-	activateUi(false);
+// 	activateUi(false);
 	saveDB();
 	db.close_database();
 }
 
 void DBBrowser::dbb_new_clicked(bool) {
-// 	Ui::NewDatabase * dialog = new Ui::NewDatabase();
-// 	dialog->exec();
-	while (true) {
-		QString dbname = QInputDialog::getText(this, tr("New database"), tr("New database name"));
-		bool ret = createDBName(dbname);
-		if (ret) break;
-	}
-
-	reload_list();
+	bool wasOK = false;
+	QString dbname = QInputDialog::getText(this, tr("New database"), tr("New database name"),QLineEdit::Normal, "", &wasOK);
+	if (wasOK && createDBFile(dbname))
+		reload_list();
 }
 
 #include "DBBrowser.moc"

@@ -27,7 +27,6 @@
 zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
 										 tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
 	setupUi(this);
-
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
 // 	dbb = new DBBrowser();
@@ -67,13 +66,13 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 // 	tb2->addAction(new QAction(dbiw));
 // 	tb2->addWidget(b);
 	tb2->addWidget(dbiw);
-	activateUi(false);
+// 	activateUi(false);
 
 // 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
-	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
+// 	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
 
-	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
-	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(closeDB()));
+// 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
+	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
 
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
@@ -86,10 +85,17 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 // // 		openDB(dbname);
 // 		dbb->openDBName(dbname);
 // 	}
+
+	activateUi(true);
 }
 
 zarlok::~zarlok() {
 // 	saveDB();
+}
+
+void zarlok::doExitZarlok() {
+	db.save_database();
+	emit exitZarlok();
 }
 
 // private members
@@ -102,7 +108,7 @@ zarlok::~zarlok() {
  * @return void
  **/
 void zarlok::activateUi(bool activate) {
-	dbb->setVisible(!activate);
+// 	dbb->setVisible(!activate);
 	this->setVisible(activate);
 
 	if (activate) {
@@ -129,7 +135,7 @@ void zarlok::activateUi(bool activate) {
 }
 
 void zarlok::printDailyReport() {
-	DBReports::printDailyReport(dbname, QDate::currentDate());
+// 	DBReports::printDailyReport(dbname, QDate::currentDate());
 }
 
 void zarlok::about() {

@@ -3,7 +3,7 @@
 
 #include "config.h"
 #include "globals.h"
-#include "zarlok.h"
+#include "DBBrowser.h"
 
 namespace globals {
 	QPalette palette_ok = QPalette();
@@ -77,7 +77,6 @@ int main(int argc, char ** argv/*, char ** env*/) {
 //     zarlok foo(arg_dbname);
 //     foo.show();
 	DBBrowser dbb(fsettings.exists());
-	dbb.show();
 
-    return app.exec();
+	return app.exec();
 }

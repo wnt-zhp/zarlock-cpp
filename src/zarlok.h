@@ -6,7 +6,6 @@
 #include <QtSql>
 
 #include "Database.h"
-#include "DBBrowser.h"
 
 #include "AddDistributorRecordWidget.h"
 
@@ -25,11 +24,16 @@ Q_OBJECT
 public:
 	zarlok(const QString & dbname);
 	virtual ~zarlok();
-	
+
 private:
 	void activateUi(bool activate = true);
 
+signals:
+	void exitZarlok();
+
 private slots:
+	void doExitZarlok();
+
 	void printDailyReport();
 
 	void about();
@@ -38,7 +42,6 @@ private slots:
 	void db2update();
 
 private:
-	QString dbname, dbfile;
 	Database & db;
 	QDataWidgetMapper * dwm_prod;
 
@@ -46,8 +49,6 @@ private:
 	TabBatchWidget * tbw;
 	TabDistributorWidget * tdw;
 	TabMealWidget * tmw;
-
-	DBBrowser * dbb;
 
 	QAction * actionQuit;
 	QAction * actionAbout;
