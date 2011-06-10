@@ -25,6 +25,8 @@
 
 #include "globals.h"
 #include "config.h"
+#include "zarlok.h"
+
 #include "DBBrowser.h"
 #include "DBItemWidget.h"
 
@@ -36,7 +38,9 @@
 
 #include "Database.h"
 
-DBBrowser::DBBrowser() {
+DBBrowser::DBBrowser(bool firstrun) {
+	this->setVisible(false);
+
 	setupUi(this);
 	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
 	connect(dbb_new, SIGNAL(clicked(bool)), this, SLOT(dbb_new_clicked(bool)));
@@ -49,6 +53,17 @@ DBBrowser::DBBrowser() {
 	dbb_load->setIcon( dbb_load->style()->standardIcon(QStyle::SP_DialogOpenButton) );
 
 	reload_list();
+
+	bool firstRun = false;
+// 	LOG(fsettings.fileName().toStdString());
+
+	if (!firstrun) {
+		PR("First run! Welcome to żarłok.");
+	} else {
+		globals::appSettings->beginGroup("Database");
+		recentDB = globals::appSettings->value("RecentDatabase").toString();
+		globals::appSettings->endGroup();
+	}
 }
 
 DBBrowser::~DBBrowser() {
@@ -59,6 +74,17 @@ DBBrowser::~DBBrowser() {
 		delete item;
 	}
 	PR(667);
+}
+
+void DBBrowser::browser() {
+	QString ddbb = recentDB;
+
+	while(true) {
+		if (!ddbb.isEmpty()) {
+			this->setVisible(false);
+			zarlok().show();
+		}
+	}
 }
 
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
@@ -115,7 +141,7 @@ void DBBrowser::reload_list(int sort, int order) {
 	}
 }
 
-bool DBBrowser::openDBName(const QString& dbname) {
+bool DBBrowser::openDBFile(const QString& dbname) {
 	QFile dbfile(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
 					dbname + QString(".db"));
 
@@ -131,14 +157,20 @@ bool DBBrowser::openDBName(const QString& dbname) {
 		msgBox.setDefaultButton(QMessageBox::Yes);
 		int ret = msgBox.exec();
 		if (ret == QMessageBox::Yes) {
-			if (createDBName(dbname))
+			if (createDBFile(dbname))
 				emit dbb_database(dbname);
-		}
+		} else
+			return false;
 	}
+
+	globals::appSettings->beginGroup("Database");
+	globals::appSettings->setValue("RecentDatabase", dbname);
+	globals::appSettings->endGroup();
+
 	return true;
 }
 
-bool DBBrowser::createDBName(const QString & dbname) {
+bool DBBrowser::createDBFile(const QString & dbname) {
 	if (dbname.isEmpty()) {
 		QMessageBox msgBox;
 		msgBox.setText(tr("The database name is empty."));
@@ -178,6 +210,45 @@ bool DBBrowser::createDBName(const QString & dbname) {
 		db.close_database();
 	}
 	return true;
+}
+
+/**
+ * @brief Slot - otwiera bazę danych po wywołaniu akcji z menu lub skrótu klawiatury
+ *
+ * @param recreate jeśli w bazie istnieją tabele, wpierw je usuń i stwórz na nowo
+ * @param file nazwa pliku do otwarcia
+ * @return bool
+ **/
+void DBBrowser::openDB(const QString & dbname) {
+	dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
+					dbname + QString(".db");
+	bool ret = db.open_database(dbfile, false);
+	activateUi(ret);
+}
+
+/**
+ * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
+ *
+ * @return bool - wynik wykonania QTableModel::submitAll()
+ **/
+void DBBrowser::saveDB() {
+	db.CachedProducts()->submitAll();
+	db.CachedBatch()->submitAll();
+	db.CachedDistributor()->submitAll();
+
+	db.updateBatchQty();
+	actionSaveDB->setEnabled(false);
+}
+
+/**
+ * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
+ *
+ * @return bool - wynik wykonania QTableModel::submitAll()
+ **/
+void DBBrowser::closeDB() {
+	activateUi(false);
+	saveDB();
+	db.close_database();
 }
 
 void DBBrowser::dbb_new_clicked(bool) {

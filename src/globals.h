@@ -8,6 +8,7 @@
 
 #include <QtGui/QPalette>
 #include <QtGui/QFont>
+#include <QtCore/QSettings>
 
 #include "Logger.h"
 
@@ -20,6 +21,8 @@ namespace globals {
 // 	extern QPalette palette_neutral;
 	extern QFont font_edit;
 	extern QFont font_display;
+
+	extern QSettings * appSettings;
 }
 
 #endif /*__GLOBALS_H__*/

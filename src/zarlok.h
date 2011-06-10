@@ -30,9 +30,6 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void openDB(const QString & dbname);
-	void saveDB();
-	void closeDB();
 	void printDailyReport();
 
 	void about();

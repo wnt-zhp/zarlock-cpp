@@ -171,6 +171,7 @@ bool Database::rebuild_models() {
 		return false;
 	}
 
+	// distributor
 	if (!tab_distributor->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), tab_distributor->lastError().text(), QMessageBox::Abort);
 		return false;

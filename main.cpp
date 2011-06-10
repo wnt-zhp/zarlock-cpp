@@ -13,6 +13,8 @@ namespace globals {
 	QColor item_nexpired = QColor();
 	QFont font_edit = QFont();
 	QFont font_display = QFont();
+
+	QSettings * appSettings = NULL;
 }
 
 int main(int argc, char ** argv/*, char ** env*/) {
@@ -62,11 +64,20 @@ int main(int argc, char ** argv/*, char ** env*/) {
 		exit(EXIT_FAILURE);
 	}
 
-	QString arg_dbname;
-	if (argc > 1) {
-		arg_dbname = argv[1];
-	}
-    zarlok foo(arg_dbname);
+	QDir dir(QDir::homePath() + QString(ZARLOK_HOME));
+// 	QString fsettings = dir.absoluteFilePath("zarlok.settings");
+// 	PR(fsettings.toStdString().c_str());
+
+	QFile fsettings(QDir::homePath() + QString(ZARLOK_HOME) + QString("zarlok.cfg"));
+	globals::appSettings = new QSettings(fsettings.fileName(), QSettings::IniFormat);
+
+// 	if (argc > 1) {
+// 		arg_dbname = argv[1];
+// 	}
+//     zarlok foo(arg_dbname);
 //     foo.show();
+	DBBrowser dbb(fsettings.exists());
+	dbb.show();
+
     return app.exec();
 }

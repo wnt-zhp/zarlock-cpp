@@ -58,6 +58,7 @@ set(zarlok_widget_FORMS
 									src/ui/TabBatchWidget.ui
 									src/ui/TabDistributorWidget.ui
 									src/ui/TabMealWidget.ui
+									src/ui/CampSettings.ui
 )
 set(zarlok_db_RESOURCES src/database.qrc)
 set(zarlok_db_RESOURCES_RCC database.rcc)
@@ -81,6 +82,7 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/TabDistributorWidget.cpp
 									src/gui/widgets/TabMealWidget.cpp
 									src/gui/widgets/MainTabWidget.cpp
+									src/gui/widgets/CampSettingsWidget.cpp
 )
 set(zarlok_src_models_SRCS
 									src/models/BatchTableModel.cpp

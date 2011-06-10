@@ -30,7 +30,7 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
-	dbb = new DBBrowser();
+// 	dbb = new DBBrowser();
 
 	QToolBar * toolbar;
 	toolbar = addToolBar(tr("Main"));
@@ -80,16 +80,16 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
-	if (dbname.isEmpty()) {
-		dbb->show();
-	} else {
-// 		openDB(dbname);
-		dbb->openDBName(dbname);
-	}
+// 	if (dbname.isEmpty()) {
+// 		dbb->show();
+// 	} else {
+// // 		openDB(dbname);
+// 		dbb->openDBName(dbname);
+// 	}
 }
 
 zarlok::~zarlok() {
-	saveDB();
+// 	saveDB();
 }
 
 // private members
@@ -126,46 +126,6 @@ void zarlok::activateUi(bool activate) {
 		if (tbw) delete tbw; tbw = NULL;
 		if (tpw) delete tpw; tpw = NULL;
 	}
-}
-
-/**
- * @brief Slot - otwiera bazę danych po wywołaniu akcji z menu lub skrótu klawiatury
- *
- * @param recreate jeśli w bazie istnieją tabele, wpierw je usuń i stwórz na nowo
- * @param file nazwa pliku do otwarcia
- * @return bool
- **/
-void zarlok::openDB(const QString & dbname) {
-	dbfile = QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB) +
-					dbname + QString(".db");
-	this->dbname = dbname;
-	bool ret = db.open_database(dbfile, false);
-	activateUi(ret);
-}
-
-/**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
- *
- * @return bool - wynik wykonania QTableModel::submitAll()
- **/
-void zarlok::saveDB() {
-	db.CachedProducts()->submitAll();
-	db.CachedBatch()->submitAll();
-	db.CachedDistributor()->submitAll();
-
-	db.updateBatchQty();
-	actionSaveDB->setEnabled(false);
-}
-
-/**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
- *
- * @return bool - wynik wykonania QTableModel::submitAll()
- **/
-void zarlok::closeDB() {
-	activateUi(false);
-	saveDB();
-	db.close_database();
 }
 
 void zarlok::printDailyReport() {
