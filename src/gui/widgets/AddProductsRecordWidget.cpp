@@ -38,6 +38,7 @@ AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidg
 }
 
 AddProductsRecordWidget::~AddProductsRecordWidget() {
+	FPR(__func__);
 	if (completer_name) delete completer_name;
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;

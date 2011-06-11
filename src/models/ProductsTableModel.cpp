@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
 #include <QAbstractTableModel>
 #include <QDate>
 #include <QColor>
@@ -23,20 +24,12 @@
 #include "ProductsTableModel.h"
 #include "DataParser.h"
 
-/**
- * @brief Konstruktor - nic się nie dzieje.
- *
- * @param parent rodzic
- * @param db Połączenie do bazy danych, z których model będzie pobierał dane
- **/
 ProductsTableModel::ProductsTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
+	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
 }
 
-/**
- * @brief I tu też nic.
- *
- **/
 ProductsTableModel::~ProductsTableModel() {
+	FPR(__func__);
 }
 
 /**

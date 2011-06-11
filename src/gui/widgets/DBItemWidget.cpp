@@ -18,6 +18,7 @@
 
 
 #include "DBItemWidget.h"
+#include "globals.h"
 
 DBItemWidget::DBItemWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
 	if (parent == NULL)
@@ -27,6 +28,6 @@ DBItemWidget::DBItemWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, 
 }
 
 DBItemWidget::~DBItemWidget() {
-
+	FPR(__func__);
 }
 

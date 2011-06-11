@@ -4,5 +4,6 @@
 	<file>resources/icons/printer.png</file>
 	<file>resources/icons/svn-commit.png</file>
 	<file>resources/icons/system-help.png</file>
+	<file>resources/icons/system-switch-user.png</file>
 </qresource>
 </RCC>

@@ -24,7 +24,7 @@ MainTabWidget::MainTabWidget(QWidget* parent): QTabWidget(parent) {
 }
 
 MainTabWidget::~MainTabWidget() {
-
+	FPR(__func__);
 }
 
 void MainTabWidget::changeEvent(QEvent& ) {

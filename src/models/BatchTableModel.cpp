@@ -27,21 +27,12 @@
 #include "BatchTableModel.h"
 #include "DataParser.h"
 
-/**
- * @brief Konstruktor - nic się nie dzieje.
- *
- * @param parent rodzic
- * @param db Połączenie do bazy danych, z których model będzie pobierał dane
- **/
 BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged(QModelIndex,QModelIndex)));
+	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
 }
 
-/**
- * @brief Luck, I'm your father!
- *
- **/
 BatchTableModel::~BatchTableModel() {
+	FPR(__func__);
 }
 
 /**
@@ -106,7 +97,7 @@ bool BatchTableModel::select() {
 	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
 	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice No."));
 
-    return QSqlTableModel::select();
+    return QSqlRelationalTableModel::select();
 }
 
 /**
@@ -218,11 +209,6 @@ void BatchTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
-}
-
-void BatchTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
-	PR(topleft.row()); PR(topleft.column());
-	PR(bottomright.row()); PR(bottomright.column());
 }
 
 #include "BatchTableModel.moc"

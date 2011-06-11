@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="MainTabWidget" name="MainTab">
+     <widget class="QTabWidget" name="MainTab">
       <property name="tabPosition">
        <enum>QTabWidget::West</enum>
       </property>
@@ -26,14 +26,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>MainTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header location="global">MainTabWidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

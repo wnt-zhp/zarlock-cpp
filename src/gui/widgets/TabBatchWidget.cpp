@@ -57,6 +57,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 }
 
 TabBatchWidget::~TabBatchWidget() {
+	FPR(__func__);
 	activateUi(false);
 	if (model_batch_delegate) delete model_batch_delegate;
 	if (modelproxy_batch) delete modelproxy_batch;

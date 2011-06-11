@@ -42,6 +42,7 @@ AddMealRecordWidget::AddMealRecordWidget(const QDate & bd, const QDate & ed, QWi
 }
 
 AddMealRecordWidget::~AddMealRecordWidget() {
+	FPR(__func__);
 	if (completer_other) delete completer_other;
 }
 
@@ -167,10 +168,7 @@ void AddMealRecordWidget::validateAdd() {
 void AddMealRecordWidget::update_model() {
 // 	combo_batch->setModel(Database::Instance().CachedBatch());
 // 	combo_batch->setModelColumn(2);
-	PR(__LINE__);
-
 	if (completer_other) delete completer_other;
-
 	completer_other = new QCompleter();
 
 // 	Database & db = Database::Instance();

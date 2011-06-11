@@ -50,8 +50,10 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
  *
  **/
 ProductsTableView::~ProductsTableView() {
+	FPR(__func__);
 	delete removeRec;
 	delete addRec;
+// 	db.CachedProducts()->submitAll();
 }
 
 /**

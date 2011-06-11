@@ -68,6 +68,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 }
 
 TabMealWidget::~TabMealWidget() {
+	FPR(__func__);
 	activateUi(false);
 	if (amrw) delete amrw;
 	if (afrw) delete afrw;

@@ -57,6 +57,7 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Databa
  *
  **/
 BatchTableView::~BatchTableView() {
+	FPR(__func__);
 	delete removeRec;
 	delete addRec;
 }

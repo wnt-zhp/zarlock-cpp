@@ -24,35 +24,41 @@
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()), dwm_prod(NULL),
+zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()),
 										 tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
-// 	dbb = new DBBrowser();
+	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), this);
+	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
+// 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
+	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
+	actionSwitchDB = new QAction(QIcon(":/resources/icons/system-switch-user.png"), tr("Switch Database"), this);
 
-	QToolBar * toolbar;
+// 	actionSaveDB->setEnabled(false);
+
 	toolbar = addToolBar(tr("Main"));
-	toolbar->setMovable(false);
-	toolbar->setIconSize(QSize(32, 32));
+	toolbar->setObjectName("toolbar");
+	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+// 	toolbar->setMovable(false);
+	toolbar->setIconSize(QSize(64, 64));
 
-	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), toolbar);
-	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), toolbar);
-	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), toolbar);
-	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), toolbar);
-
-	actionSaveDB->setEnabled(false);
 
 	toolbar->addAction(actionQuit);
-	toolbar->addAction(actionPrintReport);
+// 	toolbar->addAction(actionPrintReport);
 	toolbar->addSeparator();
-	toolbar->addAction(actionSaveDB);
+// 	toolbar->addAction(actionSaveDB);
 	toolbar->addSeparator();
 	toolbar->addAction(actionAbout);
 
-	QToolBar * tb2 = addToolBar(tr("Database"));
-	tb2->setAllowedAreas(Qt::RightToolBarArea);
-	tb2->setIconSize(QSize(400, 100));
+	dbtoolbar = addToolBar(tr("Database"));
+	dbtoolbar->setObjectName("dbtoolbar");
+	dbtoolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+// 	dbtoolbar->setMovable(false);
+	dbtoolbar->setIconSize(QSize(64, 64));
+
+	dbtoolbar->addAction(actionSwitchDB);
+
 // 	QPushButton * b = new QPushButton("adasd");
 // 	QIcon * b = new QIcon(QPixmap(300, 80));
 // 	b->resize( 400, 100);
@@ -65,36 +71,40 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 // 	tb2->addAction(*b, "adssad");
 // 	tb2->addAction(new QAction(dbiw));
 // 	tb2->addWidget(b);
-	tb2->addWidget(dbiw);
+	dbtoolbar->addWidget(dbiw);
 // 	activateUi(false);
 
 // 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
-// 	connect(dbb, SIGNAL(dbb_database(const QString&)), this, SLOT(openDB(const QString&)));
 
 // 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
-	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
-
+	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
+	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
-// 	if (dbname.isEmpty()) {
-// 		dbb->show();
-// 	} else {
-// // 		openDB(dbname);
-// 		dbb->openDBName(dbname);
-// 	}
-
 	activateUi(true);
+
+	globals::appSettings->beginGroup("WindowSettings");
+	restoreGeometry(globals::appSettings->value("geometry").toByteArray());
+	restoreState(globals::appSettings->value("windowState").toByteArray());
+	globals::appSettings->endGroup();
 }
 
 zarlok::~zarlok() {
-// 	saveDB();
+	activateUi(false);
+	FPR(__func__);
+	globals::appSettings->beginGroup("WindowSettings");
+	globals::appSettings->setValue("geometry", saveGeometry());
+	globals::appSettings->setValue("windowState", saveState());
+	globals::appSettings->endGroup();
+
+	delete toolbar;
+	delete dbtoolbar;
 }
 
 void zarlok::doExitZarlok() {
-	db.save_database();
 	emit exitZarlok();
 }
 
@@ -108,7 +118,6 @@ void zarlok::doExitZarlok() {
  * @return void
  **/
 void zarlok::activateUi(bool activate) {
-// 	dbb->setVisible(!activate);
 	this->setVisible(activate);
 
 	if (activate) {
@@ -123,10 +132,11 @@ void zarlok::activateUi(bool activate) {
 		MainTab->addTab(tmw, tr("Meal"));
 
 		MainTab->setTabPosition(QTabWidget::North);
-
 		MainTab->setVisible(activate);
 		MainTab->setEnabled(activate);
 	} else {
+		while (MainTab->count())
+			MainTab->removeTab(0);
 		if (tmw) delete tmw; tmw = NULL;
 		if (tdw) delete tdw; tdw = NULL;
 		if (tbw) delete tbw; tbw = NULL;
@@ -144,7 +154,7 @@ void zarlok::about() {
              tr("The <b>Menu</b> example shows how to create "
                 "menu-bar menus and context menus."));
 }
-
+/*
 void zarlok::tabChanged(int index) {
 	PR(index);
 	if (actionSaveDB->isEnabled()) {
@@ -163,7 +173,7 @@ void zarlok::tabChanged(int index) {
 	} else {
 // 		MainTab->setCurrentIndex(index);
 	}
-}
+}*/
 
 void zarlok::db2update() {
 	statusbar->showMessage(tr("You need to save your database!"));

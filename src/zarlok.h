@@ -1,8 +1,6 @@
 #ifndef zarlok_H
 #define zarlok_H
 
-#include <QtGui/QDataWidgetMapper>
-
 #include <QtSql>
 
 #include "Database.h"
@@ -38,22 +36,26 @@ private slots:
 
 	void about();
 
-	void tabChanged(int index);
+// 	void tabChanged(int index);
 	void db2update();
 
 private:
 	Database & db;
-	QDataWidgetMapper * dwm_prod;
 
 	TabProductsWidget * tpw;
 	TabBatchWidget * tbw;
 	TabDistributorWidget * tdw;
 	TabMealWidget * tmw;
 
+	QToolBar * toolbar;
+	QToolBar * dbtoolbar;
+
 	QAction * actionQuit;
 	QAction * actionAbout;
 	QAction * actionPrintReport;
 	QAction * actionSaveDB;
+
+	QAction * actionSwitchDB;
 };
 
 #endif // zarlok_H

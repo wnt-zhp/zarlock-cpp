@@ -30,10 +30,9 @@
 class ProductsTableModel : public QSqlTableModel {
 Q_OBJECT
 public:
-	ProductsTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
-// 	ProductsTableModel(QSqlTableModel & dd);
-
+	ProductsTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
 	virtual ~ProductsTableModel();
+
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 

@@ -21,9 +21,8 @@
 
 #include "DateInput.h"
 
-DateInput::DateInput(QWidget * parent) : CustomLineEdit(parent) {
+DateInput::DateInput(QWidget * parent) : CustomLineEdit(parent), data_ref(NULL) {
 	setPlaceholderText(tr("Expiry date"));
-	data_ref = NULL;
 }
 
 void DateInput::setDateReferenceObj(const DateInput * ref) {

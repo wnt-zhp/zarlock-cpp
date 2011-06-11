@@ -45,6 +45,7 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 }
 
 AddDistributorRecordWidget::~AddDistributorRecordWidget() {
+	FPR(__func__);
 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
 	if (completer_reason) delete completer_reason;

@@ -39,6 +39,7 @@ MealTableModelProxy::MealTableModelProxy(QObject * parent) : QSortFilterProxyMod
  *
  **/
 MealTableModelProxy::~MealTableModelProxy() {
+	FPR(__func__);
 }
 
 

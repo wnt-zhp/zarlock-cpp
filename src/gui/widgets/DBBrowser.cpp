@@ -37,7 +37,7 @@
 
 #include "Database.h"
 
-DBBrowser::DBBrowser(bool firstrun) : db(Database::Instance()) {
+DBBrowser::DBBrowser(bool firstrun) {
 	this->setVisible(false);
 
 	setupUi(this);
@@ -54,7 +54,6 @@ DBBrowser::DBBrowser(bool firstrun) : db(Database::Instance()) {
 
 	reload_list();
 
-	bool firstRun = false;
 // 	LOG(fsettings.fileName().toStdString());
 
 	if (!firstrun) {
@@ -70,6 +69,8 @@ DBBrowser::DBBrowser(bool firstrun) : db(Database::Instance()) {
 }
 
 DBBrowser::~DBBrowser() {
+	FPR(__func__);
+	delete z;
 	while (dbb_list->count()) {
 		QListWidgetItem * item = dbb_list->item(0);
 		dbb_list->removeItemWidget(item);
@@ -77,7 +78,7 @@ DBBrowser::~DBBrowser() {
 	}
 }
 
-bool DBBrowser::openZarlock() {
+void DBBrowser::openZarlock() {
 	this->setVisible(false);
 	z = new zarlok("");
 	z->show();
@@ -85,12 +86,15 @@ bool DBBrowser::openZarlock() {
 	connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
 }
 
-bool DBBrowser::closeZarlock() {
-// 	disconnect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
-	disconnect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
-	delete z;
-	z = NULL;
+void DBBrowser::closeZarlock() {
+	if (z) {
+		disconnect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+		delete z;
+		z = NULL;
+	}
 	this->setVisible(true);
+	Database::Destroy();
+	FPR(__func__);
 }
 
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
@@ -244,9 +248,9 @@ bool DBBrowser::createDBFile(const QString & dbname) {
  * @return bool
  **/
 void DBBrowser::openDB(const QString & dbfile) {
-	bool ret = db.open_database(dbfile, false);
+	Database & db = Database::Instance();
+	db.open_database(dbfile, false);
 	openZarlock();
-// 	activateUi(ret);
 }
 
 /**
@@ -255,6 +259,7 @@ void DBBrowser::openDB(const QString & dbfile) {
  * @return bool - wynik wykonania QTableModel::submitAll()
  **/
 void DBBrowser::saveDB() {
+	Database & db = Database::Instance();
 	db.CachedProducts()->submitAll();
 	db.CachedBatch()->submitAll();
 	db.CachedDistributor()->submitAll();
@@ -270,6 +275,7 @@ void DBBrowser::saveDB() {
  **/
 void DBBrowser::closeDB() {
 // 	activateUi(false);
+	Database & db = Database::Instance();
 	saveDB();
 	db.close_database();
 }

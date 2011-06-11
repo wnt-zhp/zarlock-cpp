@@ -30,10 +30,9 @@
 class BatchTableModel : public QSqlRelationalTableModel {
 Q_OBJECT
 public:
-	BatchTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
-// 	BatchTableModel(QSqlTableModel & dd);
-
+	BatchTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
 	virtual ~BatchTableModel();
+
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
@@ -43,7 +42,6 @@ public:
 
 public slots:
 	void filterDB(const QString &);
-	void trigDataChanged(QModelIndex topleft , QModelIndex bottomright);
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;

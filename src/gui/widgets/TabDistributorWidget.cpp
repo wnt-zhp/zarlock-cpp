@@ -37,6 +37,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
+	FPR(__func__);
 	activateUi(false);
 	if (adrw) delete adrw;
 }

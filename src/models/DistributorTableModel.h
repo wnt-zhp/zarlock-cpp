@@ -31,9 +31,8 @@ class DistributorTableModel : public QSqlRelationalTableModel {
 Q_OBJECT
 public:
 	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
-// 	DistributorTableModel(QSqlTableModel & dd);
+// 	virtual ~DistributorTableModel();
 
-	virtual ~DistributorTableModel();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 

@@ -29,7 +29,6 @@ public:
 
 private slots:
 	bool verifyText(const QString &, QString & );
-
 };
 
 #endif // UNITINPUT_H

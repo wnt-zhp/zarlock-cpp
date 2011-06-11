@@ -36,6 +36,7 @@ AddFoodRecordWidget::AddFoodRecordWidget(QWidget * parent) : QWidget(parent), co
 }
 
 AddFoodRecordWidget::~AddFoodRecordWidget() {
+	FPR(__func__);
 	if (completer_qty) delete completer_qty;
 }
 

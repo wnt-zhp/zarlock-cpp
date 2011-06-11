@@ -21,7 +21,7 @@
 #include "Database.h"
 #include "DataParser.h"
 
-TabProductsWidget::TabProductsWidget(QWidget * parent) :
+TabProductsWidget::TabProductsWidget(QWidget *) :
 	Ui::TabProductsWidget(), db(Database::Instance()), model_batchbyid(NULL) {
 
 	setupUi(this);
@@ -36,6 +36,7 @@ TabProductsWidget::TabProductsWidget(QWidget * parent) :
 	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
+	connect(&db, SIGNAL(dbSaved()), aprw, SLOT(update_model()));
 // 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 
 	table_products->setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -43,17 +44,13 @@ TabProductsWidget::TabProductsWidget(QWidget * parent) :
 }
 
 TabProductsWidget::~TabProductsWidget() {
+	FPR(__func__);
 	activateUi(false);
 	if (aprw) delete aprw;
 }
 
 void TabProductsWidget::set_filter(const QString & str) {
-	QString q("select \"spec\", \"used_qty\" from batch");
-	q.append(str);
-	if (table_batchbyid->model() != NULL) {
-		((QSqlQueryModel *)table_batchbyid->model())->setQuery(q);
-		model_batchbyid->setQuery(q);
-	}
+
 }
 
 /**
@@ -67,7 +64,7 @@ void TabProductsWidget::activateUi(bool activate) {
 // 	this->setVisible(activate);
 
 	if (activate) {
-		// products
+// 		// products
 		if ((model_prod = db.CachedProducts())) {
 			table_products->setModel(model_prod);
 			table_products->show();
@@ -75,7 +72,7 @@ void TabProductsWidget::activateUi(bool activate) {
 			aprw->update_model();
 		}
 		if (model_batchbyid != NULL) delete model_batchbyid;
-		if (model_batchbyid = new QSqlQueryModel()) {
+		if ((model_batchbyid = new QSqlQueryModel())) {
 // 			model_batchbyid->setQuery("select \"spec\", \"used_qty\" from batch");
 			table_batchbyid->setModel(model_batchbyid);
 			table_batchbyid->show();

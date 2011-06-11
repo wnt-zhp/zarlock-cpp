@@ -3,6 +3,7 @@
 
 #include <iostream>
 #define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "| in " << __FILE__ << " at line " << __LINE__ << "\n";
+#define FPR(x) //std::cout << "++DEBUG: " << #x << " = |" << x << "| in " << __FILE__ << " at line " << __LINE__ << "\n";
 
 #define INFO if (true)
 

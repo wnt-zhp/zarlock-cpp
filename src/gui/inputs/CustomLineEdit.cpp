@@ -26,6 +26,7 @@ CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(
 }
 
 CustomLineEdit::~CustomLineEdit() {
+	FPR(__func__);
 }
 
 bool CustomLineEdit::ok() {

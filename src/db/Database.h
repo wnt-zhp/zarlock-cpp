@@ -33,10 +33,11 @@ class Database : public QObject {
 Q_OBJECT
 public:
 	static Database & Instance();
+	static void Destroy();
 	virtual ~Database();
 private:
 	Database();
-	Database(const Database &) : QObject(NULL) {};
+	Database(const Database &);
 
 public:
 	bool open_database(const QString & dbfile, bool recreate = false);
@@ -67,6 +68,8 @@ private:
 	ProductsTableModel * tab_products;
 	BatchTableModel * tab_batch;
 	DistributorTableModel * tab_distributor;
+
+	bool locked;
 };
 
 #endif // DATABASE_H

@@ -41,13 +41,6 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): 
 }
 
 /**
- * @brief I tu też nic.
- *
- **/
-DistributorTableModel::~DistributorTableModel() {
-}
-
-/**
  * @brief Ta funckja nadpisuje standardową funckję zwracającą daną z modelu. Każda komórka tabeli
  * ma dodatkowy wymiar (tzw. rola, opis ról pod hasłem 'Qt Namespace'). Dzieki temu możemy modyfikować
  * to, co trafia do widoku. Jeśli widok zarząda podania danych z roli Qt::EditRole (czyli do edycji) to tak
@@ -105,7 +98,7 @@ bool DistributorTableModel::select() {
 	setHeaderData(HReason2,	Qt::Horizontal, QObject::tr("Sub reason"));
 	setHeaderData(HReason3,	Qt::Horizontal, QObject::tr("Extra reason"));
 
-    return QSqlTableModel::select();
+    return QSqlRelationalTableModel::select();
 }
 
 /**
@@ -188,8 +181,9 @@ void DistributorTableModel::filterDB(const QString & f) {
 }
 
 void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
+	PR(__func__);
+	submitAll();
 	if (topleft.column() == HQty) {
-		Database::Instance().CachedDistributor()->submitAll();
 		for (int i = topleft.row(); i <= bottomright.row(); ++i) {
 			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());
 		}

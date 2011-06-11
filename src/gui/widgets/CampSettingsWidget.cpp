@@ -26,6 +26,7 @@ CampSettingsWidget::CampSettingsWidget(QWidget * /*parent*/) : Ui::CampSettings(
 }
 
 CampSettingsWidget::~CampSettingsWidget() {
+	FPR(__func__);
 	activateUi(false);
 }
 

@@ -49,6 +49,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 }
 
 AddBatchRecordWidget::~AddBatchRecordWidget() {
+	FPR(__func__);
 	if (completer_spec) delete completer_spec;
 	if (completer_qty) delete completer_qty;
 	if (completer_unit) delete completer_unit;

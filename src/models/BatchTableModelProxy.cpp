@@ -40,6 +40,7 @@ BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBo
  *
  **/
 BatchTableModelProxy::~BatchTableModelProxy() {
+	FPR(__func__);
 }
 
 

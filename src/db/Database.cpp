@@ -39,31 +39,41 @@ Database * Database::dbi = NULL;
  **/
 Database & Database::Instance() {
 	if (!dbi) {
-		dbi = new Database();
+		dbi = new Database;
+		FPR(__func__);
 		std::cout << "++ Create Database instance\n";
-	} else {
-// 		cout << "++ Use existing Database instance\n";
 	}
 
 	return *dbi;
 }
 
-Database::Database() : /*QObject(),*/ tab_products(NULL), tab_batch(NULL), tab_distributor(NULL) {
+void Database::Destroy() {
+	if (dbi) {
+		delete dbi; dbi = NULL;
+		std::cout << "++ Destroy Database instance\n";
+	}
+}
+
+Database::Database() : QObject(), tab_products(NULL), tab_batch(NULL), tab_distributor(NULL), locked(false) {
 	db = QSqlDatabase::addDatabase("QSQLITE");
 }
 
+Database::Database(const Database & db) : QObject() {
+	PR(this);
+	PR(&db);
+}
+
 Database::~Database() {
-	std::cout << "++ Destroy Database instance\n";
+	FPR(__func__);
+
+	if (db.isOpen())
+		db.close();
 
 	if (tab_products) delete tab_products;
 	if (tab_batch) delete tab_batch;
 	if (tab_distributor) delete tab_distributor;
 
-	if (db.isOpen())
-		db.close();
-	db.removeDatabase("QSQLITE");
 // 	QSqlDatabase::removeDatabase("QSQLITE");
-	delete dbi;
 }
 
 /**
@@ -74,6 +84,11 @@ Database::~Database() {
  * @return bool
  **/
 bool Database::open_database(const QString & dbfile, bool recreate) {
+	if (locked) {
+		std::cerr << "Database already opened, close it before reopen." << std::endl;
+		return false;
+	}
+
 	db.setDatabaseName(dbfile);
 	bool ok = db.open();
 	if (!ok) {
@@ -111,19 +126,16 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	}
 
 	// products
-	if (tab_products) delete tab_products;
 	tab_products = new ProductsTableModel;
 	tab_products->setTable("products");
 	tab_products->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
 	// batch
-	if (tab_batch) delete tab_batch;
 	tab_batch = new BatchTableModel;
 	tab_batch->setTable("batch");
 	tab_batch->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
 	tab_batch->setRelation(BatchTableModel::HProdId, QSqlRelation("products", "id", "name"));
 
-	if (tab_distributor) delete tab_distributor;
 	tab_distributor = new DistributorTableModel;
 	tab_distributor->setTable("distributor");
 	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
@@ -132,6 +144,8 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 // 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
 // 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
 // 	connect(tab_distributor, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
+
+	locked = true;
 
 	return rebuild_models();
 }
@@ -142,6 +156,13 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
  * @return bool
  **/
 bool Database::close_database() {
+	if (locked) {
+		if (tab_products) delete tab_products;
+		if (tab_batch) delete tab_batch;
+		if (tab_distributor) delete tab_distributor;
+	}
+	locked = false;
+
 	if (db.isOpen())
 		db.close();
 	return true;
@@ -153,7 +174,6 @@ void Database::save_database() {
 	tab_distributor->submitAll();
 	emit dbSaved();
 }
-
 
 /**
  * @brief ...

@@ -45,10 +45,11 @@ DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
 
-	// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+// 	// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+// 	// 	horizontalHeader()->setMinimumSectionSize(0);
 	horizontalHeader()->setStretchLastSection(true);
-// 	horizontalHeader()->setMinimumSectionSize(0);
 	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+// 	resizeColumnsToContents();
 }
 
 /**
@@ -56,6 +57,7 @@ DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent
  *
  **/
 DistributorTableView::~DistributorTableView() {
+	FPR(__func__);
 	delete removeRec;
 	delete addRec;
 }

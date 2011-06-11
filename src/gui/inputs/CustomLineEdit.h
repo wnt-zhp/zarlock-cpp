@@ -22,7 +22,6 @@
 
 #include <QtGui/QLineEdit>
 
-
 class CustomLineEdit : public QLineEdit {
 Q_OBJECT
 public:

@@ -25,7 +25,7 @@
 class DateInput : public CustomLineEdit {
 Q_OBJECT
 public:
-    DateInput(QWidget * parent);
+	DateInput(QWidget * parent);
 
 	const QDate date() const;
 	void setDateReferenceObj(const DateInput * ref);

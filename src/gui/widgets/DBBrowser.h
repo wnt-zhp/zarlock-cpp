@@ -34,8 +34,8 @@ public slots:
 	void dbb_list_selected(QListWidgetItem * item);
 	void dbb_new_clicked(bool);
 
-	bool openZarlock();
-	bool closeZarlock();
+	void openZarlock();
+	void closeZarlock();
 
 	bool createDBFile(const QString & dbname);
 	bool openDBFile(const QString & dbname);
@@ -57,7 +57,7 @@ private:
 
 	QString dbname, dbfile;
 	QString recentDB;
-	Database & db;
+// 	Database & db;
 	zarlok * z;
 };
 
