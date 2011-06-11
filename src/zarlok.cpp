@@ -120,12 +120,16 @@ void zarlok::activateUi(bool activate) {
 		tdw = new TabDistributorWidget();
 		tmw = new TabMealWidget();
 
-		MainTab->addTab(tpw, tr("Products"));
-		MainTab->addTab(tbw, tr("Stock"));
-		MainTab->addTab(tdw, tr("Distribute"));
-		MainTab->addTab(tmw, tr("Meal"));
+		MainTab->addTab(tpw, QIcon(":/resources/icons/folder-green.png"), tr("Products"));
+		MainTab->addTab(tbw, QIcon(":/resources/icons/folder-orange.png"), tr("Stock"));
+		MainTab->addTab(tdw, QIcon(":/resources/icons/folder-downloads.png"), tr("Distribute"));
+		MainTab->addTab(tmw, QIcon(":/resources/icons/folder-violet.png"), tr("Meal"));
 
-		MainTab->setTabPosition(QTabWidget::North);
+// 		MainTab->setTabPosition(QTabWidget::North);
+		MainTab->setIconSize(QSize(48, 48));
+
+		MainTab->setTabShape(QTabWidget::Triangular);
+	
 		MainTab->setVisible(activate);
 		MainTab->setEnabled(activate);
 	} else {
@@ -148,7 +152,7 @@ void zarlok::writeSettings() {
 
 void zarlok::readSettings() {
 	 globals::appSettings->beginGroup("WindowSettings");
-	 resize			(globals::appSettings->value("size", QSize(400, 400)).toSize());
+	 resize			(globals::appSettings->value("size", QSize(860, 580)).toSize());
 	 move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
 	 restoreState	(globals::appSettings->value("state").toByteArray());
 	 globals::appSettings->endGroup();

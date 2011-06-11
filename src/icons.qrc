@@ -5,5 +5,9 @@
 	<file>resources/icons/svn-commit.png</file>
 	<file>resources/icons/system-help.png</file>
 	<file>resources/icons/system-switch-user.png</file>
+	<file>resources/icons/folder-green.png</file>
+	<file>resources/icons/folder-orange.png</file>
+	<file>resources/icons/folder-downloads.png</file>
+	<file>resources/icons/folder-violet.png</file>
 </qresource>
 </RCC>
