@@ -32,21 +32,21 @@ public:
 
 public slots:
 	void dbb_list_selected(QListWidgetItem * item);
-	void dbb_new_clicked(bool);
+	void newDatabaseCreator(bool autoopen = true);
 
 	void openZarlock();
 	void closeZarlock();
 
-	bool createDBFile(const QString & dbname);
-	bool openDBFile(const QString & dbname);
+	bool openDBFile(const QString & dbname, QString & dbfile, bool createifnotexists = false);
+	bool createDBFile(const QString & dbname, const QString & dbfile);
 
 private slots:
-	void openDB(const QString & dbname);
+	void openDB(const QString & dbname, bool createifnotexists = false);
 	void saveDB();
 	void closeDB();
 
 private:
-	void reload_list(int sort = 0, int order = 0);
+	void refreshList(int sort = 0, int order = 0);
 
 signals:
 	void dbb_database(const QString & dbname);
@@ -55,7 +55,7 @@ private:
 	enum sortflags { s_name = 0, s_time, s_size };
 	enum orderflags { o_asc = 0, o_dsc };
 
-	QString dbname, dbfile;
+// 	QString dbname, dbfile;
 	QString recentDB;
 // 	Database & db;
 	zarlok * z;

@@ -26,6 +26,10 @@ public:
 private:
 	void activateUi(bool activate = true);
 
+	void writeSettings();
+	void readSettings();
+
+	void closeEvent(QCloseEvent *event);
 signals:
 	void exitZarlok();
 

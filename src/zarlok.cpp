@@ -78,33 +78,27 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 
 // 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+	connect(this, SIGNAL(destroyed(QObject*)), this, SLOT(doExitZarlok()));
+	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
+
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
-	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
 	activateUi(true);
-
-	globals::appSettings->beginGroup("WindowSettings");
-	restoreGeometry(globals::appSettings->value("geometry").toByteArray());
-	restoreState(globals::appSettings->value("windowState").toByteArray());
-	globals::appSettings->endGroup();
+	readSettings();
 }
 
 zarlok::~zarlok() {
-	activateUi(false);
 	FPR(__func__);
-	globals::appSettings->beginGroup("WindowSettings");
-	globals::appSettings->setValue("geometry", saveGeometry());
-	globals::appSettings->setValue("windowState", saveState());
-	globals::appSettings->endGroup();
-
+	activateUi(false);
 	delete toolbar;
 	delete dbtoolbar;
 }
 
 void zarlok::doExitZarlok() {
+	writeSettings();
 	emit exitZarlok();
 }
 
@@ -141,6 +135,31 @@ void zarlok::activateUi(bool activate) {
 		if (tdw) delete tdw; tdw = NULL;
 		if (tbw) delete tbw; tbw = NULL;
 		if (tpw) delete tpw; tpw = NULL;
+	}
+}
+
+void zarlok::writeSettings() {
+	globals::appSettings->beginGroup("WindowSettings");
+	globals::appSettings->setValue("size", size());
+	globals::appSettings->setValue("pos", pos());
+	globals::appSettings->setValue("state", saveState());
+	globals::appSettings->endGroup();
+}
+
+void zarlok::readSettings() {
+	 globals::appSettings->beginGroup("WindowSettings");
+	 resize			(globals::appSettings->value("size", QSize(400, 400)).toSize());
+	 move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
+	 restoreState	(globals::appSettings->value("state").toByteArray());
+	 globals::appSettings->endGroup();
+}
+
+void zarlok::closeEvent(QCloseEvent *event) {
+	if (/*userReallyWantsToQuit()*/true) {
+		writeSettings();
+		event->accept();
+	} else {
+		event->ignore();
 	}
 }
 

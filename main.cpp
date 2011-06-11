@@ -29,6 +29,10 @@ int main(int argc, char ** argv/*, char ** env*/) {
 	globals::font_display.setItalic(false);
 // 	globals::font_bad.setBold(true);
 
+	QCoreApplication::setOrganizationName("Wydzuał nowych technologi Głównej Komendy ZHP");
+	QCoreApplication::setOrganizationDomain("wnt.zhp.pl");
+	QCoreApplication::setApplicationName("Żarłok");
+	QCoreApplication::setApplicationVersion("3.0_rc1");
     QApplication app(argc, argv);
 
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";
@@ -76,7 +80,7 @@ int main(int argc, char ** argv/*, char ** env*/) {
 // 	}
 //     zarlok foo(arg_dbname);
 //     foo.show();
-	DBBrowser dbb(fsettings.exists());
+	DBBrowser dbb(!fsettings.exists());
 
 	return app.exec();
 }
