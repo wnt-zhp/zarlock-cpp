@@ -29,54 +29,44 @@ int main(int argc, char ** argv/*, char ** env*/) {
 	globals::font_display.setItalic(false);
 // 	globals::font_bad.setBold(true);
 
-	QCoreApplication::setOrganizationName("Wydzuał nowych technologi Głównej Komendy ZHP");
+	QCoreApplication::setOrganizationName("Wydział nowych technologi Głównej Komendy ZHP");
 	QCoreApplication::setOrganizationDomain("wnt.zhp.pl");
 	QCoreApplication::setApplicationName("Żarłok");
-	QCoreApplication::setApplicationVersion("3.0_rc1");
+	QCoreApplication::setApplicationVersion("3.0_dev");
     QApplication app(argc, argv);
 
-	QTranslator qtTranslator;
+// 	QTranslator qtTranslator;
 // 	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	qtTranslator.load("qt_pl", QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	app.installTranslator(&qtTranslator);
-
-	PR(QString("zarlok_" + QLocale::system().name()).toStdString());
-	PR(QLibraryInfo::location(QLibraryInfo::TranslationsPath).toStdString());
+// 	app.installTranslator(&qtTranslator);
 
 	QTranslator myappTranslator;
-	myappTranslator.load("zarlok_pl", PREFIX SHARE "/translations/");
+	myappTranslator.load("zarlok_" % QLocale::system().name(), PREFIX SHARE "/translations/");
 	app.installTranslator(&myappTranslator);
 
+	const QString resWarnMsgTitle = QObject::tr("Cannot find resources");
+	const QString resWarnMsg = QObject::tr(
+									"Unable to find resources in %1\n"
+									"Check your installation and try to run again.\n"
+									"Click Close to exit.");
+								
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";
-	PR(resource_database.toStdString());
+// 	PR(resource_database.toStdString());
 	if (!QResource::registerResource(resource_database)) {
-		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
-								QObject::tr("Unable to find a database resources in ") +
-								resource_database + "\n" +
-								QObject::tr("Check your installation and try to run again.\n"
-								"Click Close to exit."), QMessageBox::Close);
+		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_database), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
 	QString resource_reports = PREFIX SHARE "/resources/reports.rcc";
-	PR(resource_reports.toStdString());
+// 	PR(resource_reports.toStdString());
 	if (!QResource::registerResource(resource_reports)) {
-		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
-								QObject::tr("Unable to find a reports resources in ") +
-								resource_reports + "\n" +
-								QObject::tr("Check your installation and try to run again.\n"
-								"Click Close to exit."), QMessageBox::Close);
+		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_reports), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
 	QString resource_icons = PREFIX SHARE "/resources/icons.rcc";
-	PR(resource_icons.toStdString());
+// 	PR(resource_icons.toStdString());
 	if (!QResource::registerResource(resource_icons)) {
-		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
-								QObject::tr("Unable to find a icons resources in ") +
-								resource_icons + "\n" +
-								QObject::tr("Check your installation and try to run again.\n"
-								"Click Close to exit."), QMessageBox::Close);
+		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_icons), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 

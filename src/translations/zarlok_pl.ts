@@ -932,7 +932,7 @@ Click Close to exit.</source>
         <location filename="../ui/TabBatchWidget.ui" line="64"/>
         <location filename="../../build/ui_TabBatchWidget.h" line="137"/>
         <source>Valid</source>
-        <translation>Przydatne do sporzycia</translation>
+        <translation>Przydatne do spożycia</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="78"/>
