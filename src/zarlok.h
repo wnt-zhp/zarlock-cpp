@@ -5,15 +5,12 @@
 
 #include "Database.h"
 
-#include "AddDistributorRecordWidget.h"
-
 #include "TabProductsWidget.h"
 #include "TabBatchWidget.h"
 #include "TabDistributorWidget.h"
 #include "TabMealWidget.h"
 
-#include "BatchTableModel.h"
-#include "DistributorTableModel.h"
+#include "DBItemWidget.h"
 
 #include "ui_MainWindow.h"
 
@@ -60,6 +57,8 @@ private:
 	QAction * actionSaveDB;
 
 	QAction * actionSwitchDB;
+	QAction * actionConfigDB;
+	DBItemWidget dbiw;
 };
 
 #endif // zarlok_H

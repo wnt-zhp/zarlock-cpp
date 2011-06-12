@@ -35,6 +35,18 @@ int main(int argc, char ** argv/*, char ** env*/) {
 	QCoreApplication::setApplicationVersion("3.0_rc1");
     QApplication app(argc, argv);
 
+	QTranslator qtTranslator;
+// 	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	qtTranslator.load("qt_pl", QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	app.installTranslator(&qtTranslator);
+
+	PR(QString("zarlok_" + QLocale::system().name()).toStdString());
+	PR(QLibraryInfo::location(QLibraryInfo::TranslationsPath).toStdString());
+
+	QTranslator myappTranslator;
+	myappTranslator.load("zarlok_pl", PREFIX SHARE "/translations/");
+	app.installTranslator(&myappTranslator);
+
 	QString resource_database = PREFIX SHARE "/resources/database.rcc";
 	PR(resource_database.toStdString());
 	if (!QResource::registerResource(resource_database)) {

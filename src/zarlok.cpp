@@ -13,7 +13,6 @@
 
 #include <QFileDialog>
 #include <QToolBar>
-#include <DBItemWidget.h>
 
 // public members
 
@@ -34,48 +33,39 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 // 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
 	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
 	actionSwitchDB = new QAction(QIcon(":/resources/icons/system-switch-user.png"), tr("Switch Database"), this);
+	actionConfigDB = new QAction(QIcon(":/resources/icons/configure.png"), tr("Configure"), this);
 
-// 	actionSaveDB->setEnabled(false);
+	actionQuit->setShortcuts(QKeySequence::Quit);
+	actionAbout->setShortcut(QKeySequence::HelpContents);
+	actionSwitchDB->setShortcuts(QKeySequence::Replace);
+	actionConfigDB->setShortcut(QKeySequence::Preferences);
+
+	actionAbout->setMenuRole(QAction::AboutRole);
 
 	toolbar = addToolBar(tr("Main"));
 	toolbar->setObjectName("toolbar");
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-// 	toolbar->setMovable(false);
 	toolbar->setIconSize(QSize(64, 64));
-
 
 	toolbar->addAction(actionQuit);
 // 	toolbar->addAction(actionPrintReport);
 	toolbar->addSeparator();
-// 	toolbar->addAction(actionSaveDB);
 	toolbar->addSeparator();
 	toolbar->addAction(actionAbout);
 
 	dbtoolbar = addToolBar(tr("Database"));
+	dbtoolbar->setWindowTitle("Database1");
+	dbtoolbar->setAccessibleName("Database2");
+	dbtoolbar->setAccessibleDescription("Database3");
 	dbtoolbar->setObjectName("dbtoolbar");
 	dbtoolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-// 	dbtoolbar->setMovable(false);
 	dbtoolbar->setIconSize(QSize(64, 64));
 
 	dbtoolbar->addAction(actionSwitchDB);
-
-// 	QPushButton * b = new QPushButton("adasd");
-// 	QIcon * b = new QIcon(QPixmap(300, 80));
-// 	b->resize( 400, 100);
-// 	b->setGeometry(0, 0, 400, 100);
-	DBItemWidget * dbiw = new DBItemWidget();
-// 	b->setGeometry(0, 0, 400, 100);
-// 	dbiw->setGeometry(0, 0, 400, 100);
-// 	toolbar->addWidget(new DBItemWidget(b));
-// 	toolbar->addWidget(b);
-// 	tb2->addAction(*b, "adssad");
-// 	tb2->addAction(new QAction(dbiw));
-// 	tb2->addWidget(b);
-	dbtoolbar->addWidget(dbiw);
-// 	activateUi(false);
+// 	dbtoolbar->addWidget(&dbiw);
+	dbtoolbar->addAction(actionConfigDB);
 
 // 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
-
 // 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 	connect(this, SIGNAL(destroyed(QObject*)), this, SLOT(doExitZarlok()));
@@ -152,7 +142,7 @@ void zarlok::writeSettings() {
 
 void zarlok::readSettings() {
 	 globals::appSettings->beginGroup("WindowSettings");
-	 resize			(globals::appSettings->value("size", QSize(860, 580)).toSize());
+	 resize			(globals::appSettings->value("size", QSize(860, 620)).toSize());
 	 move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
 	 restoreState	(globals::appSettings->value("state").toByteArray());
 	 globals::appSettings->endGroup();

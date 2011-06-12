@@ -95,6 +95,21 @@ set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/Dat
 set(zarlok_INCS config.h)
 set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
 
+file (GLOB TS_FILES src/translations/zarlok_*.ts)
+set(zarlok_TS ${TS_FILES})
+
+# translations
+
+option (UPDATE_TRANSLATIONS "Update source translation translations/*.ts files (WARNING: make clean will delete the source .ts files! Danger!)")
+if (UPDATE_TRANSLATIONS)
+  qt4_create_translation(QM_FILES ${zarlok_SRCS} ${zarlok_TS})
+else (UPDATE_TRANSLATIONS)
+  qt4_add_translation(QM_FILES ${zarlok_TS})
+endif (UPDATE_TRANSLATIONS) 
+
+# set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
+add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
+
 qt4_automoc(${zarlok_SRCS})
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS})
 qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
@@ -104,7 +119,7 @@ qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTION
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
 add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC})
 
-add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS})
+add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
 
 # installation
@@ -113,6 +128,11 @@ install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/icons.rcc
 				DESTINATION share/${CMAKE_PROJECT_NAME}/resources
+)
+
+install(FILES
+				${QM_FILES}
+				DESTINATION share/${CMAKE_PROJECT_NAME}/translations
 )
 
 install(TARGETS zarlok DESTINATION bin)

@@ -165,16 +165,10 @@ void DBBrowser::refreshList(int sort, int order) {
 			infoFile.close();
 		}
 
-		QListWidgetItem * witem = new QListWidgetItem();
+		dbb_list->setIconSize(QSize(64, 64));
+		QListWidgetItem * witem = new QListWidgetItem(QIcon(":/resources/icons/user-home.png"), finfo);
 		witem->setData(Qt::UserRole, fname);
-		witem->setText(finfo);
-		witem->setSizeHint(QSize(0, 60));
-		witem->setIcon(QIcon(QPixmap(QSize(60,60))));
 		dbb_list->addItem(witem);
-// 		DBItemWidget * w = new DBItemWidget();
-// 		w->setDBName(finfo);
-// // 		dbb_list->setIconSize(QSize(50, 50));
-// 		dbb_list->setItemWidget(witem, w);
 	}
 }
 
