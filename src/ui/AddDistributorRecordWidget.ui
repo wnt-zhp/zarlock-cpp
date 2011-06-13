@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Distribute new product</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -40,7 +40,7 @@
       <item row="4" column="0">
        <widget class="QLabel" name="label_reason2">
         <property name="text">
-         <string>Opt.</string>
+         <string>Optional</string>
         </property>
        </widget>
       </item>

@@ -5,127 +5,106 @@
     <name>ABRWidget</name>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="14"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="210"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Add new product specifier</source>
+        <translation>Dodaj nową partię produktu</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="20"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="211"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="36"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="212"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="43"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="213"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="50"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="214"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="57"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="215"/>
         <source>Booking</source>
         <translation>Wpis</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="64"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="216"/>
         <source>quantity</source>
         <translation>ilość</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="73"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="217"/>
         <source>price</source>
         <translation>cena</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="83"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="218"/>
         <source>U&amp;nit price</source>
         <translation>Cena/&amp;jednostkę</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="92"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="219"/>
         <source>booking time</source>
         <translation>data katalogowania</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="99"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="220"/>
         <source>Spec</source>
         <translation>Nazwa</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="106"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="221"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="113"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="222"/>
         <source>Invoice</source>
         <translation>Faktura</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="120"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="223"/>
         <source>Expiry</source>
         <translation>Ważność</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="127"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="224"/>
         <source>specificator</source>
         <translation>specyfikator produktu</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="134"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="225"/>
         <source>unit</source>
         <translation>jednostka</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="141"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="226"/>
         <source>invoice number</source>
         <translation>numer faktury</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="148"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="227"/>
         <source>expiry date</source>
         <translation>data ważności produktu</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="160"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="228"/>
         <source>&amp;Save and Add next</source>
         <translation>&amp;Zapisz i dodaj kolejny</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="167"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="229"/>
         <source>Save and &amp;Exit</source>
         <translation>Zapisz i &amp;wyjdź</translation>
     </message>
     <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="174"/>
-        <location filename="../../build/ui_AddBatchRecordWidget.h" line="230"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -133,92 +112,77 @@
 <context>
     <name>ADRWidget</name>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="14"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="177"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
-    </message>
-    <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="20"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="178"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="29"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="179"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="36"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="180"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="14"/>
+        <source>Distribute new product</source>
+        <translation>Wydaj nową partię produktu</translation>
+    </message>
+    <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="43"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="181"/>
-        <source>Opt.</source>
-        <translation type="unfinished">Opcjonalny</translation>
+        <source>Optional</source>
+        <translation>Opcjonalny</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="50"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="182"/>
         <source>Reason</source>
         <translation>Powód</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="57"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="183"/>
         <source>Date</source>
         <translation>Data wydania</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="66"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="184"/>
         <source>quantity</source>
         <translation>ilość</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="73"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="185"/>
         <source>max:</source>
         <translation>maksymalnie:</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="92"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="186"/>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="104"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="187"/>
         <source>distribute date</source>
         <translation>data wydania</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="111"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="188"/>
         <source>reason</source>
         <translation>przyczyna wydania</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="118"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="189"/>
         <source>additional reason</source>
         <translation>dodatkowy opis</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="140"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="190"/>
         <source>&amp;Add</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="147"/>
-        <location filename="../../build/ui_AddDistributorRecordWidget.h" line="191"/>
         <source>C&amp;lear</source>
         <translation>&amp;Wyczyść</translation>
     </message>
@@ -227,55 +191,46 @@
     <name>AFRWidget</name>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="14"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="130"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Add food to meal</source>
+        <translation>Dodaj produkt do posiłku</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="20"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="131"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="29"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="132"/>
         <source>Batch</source>
-        <translation type="unfinished"></translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="36"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="133"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="45"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="134"/>
         <source>quantity</source>
         <translation>ilość</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="52"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="135"/>
         <source>max:</source>
         <translation>maksymalnie:</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="71"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="136"/>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="98"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="137"/>
         <source>&amp;Add</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="105"/>
-        <location filename="../../build/ui_AddFoodRecordWidget.h" line="138"/>
         <source>C&amp;lear</source>
         <translation>&amp;Wyczyść</translation>
     </message>
@@ -284,57 +239,47 @@
     <name>AMRWidget</name>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="14"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="146"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Add daily meal</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="20"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="147"/>
         <source>GroupBox</source>
         <translation>Posiłki</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="28"/>
         <location filename="../ui/AddMealRecordWidget.ui" line="70"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="148"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="153"/>
         <source>Other</source>
         <translation>Inny</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="40"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="149"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="47"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="150"/>
         <source>Second breakfast</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="54"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="151"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="61"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="152"/>
         <source>Dinner</source>
         <translation>Kolacja</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="95"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="154"/>
         <source>Add</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="102"/>
-        <location filename="../../build/ui_AddMealRecordWidget.h" line="155"/>
         <source>Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -343,67 +288,56 @@
     <name>APRWidget</name>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="14"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="124"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Add new product</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="20"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="125"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="26"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="126"/>
         <source>Name</source>
         <translation>Nazwa</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="33"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="127"/>
         <source>name</source>
         <translation>nazwa produktu</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="40"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="128"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="47"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="129"/>
         <source>unit</source>
         <translation>jednostka podstawowa</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="54"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="130"/>
         <source>Expiry</source>
         <translation>Data ważności</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="61"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="131"/>
         <source>expiry date</source>
         <translation>data przydatności produktu</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="70"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="132"/>
         <source>&amp;Save and Add next</source>
         <translation>&amp;Zapisz i dodaj kolejny</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="77"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="133"/>
         <source>Save and &amp;Exit</source>
         <translation>Zapisz i &amp;wyjdź</translation>
     </message>
     <message>
         <location filename="../ui/AddProductsRecordWidget.ui" line="84"/>
-        <location filename="../../build/ui_AddProductsRecordWidget.h" line="134"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -455,78 +389,80 @@
     </message>
 </context>
 <context>
-    <name>CampSettings</name>
+    <name>CampSettingsDialog</name>
     <message>
-        <location filename="../ui/CampSettings.ui" line="14"/>
-        <location filename="../../build/ui_CampSettings.h" line="179"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
-    </message>
-    <message>
-        <location filename="../ui/CampSettings.ui" line="20"/>
-        <location filename="../../build/ui_CampSettings.h" line="180"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="14"/>
         <source>Camp properties</source>
-        <translation>Obóz</translation>
+        <translation>Obóz ustawienia</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="26"/>
-        <location filename="../../build/ui_CampSettings.h" line="181"/>
-        <source>Camp name</source>
-        <translation>Nazwa obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="23"/>
+        <source>Camp description</source>
+        <translation>Opis obozu</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="36"/>
-        <location filename="../../build/ui_CampSettings.h" line="182"/>
-        <source>Camp period</source>
-        <translation>Czas trwania obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="32"/>
+        <source>Name</source>
+        <translation>Nazwa</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="45"/>
-        <location filename="../../build/ui_CampSettings.h" line="183"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="46"/>
+        <source>Period</source>
+        <translation>Okres trwania</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="55"/>
         <source>dd-MM-yyyy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/CampSettings.ui" line="55"/>
-        <location filename="../../build/ui_CampSettings.h" line="184"/>
-        <source>-</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="78"/>
-        <location filename="../../build/ui_CampSettings.h" line="185"/>
-        <source>Number of regular participants</source>
-        <translation>Ilość uczestników obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="65"/>
+        <source>-</source>
+        <translation>do</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="88"/>
-        <location filename="../../build/ui_CampSettings.h" line="186"/>
-        <source>Number of regular stuff</source>
-        <translation>Ilość kadry obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="79"/>
+        <source>@days</source>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="98"/>
-        <location filename="../../build/ui_CampSettings.h" line="187"/>
-        <source>People</source>
-        <translation>Kadra</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="88"/>
+        <source>Amount of leders</source>
+        <translation>Liczba kadry</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="104"/>
-        <location filename="../../build/ui_CampSettings.h" line="188"/>
-        <source>Chieff name</source>
-        <translation>Komendant obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="95"/>
+        <source>Amount of scouts</source>
+        <translation>Liczba harcerzy</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="120"/>
-        <location filename="../../build/ui_CampSettings.h" line="189"/>
-        <source>Quatermaster</source>
-        <translation>Kwatermistrz obozu</translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="122"/>
+        <source>Leaders</source>
+        <translation>Komenda</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettings.ui" line="127"/>
-        <location filename="../../build/ui_CampSettings.h" line="190"/>
-        <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <location filename="../ui/CampSettingsDialog.ui" line="128"/>
+        <source>Camp Leader</source>
+        <translation>Komendant</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="156"/>
+        <source>Quartermaster</source>
+        <translation>Kwatermistrz</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="163"/>
+        <source>Other</source>
+        <translation>Pozostali</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="71"/>
+        <source>%n days</source>
+        <translation>
+            <numerusform>%n dzień</numerusform>
+            <numerusform>%n dni</numerusform>
+            <numerusform>%n dni</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -540,37 +476,37 @@
 <context>
     <name>DBBrowser</name>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="177"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
         <source>Create new database</source>
         <translation>Stwórz nową bazę danych dla obozu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="177"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="200"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="196"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="201"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="197"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="217"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="216"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="232"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="231"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="233"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="232"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -578,28 +514,9 @@
 <context>
     <name>DBItem</name>
     <message>
-        <location filename="../ui/DBItem.ui" line="24"/>
-        <location filename="../../build/ui_DBItem.h" line="73"/>
-        <source>@database name</source>
-        <translation>@nazwa bazy</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBItem.ui" line="31"/>
-        <location filename="../../build/ui_DBItem.h" line="74"/>
-        <source>@camp period</source>
-        <translation>@trwanie obozu</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBItem.ui" line="38"/>
-        <location filename="../../build/ui_DBItem.h" line="75"/>
-        <source>@nr of scouts</source>
-        <translation>@ilość harcerzy</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBItem.ui" line="45"/>
-        <location filename="../../build/ui_DBItem.h" line="76"/>
-        <source>@nr of stuff</source>
-        <translation>@ilośc kadry</translation>
+        <location filename="../ui/DBItem.ui" line="32"/>
+        <source>@info</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -615,38 +532,36 @@
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
 Click Close to exit.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nie można nawiązać połączenia z bazą danych
+Ta aplikacja wymaga wsparcia dla SQLite. Proszę zapoznań się z dokumentacją jak włączyć wsparcie dla tego steownika.
+
+Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
     <name>DatabaseBrowser</name>
     <message>
-        <location filename="../ui/DatabaseBrowser.ui" line="14"/>
-        <location filename="../../build/ui_DatabaseBrowser.h" line="88"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
-    </message>
-    <message>
         <location filename="../ui/DatabaseBrowser.ui" line="25"/>
-        <location filename="../../build/ui_DatabaseBrowser.h" line="89"/>
         <source>&amp;Quit</source>
         <translation>&amp;Zamknij</translation>
     </message>
     <message>
+        <location filename="../ui/DatabaseBrowser.ui" line="14"/>
+        <source>Database manager</source>
+        <translation>Menadżer baz danych</translation>
+    </message>
+    <message>
         <location filename="../ui/DatabaseBrowser.ui" line="45"/>
-        <location filename="../../build/ui_DatabaseBrowser.h" line="90"/>
-        <source>&amp;Load</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Open</source>
+        <translation>&amp;Otwórz</translation>
     </message>
     <message>
         <location filename="../ui/DatabaseBrowser.ui" line="52"/>
-        <location filename="../../build/ui_DatabaseBrowser.h" line="91"/>
         <source>&amp;New</source>
         <translation>&amp;Nowa</translation>
     </message>
     <message>
         <location filename="../ui/DatabaseBrowser.ui" line="59"/>
-        <location filename="../../build/ui_DatabaseBrowser.h" line="92"/>
         <source>&amp;Delete</source>
         <translation>&amp;Usuń</translation>
     </message>
@@ -695,9 +610,8 @@ Click Close to exit.</source>
     <name>MainWindow</name>
     <message>
         <location filename="../ui/MainWindow.ui" line="14"/>
-        <location filename="../../build/ui_MainWindow.h" line="61"/>
-        <source>MainWindow</source>
-        <translation>Okno główne programu</translation>
+        <source>Main Window</source>
+        <translation>Okno główne</translation>
     </message>
 </context>
 <context>
@@ -713,7 +627,7 @@ Click Close to exit.</source>
     <message>
         <location filename="../models/ProductsTableModel.cpp" line="106"/>
         <source>Parser error!</source>
-        <translation type="unfinished">Błąd przetwarzania!</translation>
+        <translation>Błąd przetwarzania!</translation>
     </message>
 </context>
 <context>
@@ -742,36 +656,23 @@ Click Close to exit.</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../main.cpp" line="53"/>
-        <location filename="../../main.cpp" line="64"/>
-        <location filename="../../main.cpp" line="75"/>
+        <location filename="../../main.cpp" line="46"/>
         <location filename="../db/DBReports.cpp" line="45"/>
         <location filename="../db/DBReports.cpp" line="55"/>
         <source>Cannot find resources</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="54"/>
-        <source>Unable to find a database resources in </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../main.cpp" line="56"/>
-        <location filename="../../main.cpp" line="67"/>
-        <location filename="../../main.cpp" line="78"/>
-        <location filename="../db/DBReports.cpp" line="48"/>
-        <source>Check your installation and try to run again.
+        <location filename="../../main.cpp" line="47"/>
+        <source>Unable to find resources in %1
+Check your installation and try to run again.
 Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="65"/>
-        <source>Unable to find a reports resources in </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../main.cpp" line="76"/>
-        <source>Unable to find a icons resources in </source>
+        <location filename="../db/DBReports.cpp" line="48"/>
+        <source>Check your installation and try to run again.
+Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -794,16 +695,16 @@ Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="87"/>
-        <location filename="../models/DistributorTableModel.cpp" line="92"/>
         <location filename="../models/ProductsTableModel.cpp" line="78"/>
+        <location filename="../models/DistributorTableModel.cpp" line="92"/>
+        <location filename="../models/BatchTableModel.cpp" line="87"/>
         <source>ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../models/BatchTableModel.cpp" line="88"/>
         <source>Product</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Produkt</translation>
     </message>
     <message>
         <location filename="../models/BatchTableModel.cpp" line="89"/>
@@ -813,24 +714,24 @@ Click Close to exit.</source>
     <message>
         <location filename="../models/BatchTableModel.cpp" line="90"/>
         <source>Price</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cena</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="91"/>
         <location filename="../models/ProductsTableModel.cpp" line="80"/>
+        <location filename="../models/BatchTableModel.cpp" line="91"/>
         <source>Unit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Jednostka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="92"/>
         <location filename="../models/DistributorTableModel.cpp" line="94"/>
+        <location filename="../models/BatchTableModel.cpp" line="92"/>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ilość</translation>
     </message>
     <message>
         <location filename="../models/BatchTableModel.cpp" line="93"/>
         <source>Booking</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wpis</translation>
     </message>
     <message>
         <location filename="../models/BatchTableModel.cpp" line="94"/>
@@ -843,8 +744,8 @@ Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="96"/>
         <location filename="../models/DistributorTableModel.cpp" line="96"/>
+        <location filename="../models/BatchTableModel.cpp" line="96"/>
         <source>Registered</source>
         <translation type="unfinished"></translation>
     </message>
@@ -886,7 +787,7 @@ Click Close to exit.</source>
     <message>
         <location filename="../models/ProductsTableModel.cpp" line="79"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nazwa</translation>
     </message>
     <message>
         <location filename="../models/ProductsTableModel.cpp" line="81"/>
@@ -906,72 +807,73 @@ Click Close to exit.</source>
     <name>TabBatchWidget</name>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="14"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="133"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Batch Tab</source>
+        <translation>Zakładka magazynu</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="22"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="134"/>
         <source>filter</source>
-        <translation type="unfinished"></translation>
+        <translation>filtr</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="36"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="135"/>
         <source>Expired</source>
         <translation>Przeterminowane</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="50"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="136"/>
-        <source>Today expires</source>
-        <translation>Ważność mija dzisiaj</translation>
+        <source>Today expire</source>
+        <translation>Traci ważność dzisiaj</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="64"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="137"/>
         <source>Valid</source>
         <translation>Przydatne do spożycia</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="78"/>
-        <location filename="../../build/ui_TabBatchWidget.h" line="138"/>
         <source>Add batc&amp;h</source>
         <translation>Dodaj &amp;produkt</translation>
     </message>
 </context>
 <context>
+    <name>TabDistributorWidget</name>
+    <message>
+        <location filename="../ui/TabDistributorWidget.ui" line="14"/>
+        <source>Distributor Tab</source>
+        <translation>Zakładka wydawania produktów</translation>
+    </message>
+</context>
+<context>
     <name>TabMealWidget</name>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="17"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="117"/>
-        <source>GroupBox</source>
+        <location filename="../ui/TabMealWidget.ui" line="14"/>
+        <source>Meal Tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="26"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="118"/>
+        <location filename="../ui/TabMealWidget.ui" line="20"/>
+        <source>GroupBox</source>
+        <translation type="unfinished">Posiłki</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="29"/>
         <source>Meal costs</source>
         <translation>Koszt posiłku</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="33"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="119"/>
+        <location filename="../ui/TabMealWidget.ui" line="36"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="58"/>
-        <location filename="../ui/TabMealWidget.ui" line="86"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="120"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="122"/>
+        <location filename="../ui/TabMealWidget.ui" line="61"/>
+        <location filename="../ui/TabMealWidget.ui" line="89"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="65"/>
-        <location filename="../../build/ui_TabMealWidget.h" line="121"/>
+        <location filename="../ui/TabMealWidget.ui" line="68"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1006,21 +908,18 @@ Click Close to exit.</source>
     <name>TabProductsWidget</name>
     <message>
         <location filename="../ui/TabProductsWidget.ui" line="14"/>
-        <location filename="../../build/ui_TabProductsWidget.h" line="96"/>
-        <source>Form</source>
-        <translation>Formularz</translation>
+        <source>Products Tab</source>
+        <translation>Zakładka produktów</translation>
     </message>
     <message>
         <location filename="../ui/TabProductsWidget.ui" line="24"/>
-        <location filename="../../build/ui_TabProductsWidget.h" line="97"/>
         <source>filter</source>
-        <translation type="unfinished"></translation>
+        <translation>filtr</translation>
     </message>
     <message>
         <location filename="../ui/TabProductsWidget.ui" line="31"/>
-        <location filename="../../build/ui_TabProductsWidget.h" line="98"/>
-        <source>A&amp;dd</source>
-        <translation>&amp;Dodaj</translation>
+        <source>A&amp;dd products</source>
+        <translation>&amp;Dodaj produkt</translation>
     </message>
 </context>
 <context>
@@ -1042,77 +941,82 @@ Click Close to exit.</source>
 <context>
     <name>zarlok</name>
     <message>
-        <location filename="../zarlok.cpp" line="29"/>
+        <location filename="../zarlok.cpp" line="30"/>
         <source>Zarlok by Rafal Lalik --- build: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="31"/>
+        <location filename="../zarlok.cpp" line="32"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="32"/>
+        <location filename="../zarlok.cpp" line="33"/>
         <source>Print Report DB</source>
         <translation>Drukuj raport</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="34"/>
+        <location filename="../zarlok.cpp" line="35"/>
         <source>About</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="35"/>
+        <location filename="../zarlok.cpp" line="36"/>
         <source>Switch Database</source>
         <translation>Zmień bazę</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="36"/>
+        <location filename="../zarlok.cpp" line="37"/>
         <source>Configure</source>
         <translation>Konfiguruj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="45"/>
+        <location filename="../zarlok.cpp" line="46"/>
         <source>Main</source>
         <translation>Główny</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="56"/>
+        <location filename="../zarlok.cpp" line="57"/>
         <source>Database</source>
         <translation>Baza danych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="113"/>
+        <location filename="../zarlok.cpp" line="77"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="114"/>
+        <location filename="../zarlok.cpp" line="78"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="115"/>
+        <location filename="../zarlok.cpp" line="79"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="116"/>
+        <location filename="../zarlok.cpp" line="80"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="166"/>
+        <location filename="../zarlok.cpp" line="237"/>
+        <source>quatermaster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="247"/>
         <source>About Menu</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="167"/>
+        <location filename="../zarlok.cpp" line="248"/>
         <source>The &lt;b&gt;Menu&lt;/b&gt; example shows how to create menu-bar menus and context menus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="192"/>
+        <location filename="../zarlok.cpp" line="273"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>

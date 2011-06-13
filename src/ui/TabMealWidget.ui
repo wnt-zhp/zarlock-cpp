@@ -10,6 +10,9 @@
     <height>437</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Meal Tab</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
    <item row="0" column="1" rowspan="3">
     <widget class="QGroupBox" name="groupBox">

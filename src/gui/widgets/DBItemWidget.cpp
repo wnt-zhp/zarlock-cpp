@@ -14,11 +14,13 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// */
 
 
 #include "DBItemWidget.h"
 #include "globals.h"
+
+#include <QStringBuilder>
 
 DBItemWidget::DBItemWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
 	if (parent == NULL)
@@ -29,5 +31,14 @@ DBItemWidget::DBItemWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, 
 
 DBItemWidget::~DBItemWidget() {
 	FPR(__func__);
+}
+
+void DBItemWidget::update(const CampProperties * camp) {
+// 	QString name = camp->campName % " ( " % tr("commander") % QString(": ") %  % QString(")");
+	QString period = camp->campDateBegin.toString(Qt::DefaultLocaleShortDate) % QString(" - ") % camp->campDateEnd.toString(Qt::DefaultLocaleShortDate);
+	QString scouts = QString("%1 + %2 scouts").arg(camp->scoutsNo).arg(camp->leadersNo);
+
+	this->label_info->setText("<b>" % camp->campName % "</b><br/>" % camp->campQuarter % "<br/>" % period % "<br/>" % scouts);
+
 }
 

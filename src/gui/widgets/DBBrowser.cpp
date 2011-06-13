@@ -27,13 +27,9 @@
 #include "config.h"
 
 #include "DBBrowser.h"
-#include "DBItemWidget.h"
 
 #include <QMessageBox>
 #include <QInputDialog>
-#include <QFileDialog>
-#include <QDir>
-#include <QFile>
 
 #include "Database.h"
 
@@ -75,9 +71,9 @@ DBBrowser::~DBBrowser() {
 	}
 }
 
-void DBBrowser::openZarlock() {
+void DBBrowser::openZarlock(const QString & dbname) {
 	this->setVisible(false);
-	z = new zarlok("");
+	z = new zarlok(dbname);
 	z->show();
 // 	connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
 	connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
@@ -111,7 +107,7 @@ void DBBrowser::openDB(const QString & dbname, bool createifnotexists) {
 		globals::appSettings->setValue("RecentDatabase", dbname);
 		globals::appSettings->endGroup();
 
-		openZarlock();
+		openZarlock(dbname);
 	}
 }
 
@@ -206,6 +202,9 @@ bool DBBrowser::openDBFile(const QString & dbname, QString & dbfile, bool create
 		}
 		if (createifnotexists || (create == QMessageBox::Yes))
 			return createDBFile(dbname, dbfilenoext);
+		else
+			this->setVisible(true);
+			
 	}
 
 	return false;
@@ -250,6 +249,8 @@ bool DBBrowser::createDBFile(const QString & dbname, const QString & dbfile) {
 		Database & db = Database::Instance();
 		db.open_database(datafile, true);
 		db.close_database();
+
+		refreshList();
 	}
 	return true;
 }

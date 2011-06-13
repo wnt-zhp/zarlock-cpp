@@ -1,8 +1,6 @@
 #ifndef zarlok_H
 #define zarlok_H
 
-#include <QtSql>
-
 #include "Database.h"
 
 #include "TabProductsWidget.h"
@@ -10,9 +8,10 @@
 #include "TabDistributorWidget.h"
 #include "TabMealWidget.h"
 
-#include "DBItemWidget.h"
-
 #include "ui_MainWindow.h"
+
+#include "DBItemWidget.h"
+#include "CampProperties.h"
 
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
@@ -26,12 +25,18 @@ private:
 	void writeSettings();
 	void readSettings();
 
+	void writeCampSettings();
+	void readCampSettings();
+
+	void updateAppTitle();
+
 	void closeEvent(QCloseEvent *event);
 signals:
 	void exitZarlok();
 
 private slots:
 	void doExitZarlok();
+	void doCampSettings();
 
 	void printDailyReport();
 
@@ -58,7 +63,9 @@ private:
 
 	QAction * actionSwitchDB;
 	QAction * actionConfigDB;
-	DBItemWidget dbiw;
+	DBItemWidget * dbiw;
+
+	CampProperties camp;
 };
 
 #endif // zarlok_H

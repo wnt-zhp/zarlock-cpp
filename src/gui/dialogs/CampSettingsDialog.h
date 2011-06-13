@@ -17,19 +17,28 @@
 */
 
 
-#ifndef CAMPSETTINGSWIDGET_H
-#define CAMPSETTINGSWIDGET_H
+#ifndef CAMPSETTINGSDIALOG_H
+#define CAMPSETTINGSDIALOG_H
 
-#include "ui_CampSettings.h"
+#include "ui_CampSettingsDialog.h"
 
-class CampSettingsWidget : public QWidget, public Ui::CampSettings {
+#include "CampProperties.h"
+
+class CampSettingsDialog : public QDialog, public Ui::CampSettingsDialog {
 Q_OBJECT
 public:
-	CampSettingsWidget(QWidget * parent = NULL);
-	virtual ~CampSettingsWidget();
+	CampSettingsDialog(CampProperties * cp, QDialog * parent = NULL);
+	virtual ~CampSettingsDialog();
 
 private:
-	void activateUi(bool activate = true);
+	void accept();
+
+private slots:
+	void verify();
+	void verifyDate();
+
+private:
+	CampProperties * camp;
 };
 
-#endif // CAMPSETTINGSWIDGET_H
+#endif // CAMPSETTINGSDIALOG_H

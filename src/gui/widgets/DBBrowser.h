@@ -34,7 +34,7 @@ public slots:
 	void dbb_list_selected(QListWidgetItem * item);
 	void newDatabaseCreator(bool autoopen = true);
 
-	void openZarlock();
+	void openZarlock(const QString & dbname);
 	void closeZarlock();
 
 	bool openDBFile(const QString & dbname, QString & dbfile, bool createifnotexists = false);

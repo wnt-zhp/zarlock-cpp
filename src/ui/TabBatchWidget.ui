@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Batch Tab</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -47,7 +47,7 @@
      <item>
       <widget class="QCheckBox" name="cb_aexpired">
        <property name="text">
-        <string>Today expires</string>
+        <string>Today expire</string>
        </property>
       </widget>
      </item>

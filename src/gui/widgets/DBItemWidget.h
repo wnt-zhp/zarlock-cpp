@@ -20,16 +20,18 @@
 #ifndef DBITEMWIDGET_H
 #define DBITEMWIDGET_H
 
+#include "CampProperties.h"
+
 #include <QWidget>
 
 #include "ui_DBItem.h"
 
 class DBItemWidget : public QWidget, public Ui::DBItem {
 public:
-    explicit DBItemWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit DBItemWidget(QWidget * parent = 0, Qt::WindowFlags f = 0);
     virtual ~DBItemWidget();
 
-	void setDBName(const QString & str) { label_1->setText(str); }
+	void update(const CampProperties * camp);
 };
 
 #endif // DBITEMWIDGET_H

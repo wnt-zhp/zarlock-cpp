@@ -10,6 +10,9 @@
     <height>214</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Distributor Tab</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
     <widget class="DistributorTableView" name="table_dist">
