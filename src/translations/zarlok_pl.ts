@@ -471,39 +471,14 @@
 <context>
     <name>DBBrowser</name>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="163"/>
         <source>Create new database</source>
         <translation>Stwórz nową bazę danych dla obozu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="163"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="196"/>
-        <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
-        <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="197"/>
-        <source>Do you want to create new database with name &quot;%1&quot;?</source>
-        <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="216"/>
-        <source>The database name is empty</source>
-        <translation>Nazwa bazy danych jest pusta</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="231"/>
-        <source>The database name &apos;%1&apos; already exists.</source>
-        <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="232"/>
-        <source>Do you want to overwrite existing database?</source>
-        <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
 </context>
 <context>
@@ -517,12 +492,12 @@
 <context>
     <name>Database</name>
     <message>
-        <location filename="../db/Database.cpp" line="97"/>
+        <location filename="../db/Database.cpp" line="93"/>
         <source>Cannot create database</source>
         <translation>Nie mogę stworzyć bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="98"/>
+        <location filename="../db/Database.cpp" line="94"/>
         <source>Unable to establish a database connection.
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
@@ -531,6 +506,67 @@ Click Close to exit.</source>
 Ta aplikacja wymaga wsparcia dla SQLite. Proszę zapoznań się z dokumentacją jak włączyć wsparcie dla tego steownika.
 
 Wciśnij Zamknij aby wyjść.</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="113"/>
+        <source>Your database &quot;%1&quot; is corrupted. Unable to find version number.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="114"/>
+        <location filename="../db/Database.cpp" line="152"/>
+        <source>This is critical error and if your database has important data, please contact with Zarlok team in WNT GK to help you solve your problem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="127"/>
+        <source>Your database &quot;%1&quot; is in version %2 and is newer than supported version %3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="128"/>
+        <source>Please upgrade Zarlok to the newest version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="139"/>
+        <source>You have asked for upgrade of database &quot;%1&quot; from version %2 to version %3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="140"/>
+        <source>Do you want to upgrade?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="151"/>
+        <source>Your database &quot;%1&quot; upgrade failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="262"/>
+        <source>The database name is empty</source>
+        <translation type="unfinished">Nazwa bazy danych jest pusta</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="285"/>
+        <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
+        <translation type="unfinished">Baza danych &quot;%1&quot; nie istnieje!</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="286"/>
+        <source>Do you want to create new database with name &quot;%1&quot;?</source>
+        <translation type="unfinished">Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="353"/>
+        <source>The database name &apos;%1&apos; already exists.</source>
+        <translation type="unfinished">Baza danych &apos;%1&apos; już istnieje.</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="354"/>
+        <source>Do you want to overwrite existing database?</source>
+        <translation type="unfinished">Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
 </context>
 <context>
@@ -671,9 +707,9 @@ Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="191"/>
-        <location filename="../db/Database.cpp" line="197"/>
-        <location filename="../db/Database.cpp" line="203"/>
+        <location filename="../db/Database.cpp" line="233"/>
+        <location filename="../db/Database.cpp" line="239"/>
+        <location filename="../db/Database.cpp" line="245"/>
         <source>Database error</source>
         <translation type="unfinished"></translation>
     </message>

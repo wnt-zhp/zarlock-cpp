@@ -126,7 +126,7 @@ void zarlok::doExitZarlok() {
  * @brief Funkcja ustawia wartości wszystkich kontrolek w głownym oknie.
  * Należy wywołać funkcję za każdym razem, gdy ładujemy nową bazę.
  *
- * @param activate Gdy ustawione, powoduje deaktywację kontrolek
+ * @param activate Gdy ustawione, powoduje aktywację kontrolek
  * @return void
  **/
 void zarlok::activateUi(bool activate) {
@@ -187,10 +187,10 @@ void zarlok::updateAppTitle() {
 }
 
 void zarlok::about() {
-//      QLabel infoLabel->setText(tr("Invoked <b>Help|About</b>"));
-     QMessageBox::about(this, tr("About Menu"),
-             tr("The <b>Menu</b> example shows how to create "
-                "menu-bar menus and context menus."));
+//	QLabel infoLabel->setText(tr("Invoked <b>Help|About</b>"));
+	QMessageBox::about(this, tr("About Menu"),
+		tr("The <b>Menu</b> example shows how to create "
+		"menu-bar menus and context menus."));
 }
 /*
 void zarlok::tabChanged(int index) {

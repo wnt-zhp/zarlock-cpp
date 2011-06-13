@@ -42,7 +42,7 @@ private:
 	Database(const Database &);
 
 public:
-	bool open_database(const QString & dbname, bool recreate = false);
+	bool open_database(const QString & dbname, bool autoupgrade = true);
 	bool close_database();
 	void save_database();
 
@@ -62,9 +62,6 @@ public:
 	inline CampProperties * cs() { return camp; };
 
 private:
-	void saveDB();
-	void closeDB();
-
 	bool openDBFile(const QString & dbname, bool createifnotexists = false);
 	bool createDBFile(const QString & dbname, const QString & dbfilenoext);
 
@@ -85,7 +82,11 @@ private:
 	BatchTableModel * tab_batch;
 	DistributorTableModel * tab_distributor;
 
+	bool doDBUpgrade(unsigned int & version);
+
 	bool locked;
+
+	static const unsigned int DBVERSION = 0x000030;
 };
 
 #endif // DATABASE_H

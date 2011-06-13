@@ -18,6 +18,7 @@
 
 #include <iostream>
 
+#include <QtSql/QSqlDriver>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <QtGui/QMessageBox>
@@ -31,14 +32,14 @@
 #include "config.h"
 
 /**
- * @brief Przetrzymuję jedną instancję klasy.
+ * @brief Instancja klasy Database
  **/
 Database * Database::dbi = NULL;
 
 /**
  * @brief Tworzy i zwraca instację do obiektu Database
  *
- * @return Database&
+ * @return Database &
  **/
 Database & Database::Instance() {
 	if (!dbi) {
@@ -59,36 +60,28 @@ void Database::Destroy() {
 
 Database::Database() : QObject(), tab_products(NULL), tab_batch(NULL), tab_distributor(NULL), locked(false) {
 	db = QSqlDatabase::addDatabase("QSQLITE");
+	PR(db.driver()->hasFeature(QSqlDriver::Transactions));
 }
 
-Database::Database(const Database & db) : QObject() {
-	PR(this);
-	PR(&db);
+Database::Database(const Database & /*db*/) : QObject() {
+	FPR(__FUNC__);
 }
 
 Database::~Database() {
 	FPR(__func__);
-
-	if (db.isOpen())
-		db.close();
-
-	if (tab_products) delete tab_products;
-	if (tab_batch) delete tab_batch;
-	if (tab_distributor) delete tab_distributor;
-
-	if (camp) delete camp;
+	close_database();
 
 // 	QSqlDatabase::removeDatabase("QSQLITE");
 }
 
 /**
- * @brief ...
+ * @brief Otwórz bazę danych z pliku
  *
- * @param dbfile ...
- * @param create ...
+ * @param dbname Nazwa bazy danych
+ * @param autoupgrade automatycznie aktualizuj wersję bazy danych
  * @return bool
  **/
-bool Database::open_database(const QString & dbname, bool recreate) {
+bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	if (locked) {
 		std::cerr << "Database already opened, close it before reopen" << std::endl;
 		return false;
@@ -104,6 +97,68 @@ bool Database::open_database(const QString & dbname, bool recreate) {
 								"to build it.\n\n"
 								"Click Close to exit."), QMessageBox::Close);
 		return false;
+	}
+
+	// do upgrade
+	QSqlQuery qdbv("SELECT value FROM settings WHERE key='dbversion';");
+
+	// TODO temporary constrain
+	autoupgrade = false;
+
+	unsigned int dbversion;
+	if (qdbv.next())
+		dbversion = qdbv.value(0).toUInt();
+	else {
+		QMessageBox msgBox;
+		msgBox.setText(tr("Your database \"%1\" is corrupted. Unable to find version number.").arg(dbname).arg(dbversion).arg(DBVERSION));
+		msgBox.setInformativeText(tr("This is critical error and if your database has important data, "
+									"please contact with Zarlok team in WNT GK to help you solve your problem."));
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+
+		std::cerr << "Database " << dbname.toStdString() << " is corrupted. Unable to find DB database version!\n";
+		return false;
+	}
+
+	if (dbversion > DBVERSION) {
+		QMessageBox msgBox;
+		msgBox.setText(tr("Your database \"%1\" is in version %2 and is newer than supported version %3.").arg(dbname).arg(dbversion).arg(DBVERSION));
+		msgBox.setInformativeText(tr("Please upgrade Zarlok to the newest version."));
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+		return false;
+	}
+			
+	if (dbversion != DBVERSION) {
+		if (!autoupgrade) {
+			QMessageBox msgBox;
+			msgBox.setText(tr("You have asked for upgrade of database \"%1\" from version %2 to version %3.").arg(dbname).arg(dbversion).arg(DBVERSION));
+			msgBox.setInformativeText(tr("Do you want to upgrade?"));
+			msgBox.setIcon(QMessageBox::Question);
+			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+			msgBox.setDefaultButton(QMessageBox::Yes);
+
+			if (msgBox.exec() == QMessageBox::Yes)
+				autoupgrade = true;
+		}
+		if (autoupgrade)
+		if (!doDBUpgrade(dbversion)) {
+			QMessageBox msgBox;
+			msgBox.setText(tr("Your database \"%1\" upgrade failed.").arg(dbname).arg(dbversion).arg(DBVERSION));
+			msgBox.setInformativeText(tr("This is critical error and if your database has important data, "
+									"please contact with Zarlok team in WNT GK to help you solve your problem."));
+			msgBox.setIcon(QMessageBox::Critical);
+			msgBox.setStandardButtons(QMessageBox::Ok);
+			msgBox.setDefaultButton(QMessageBox::Ok);
+			msgBox.exec();
+
+			std::cerr << "Database upgrade failed!\n";
+			return false;
+		}
 	}
 
 	// products
@@ -143,10 +198,13 @@ bool Database::open_database(const QString & dbname, bool recreate) {
  * @return bool
  **/
 bool Database::close_database() {
+	save_database();
+
 	if (locked) {
 		if (tab_products) delete tab_products;
 		if (tab_batch) delete tab_batch;
 		if (tab_distributor) delete tab_distributor;
+		if (camp) delete camp;
 	}
 	locked = false;
 
@@ -159,6 +217,8 @@ void Database::save_database() {
 	tab_products->submitAll();
 	tab_batch->submitAll();
 	tab_distributor->submitAll();
+	updateBatchQty();
+
 	emit dbSaved();
 }
 
@@ -190,32 +250,12 @@ bool Database::rebuild_models() {
 }
 
 /**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
+ * @brief Otwórz plik z bazą danych
  *
- * @return bool - wynik wykonania QTableModel::submitAll()
+ * @param dbname Nazwa bazy danych
+ * @param createifnotexists Jeślu true automatycznie tworzy bazę danych jeśli nie istnieje
+ * @return bool true jeśli poprawnie otwarto plik bazy danych
  **/
-void Database::saveDB() {
-	Database & db = Database::Instance();
-	tab_products->submitAll();
-	tab_batch->submitAll();
-	tab_distributor->submitAll();
-
-	updateBatchQty();
-// 	actionSaveDB->setEnabled(false);
-}
-
-/**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
- *
- * @return bool - wynik wykonania QTableModel::submitAll()
- **/
-void Database::closeDB() {
-// 	activateUi(false);
-	Database & db = Database::Instance();
-	saveDB();
-	db.close_database();
-}
-
 bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 	if (dbname.isEmpty()) {
 		QMessageBox msgBox;
@@ -234,7 +274,6 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 	QFile fdbfile(dbfile);
 
 	int create = QMessageBox::No;
-	bool createTables = false;
 
 	if (fdbfile.exists()) {
 		db.setDatabaseName(dbfile);
@@ -260,9 +299,14 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 
 		QSqlQuery query;
 
+		if (db.driver()->hasFeature(QSqlDriver::Transactions))
+			db.transaction();
+
+		QString qdbv("INSERT INTO settings VALUES('dbversion', '%1');");
+		query.exec(qdbv.arg(DBVERSION));
+
 		QFile dbresfile(":/resources/database.sql");
 		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			PR(false);
 			return false;
 		}
 		while (!dbresfile.atEnd()) {
@@ -272,19 +316,29 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 
 		QFile dbtestfile(":/resources/test_data.sql");
 		if (!dbtestfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			PR(false);
 			return false;
 		}
 		while (!dbtestfile.atEnd()) {
 			QString line = dbtestfile.readLine();
 			query.exec(line.fromUtf8(line.toStdString().c_str()));
 		}
+
+		if (db.driver()->hasFeature(QSqlDriver::Transactions))
+			db.commit();
+
 		return true;
 	}
 
 	return false;
 }
 
+/**
+ * @brief Tworzy plik bazy danych i inicjuje strukturę bazy danych
+ *
+ * @param dbname Nazwa bazy danych
+ * @param dbfilenoext Nazwa (bez rozszerzenia) pliku bazy danych
+ * @return bool true jeśli poprawnie stworzono nowy plik i zainicjowano bazę danych
+ **/
 bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext) {
 	QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
 	if (!dbsavepath.exists())
@@ -411,6 +465,32 @@ void Database::readCampSettings() {
 				camp->campOthers = csq.value(1).toString();
 				break;
 		}
+	}
+}
+
+/** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
+ *  @param version wersja bazy danych do aktualizacji
+ *  @return zwraca true jeśliaktualiazcja zakończona sukcesem, w przeciwnym wypadku zmienna version zawiera
+ * numer ostatniej wersji dla której aktualizacja zakończyla się sukcesem.
+ */
+bool Database::doDBUpgrade(unsigned int & version) {
+	QSqlQuery qdbup;
+	QString str;
+
+	switch (version) {
+		case 0:
+			PR("Upgrade from 0");
+			str = "UPDATE settings SET value='%1' WHERE key='dbversion';";
+			qdbup.exec(str.arg(DBVERSION));
+			version = DBVERSION;
+			return doDBUpgrade(version);
+			break;
+		case DBVERSION:
+			PR("Upgrade to");
+			PR(DBVERSION);
+			return true;
+		default:
+			return false;
 	}
 }
 
