@@ -66,7 +66,7 @@ bool AddDistributorRecordWidget::insert_record() {
 	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
 	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
-	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
+	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RGeneral);

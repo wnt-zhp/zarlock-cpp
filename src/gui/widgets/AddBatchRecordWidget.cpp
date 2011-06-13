@@ -88,7 +88,7 @@ void AddBatchRecordWidget::insert_record() {
 		<< edit_qty->text().toStdString() << ","
 		<< edit_invoice->text().toStdString() << ","
 		<< edit_book->text(true).toStdString() << ","
-		<< QDate::currentDate().toString("yyyy-MM-dd").toStdString() << ","
+		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
 		<< QString(":)").toStdString() << " );" << std::endl;
 
 	btm->insertRows(row, 1);
@@ -102,7 +102,7 @@ void AddBatchRecordWidget::insert_record() {
 	btm->setData(btm->index(row, BatchTableModel::HUsedQty), edit_qty->text());
 	btm->setData(btm->index(row, BatchTableModel::HInvoice), edit_invoice->text());
 	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
-	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
+	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
 	btm->setData(btm->index(row, BatchTableModel::HDesc), QString(":)"));
 	btm->submitAll();
 

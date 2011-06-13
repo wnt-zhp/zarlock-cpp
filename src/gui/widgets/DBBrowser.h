@@ -37,13 +37,7 @@ public slots:
 	void openZarlock(const QString & dbname);
 	void closeZarlock();
 
-	bool openDBFile(const QString & dbname, QString & dbfile, bool createifnotexists = false);
-	bool createDBFile(const QString & dbname, const QString & dbfile);
-
 private slots:
-	void openDB(const QString & dbname, bool createifnotexists = false);
-	void saveDB();
-	void closeDB();
 
 private:
 	void refreshList(int sort = 0, int order = 0);

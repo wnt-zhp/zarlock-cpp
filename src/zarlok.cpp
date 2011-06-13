@@ -24,7 +24,7 @@
  *
  * @param parent QMainWindow
  **/
-zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance()),
+zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
@@ -97,15 +97,8 @@ zarlok::zarlok(const QString & dbname) : QMainWindow(), db(Database::Instance())
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
 	readSettings();
-	readCampSettings();
 
-	activateUi(camp.isCorrect);
-	if (!camp.isCorrect) {
-		camp.campName = dbname;
-		doCampSettings();
-	} else {
-		dbiw->update(&camp);
-	}
+	activateUi(db.cs()->isCorrect);
 // 	updateAppTitle();
 }
 
@@ -140,7 +133,9 @@ void zarlok::activateUi(bool activate) {
 	MainTab->setEnabled(activate);
 
 	if (activate) {
+		dbiw->update(db.cs());
 	} else {
+		doCampSettings();
 	}
 }
 
@@ -160,57 +155,6 @@ void zarlok::readSettings() {
 	 globals::appSettings->endGroup();
 }
 
-void zarlok::writeCampSettings() {
-	QSqlQuery cs;
-	QString query("UPDATE settings SET value=\"%2\" WHERE key=\"%1\";");
-
-	cs.exec(query.arg(CampProperties::HisCorrect).arg(camp.isCorrect));
-	cs.exec(query.arg(CampProperties::HcampName).arg(camp.campName));
-	cs.exec(query.arg(CampProperties::HcampDateBegin).arg(camp.campDateBegin.toString(Qt::ISODate)));
-	cs.exec(query.arg(CampProperties::HcampDateEnd).arg(camp.campDateEnd.toString(Qt::ISODate)));
-	cs.exec(query.arg(CampProperties::HscoutsNo).arg(camp.scoutsNo));
-	cs.exec(query.arg(CampProperties::HleadersNo).arg(camp.leadersNo));
-	cs.exec(query.arg(CampProperties::HcampLeader).arg(camp.campLeader));
-	cs.exec(query.arg(CampProperties::HcampQuarter).arg(camp.campQuarter));
-	cs.exec(query.arg(CampProperties::HcampOthers).arg(camp.campOthers));
-}
-
-void zarlok::readCampSettings() {
-	QSqlQuery cs;
-	cs.exec("SELECT * FROM settings;");
-	while(cs.next()) {
-		switch (cs.value(0).toInt()) {
-			case CampProperties::HisCorrect:
-				camp.isCorrect = cs.value(1).toBool();
-				break;
-			case CampProperties::HcampName:
-				camp.campName = cs.value(1).toString();
-				break;
-			case CampProperties::HcampDateBegin:
-				camp.campDateBegin = cs.value(1).toDate();
-				break;
-			case CampProperties::HcampDateEnd:
-				camp.campDateEnd = cs.value(1).toDate();
-				break;
-			case CampProperties::HscoutsNo:
-				camp.scoutsNo = cs.value(1).toInt();
-				break;
-			case CampProperties::HleadersNo:
-				camp.leadersNo = cs.value(1).toInt();
-				break;
-			case CampProperties::HcampLeader:
-				camp.campLeader = cs.value(1).toString();
-				break;
-			case CampProperties::HcampQuarter:
-				camp.campQuarter = cs.value(1).toString();
-				break;
-			case CampProperties::HcampOthers:
-				camp.campOthers = cs.value(1).toString();
-				break;
-		}
-	}
-}
-
 void zarlok::closeEvent(QCloseEvent *event) {
 	if (/*userReallyWantsToQuit()*/true) {
 		writeSettings();
@@ -225,20 +169,20 @@ void zarlok::printDailyReport() {
 }
 
 void zarlok::doCampSettings() {
-	CampSettingsDialog csd(&camp);
+	CampSettingsDialog csd(db.cs());
 	if (csd.exec()) {
-		writeCampSettings();
-		dbiw->update(&camp);
+		db.writeCampSettings();
+		dbiw->update(db.cs());
 	}
-	activateUi(camp.isCorrect);
+	activateUi(db.cs()->isCorrect);
 }
 
 void zarlok::updateAppTitle() {
-	QString name = "CAMP NAME: " % camp.campName % " ( " % tr("quatermaster") % ": " % camp.campQuarter % ")";
-	QString period = "\tPERIOD: " % camp.campDateBegin.toString(Qt::TextDate) % " - " % camp.campDateEnd.toString(Qt::TextDate);
-	QString scoutsnr = "\tSCOUTS: " % QString("%1 + %2 scouts").arg(camp.scoutsNo).arg(camp.leadersNo);
+// 	QString name = "CAMP NAME: " % camp.campName % " ( " % tr("quatermaster") % ": " % camp.campQuarter % ")";
+// 	QString period = "\tPERIOD: " % camp.campDateBegin.toString(Qt::TextDate) % " - " % camp.campDateEnd.toString(Qt::TextDate);
+// 	QString scoutsnr = "\tSCOUTS: " % QString("%1 + %2 scouts").arg(camp.scoutsNo).arg(camp.leadersNo);
 
-	this->statusBar()->showMessage(name % period % scoutsnr);
+// 	this->statusBar()->showMessage(name % period % scoutsnr);
 // 	this->setWindowTitle(name % period % scoutsnr);
 }
 

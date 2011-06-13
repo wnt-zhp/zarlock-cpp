@@ -134,7 +134,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				QDate date;
 				if (DataParser::date(data, date)) {
 					QString var;
-					return date.toString("yyyy-MM-dd");
+					return date.toString(Qt::ISODate);
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -146,9 +146,9 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			if (idx.column() == HExpire) {
 				QString data = idx.data(Qt::EditRole).toString();
 				QDate date;
-				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), "yyyy-MM-dd"))) {
+				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), Qt::ISODate))) {
 					QString var;
-					return date.toString("yyyy-MM-dd");
+					return date.toString(Qt::ISODate);
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -171,8 +171,8 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 // 			} else {
 // 				return QColor(Qt::cyan);
 // 			}
-			QString today = QDate::currentDate().toString("yyyy-MM-dd");
-			QString expdate = QDate::fromString(index(idx.row(), HExpire).data().toString(), "yyyy-MM-dd").toString("yyyy-MM-dd");
+			QString today = QDate::currentDate().toString(Qt::ISODate);
+			QString expdate = QDate::fromString(index(idx.row(), HExpire).data().toString(), Qt::ISODate).toString(Qt::ISODate);
 			if (today > expdate) {
 				return globals::item_expired;
 			} else if (today == expdate) {

@@ -411,47 +411,42 @@
         <translation>Okres trwania</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="55"/>
-        <source>dd-MM-yyyy</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="65"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="62"/>
         <source>-</source>
         <translation>do</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="79"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="76"/>
         <source>@days</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="88"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="85"/>
         <source>Amount of leders</source>
         <translation>Liczba kadry</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="95"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="92"/>
         <source>Amount of scouts</source>
         <translation>Liczba harcerzy</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="122"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="119"/>
         <source>Leaders</source>
         <translation>Komenda</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="128"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="125"/>
         <source>Camp Leader</source>
         <translation>Komendant</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="156"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="153"/>
         <source>Quartermaster</source>
         <translation>Kwatermistrz</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="163"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="160"/>
         <source>Other</source>
         <translation>Pozostali</translation>
     </message>
@@ -522,12 +517,12 @@
 <context>
     <name>Database</name>
     <message>
-        <location filename="../db/Database.cpp" line="95"/>
+        <location filename="../db/Database.cpp" line="97"/>
         <source>Cannot create database</source>
         <translation>Nie mogę stworzyć bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="96"/>
+        <location filename="../db/Database.cpp" line="98"/>
         <source>Unable to establish a database connection.
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
@@ -676,9 +671,9 @@ Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="186"/>
-        <location filename="../db/Database.cpp" line="192"/>
-        <location filename="../db/Database.cpp" line="198"/>
+        <location filename="../db/Database.cpp" line="191"/>
+        <location filename="../db/Database.cpp" line="197"/>
+        <location filename="../db/Database.cpp" line="203"/>
         <source>Database error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -762,7 +757,7 @@ Click Close to exit.</source>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="93"/>
         <source>Batch</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Produkt</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="95"/>
@@ -1001,22 +996,17 @@ Click Close to exit.</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="237"/>
-        <source>quatermaster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="247"/>
+        <location filename="../zarlok.cpp" line="191"/>
         <source>About Menu</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="248"/>
+        <location filename="../zarlok.cpp" line="192"/>
         <source>The &lt;b&gt;Menu&lt;/b&gt; example shows how to create menu-bar menus and context menus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="273"/>
+        <location filename="../zarlok.cpp" line="217"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>

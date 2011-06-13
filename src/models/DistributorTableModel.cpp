@@ -125,7 +125,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 				QDate date;
 				if (DataParser::date(data, date)) {
 					QString var;
-					return date.toString("yyyy-MM-dd");
+					return date.toString(Qt::ISODate);
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -137,9 +137,9 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			if (idx.column() == HDistDate) {
 				QString data = idx.data(Qt::EditRole).toString();
 				QDate date;
-				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), "yyyy-MM-dd"))) {
+				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), Qt::ISODate))) {
 					QString var;
-					return date.toString("yyyy-MM-dd");
+					return date.toString(Qt::ISODate);
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);

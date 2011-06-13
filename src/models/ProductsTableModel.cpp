@@ -98,7 +98,7 @@ QVariant ProductsTableModel::display(const QModelIndex & idx, const int role) co
 		QDate date;
 		if (DataParser::date(data, date)) {
 			QString var;
-			return date.toString("yyyy-MM-dd");
+			return date.toString(Qt::ISODate);
 		} else {
 			if (role == Qt::BackgroundRole)
 				return QColor(Qt::red);

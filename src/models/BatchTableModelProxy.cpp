@@ -48,7 +48,7 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow,
 											const QModelIndex &sourceParent) const {
 	QModelIndex expidx = sourceModel()->index(sourceRow, BatchTableModel::HExpire, sourceParent);
 	QString exp = expidx.data(Qt::DisplayRole).toString();
-	QString td = QDate::currentDate().toString("yyyy-MM-dd");
+	QString td = QDate::currentDate().toString(Qt::ISODate);
 	bool val = false;
 	if (cb_exp->isChecked())
 		val |= exp < td ? true : false;

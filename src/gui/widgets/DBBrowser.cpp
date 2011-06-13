@@ -48,11 +48,13 @@ DBBrowser::DBBrowser(bool firstrun) {
 	dbb_load->setIcon( dbb_load->style()->standardIcon(QStyle::SP_DialogOpenButton) );
 
 	if (!firstrun) {
-		globals::appSettings->beginGroup("Database");
-		recentDB = globals::appSettings->value("RecentDatabase").toString();
-		globals::appSettings->endGroup();
-		if (!recentDB.isEmpty())
-			openDB(recentDB);
+	}
+
+	globals::appSettings->beginGroup("Database");
+	recentDB = globals::appSettings->value("RecentDatabase").toString();
+	globals::appSettings->endGroup();
+	if (!recentDB.isEmpty()) {
+		openZarlock(recentDB);
 	} else {
 		PR("First run! Welcome to żarłok.");
 		newDatabaseCreator();
@@ -72,16 +74,23 @@ DBBrowser::~DBBrowser() {
 }
 
 void DBBrowser::openZarlock(const QString & dbname) {
-	this->setVisible(false);
-	z = new zarlok(dbname);
-	z->show();
-// 	connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
-	connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+	if (Database::Instance().open_database(dbname)) {
+		this->setVisible(false);
+
+		globals::appSettings->beginGroup("Database");
+		globals::appSettings->setValue("RecentDatabase", dbname);
+		globals::appSettings->endGroup();
+		z = new zarlok();
+		z->show();
+// 		connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
+		connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+	}
 }
 
 void DBBrowser::closeZarlock() {
 	FPR(__func__);
 	if (z) {
+// 		Database::Instance().close_database();
 		disconnect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
 		delete z;
 		z = NULL;
@@ -90,30 +99,11 @@ void DBBrowser::closeZarlock() {
 	Database::Destroy();
 }
 
-/**
- * @brief Slot - otwiera bazę danych po wywołaniu akcji z menu lub skrótu klawiatury
- *
- * @param recreate jeśli w bazie istnieją tabele, wpierw je usuń i stwórz na nowo
- * @param file nazwa pliku do otwarcia
- * @return bool
- **/
-void DBBrowser::openDB(const QString & dbname, bool createifnotexists) {
-	QString dbfile;
-	if (openDBFile(dbname, dbfile, createifnotexists)) {
-		Database & db = Database::Instance();
-		db.open_database(dbfile, false);
-
-		globals::appSettings->beginGroup("Database");
-		globals::appSettings->setValue("RecentDatabase", dbname);
-		globals::appSettings->endGroup();
-
-		openZarlock(dbname);
-	}
-}
-
+// openZarlock();
+		
 void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
 	QString dbname = item->data(Qt::UserRole).toString();
-	openDB(dbname);
+	openZarlock(dbname);
 }
 
 void DBBrowser::refreshList(int sort, int order) {
@@ -172,114 +162,12 @@ void DBBrowser::newDatabaseCreator(bool autoopen) {
 	bool wasOK = false;
 	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"),QLineEdit::Normal, "", &wasOK);
 
-	if (wasOK && autoopen)
-		openDB(dbname, true);
-	else
-		this->setVisible(true);
-}
-
-bool DBBrowser::openDBFile(const QString & dbname, QString & dbfile, bool createifnotexists) {
-	QString safename = dbname;
-	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
-
-	QString dbfilenoext = QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
-	dbfile = dbfilenoext % QString(".db");
-
-	QFile fdbfile(dbfile);
-
-	if  (fdbfile.exists()) {
-		return true;
-	} else {
-		int create = QMessageBox::No;
-		if (!createifnotexists) {
-			QMessageBox msgBox;
-			msgBox.setText(tr("The database name \"%1\" doesn't exists!").arg(dbname));
-			msgBox.setInformativeText(tr("Do you want to create new database with name \"%1\"?").arg(dbname));
-			msgBox.setIcon(QMessageBox::Question);
-			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-			msgBox.setDefaultButton(QMessageBox::Yes);
-			create = msgBox.exec();
-		}
-		if (createifnotexists || (create == QMessageBox::Yes))
-			return createDBFile(dbname, dbfilenoext);
-		else
-			this->setVisible(true);
-			
-	}
-
-	return false;
-}
-
-bool DBBrowser::createDBFile(const QString & dbname, const QString & dbfile) {
-	if (dbname.isEmpty()) {
-		QMessageBox msgBox;
-		msgBox.setText(tr("The database name is empty"));
-		msgBox.setIcon(QMessageBox::Critical);
-		msgBox.exec();
-		return false;
-	} else {
-		QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
-		if (!dbsavepath.exists())
-			dbsavepath.mkpath(dbsavepath.absolutePath());
-
-		QString datafile = dbfile % QString(".db");
-		QString infofile = dbfile % QString(".info");
-
-		QFile file(datafile);
-		if (file.exists()) {
-			QMessageBox msgBox;
-			msgBox.setText(tr("The database name '%1' already exists.").arg(dbname));
-			msgBox.setInformativeText(tr("Do you want to overwrite existing database?"));
-			msgBox.setIcon(QMessageBox::Critical);
-			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-			msgBox.setDefaultButton(QMessageBox::Yes);
-
-			if (msgBox.exec() == QMessageBox::No)
-				return false;
-		} 
-		
-		file.open(QIODevice::ReadWrite | QIODevice::Truncate);
-		file.close();
-
-		file.setFileName(infofile);
-		file.open(QIODevice::ReadWrite | QIODevice::Truncate);
-		file.write(dbname.toUtf8());
-		file.close();
-
-		Database & db = Database::Instance();
-		db.open_database(datafile, true);
-		db.close_database();
-
+	if (wasOK && autoopen) {
+// 		Database::Instance().open_database(dbname, true);
+		openZarlock(dbname);
 		refreshList();
-	}
-	return true;
-}
-
-/**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
- *
- * @return bool - wynik wykonania QTableModel::submitAll()
- **/
-void DBBrowser::saveDB() {
-	Database & db = Database::Instance();
-	db.CachedProducts()->submitAll();
-	db.CachedBatch()->submitAll();
-	db.CachedDistributor()->submitAll();
-
-	db.updateBatchQty();
-// 	actionSaveDB->setEnabled(false);
-}
-
-/**
- * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
- *
- * @return bool - wynik wykonania QTableModel::submitAll()
- **/
-void DBBrowser::closeDB() {
-// 	activateUi(false);
-	Database & db = Database::Instance();
-	saveDB();
-	db.close_database();
+	} else
+		this->setVisible(true);
 }
 
 #include "DBBrowser.moc"

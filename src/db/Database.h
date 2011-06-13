@@ -26,6 +26,8 @@
 #include "BatchTableModel.h"
 #include "DistributorTableModel.h"
 
+#include "CampProperties.h"
+
 /**
  * @brief Klasa obsługuję całą komunikację z bazą danych oraz tworzenie/otwieranie/zamykanie. Jest singletonem.
  **/
@@ -40,7 +42,7 @@ private:
 	Database(const Database &);
 
 public:
-	bool open_database(const QString & dbfile, bool recreate = false);
+	bool open_database(const QString & dbname, bool recreate = false);
 	bool close_database();
 	void save_database();
 
@@ -50,9 +52,21 @@ public:
 	void updateMealCosts();
 	void updateMealCosts(const int);
 
+	void writeCampSettings();
+	void readCampSettings();
+
 	inline ProductsTableModel * CachedProducts() { return tab_products; }
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
 	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
+
+	inline CampProperties * cs() { return camp; };
+
+private:
+	void saveDB();
+	void closeDB();
+
+	bool openDBFile(const QString & dbname, bool createifnotexists = false);
+	bool createDBFile(const QString & dbname, const QString & dbfilenoext);
 
 signals:
 	void databaseDirty();
@@ -64,6 +78,8 @@ private slots:
 private:
 	static Database * dbi;
 	QSqlDatabase db;
+
+	CampProperties * camp;
 
 	ProductsTableModel * tab_products;
 	BatchTableModel * tab_batch;

@@ -11,12 +11,11 @@
 #include "ui_MainWindow.h"
 
 #include "DBItemWidget.h"
-#include "CampProperties.h"
 
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
 public:
-	zarlok(const QString & dbname);
+	zarlok();
 	virtual ~zarlok();
 
 private:
@@ -24,9 +23,6 @@ private:
 
 	void writeSettings();
 	void readSettings();
-
-	void writeCampSettings();
-	void readCampSettings();
 
 	void updateAppTitle();
 
@@ -64,8 +60,6 @@ private:
 	QAction * actionSwitchDB;
 	QAction * actionConfigDB;
 	DBItemWidget * dbiw;
-
-	CampProperties camp;
 };
 
 #endif // zarlok_H

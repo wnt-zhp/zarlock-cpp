@@ -34,11 +34,11 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	mq.exec("SELECT value FROM settings WHERE key='BeginOfTheCamp';");
 
 	if (mq.next())
-		bd = QDate::fromString(mq.value(0).toString(), "yyyy-MM-dd");
+		bd = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
 
 	mq.exec("SELECT value FROM settings WHERE key='EndOfTheCamp';");
 	if (mq.next())
-		ed = QDate::fromString(mq.value(0).toString(), "yyyy-MM-dd");
+		ed = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
 
 	setupUi(this);
 
@@ -93,7 +93,7 @@ void TabMealWidget::activateUi(bool activate) {
 	
 		tree_meal->clear();
 		for (int i = 0; i <= total_days; ++i) {
-			QString date = bd.addDays(i).toString("yyyy-MM-dd");
+			QString date = bd.addDays(i).toString(Qt::ISODate);
 
 			QTreeWidgetItem * item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(date));
 			QSqlQuery mq(QString("SELECT * FROM meal WHERE distdate='%1' ORDER BY mealtype ASC;").arg(date));

@@ -135,7 +135,7 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 // 	PR(rx3.cap(4).toStdString());
 // 	PR(rx3.cap(5).toStdString());
 
-// 	PR(ref.toString("yyyy-MM-dd").toStdString());
+// 	PR(ref.toString(Qt::ISODate).toStdString());
 
 	rx1.indexIn(data);
 	rx2.indexIn(data);
@@ -152,7 +152,7 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 		int month = rx3.cap(3).isEmpty() ? date_formated.month() : rx3.cap(3).toInt();
 		int day = rx3.cap(5).isEmpty() ? date_formated.day() : rx3.cap(5).toInt();
 		date_formated.setDate(year, month, day);
-// 		PR(date_formated.toString("yyyy-MM-dd").toStdString());
+// 		PR(date_formated.toString(Qt::ISODate).toStdString());
 		return date_formated.isValid();
 	}
 	return false;
@@ -161,6 +161,6 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 bool DataParser::date(const QString & data, QString & date_formated, const QDate & ref) {
 	QDate date;
 	bool status = DataParser::date(data,  date, ref);
-	date_formated = date.toString("yyyy-MM-dd");
+	date_formated = date.toString(Qt::ISODate);
 	return status;
 }

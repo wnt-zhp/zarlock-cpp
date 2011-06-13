@@ -53,8 +53,8 @@ bool AddFoodRecordWidget::insert_record() {
 // 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
 	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
 	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
-	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), QDate::currentDate().toString("yyyy-MM-dd"));
-	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString("yyyy-MM-dd"));
+	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), QDate::currentDate().toString(Qt::ISODate));
+	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), "meal");
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), "");
 	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RMeal);

@@ -23,9 +23,12 @@
 #include <QtGui/QMessageBox>
 
 #include <QFile>
+#include <QDir>
+#include <QStringBuilder>
 
 #include "Database.h"
 #include "globals.h"
+#include "config.h"
 
 /**
  * @brief Przetrzymuję jedną instancję klasy.
@@ -73,6 +76,8 @@ Database::~Database() {
 	if (tab_batch) delete tab_batch;
 	if (tab_distributor) delete tab_distributor;
 
+	if (camp) delete camp;
+
 // 	QSqlDatabase::removeDatabase("QSQLITE");
 }
 
@@ -83,46 +88,22 @@ Database::~Database() {
  * @param create ...
  * @return bool
  **/
-bool Database::open_database(const QString & dbfile, bool recreate) {
+bool Database::open_database(const QString & dbname, bool recreate) {
 	if (locked) {
-		std::cerr << "Database already opened, close it before reopen." << std::endl;
+		std::cerr << "Database already opened, close it before reopen" << std::endl;
 		return false;
 	}
 
-	db.setDatabaseName(dbfile);
-	bool ok = db.open();
-	if (!ok) {
+	if (!openDBFile(dbname, true)) {// dbfile
+		std::cerr << "Unable to find file for database " << dbname.toStdString() << std::endl;
+
 		QMessageBox::critical(0, tr("Cannot create database"),
-							  tr("Unable to establish a database connection.\n"
-								   "This application needs SQLite support. Please read "
-								   "the Qt SQL driver documentation for information how "
-								   "to build it.\n\n"
-								   "Click Close to exit."), QMessageBox::Close);
+								tr("Unable to establish a database connection.\n"
+								"This application needs SQLite support. Please read "
+								"the Qt SQL driver documentation for information how "
+								"to build it.\n\n"
+								"Click Close to exit."), QMessageBox::Close);
 		return false;
-	}
-
-	if (recreate) {
-		QSqlQuery query;
-
-		QFile dbresfile(":/resources/database.sql");
-		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			PR(false);
-			return false;
-		}
-		while (!dbresfile.atEnd()) {
-			QString line = dbresfile.readLine();
-			query.exec(line.fromUtf8(line.toStdString().c_str()));
-		}
-
-		QFile dbtestfile(":/resources/test_data.sql");
-		if (!dbtestfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			PR(false);
-			return false;
-		}
-		while (!dbtestfile.atEnd()) {
-			QString line = dbtestfile.readLine();
-			query.exec(line.fromUtf8(line.toStdString().c_str()));
-		}
 	}
 
 	// products
@@ -140,6 +121,12 @@ bool Database::open_database(const QString & dbfile, bool recreate) {
 	tab_distributor->setTable("distributor");
 	tab_distributor->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
 	tab_distributor->setRelation(DistributorTableModel::HBatchId, QSqlRelation("batch", "id", "id"/*"spec"*/));
+
+	camp = new CampProperties;
+	readCampSettings();
+
+	if (!camp->isCorrect)
+		camp->campName = dbname;
 
 // 	connect(tab_products, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
 // 	connect(tab_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(rebuild_models()));
@@ -202,6 +189,134 @@ bool Database::rebuild_models() {
 	return true;
 }
 
+/**
+ * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
+ *
+ * @return bool - wynik wykonania QTableModel::submitAll()
+ **/
+void Database::saveDB() {
+	Database & db = Database::Instance();
+	tab_products->submitAll();
+	tab_batch->submitAll();
+	tab_distributor->submitAll();
+
+	updateBatchQty();
+// 	actionSaveDB->setEnabled(false);
+}
+
+/**
+ * @brief Slot - zapisuje bazę danych wraz ze wszystkimi zmianami
+ *
+ * @return bool - wynik wykonania QTableModel::submitAll()
+ **/
+void Database::closeDB() {
+// 	activateUi(false);
+	Database & db = Database::Instance();
+	saveDB();
+	db.close_database();
+}
+
+bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
+	if (dbname.isEmpty()) {
+		QMessageBox msgBox;
+		msgBox.setText(tr("The database name is empty"));
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.exec();
+		return false;
+	}
+
+	QString safename = dbname;
+	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
+
+	QString dbfilenoext = QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
+	QString dbfile = dbfilenoext % ".db";
+
+	QFile fdbfile(dbfile);
+
+	int create = QMessageBox::No;
+	bool createTables = false;
+
+	if (fdbfile.exists()) {
+		db.setDatabaseName(dbfile);
+		return db.open();
+	}
+
+	if (!createifnotexists) {
+		QMessageBox msgBox;
+		msgBox.setText(tr("The database name \"%1\" doesn't exists!").arg(dbname));
+		msgBox.setInformativeText(tr("Do you want to create new database with name \"%1\"?").arg(dbname));
+		msgBox.setIcon(QMessageBox::Question);
+		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::Yes);
+		create = msgBox.exec();
+		if (create != QMessageBox::Yes)
+			return false;
+	}	
+
+	if (createDBFile(dbname, dbfilenoext)) {
+		db.setDatabaseName(dbfile);
+		if (!db.open())
+			return false;
+
+		QSqlQuery query;
+
+		QFile dbresfile(":/resources/database.sql");
+		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			PR(false);
+			return false;
+		}
+		while (!dbresfile.atEnd()) {
+			QString line = dbresfile.readLine();
+			query.exec(line.fromUtf8(line.toStdString().c_str()));
+		}
+
+		QFile dbtestfile(":/resources/test_data.sql");
+		if (!dbtestfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			PR(false);
+			return false;
+		}
+		while (!dbtestfile.atEnd()) {
+			QString line = dbtestfile.readLine();
+			query.exec(line.fromUtf8(line.toStdString().c_str()));
+		}
+		return true;
+	}
+
+	return false;
+}
+
+bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext) {
+	QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
+	if (!dbsavepath.exists())
+		dbsavepath.mkpath(dbsavepath.absolutePath());
+
+	QString datafile = dbfilenoext % ".db";
+	QString infofile = dbfilenoext % ".info";
+
+	QFile file(datafile);
+	if (file.exists()) {
+		QMessageBox msgBox;
+		msgBox.setText(tr("The database name '%1' already exists.").arg(dbname));
+		msgBox.setInformativeText(tr("Do you want to overwrite existing database?"));
+		msgBox.setIcon(QMessageBox::Critical);
+		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		msgBox.setDefaultButton(QMessageBox::Yes);
+
+		if (msgBox.exec() == QMessageBox::No)
+			return false;
+	}
+		
+	file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+	file.close();
+
+	file.setFileName(infofile);
+	file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+	file.write(dbname.toUtf8());
+	file.close();
+
+	return true;
+}
+
 void Database::updateBatchQty() {
 	QSqlQuery qBatch("SELECT id FROM batch;");
 	qBatch.exec();
@@ -246,6 +361,57 @@ void Database::updateMealCosts(const int mid) {
 // 	qBatch.bindValue(0, price);
 // 	qBatch.bindValue(1, pid);
 // 	qBatch.exec();
+}
+
+void Database::writeCampSettings() {
+	QSqlQuery csq;
+	QString query("UPDATE settings SET value=\"%2\" WHERE key=\"%1\";");
+
+	csq.exec(query.arg(CampProperties::HisCorrect).arg(camp->isCorrect));
+	csq.exec(query.arg(CampProperties::HcampName).arg(camp->campName));
+	csq.exec(query.arg(CampProperties::HcampDateBegin).arg(camp->campDateBegin.toString(Qt::ISODate)));
+	csq.exec(query.arg(CampProperties::HcampDateEnd).arg(camp->campDateEnd.toString(Qt::ISODate)));
+	csq.exec(query.arg(CampProperties::HscoutsNo).arg(camp->scoutsNo));
+	csq.exec(query.arg(CampProperties::HleadersNo).arg(camp->leadersNo));
+	csq.exec(query.arg(CampProperties::HcampLeader).arg(camp->campLeader));
+	csq.exec(query.arg(CampProperties::HcampQuarter).arg(camp->campQuarter));
+	csq.exec(query.arg(CampProperties::HcampOthers).arg(camp->campOthers));
+}
+
+void Database::readCampSettings() {
+	QSqlQuery csq;
+	csq.exec("SELECT * FROM settings;");
+	while(csq.next()) {
+		switch (csq.value(0).toInt()) {
+			case CampProperties::HisCorrect:
+				camp->isCorrect = csq.value(1).toBool();
+				break;
+			case CampProperties::HcampName:
+				camp->campName = csq.value(1).toString();
+				break;
+			case CampProperties::HcampDateBegin:
+				camp->campDateBegin = csq.value(1).toDate();
+				break;
+			case CampProperties::HcampDateEnd:
+				camp->campDateEnd = csq.value(1).toDate();
+				break;
+			case CampProperties::HscoutsNo:
+				camp->scoutsNo = csq.value(1).toInt();
+				break;
+			case CampProperties::HleadersNo:
+				camp->leadersNo = csq.value(1).toInt();
+				break;
+			case CampProperties::HcampLeader:
+				camp->campLeader = csq.value(1).toString();
+				break;
+			case CampProperties::HcampQuarter:
+				camp->campQuarter = csq.value(1).toString();
+				break;
+			case CampProperties::HcampOthers:
+				camp->campOthers = csq.value(1).toString();
+				break;
+		}
+	}
 }
 
 #include "Database.moc"

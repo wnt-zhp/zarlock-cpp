@@ -51,7 +51,7 @@ void AddMealRecordWidget::showW(QTreeWidgetItem * item, int /*column*/) {
 		return;
 
 	if (item) {
-		calendar->setSelectedDate(QDate::fromString(item->text(0), "yyyy-MM-dd"));
+		calendar->setSelectedDate(QDate::fromString(item->text(0), Qt::ISODate));
 	} else {
 		calendar->setSelectedDate(QDate::currentDate());
 	}
@@ -71,7 +71,7 @@ bool AddMealRecordWidget::insert_record() {
 	QString qsel("SELECT * FROM meal WHERE distdate='%1';");
 	QSqlQuery qsql;
 
-	qsql.exec(qsel.arg(calendar->selectedDate().toString("yyyy-MM-dd")));
+	qsql.exec(qsel.arg(calendar->selectedDate().toString(Qt::ISODate)));
 	bool recexisting[DistributorTableModel::MOther2+1] = { false, false, false, false, false, false };
 	int recexistingid[DistributorTableModel::MOther2+1];
 	while (qsql.next()) {
@@ -86,7 +86,7 @@ bool AddMealRecordWidget::insert_record() {
 				PR(cb_breakfast->isChecked());
 				PR(qdel.arg(recexistingid[DistributorTableModel::MBreakfast]).toStdString());
 				if (!recexisting[DistributorTableModel::MBreakfast] and cb_breakfast->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::MBreakfast).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::MBreakfast).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::MBreakfast] and !cb_breakfast->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::MBreakfast]));
@@ -95,7 +95,7 @@ bool AddMealRecordWidget::insert_record() {
 				break;
 			case DistributorTableModel::M2Breakfast:
 				if (!recexisting[DistributorTableModel::M2Breakfast] and cb_breakfast2nd->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::M2Breakfast).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::M2Breakfast).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::M2Breakfast] and !cb_breakfast2nd->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::M2Breakfast]));
@@ -103,7 +103,7 @@ bool AddMealRecordWidget::insert_record() {
 				break;
 			case DistributorTableModel::MLunch:
 				if (!recexisting[DistributorTableModel::MLunch] and cb_lunch->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::MLunch).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::MLunch).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::MLunch] and !cb_lunch->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::MLunch]));
@@ -111,7 +111,7 @@ bool AddMealRecordWidget::insert_record() {
 				break;
 			case DistributorTableModel::MDiner:
 				if (!recexisting[DistributorTableModel::MDiner] and cb_dinner->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::MDiner).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::MDiner).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::MDiner] and !cb_dinner->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::MDiner]));
@@ -119,7 +119,7 @@ bool AddMealRecordWidget::insert_record() {
 				break;
 			case DistributorTableModel::MOther1:
 				if (!recexisting[DistributorTableModel::MOther1] and cb_other1->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::MOther1).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::MOther1).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::MOther1] and !cb_other1->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::MOther1]));
@@ -127,7 +127,7 @@ bool AddMealRecordWidget::insert_record() {
 				break;
 			case DistributorTableModel::MOther2:
 				if (!recexisting[DistributorTableModel::MOther2] and cb_other2->isChecked()) {
-					qsql.exec(qadd.arg(calendar->selectedDate().toString("yyyy-MM-dd")).arg(DistributorTableModel::MOther2).arg("").arg(0).arg(0.0));
+					qsql.exec(qadd.arg(calendar->selectedDate().toString(Qt::ISODate)).arg(DistributorTableModel::MOther2).arg("").arg(0).arg(0.0));
 				}
 				if (recexisting[DistributorTableModel::MOther2] and !cb_other2->isChecked()) {
 					qsql.exec(qdel.arg(recexistingid[DistributorTableModel::MOther2]));
@@ -185,7 +185,7 @@ void AddMealRecordWidget::set_caldate(const QDate& /*date*/) {
 }
 
 void AddMealRecordWidget::calDayChanged() {
-	QString date = calendar->selectedDate().toString("yyyy-MM-dd");
+	QString date = calendar->selectedDate().toString(Qt::ISODate);
 
 	QSqlQuery q(QString("SELECT * FROM meal WHERE distdate='%1';").arg(date));
 	q.exec();

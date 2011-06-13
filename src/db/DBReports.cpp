@@ -70,7 +70,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	printer.setOutputFormat(QPrinter::PdfFormat);
 	QString ofile =
 		QDir::homePath() + QString(ZARLOK_HOME ZARLOK_REPORTS) + dbname +
-		QString("/") + date.toString("yyyy-MM-dd") + QString("_raport.pdf");
+		QString("/") + date.toString(Qt::ISODate) + QString("_raport.pdf");
 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
