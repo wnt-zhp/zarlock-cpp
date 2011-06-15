@@ -140,7 +140,7 @@ void AddBatchRecordWidget::validateCB(int i) {
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
 // 	PR(i);
-// 	PR(defexp.toStdString());
+	PR(defexp.toStdString());
 
 	if (edit_expiry->text().isEmpty()) {
 		edit_expiry->setText(defexp);

@@ -68,7 +68,7 @@ bool DataParser::quantity(const QString & data, QString & qty_formated) {
 }
 
 bool DataParser::price(const QString & data, double & price_formated, double & tax_formated) {
-	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*([p\\+]\\s*(22|15|7)\%?)?\\s*$");
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*([p\\+]\\s*(22|15|7|0)\%?)?\\s*(zl)?\\s*$");
 
 // 	PR(rx.indexIn(data));
 // 	PR(rx.cap(0).toStdString());
@@ -76,13 +76,16 @@ bool DataParser::price(const QString & data, double & price_formated, double & t
 // 	PR(rx.cap(2).toStdString());
 // 	PR(rx.cap(3).toStdString());
 // 	PR(rx.cap(4).toStdString());
+// 	PR(rx.cap(5).toStdString());
 
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
 		price_formated = rx.cap(1).toDouble();
 		tax_formated = rx.cap(4).toDouble();
 		return true;
+		PR(true);
 	}
+	PR(false);
 	return false;
 }
 
@@ -90,7 +93,7 @@ bool DataParser::price(const QString & data, QString & price_formated) {
 	double price, tax;
 	
 	bool status = DataParser::price(data, price, tax);
-	price_formated.sprintf("%.2f zl", price*(100.0+tax)/100.0);
+	price_formated.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), price*(100.0+tax)/100.0);
 
 	return status;
 }

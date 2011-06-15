@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2010  Rafał Lalik <rafal.lalik@ph.tum.de>
+    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,17 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "globals.h"
-#include "DataParser.h"
+#include <QtGui/QMessageBox>
+#include <QtCore/QString>
 
-#include "PriceInput.h"
+#include "ModelsCommon.h"
 
-PriceInput::PriceInput(QWidget * parent) : CustomLineEdit(parent) {
-	setPlaceholderText(tr("date"));
+void ModelsCommon::inputErrorMsgBox(const QString& val) {
+	QMessageBox msgBox;
+	msgBox.setText(QObject::tr("Value \"%1\" which you try store in database is not valid.").arg(val));
+	msgBox.setInformativeText(QObject::tr("Try to edit your data again, pay attention to its validity."));
+	msgBox.setIcon(QMessageBox::Critical);
+	msgBox.setStandardButtons(QMessageBox::Ok);
+	msgBox.setDefaultButton(QMessageBox::Ok);
+	msgBox.exec();
 }
-
-bool PriceInput::verifyText(const QString & raw, QString & placeholder) {
-	return DataParser::price(raw, placeholder);
-}
-
-#include "PriceInput.moc"

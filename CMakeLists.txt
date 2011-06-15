@@ -90,6 +90,7 @@ set(zarlok_src_gui_dialogs_SRCS
 									src/gui/dialogs/CampSettingsDialog.cpp
 )
 set(zarlok_src_models_SRCS
+									src/models/ModelsCommon.cpp
 									src/models/BatchTableModel.cpp
 									src/models/ProductsTableModel.cpp
 									src/models/DistributorTableModel.cpp

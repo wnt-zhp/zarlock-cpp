@@ -50,7 +50,6 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 
 	if (rawtext.isEmpty()) {
 		displaytext.clear();
-		this->setPalette(defpal);
 	} else if (!is_ok) {
 		displaytext = tr("Parser error!");
 	}
@@ -85,12 +84,15 @@ bool CustomLineEdit::verify(const QString & t) {
 		edit_mode = true;
 		verify(rawtext);
 	} else {
+		if (t.isEmpty())
+			this->setPalette(defpal);
+
 		if (verifyText(t, displaytext)) {
-			this->setPalette(globals::palette_ok);
+			if (!t.isEmpty()) this->setPalette(globals::palette_ok);
 			is_ok = true;
 			emit dateChanged();
 		} else {
-			this->setPalette(globals::palette_bad);
+			if (!t.isEmpty()) this->setPalette(globals::palette_bad);
 			is_ok = false;
 		}
 	}
@@ -106,17 +108,18 @@ void CustomLineEdit::clear() {
 }
 
 void CustomLineEdit::setText(const QString& t) {
-// 	edit_mode = true;
-// 	rawtext = t;
-// 	QLineEdit::setText(t);
-// 	emit textChanged(t);
-// 	focusOutEvent(NULL);
+//	edit_mode = true;
+//	rawtext = t;
+//	QLineEdit::setText(t);
+//	emit textChanged(t);
+//	focusOutEvent(NULL);
 
-// 	rawtext = t;
+//	rawtext = t;
 	edit_mode = true;
-	emit textChanged(t);
-// 	verify(t);
-	edit_mode = false;
+// 	emit textChanged(t);
+	QLineEdit::setText(t);
+//	verify(t);
+// 	edit_mode = false;
 	focusOutEvent(NULL);
 }
 
@@ -129,7 +132,7 @@ void CustomLineEdit::doReturnPressed() {
 
 void CustomLineEdit::doRefresh() {
 // 	edit_mode = true;
-// 	verify(text());
+// 	verify(rawtext);
 	edit_mode = false;
 	focusOutEvent(NULL);
 }

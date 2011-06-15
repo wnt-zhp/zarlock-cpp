@@ -20,6 +20,7 @@
 #define PRODUCTSTABLEMODEL_H
 
 #include <QtSql/QSqlTableModel>
+#include "ModelsCommon.h"
 
 /**
  * @brief Klasa dziedziczy po QSqlTableModel i odpowiada za
@@ -27,7 +28,7 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class ProductsTableModel : public QSqlTableModel {
+class ProductsTableModel : public QSqlTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	ProductsTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());

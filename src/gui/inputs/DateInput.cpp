@@ -48,20 +48,18 @@ bool DateInput::verifyText(const QString & raw, QString & placeholder) {
 		ref = data_ref->date();
 
 	if (ref.toString().isEmpty()) {
-		placeholder = tr("To obtain correct expiry date, first set registration date");
-		return false;
-	}
-// 	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
-	if (DataParser::date(raw, placeholder, ref)) {
+// 		placeholder = tr("To obtain correct expiry date, set registration date first");
+		placeholder.clear();
+		setPlaceholderText(tr("To obtain correct expiry date, set registration date first"));
+// 		this->setEnabled(false);
 		return true;
 	}
-	return false;
+// 	this->setEnabled(true);
+// 	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
+	return DataParser::date(raw, placeholder, ref);
 }
 
 void DateInput::doRefresh() {
-// 	if (data_ref != NULL)
-// 		rawtext = data_ref->displaytext;
-
 	CustomLineEdit::doRefresh();
 }
 

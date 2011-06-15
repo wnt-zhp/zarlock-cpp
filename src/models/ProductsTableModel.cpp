@@ -65,6 +65,26 @@ QVariant ProductsTableModel::data(const QModelIndex & idx, int role) const {
  * @return bool stan aktualizacji
  **/
 bool ProductsTableModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+	switch (role) {
+		case Qt::EditRole:
+			if (index.column() == HUnit) {
+				QString unitf;
+				if (!DataParser::unit(value.toString(), unitf)) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			if (index.column() == HExpire) {
+				QDate date;
+				if (!DataParser::date(value.toString(), date)) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+			break;
+	}
+
     return QSqlTableModel::setData(index, value, role);
 }
 

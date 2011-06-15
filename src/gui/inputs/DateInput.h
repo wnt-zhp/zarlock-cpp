@@ -34,7 +34,7 @@ public slots:
 	void doRefresh();
 
 private slots:
-	bool verifyText(const QString &, QString & );
+	bool verifyText(const QString &, QString &);
 
 private:
 	const DateInput * data_ref;

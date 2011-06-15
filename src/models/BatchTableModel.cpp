@@ -77,10 +77,26 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 	switch (role) {
 		case Qt::EditRole:
+			if (index.column() == HPrice) {
+				double price, tax;
+				if (!DataParser::price(value.toString(), price, tax)) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			if (index.column() == HUnit) {
+				QString unitf;
+				if (!DataParser::unit(value.toString(), unitf)) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
 			if (index.column() == HBook) {
 				QDate date;
 				if (DataParser::date(value.toString(), date)) {
-					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), role);
+					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
 				} else {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -89,14 +105,21 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 
 			if (index.column() == HExpire) {
 				QDate date;
-				if (DataParser::date(value.toString(), date, this->index(index.row(), HBook).data(Qt::DisplayRole).toDate())) {
-					return QSqlRelationalTableModel::setData(index, value, role);
-				} else {
+				if (!DataParser::date(value.toString(), date, this->index(index.row(), HBook).data(Qt::DisplayRole).toDate())) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
 			}
 
+			if (index.column() == HStaQty) {
+				float used = this->index(index.row(), HUsedQty).data().toFloat();
+				float total = value.toFloat();
+				float free = total - used;
+				if (total < used) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
 			break;
 	}
     return QSqlRelationalTableModel::setData(index, value, role);
@@ -146,11 +169,23 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			if (idx.column() == HPrice) {
-				QString data = idx.data(Qt::EditRole).toString(); 
+				QString data = idx.data(Qt::EditRole).toString();
 				double price, tax;
 				if (DataParser::price(data, price, tax)) {
 					QString var;
 					return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
+				} else {
+					if (role == Qt::BackgroundRole)
+						return QColor(Qt::red);
+					else
+						return QVariant(tr("Parser error!"));
+				}
+			}
+
+			if (idx.column() == HUnit) {
+				QString unitf;
+				if (DataParser::unit(idx.data(Qt::EditRole).toString(), unitf)) {
+					return unitf;
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -222,16 +257,6 @@ void BatchTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
-}
-
-void BatchTableModel::inputErrorMsgBox(const QString& val) {
-	QMessageBox msgBox;
-	msgBox.setText(tr("Value \"%1\" which you try store in database is not valid.").arg(val));
-	msgBox.setInformativeText(tr("Try to edit your data again, pay attention to its validity."));
-	msgBox.setIcon(QMessageBox::Critical);
-	msgBox.setStandardButtons(QMessageBox::Ok);
-	msgBox.setDefaultButton(QMessageBox::Ok);
-	msgBox.exec();
 }
 
 #include "BatchTableModel.moc"

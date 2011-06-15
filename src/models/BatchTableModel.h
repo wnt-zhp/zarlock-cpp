@@ -20,6 +20,7 @@
 #define BATCHTABLEMODEL_H
 
 #include <QtSql/QSqlRelationalTableModel>
+#include "ModelsCommon.h"
 
 /**
  * @brief Klasa dziedziczy po QSqlRelationalTableModel i odpowiada za
@@ -27,7 +28,7 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class BatchTableModel : public QSqlRelationalTableModel {
+class BatchTableModel : public QSqlRelationalTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	BatchTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
@@ -44,8 +45,6 @@ public slots:
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
-
-	void inputErrorMsgBox(const QString & val);
 
 public:
 	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HDesc, HInvoice };
