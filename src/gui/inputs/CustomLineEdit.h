@@ -28,25 +28,32 @@ public:
 	CustomLineEdit(QWidget * parent);
 	virtual ~CustomLineEdit();
 
-	virtual void focusOutEvent(QFocusEvent* );
-	virtual void focusInEvent(QFocusEvent* );
+	virtual void focusOutEvent(QFocusEvent *);
+	virtual void focusInEvent(QFocusEvent *);
 
 	virtual void clear();
 
 	bool ok();
 	
-	inline virtual QString text(bool placeholdertext = false) const { return placeholdertext ? displaytext : rawtext; }
-	inline virtual void setText(const QString & t) { rawtext = t; }
+	virtual const QString text(bool placeholdertext = false);
+	virtual void setText(const QString & t);
 
 protected:
 	virtual bool verifyText(const QString &, QString & ) = 0;
 
+public slots:
+	void doReturnPressed();
+	void doRefresh();
+
 private slots:
 	bool verify(const QString &);
 
+signals:
+	void dateChanged();
 protected:
 	QString displaytext, rawtext;
 	bool edit_mode, is_ok;
+	QPalette defpal;
 };
 
 #endif // CUSTOMLINEEDI

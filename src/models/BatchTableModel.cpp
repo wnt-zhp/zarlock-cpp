@@ -22,6 +22,7 @@
 #include <QDate>
 #include <QTime>
 #include <QColor>
+#include <QMessageBox>
 #include <QStringBuilder>
 
 #include "BatchTableModel.h"
@@ -50,10 +51,10 @@ BatchTableModel::~BatchTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole or role == Qt::StatusTipRole)
+	if (role == Qt::StatusTipRole)
 		return raw(idx);
 
-	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
+	if (role == Qt::EditRole or role == Qt::DisplayRole or role == Qt::BackgroundRole)
 		return display(idx, role);
 
 	int col = idx.column();
@@ -74,6 +75,30 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
  * @return bool stan dodania/aktualizacji
  **/
 bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
+	switch (role) {
+		case Qt::EditRole:
+			if (index.column() == HBook) {
+				QDate date;
+				if (DataParser::date(value.toString(), date)) {
+					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), role);
+				} else {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			if (index.column() == HExpire) {
+				QDate date;
+				if (DataParser::date(value.toString(), date, this->index(index.row(), HBook).data(Qt::DisplayRole).toDate())) {
+					return QSqlRelationalTableModel::setData(index, value, role);
+				} else {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			break;
+	}
     return QSqlRelationalTableModel::setData(index, value, role);
 }
 
@@ -110,9 +135,14 @@ bool BatchTableModel::select() {
  **/
 QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
+		case Qt::EditRole:
+			if (idx.column() == HBook) {
+				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+			}
+			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HSpec) {
-				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % idx.data(Qt::EditRole).toString());
+				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % QSqlRelationalTableModel::data(idx, Qt::EditRole).toString());
 			}
 
 			if (idx.column() == HPrice) {
@@ -130,25 +160,13 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			if (idx.column() == HBook) {
-				QString data = idx.data(Qt::EditRole).toString();
-				QDate date;
-				if (DataParser::date(data, date)) {
-					QString var;
-					return date.toString(Qt::ISODate);
-				} else {
-					if (role == Qt::BackgroundRole)
-						return QColor(Qt::red);
-					else
-						return QVariant(tr("Parser error!"));
-				}
+				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
-			
+
 			if (idx.column() == HExpire) {
-				QString data = idx.data(Qt::EditRole).toString();
 				QDate date;
-				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HBook).data(Qt::DisplayRole).toString(), Qt::ISODate))) {
-					QString var;
-					return date.toString(Qt::ISODate);
+				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlRelationalTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
+					return date.toString(Qt::DefaultLocaleShortDate);
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -166,16 +184,14 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			break;
 		case Qt::BackgroundRole:
-// 			if (idx.row() % 2) {
-// 				return QColor(Qt::magenta);
-// 			} else {
-// 				return QColor(Qt::cyan);
-// 			}
-			QString today = QDate::currentDate().toString(Qt::ISODate);
-			QString expdate = QDate::fromString(index(idx.row(), HExpire).data().toString(), Qt::ISODate).toString(Qt::ISODate);
-			if (today > expdate) {
+			QModelIndex expidx = index(idx.row(), BatchTableModel::HExpire);
+			QDate expd = QDate::fromString(data(expidx, Qt::DisplayRole).toString(), Qt::DefaultLocaleShortDate);
+
+			int daystoexp = expd.daysTo(QDate::currentDate());
+
+			if (daystoexp > 0) {
 				return globals::item_expired;
-			} else if (today == expdate) {
+			} else if (daystoexp == 0) {
 				return globals::item_aexpired;
 			} else {
 				return globals::item_nexpired;
@@ -192,9 +208,6 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
  * @return QVariant
  **/
 QVariant BatchTableModel::raw(const QModelIndex & idx) const {
-// 	if (idx.column() == HSpec) {
-// 		return QSqlRelationalTableModel::data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString();
-// 	}
 	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
 }
 
@@ -209,6 +222,16 @@ void BatchTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
+}
+
+void BatchTableModel::inputErrorMsgBox(const QString& val) {
+	QMessageBox msgBox;
+	msgBox.setText(tr("Value \"%1\" which you try store in database is not valid.").arg(val));
+	msgBox.setInformativeText(tr("Try to edit your data again, pay attention to its validity."));
+	msgBox.setIcon(QMessageBox::Critical);
+	msgBox.setStandardButtons(QMessageBox::Ok);
+	msgBox.setDefaultButton(QMessageBox::Ok);
+	msgBox.exec();
 }
 
 #include "BatchTableModel.moc"

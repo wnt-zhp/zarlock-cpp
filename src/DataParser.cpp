@@ -115,27 +115,8 @@ bool DataParser::unit(const QString & data, QString & unit_formated) {
 bool DataParser::date(const QString & data, QDate & date_formated, const QDate & ref) {
 	QRegExp rx1("^\\s*([+-]\\d+|0)\\s*$");
 	QRegExp rx2("^\\s*dzis\\s*$");
-// 	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
-	QRegExp rx3("^\\s*(\\d\\d\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d))?)?\\s*$");	// dd/mm//yy
-
-// 	PR(data.toStdString());
-
-// 	PR(rx1.indexIn(data));
-// 	PR(rx1.cap(0).toStdString());
-
-// 	PR(rx2.indexIn(data));
-// 	PR(rx2.cap(0).toStdString());
-// 	PR(rx2.cap(1).toStdString());
-
-// 	PR(rx3.indexIn(data));
-// 	PR(rx3.cap(0).toStdString());
-// 	PR(rx3.cap(1).toStdString());
-// 	PR(rx3.cap(2).toStdString());
-// 	PR(rx3.cap(3).toStdString());
-// 	PR(rx3.cap(4).toStdString());
-// 	PR(rx3.cap(5).toStdString());
-
-// 	PR(ref.toString(Qt::ISODate).toStdString());
+	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
+// 	QRegExp rx3("^\\s*(\\d\\d\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d))?)?\\s*$");	// dd/mm//yy
 
 	rx1.indexIn(data);
 	rx2.indexIn(data);
@@ -148,11 +129,10 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 		return true;
 	} else if (!rx3.cap(0).isEmpty()) {
 		date_formated = QDate::currentDate();
-		int year = rx3.cap(1).isEmpty() ? date_formated.year() : rx3.cap(1).toInt();
+		int year = rx3.cap(5).isEmpty() ? date_formated.year() : rx3.cap(5).toInt();
 		int month = rx3.cap(3).isEmpty() ? date_formated.month() : rx3.cap(3).toInt();
-		int day = rx3.cap(5).isEmpty() ? date_formated.day() : rx3.cap(5).toInt();
+		int day = rx3.cap(1).isEmpty() ? date_formated.day() : rx3.cap(1).toInt();
 		date_formated.setDate(year, month, day);
-// 		PR(date_formated.toString(Qt::ISODate).toStdString());
 		return date_formated.isValid();
 	}
 	return false;
@@ -161,6 +141,6 @@ bool DataParser::date(const QString & data, QDate & date_formated, const QDate &
 bool DataParser::date(const QString & data, QString & date_formated, const QDate & ref) {
 	QDate date;
 	bool status = DataParser::date(data,  date, ref);
-	date_formated = date.toString(Qt::ISODate);
+	date_formated = date.toString(Qt::DefaultLocaleShortDate);
 	return status;
 }

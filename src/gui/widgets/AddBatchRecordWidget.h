@@ -42,6 +42,7 @@ private slots:
 	void clear_form();
 	void cancel_form();
 	void validateAdd();
+	void validateCB(int i);
 
 private:
 	QCompleter * completer_spec;

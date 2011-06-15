@@ -32,7 +32,7 @@ void DateInput::setDateReferenceObj(const DateInput * ref) {
 const QDate DateInput::date() const {
 	QDate d;
 // 	PR(displaytext.toStdString());
-	d = QDate::fromString(displaytext, Qt::ISODate);
+	d = QDate::fromString(displaytext, Qt::DefaultLocaleShortDate);
 // 	PR(d.toString(Qt::ISODate).toStdString());
 /*	if (DataParser::date(rawtext, d, data_ref->date())) {
 		return d;
@@ -47,11 +47,22 @@ bool DateInput::verifyText(const QString & raw, QString & placeholder) {
 	else
 		ref = data_ref->date();
 
+	if (ref.toString().isEmpty()) {
+		placeholder = tr("To obtain correct expiry date, first set registration date");
+		return false;
+	}
 // 	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
 	if (DataParser::date(raw, placeholder, ref)) {
 		return true;
 	}
 	return false;
+}
+
+void DateInput::doRefresh() {
+// 	if (data_ref != NULL)
+// 		rawtext = data_ref->displaytext;
+
+	CustomLineEdit::doRefresh();
 }
 
 #include "DateInput.moc"

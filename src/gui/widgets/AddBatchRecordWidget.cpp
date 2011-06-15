@@ -29,21 +29,23 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
+	connect(edit_book, SIGNAL(dateChanged()), edit_expiry, SLOT(doRefresh()));
+
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
-	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
+	connect(action_cancel, SIGNAL(clicked(bool)), this, SLOT(cancel_form()));
 
 // 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
-	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
+	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateCB(int)));
 	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_price, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+	connect(edit_price, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(check_uprice, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
 	connect(edit_invoice, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_book, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
-	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+	connect(edit_book, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 
 	edit_expiry->setDateReferenceObj(edit_book);
 }
@@ -133,6 +135,23 @@ void AddBatchRecordWidget::cancel_form() {
 	emit canceled(false);
 }
 
+void AddBatchRecordWidget::validateCB(int i) {
+	ProductsTableModel * ptm = Database::Instance().CachedProducts();
+	BatchTableModel * btm = Database::Instance().CachedBatch();
+	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
+// 	PR(i);
+// 	PR(defexp.toStdString());
+
+	if (edit_expiry->text().isEmpty()) {
+		edit_expiry->setText(defexp);
+		edit_expiry->doRefresh();
+// 		edit_expiry->doReturnPressed();
+	}
+
+	validateAdd();
+}
+
+
 void AddBatchRecordWidget::validateAdd() {
 // 	PR(combo_products->currentIndex());
 
@@ -206,6 +225,8 @@ void AddBatchRecordWidget::update_model() {
 	edit_invoice->setCompleter(completer_invoice);
 	edit_book->setCompleter(completer_book);
 	edit_expiry->setCompleter(completer_expiry);
+
+	validateCB(combo_products->currentIndex());
 }
 
 

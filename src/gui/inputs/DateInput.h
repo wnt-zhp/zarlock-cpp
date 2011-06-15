@@ -30,6 +30,9 @@ public:
 	const QDate date() const;
 	void setDateReferenceObj(const DateInput * ref);
 
+public slots:
+	void doRefresh();
+
 private slots:
 	bool verifyText(const QString &, QString & );
 

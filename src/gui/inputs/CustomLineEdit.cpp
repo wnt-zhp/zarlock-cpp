@@ -21,8 +21,13 @@
 
 #include "CustomLineEdit.h"
 
+#include <QToolTip>
+
 CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
 	connect(this, SIGNAL(textChanged(QString)), this, SLOT(verify(QString)));
+	connect(this, SIGNAL(returnPressed()), this, SLOT(doReturnPressed()));
+
+	defpal = this->palette();
 }
 
 CustomLineEdit::~CustomLineEdit() {
@@ -34,19 +39,32 @@ bool CustomLineEdit::ok() {
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
-	this->setFont(globals::font_display);
-
-	rawtext = QLineEdit::text();
-	if (rawtext.isEmpty()) {
-		displaytext.clear();
-	} else if (!verify(rawtext)) {
-		displaytext = tr("Parser error!");
+	if (edit_mode) {
+		rawtext = QLineEdit::text();
+	} else {
+		edit_mode = true;
+		verify(rawtext);
 	}
 
-	edit_mode = false;
+	this->setFont(globals::font_display);
+
+	if (rawtext.isEmpty()) {
+		displaytext.clear();
+		this->setPalette(defpal);
+	} else if (!is_ok) {
+		displaytext = tr("Parser error!");
+	}
+// 	if (ev != NULL)
+// 		edit_mode = false;
+
 	QLineEdit::setText(displaytext);
+
+// 	if (ev != NULL)
+		edit_mode = false;
     if (ev != NULL)
 		QLineEdit::focusOutEvent(ev);
+
+// 	emit dateChanged();
 }
 
 void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
@@ -56,28 +74,73 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 		QLineEdit::setFont(globals::font_edit);
 		QLineEdit::setText(rawtext);
 	}
-	QLineEdit::focusInEvent(ev);
+	if (ev != NULL)
+		QLineEdit::focusInEvent(ev);
 	edit_mode = true;
 }
 
 bool CustomLineEdit::verify(const QString & t) {
-	if (!edit_mode)
-		return false;
-
-	if (verifyText(t, displaytext)) {
-		this->setPalette(globals::palette_ok);
-		is_ok = true;
+	if (!edit_mode) {
+		QLineEdit::setText(rawtext);
+		edit_mode = true;
+		verify(rawtext);
 	} else {
-		this->setPalette(globals::palette_bad);
-		is_ok = false;
+		if (verifyText(t, displaytext)) {
+			this->setPalette(globals::palette_ok);
+			is_ok = true;
+			emit dateChanged();
+		} else {
+			this->setPalette(globals::palette_bad);
+			is_ok = false;
+		}
 	}
+
 	return is_ok;
 }
 
 void CustomLineEdit::clear() {
 	rawtext.clear();
+	this->setPalette(defpal);
 	is_ok = false;
 	QLineEdit::clear();
 }
+
+void CustomLineEdit::setText(const QString& t) {
+// 	edit_mode = true;
+// 	rawtext = t;
+// 	QLineEdit::setText(t);
+// 	emit textChanged(t);
+// 	focusOutEvent(NULL);
+
+// 	rawtext = t;
+	edit_mode = true;
+	emit textChanged(t);
+// 	verify(t);
+	edit_mode = false;
+	focusOutEvent(NULL);
+}
+
+void CustomLineEdit::doReturnPressed() {
+// 	edit_mode = true;
+// 	verify(text());
+// 	edit_mode = false;
+	focusOutEvent(NULL);
+}
+
+void CustomLineEdit::doRefresh() {
+// 	edit_mode = true;
+// 	verify(text());
+	edit_mode = false;
+	focusOutEvent(NULL);
+}
+
+const  QString CustomLineEdit::text(bool placeholdertext) {
+	return placeholdertext ? displaytext : rawtext;
+}
+
+// TODO Ponoć każdy dobry kod zawiera przynajmniej jedno fuck w komentarzach.
+// TODO Poniższy fuck, spolszczony oczywiście, jest niezbitym świadectwem wysokiej klasy tego kodu.
+// TODO "Ja już tu k***a sam nie wiem co napisałem w tej klasie i jak to działa :) :( :/ :\"
+// TODO Ja tu jeszcze wrócę!
 
 #include "CustomLineEdit.moc"

@@ -78,7 +78,7 @@ bool ProductsTableModel::select() {
 	setHeaderData(HId, Qt::Horizontal, QObject::tr("ID"));
 	setHeaderData(HName, Qt::Horizontal, QObject::tr("Name"));
 	setHeaderData(HUnit, Qt::Horizontal, QObject::tr("Unit"));
-	setHeaderData(HExpire, Qt::Horizontal, QObject::tr("Expire date"));
+	setHeaderData(HExpire, Qt::Horizontal, QObject::tr("Expire date (template)"));
 
     return QSqlTableModel::select();
 }
@@ -93,23 +93,23 @@ bool ProductsTableModel::select() {
  **/
 QVariant ProductsTableModel::display(const QModelIndex & idx, const int role) const {
 // 	PR(idx.data(Qt::EditRole).toString().toStdString());
-	if (idx.column() == HExpire) {
-		QString data = idx.data(Qt::EditRole).toString();
-		QDate date;
-		if (DataParser::date(data, date)) {
-			QString var;
-			return date.toString(Qt::ISODate);
-		} else {
-			if (role == Qt::BackgroundRole)
-				return QColor(Qt::red);
-			else
-				return QVariant(tr("Parser error!"));
-		}
-	}
-	if (idx.column() == HExpire) {
-		QDate data = QDate::currentDate().addDays(idx.data(Qt::EditRole).toInt());
-		return data;
-	}
+// 	if (idx.column() == HExpire) {
+// 		QString data = idx.data(Qt::EditRole).toString();
+// 		QDate date;
+// 		if (DataParser::date(data, date)) {
+// 			QString var;
+// 			return date.toString(Qt::ISODate);
+// 		} else {
+// 			if (role == Qt::BackgroundRole)
+// 				return QColor(Qt::red);
+// 			else
+// 				return QVariant(tr("Parser error!"));
+// 		}
+// 	}
+// 	if (idx.column() == HExpire) {
+// 		QDate data = QDate::currentDate().addDays(idx.data(Qt::EditRole).toInt());
+// 		return data;
+// 	}
 	return QSqlTableModel::data(idx, Qt::DisplayRole).toString();
 }
 

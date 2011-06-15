@@ -38,14 +38,17 @@ public:
 
     virtual bool select();
 
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HDesc, HInvoice };
-
 public slots:
 	void filterDB(const QString &);
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
+
+	void inputErrorMsgBox(const QString & val);
+
+public:
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HDesc, HInvoice };
 };
 
 #endif // BATCHTABLEMODEL_H
