@@ -143,7 +143,7 @@ bool BatchTableModel::select() {
 	setHeaderData(HUsedQty,	Qt::Horizontal, QObject::tr("Used"));
 	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
 	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
-	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice No."));
+	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice"));
 
     return QSqlRelationalTableModel::select();
 }

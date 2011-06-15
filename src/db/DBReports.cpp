@@ -55,7 +55,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 			QObject::tr("Unable to find resources in ") +
 						sheet_css.fileName() + "\n" +
-						QObject::tr("2Check your installation and try to run again.\n"
+						QObject::tr("Check your installation and try to run again.\n"
 						"Click Close to exit."), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}

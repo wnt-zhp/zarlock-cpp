@@ -136,7 +136,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	if (dbversion != DBVERSION) {
 		if (!autoupgrade) {
 			QMessageBox msgBox;
-			msgBox.setText(tr("You have asked for upgrade of database \"%1\" from version %2 to version %3.").arg(dbname).arg(dbversion).arg(DBVERSION));
+			msgBox.setText(tr("You have been asked for upgrade of database \"%1\" from version %2 to version %3.").arg(dbname).arg(dbversion).arg(DBVERSION));
 			msgBox.setInformativeText(tr("Do you want to upgrade?"));
 			msgBox.setIcon(QMessageBox::Question);
 			msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -148,7 +148,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 		if (autoupgrade)
 		if (!doDBUpgrade(dbversion)) {
 			QMessageBox msgBox;
-			msgBox.setText(tr("Your database \"%1\" upgrade failed.").arg(dbname).arg(dbversion).arg(DBVERSION));
+			msgBox.setText(tr("Database \"%1\" upgrade failed.").arg(dbname).arg(dbversion).arg(DBVERSION));
 			msgBox.setInformativeText(tr("This is critical error and if your database has important data, "
 									"please contact with Zarlok team in WNT GK to help you solve your problem."));
 			msgBox.setIcon(QMessageBox::Critical);

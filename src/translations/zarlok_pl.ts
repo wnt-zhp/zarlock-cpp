@@ -358,9 +358,9 @@
 <context>
     <name>BatchTableModel</name>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="128"/>
-        <location filename="../models/BatchTableModel.cpp" line="142"/>
-        <location filename="../models/BatchTableModel.cpp" line="156"/>
+        <location filename="../models/BatchTableModel.cpp" line="181"/>
+        <location filename="../models/BatchTableModel.cpp" line="193"/>
+        <location filename="../models/BatchTableModel.cpp" line="209"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
     </message>
@@ -463,7 +463,7 @@
 <context>
     <name>CustomLineEdit</name>
     <message>
-        <location filename="../gui/inputs/CustomLineEdit.cpp" line="43"/>
+        <location filename="../gui/inputs/CustomLineEdit.cpp" line="54"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
     </message>
@@ -502,7 +502,7 @@
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
 Click Close to exit.</source>
-        <translation type="unfinished">Nie można nawiązać połączenia z bazą danych
+        <translation>Nie można nawiązać połączenia z bazą danych
 Ta aplikacja wymaga wsparcia dla SQLite. Proszę zapoznań się z dokumentacją jak włączyć wsparcie dla tego steownika.
 
 Wciśnij Zamknij aby wyjść.</translation>
@@ -510,63 +510,63 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../db/Database.cpp" line="113"/>
         <source>Your database &quot;%1&quot; is corrupted. Unable to find version number.</source>
-        <translation type="unfinished"></translation>
+        <translation>Twoja baza danych &quot;%1&quot; jest uszkodzona. Nie można znaleźć numeru wersji.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="114"/>
         <location filename="../db/Database.cpp" line="152"/>
         <source>This is critical error and if your database has important data, please contact with Zarlok team in WNT GK to help you solve your problem.</source>
-        <translation type="unfinished"></translation>
+        <translation>To jest krytyczny błąd i jeśli Twoja baza danych zawiera ważne dane, skontaktuj się z zespołem Żarłoka w WNT GK, który pomoże rozwiązać Twój problem.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="127"/>
         <source>Your database &quot;%1&quot; is in version %2 and is newer than supported version %3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Baza danych&quot;%1&quot; jest w wersji %2 i jest nowsza niż wspierana wersja %3.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="128"/>
         <source>Please upgrade Zarlok to the newest version.</source>
-        <translation type="unfinished"></translation>
+        <translation>Proszę zaktualizować Żarłoka do najnowszej wersji.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="139"/>
-        <source>You have asked for upgrade of database &quot;%1&quot; from version %2 to version %3.</source>
-        <translation type="unfinished"></translation>
+        <source>You have been asked for upgrade of database &quot;%1&quot; from version %2 to version %3.</source>
+        <translation>Zostałeś poproszony o aktualizację bazy danych &quot;%1&quot; z wersji %2 do wersji %3.</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="151"/>
+        <source>Database &quot;%1&quot; upgrade failed.</source>
+        <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="140"/>
         <source>Do you want to upgrade?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../db/Database.cpp" line="151"/>
-        <source>Your database &quot;%1&quot; upgrade failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="262"/>
         <source>The database name is empty</source>
-        <translation type="unfinished">Nazwa bazy danych jest pusta</translation>
+        <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="285"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
-        <translation type="unfinished">Baza danych &quot;%1&quot; nie istnieje!</translation>
+        <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="286"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
-        <translation type="unfinished">Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
+        <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="353"/>
         <source>The database name &apos;%1&apos; already exists.</source>
-        <translation type="unfinished">Baza danych &apos;%1&apos; już istnieje.</translation>
+        <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="354"/>
         <source>Do you want to overwrite existing database?</source>
-        <translation type="unfinished">Czy chcesz nadpisać istniejącą baze danych?</translation>
+        <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
 </context>
 <context>
@@ -603,6 +603,11 @@ Wciśnij Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/DateInput.cpp" line="25"/>
         <source>Expiry date</source>
         <translation>Data ważności</translation>
+    </message>
+    <message>
+        <location filename="../gui/inputs/DateInput.cpp" line="53"/>
+        <source>To obtain correct expiry date, set registration date first</source>
+        <translation>Wprowadź datę wpisu aby dostać datę ważności</translation>
     </message>
 </context>
 <context>
@@ -654,14 +659,6 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
-    <name>ProductsTableModel</name>
-    <message>
-        <location filename="../models/ProductsTableModel.cpp" line="106"/>
-        <source>Parser error!</source>
-        <translation>Błąd przetwarzania!</translation>
-    </message>
-</context>
-<context>
     <name>ProductsTableView</name>
     <message>
         <location filename="../gui/views/ProductsTableView.cpp" line="32"/>
@@ -691,114 +688,117 @@ Wciśnij Zamknij aby wyjść.</translation>
         <location filename="../db/DBReports.cpp" line="45"/>
         <location filename="../db/DBReports.cpp" line="55"/>
         <source>Cannot find resources</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
         <location filename="../../main.cpp" line="47"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można znaleźć zasobów w %1.
+Sprawdz poprawność instalacji i uruchom program ponownie.
+Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../db/DBReports.cpp" line="48"/>
+        <location filename="../db/DBReports.cpp" line="58"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprawdź instalację programu i uruchom ponownie.
+Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="233"/>
         <location filename="../db/Database.cpp" line="239"/>
         <location filename="../db/Database.cpp" line="245"/>
         <source>Database error</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd bazy danych</translation>
     </message>
     <message>
         <location filename="../db/DBReports.cpp" line="46"/>
         <location filename="../db/DBReports.cpp" line="56"/>
         <source>Unable to find resources in </source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można znaleźć zasobów w</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="58"/>
-        <source>2Check your installation and try to run again.
-Click Close to exit.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../models/ProductsTableModel.cpp" line="78"/>
+        <location filename="../models/ProductsTableModel.cpp" line="98"/>
         <location filename="../models/DistributorTableModel.cpp" line="92"/>
-        <location filename="../models/BatchTableModel.cpp" line="87"/>
+        <location filename="../models/BatchTableModel.cpp" line="135"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Lp.</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="88"/>
+        <location filename="../models/ProductsTableModel.cpp" line="101"/>
+        <source>Expire date (template)</source>
+        <translation>Wzór daty ważności</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="136"/>
         <source>Product</source>
-        <translation type="unfinished">Produkt</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="89"/>
+        <location filename="../models/BatchTableModel.cpp" line="137"/>
         <source>Specificator</source>
-        <translation type="unfinished"></translation>
+        <translation>Specyfikacja</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="90"/>
+        <location filename="../models/BatchTableModel.cpp" line="138"/>
         <source>Price</source>
-        <translation type="unfinished">Cena</translation>
+        <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="80"/>
-        <location filename="../models/BatchTableModel.cpp" line="91"/>
+        <location filename="../models/BatchTableModel.cpp" line="146"/>
+        <source>Invoice</source>
+        <translation>Faktura</translation>
+    </message>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="100"/>
+        <location filename="../models/BatchTableModel.cpp" line="139"/>
         <source>Unit</source>
-        <translation type="unfinished">Jednostka</translation>
+        <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="94"/>
-        <location filename="../models/BatchTableModel.cpp" line="92"/>
+        <location filename="../models/BatchTableModel.cpp" line="140"/>
         <source>Quantity</source>
-        <translation type="unfinished">Ilość</translation>
+        <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="93"/>
+        <location filename="../models/BatchTableModel.cpp" line="141"/>
         <source>Booking</source>
-        <translation type="unfinished">Wpis</translation>
+        <translation>Wpis</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="94"/>
+        <location filename="../models/BatchTableModel.cpp" line="142"/>
         <source>Expiry</source>
-        <translation type="unfinished"></translation>
+        <translation>Ważność</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="95"/>
+        <location filename="../models/BatchTableModel.cpp" line="143"/>
         <source>Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Wydane</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="96"/>
-        <location filename="../models/BatchTableModel.cpp" line="96"/>
+        <location filename="../models/BatchTableModel.cpp" line="144"/>
         <source>Registered</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaindeksowane</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="97"/>
+        <location filename="../models/BatchTableModel.cpp" line="145"/>
         <source>Desc</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="98"/>
-        <source>Invoice No.</source>
-        <translation type="unfinished"></translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="93"/>
         <source>Batch</source>
-        <translation type="unfinished">Produkt</translation>
+        <translation>Partia</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="95"/>
         <source>Distributing date</source>
-        <translation type="unfinished"></translation>
+        <translation>Data wydania</translation>
     </message>
     <message>
         <location filename="../models/DistributorTableModel.cpp" line="97"/>
@@ -816,14 +816,24 @@ Click Close to exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="79"/>
+        <location filename="../models/ProductsTableModel.cpp" line="99"/>
         <source>Name</source>
-        <translation type="unfinished">Nazwa</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="81"/>
-        <source>Expire date</source>
-        <translation type="unfinished"></translation>
+        <location filename="../DataParser.cpp" line="96"/>
+        <source>%.2f zl</source>
+        <translation>%.2f zł</translation>
+    </message>
+    <message>
+        <location filename="../models/ModelsCommon.cpp" line="26"/>
+        <source>Value &quot;%1&quot; which you try store in database is not valid.</source>
+        <translation>Wartość &quot;%1&quot;, którą próbujesz zapisać w bazie danych nie jest poprawna.</translation>
+    </message>
+    <message>
+        <location filename="../models/ModelsCommon.cpp" line="27"/>
+        <source>Try to edit your data again, pay attention to its validity.</source>
+        <translation>Spróbuj wprowadzić dane ponownie, zwróć uwagę na ich poprawność.</translation>
     </message>
 </context>
 <context>

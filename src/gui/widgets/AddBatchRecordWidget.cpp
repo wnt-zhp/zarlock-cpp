@@ -139,13 +139,10 @@ void AddBatchRecordWidget::validateCB(int i) {
 	ProductsTableModel * ptm = Database::Instance().CachedProducts();
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
-// 	PR(i);
-	PR(defexp.toStdString());
 
 	if (edit_expiry->text().isEmpty()) {
 		edit_expiry->setText(defexp);
 		edit_expiry->doRefresh();
-// 		edit_expiry->doReturnPressed();
 	}
 
 	validateAdd();
