@@ -302,9 +302,6 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		if (db.driver()->hasFeature(QSqlDriver::Transactions))
 			db.transaction();
 
-		QString qdbv("INSERT INTO settings VALUES('dbversion', '%1');");
-		query.exec(qdbv.arg(DBVERSION));
-
 		QFile dbresfile(":/resources/database.sql");
 		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
 			return false;
@@ -322,6 +319,9 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 			QString line = dbtestfile.readLine();
 			query.exec(line.fromUtf8(line.toStdString().c_str()));
 		}
+
+		QString qdbv("INSERT INTO settings VALUES('dbversion', '%1');");
+		query.exec(qdbv.arg(DBVERSION));
 
 		if (db.driver()->hasFeature(QSqlDriver::Transactions))
 			db.commit();
