@@ -38,9 +38,14 @@ public:
 	virtual const MealTableModelProxy * proxyModel();
 
 	virtual void insertEmptySlot();
+	virtual void removeEmptySlot();
 
 public slots:
 	virtual void populateModel();
+	virtual void removeItem(int row);
+
+private slots:
+	virtual void doItemEdit(QListWidgetItem * item);
 
 private:
 	bool isdirty;

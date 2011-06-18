@@ -59,7 +59,7 @@ void MealTableModelProxy::setKey(int key) {
 }
 
 void MealTableModelProxy::setRef(const QString & ref) {
-	dateref = ref;
+	dateref = QDate::fromString(ref, Qt::ISODate).toString(Qt::DefaultLocaleShortDate);
 }
 
 int MealTableModelProxy::key() const {

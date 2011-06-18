@@ -30,20 +30,28 @@ public:
 
 	virtual ~MealFoodListItemDataWidget();
 
+	bool isEmpty();
+
 public slots:
-	void convertToData();
+	void render(bool doRender);
+
+	void buttonAdd();
+	void buttonUpdate();
+	void buttonRemove();
 
 	void printStatus();
 
 	void setBatchData(const QModelIndex & didx);
+	void convertToEmpty();
 
 protected slots:
-	void updateDistributor();
 	void validateAdd();
 
+signals:
+	void removeRecord(int);
+
 private:
-	bool doRender;
-	bool isEmpty;
+	bool empty;
 	QModelIndex idx;
 	MealFoodList * mfl;
 };

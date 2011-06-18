@@ -59,12 +59,12 @@ public:
 // 	virtual bool updateProductsRecord();
 // 	virtual bool removeProductsRecord(int recordid);
 
-// 	virtual bool addBatchRecord();
-// 	virtual bool updateBatchRecord();
-// 	virtual bool removeBatchRecord(int recordid);
+	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
+	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
+	virtual bool removeBatchRecord(int recordid);
 	
-	virtual bool addDistributorRecord(int, const QString &, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
-	virtual bool updateDistributorRecord(int, int, const QString &, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
+	virtual bool addDistributorRecord(int, float, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
+	virtual bool updateDistributorRecord(int, int, float, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
 	virtual bool removeDistributorRecord(int recordid);
 	
 	inline ProductsTableModel * CachedProducts() { return tab_products; }

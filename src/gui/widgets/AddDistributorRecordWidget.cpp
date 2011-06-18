@@ -76,7 +76,7 @@ bool AddDistributorRecordWidget::insert_record() {
 // 	btm->submitAll();
 // 	update_model();	
 
-	db.addDistributorRecord(batch_id, edit_qty->text(), edit_date->text(true),
+	db.addDistributorRecord(batch_id, edit_qty->text().toFloat(), edit_date->text(true),
 							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
 							edit_reason2->text(), DistributorTableModel::RGeneral);
 

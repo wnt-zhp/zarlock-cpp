@@ -73,6 +73,20 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="cb_hideempty">
+       <property name="text">
+        <string>Hide empty</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="button_add_batch">
        <property name="text">
         <string>Add batc&amp;h</string>

@@ -23,7 +23,8 @@
 #include <QLayout>
 
 #include "MealFoodListItemDataWidget.h"
-#include <Database.h>
+#include "Database.h"
+#include "DistributorTableModel.h"
 
 // #include "MealFoodListItemData.h"
 // #include "MealFoodListItemNew.h"
@@ -47,6 +48,9 @@ MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false)
 // 	proxy->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
 
 // 	populateModel();
+// 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
+// 	connect(dtm, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(populateModel()));
+	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(doItemEdit(QListWidgetItem*)));
 }
 
 MealFoodList::~MealFoodList() {
@@ -57,7 +61,8 @@ void MealFoodList::populateModel() {
 
 	this->clear();
 	for (int i = 0; i < num; ++i) {
-		QListWidgetItem * qlwi = new QListWidgetItem();
+
+		QListWidgetItem * qlwi = new QListWidgetItem(this);
 		qlwi->setSizeHint(QSize(100, 48));
 
 		MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this);
@@ -67,21 +72,35 @@ void MealFoodList::populateModel() {
 		mflidw->setBatchData(didx);
 		this->addItem(qlwi);
 		this->setItemWidget(qlwi, (QWidget *)mflidw);
-
-		mflidw->convertToData();
 	}
 
 	insertEmptySlot();
 }
 
 void MealFoodList::insertEmptySlot() {
-	QListWidgetItem * qlwi = new QListWidgetItem();
+	QListWidgetItem * qlwi = new QListWidgetItem(this);
 	qlwi->setSizeHint(QSize(100, 48));
 
 	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this);
 
 	this->addItem(qlwi);
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
+}
+
+void MealFoodList::removeEmptySlot() {
+	int num = proxy->rowCount();
+
+	this->clear();
+	for (int i = 0; i < proxy->rowCount()-1; ++i) {
+		if (((MealFoodListItemDataWidget *)itemWidget(item(i)))->isEmpty())
+			takeItem(i);
+	}
+}
+
+void MealFoodList::removeItem(int row) {
+// 	Database::Instance().removeDistributorRecord(row);
+	removeEmptySlot();
+// 	populateModel();
 }
 
 void MealFoodList::setDirty(bool dirty) {
@@ -98,6 +117,10 @@ void MealFoodList::setProxyModel(MealTableModelProxy* model) {
 
 const MealTableModelProxy* MealFoodList::proxyModel() {
 	return proxy;
+}
+
+void MealFoodList::doItemEdit(QListWidgetItem* item) {
+	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
 }
 
 #include "MealFoodList.moc"

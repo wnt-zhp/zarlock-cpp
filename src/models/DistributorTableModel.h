@@ -20,6 +20,7 @@
 #define DISTRIBUTORTABLEMODEL_H
 
 #include <QtSql/QSqlRelationalTableModel>
+#include "ModelsCommon.h"
 
 /**
  * @brief Klasa dziedziczy po QSqlRelationalTableModel i odpowiada za
@@ -27,7 +28,7 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class DistributorTableModel : public QSqlRelationalTableModel {
+class DistributorTableModel : public QSqlRelationalTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());

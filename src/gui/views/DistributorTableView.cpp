@@ -114,19 +114,13 @@ void DistributorTableView::contextMenuEvent(QContextMenuEvent * event) {
  **/
 void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
-	QVector<int> rows;
+
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
 		if ((*it).column() == DistributorTableModel::HBatchId) {
-			rows.push_back((*it).data(Qt::EditRole).toInt());
-			model()->removeRow((*it).row());
+			
+			db.removeDistributorRecord((*it).row());
 		}
 	}
-	db.CachedDistributor()->submitAll();
-
-	for (QVector<int>::iterator it = rows.begin(); it != rows.end(); ++it) {
-		db.updateBatchQty(*it);
-	}
-	db.CachedBatch()->submitAll();
 }
 
 #include "DistributorTableView.moc"

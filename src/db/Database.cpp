@@ -495,40 +495,160 @@ bool Database::doDBUpgrade(unsigned int & version) {
 	}
 }
 
-bool Database::addDistributorRecord(int bid, const QString& qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
-	int row = tab_distributor->rowCount();
-	tab_distributor->insertRows(row, 1);
-// 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HBatchId), bid);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HQty), qty);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HDistDate), ddate);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HRegDate), rdate);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason), re1);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason2), re2);
-	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason3), re3);
+bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc) {
+	bool status = true;
+	
+// 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
+// 		<< row << ","
+// 		<< prod_id << ","
+// 		<< edit_spec->text().toStdString() << ","
+// 		<< edit_expiry->text().toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_unit->text().toStdString() << ","
+// 		<< unitprice.toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_invoice->text().toStdString() << ","
+// 		<< edit_book->text(true).toStdString() << ","
+// 		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
+// 		<< QString(":)").toStdString() << " );" << std::endl;
 
-	tab_distributor->submitAll();
+	int row = tab_batch->rowCount();
+	status &= tab_batch->insertRows(row, 1);
+// 	tab_batch->setData(tab_batch->index(row, BatchTableModel::HId), row);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HProdId), pid);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HSpec), spec);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HExpire), expiry);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HStaQty), qty);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HUnit), unit);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HPrice), price);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HUsedQty), used);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HInvoice), invoice);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HBook), book);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HRegDate), reg);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HDesc), desc);
+
+	if (!status) {
+		tab_batch->revertAll();
+		return false;
+	} else if (!tab_batch->submitAll())
+		return false;
+
+// 	update_model();	
+
+	return true;
+}
+
+bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc) {
+	bool status = true;
+	
+// 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
+// 		<< row << ","
+// 		<< prod_id << ","
+// 		<< edit_spec->text().toStdString() << ","
+// 		<< edit_expiry->text().toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_unit->text().toStdString() << ","
+// 		<< unitprice.toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_invoice->text().toStdString() << ","
+// 		<< edit_book->text(true).toStdString() << ","
+// 		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
+// 		<< QString(":)").toStdString() << " );" << std::endl;
+
+// 	tab_batch->setData(tab_batch->index(row, BatchTableModel::HId), row);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HProdId), pid);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HSpec), spec);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HExpire), expiry);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HStaQty), qty);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HUnit), unit);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HPrice), price);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HUsedQty), used);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HInvoice), invoice);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HBook), book);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HRegDate), reg);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HDesc), desc);
+
+	if (!status) {
+		tab_batch->revertAll();
+		return false;
+	} else if (!tab_batch->submitAll())
+		return false;
+
+// 	update_model();	
+
+	return true;
+}
+
+bool Database::removeBatchRecord(int recordid) {
+	tab_batch->removeRow(recordid);
+	tab_batch->submitAll();
+}
+
+bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+	bool status = true;
+
+	int row = tab_distributor->rowCount();
+// PR(bid);
+// PR(qty);
+// PR(ddate.toStdString());
+// PR(rdate.toStdString());
+// PR(re1.toStdString());
+// PR(re2.toStdString());
+// PR(re3);
+// return false;
+
+	status &= tab_distributor->insertRows(row, 1);
+// 	status &= tab_distributor->setData(btm->index(row, DistributorTableModel::HId), row);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HBatchId), bid);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HQty), qty);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HDistDate), ddate);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HRegDate), rdate);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason), re1);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason2), re2);
+	status &= tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason3), re3);
+
+	if (!status) {
+		tab_distributor->revertAll();
+		return false;
+	} else if (!tab_distributor->submitAll())
+		return false;
+
 	updateBatchQty(tab_distributor->index(row, 1).data(Qt::EditRole).toInt());
 	tab_batch->submitAll();
 // 	update_model();	
+
+	return true;
 }
 
-bool Database::updateDistributorRecord(int id, int bid, const QString& qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HBatchId), bid);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HQty), qty);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HDistDate), ddate);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HRegDate), rdate);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason), re1);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason2), re2);
-	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason3), re3);
+bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+	bool status = true;
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HBatchId), bid);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HQty), qty);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HDistDate), ddate);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HRegDate), rdate);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason), re1);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason2), re2);
+	status &= tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason3), re3);
 
-	tab_distributor->submitAll();
+	if (!status) {
+		tab_distributor->revertAll();
+		return false;
+	} else if (!tab_distributor->submitAll())
+		return false;
+
 	updateBatchQty(tab_distributor->index(id, 1).data(Qt::EditRole).toInt());
 	tab_batch->submitAll();
+// 	update_model();	
+
+	return true;
 }
 
 bool Database::removeDistributorRecord(int recordid) {
-
+	int bid = tab_distributor->index(recordid, DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
+	tab_distributor->removeRow(recordid);
+	tab_distributor->submitAll();
+	updateBatchQty(bid);
+	tab_batch->submitAll();
 }
 
 #include "Database.moc"

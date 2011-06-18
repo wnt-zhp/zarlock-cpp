@@ -22,7 +22,7 @@
 #include "DataParser.h"
 
 TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(Database::Instance()),
-	model_batch(NULL), modelproxy_batch(NULL), model_batch_delegate(NULL) {
+	model_batch(NULL), modelproxy_batch(NULL)/*, model_batch_delegate(NULL)*/ {
 
 	setupUi(this);
 
@@ -37,6 +37,8 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	cb_nexpired->setIcon(pxme);
 	cb_nexpired->setChecked(true);
 
+	cb_hideempty->setChecked(false);
+
 	widget_add_batch->setVisible(false);
 	abrw = new AddBatchRecordWidget(widget_add_batch);
 
@@ -49,6 +51,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
 	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+	connect(cb_hideempty, SIGNAL(clicked()), this, SLOT(set_filter()));
 
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 
@@ -59,7 +62,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 TabBatchWidget::~TabBatchWidget() {
 	FPR(__func__);
 	activateUi(false);
-	if (model_batch_delegate) delete model_batch_delegate;
+// 	if (model_batch_delegate) delete model_batch_delegate;
 	if (modelproxy_batch) delete modelproxy_batch;
 	if (abrw) delete abrw;
 }
@@ -76,22 +79,22 @@ void TabBatchWidget::activateUi(bool activate) {
 
 	if (activate) {
 		if (!modelproxy_batch) {
-			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired);
+			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired, cb_hideempty);
 			modelproxy_batch->setDynamicSortFilter(true);
 
 			// TODO: Co z tym zrobić?
-			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
-			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+// 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
+// 			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+// 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 		}
 		// batch
 		if ((model_batch = db.CachedBatch())){
 			modelproxy_batch->setSourceModel(model_batch);
 			table_batch->setModel(modelproxy_batch);
 
-			if (model_batch_delegate) delete model_batch_delegate;
+/*			if (model_batch_delegate) delete model_batch_delegate;
 			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
-			table_batch->setItemDelegate(model_batch_delegate);
+			table_batch->setItemDelegate(model_batch_delegate);*/
 			table_batch->show();
 			// TODO: Co z tym zrobić?
 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));

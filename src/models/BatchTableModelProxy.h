@@ -30,7 +30,7 @@ class BatchTableModelProxy : public QSortFilterProxyModel {
 Q_OBJECT
 public:
 	BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
-						 const QCheckBox * nexp, QObject * parent = 0);
+						 const QCheckBox * nexp, const QCheckBox * hide, QObject * parent = 0);
 						 
 	virtual ~BatchTableModelProxy();
 
@@ -43,6 +43,7 @@ private:
 	const QCheckBox * cb_exp;
 	const QCheckBox * cb_aexp;
 	const QCheckBox * cb_nexp;
+	const QCheckBox * cb_hide;
 };
 
 #endif // BATCHTABLEMODELPROXY_H

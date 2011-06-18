@@ -55,10 +55,10 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): 
  * QString, QColor QIcon,itp.
  **/
 QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole or role == Qt::StatusTipRole)
+	if (role == Qt::StatusTipRole)
 		return raw(idx);
 
-	if (role == Qt::DisplayRole or role == Qt::BackgroundRole)
+	if (role == Qt::EditRole or role == Qt::DisplayRole or role == Qt::BackgroundRole)
 		return display(idx, role);
 
 	int col = idx.column();
@@ -79,6 +79,52 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
  * @return bool stan dodania/aktualizacji
  **/
 bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
+	switch (role) {
+		case Qt::EditRole:
+			if (index.column() == HDistDate) {
+				QDate date;
+				if (DataParser::date(value.toString(), date)) {
+					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
+				} else {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			if (index.column() == HRegDate) {
+				QDate date;
+				if (!DataParser::date(value.toString(), date)) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+			}
+
+			if (index.column() == HQty) {
+				BatchTableModel * btm = Database::Instance().CachedBatch();
+				int bidrow = -1;
+
+				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(Qt::EditRole));
+				if (!qmil.count()) {
+					return false;
+				}
+				bidrow = qmil.at(0).row();
+
+				float used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data().toFloat();
+	
+// 				float used = ->index()
+// 				this->index(index.row(), HUsedQty).data().toFloat();
+				float total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+				float fake = index.data().toFloat();
+
+				float free = total - used + fake;
+				if (free < value.toFloat()) {
+					inputErrorMsgBox(value.toString());
+					return false;
+				}
+				return QSqlRelationalTableModel::setData(index, value, role);
+			}
+			break;
+	}
     return QSqlRelationalTableModel::setData(index, value, role);
 }
 
@@ -111,9 +157,13 @@ bool DistributorTableModel::select() {
  **/
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
+		case Qt::EditRole:
+			if (idx.column() == HDistDate) {
+				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+			}
+			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
-		// 		PR(idx.data(Qt::EditRole).toString().toStdString());
 				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, 0), Qt::EditRole, idx.data(Qt::EditRole));
 				if (!qmil.isEmpty()) {
 					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
@@ -121,31 +171,11 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			}
 
 			if (idx.column() == HRegDate) {
-				QString data = idx.data(Qt::EditRole).toString();
-				QDate date;
-				if (DataParser::date(data, date)) {
-					QString var;
-					return date.toString(Qt::ISODate);
-				} else {
-					if (role == Qt::BackgroundRole)
-						return QColor(Qt::red);
-					else
-						return QVariant(tr("Parser error!"));
-				}
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 			
 			if (idx.column() == HDistDate) {
-				QString data = idx.data(Qt::EditRole).toString();
-				QDate date;
-				if (DataParser::date(data, date, QDate::fromString(index(idx.row(), HRegDate).data(Qt::DisplayRole).toString(), Qt::ISODate))) {
-					QString var;
-					return date.toString(Qt::ISODate);
-				} else {
-					if (role == Qt::BackgroundRole)
-						return QColor(Qt::red);
-					else
-						return QVariant(tr("Parser error!"));
-				}
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 			break;
 		case Qt::BackgroundRole:
@@ -181,18 +211,17 @@ void DistributorTableModel::filterDB(const QString & f) {
 }
 
 void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
-	PR(__func__);
-	submitAll();
-	PR(topleft.column());
-	PR(HQty);
+// 	if (submitAll()) {;
+// 		revertAll();
+// 		return;
+// 	}
+
 	if (topleft.column() == HQty) {
 		for (int i = topleft.row(); i <= bottomright.row(); ++i) {
-			PR(__LINE__);
 			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());
 		}
 		Database::Instance().CachedBatch()->submitAll();
 	}
 }
-
 
 #include "DistributorTableModel.moc"

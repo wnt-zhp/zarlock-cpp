@@ -24,11 +24,11 @@
 #include "Database.h"
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::WindowFlags f):
-		QWidget(parent, f), doRender(true), isEmpty(true) {
+		QWidget(parent, f) {
+
 	setupUi(this);
 	batch->setModel(Database::Instance().CachedBatch());
 	batch->setModelColumn(2);
-	batch->setCurrentIndex(-1);
 
 	addB->setMaximumSize(24, 24);
 	addB->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
@@ -42,47 +42,39 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 
 // 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(printStatus()));
 
+	mfl = (MealFoodList *)parent;
+
 	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 
-	connect(addB, SIGNAL(clicked(bool)), this, SLOT(updateDistributor()));
-	connect(addB, SIGNAL(clicked(bool)), this, SLOT(updateDistributor()));
-	connect(addB, SIGNAL(clicked(bool)), this, SLOT(updateDistributor()));
+	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
+	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
+	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
 
-	convertToData();
-	validateAdd();
+	connect(this, SIGNAL(removeRecord(int)), mfl, SLOT(removeItem(int)));
 
-	mfl = (MealFoodList *)parent;
+	convertToEmpty();
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
 // 	PR(__func__);
 }
 
-void MealFoodListItemDataWidget::convertToData() {
-	if (!doRender) {
-		addB->setVisible(false);
-		updateB->setVisible(true);
-		removeB->setVisible(true);
-
-		qty->setVisible(false);
-		qty_label->setVisible(true);
-		batch->setVisible(false);
-		batch_label->setVisible(true);
-		doRender = true;
-	} else {
-		addB->setVisible(true);
-		updateB->setVisible(false);
-		removeB->setVisible(false);
-
+void MealFoodListItemDataWidget::render(bool doRender) {
+	if (doRender) {
 		batch_label->setText(batch->currentText());
 		qty_label->setText(qty->text());
-		qty->setVisible(true);
-		qty_label->setVisible(false);
-		batch->setVisible(true);
-		batch_label->setVisible(false);
-		doRender = false;
+	} else {
 	}
+	addB->setVisible(!doRender);
+	updateB->setVisible(doRender);
+	removeB->setVisible(!empty);
+
+	qty->setVisible(!doRender);
+	qty_label->setVisible(doRender);
+	batch->setVisible(!doRender);
+	batch_label->setVisible(doRender);
+
 }
 
 void MealFoodListItemDataWidget::validateAdd() {
@@ -93,28 +85,57 @@ void MealFoodListItemDataWidget::validateAdd() {
 	}
 }
 
-void MealFoodListItemDataWidget::updateDistributor() {
-	Database & db = Database::Instance();
-	PR(sender());
-	if (sender() == addB) {
-		if (isEmpty) {
-			int batch_id = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId).data().toInt();
-
-			db.addDistributorRecord(batch_id, qty->text(), mfl->proxyModel()->ref(),
-							mfl->proxyModel()->ref(), QString("%1").arg(mfl->proxyModel()->key()),
-							"", DistributorTableModel::RMeal);
-		} else {
-			
-		}
-	}
-	if (sender() == updateB) {
-	}
-	if (sender() == removeB) {
-	}
-
-	convertToData();
+void MealFoodListItemDataWidget::convertToEmpty() {
+// 	if (empty)
+	batch->setModelColumn(2);
+// 		batch->setCurrentIndex(-1);
+		
+	qty->setValue(0.0);
+	empty = true;
+	render(false);
 }
 
+void MealFoodListItemDataWidget::buttonAdd() {
+	Database & db = Database::Instance();
+
+	int batch_id = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId).data().toInt();
+	if (empty) {
+		if (db.addDistributorRecord(batch_id, qty->text().toFloat(),
+								mfl->proxyModel()->ref(),
+								mfl->proxyModel()->ref(),
+								QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+			empty = false;
+// 			mfl->populateModel();
+			mfl->insertEmptySlot();
+		} else
+			return;
+	} else {
+		if (db.updateDistributorRecord(idx.row(), batch_id, qty->text().toFloat(),
+								mfl->proxyModel()->ref(),
+								mfl->proxyModel()->ref(),
+								QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+			empty = false;
+		} else
+			return;
+	}
+	render(true);
+}
+
+void MealFoodListItemDataWidget::buttonUpdate() {
+	render(false);
+}
+
+void MealFoodListItemDataWidget::buttonRemove() {
+	Database & db = Database::Instance();
+
+	db.removeDistributorRecord(idx.row());
+	convertToEmpty();
+	mfl->populateModel();
+// 	emit removeRecord(idx.row());
+// 	PR(removeB);
+
+// 	qlwi->listWidget()->takeItem(qlwi->listWidget()->row(qlwi));
+}
 void MealFoodListItemDataWidget::printStatus() {
 	int curIdx = batch->currentIndex();
 	PR(curIdx);
@@ -123,18 +144,23 @@ void MealFoodListItemDataWidget::printStatus() {
 }
 
 void MealFoodListItemDataWidget::setBatchData(const QModelIndex & didx) {
+	if (idx != didx)
+		idx = didx;
+
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
-	idx = didx;
 
 	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, didx.data(Qt::EditRole));
 	if (qmil.count()) {
 		batch->setCurrentIndex(qmil.at(0).row());
-		qty->setValue( dtm->data(dtm->index(didx.row(), DistributorTableModel::HQty)).toDouble());
-		isEmpty = false;
-		doRender = true;
-		convertToData();
+		qty->setValue(dtm->data(dtm->index(didx.row(), DistributorTableModel::HQty)).toDouble());
+		empty = false;
+		render(true);
 	}
+}
+
+bool MealFoodListItemDataWidget::isEmpty() {
+	return empty;
 }
 
 #include "MealFoodListItemDataWidget.moc"

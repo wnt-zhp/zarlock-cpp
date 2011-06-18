@@ -77,36 +77,22 @@ void AddBatchRecordWidget::insert_record() {
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
-	int row = btm->rowCount();
+// 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
+// 		<< row << ","
+// 		<< prod_id << ","
+// 		<< edit_spec->text().toStdString() << ","
+// 		<< edit_expiry->text().toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_unit->text().toStdString() << ","
+// 		<< unitprice.toStdString() << ","
+// 		<< edit_qty->text().toStdString() << ","
+// 		<< edit_invoice->text().toStdString() << ","
+// 		<< edit_book->text(true).toStdString() << ","
+// 		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
+// 		<< QString(":)").toStdString() << " );" << std::endl;
 
-	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
-		<< row << ","
-		<< prod_id << ","
-		<< edit_spec->text().toStdString() << ","
-		<< edit_expiry->text().toStdString() << ","
-		<< edit_qty->text().toStdString() << ","
-		<< edit_unit->text().toStdString() << ","
-		<< unitprice.toStdString() << ","
-		<< edit_qty->text().toStdString() << ","
-		<< edit_invoice->text().toStdString() << ","
-		<< edit_book->text(true).toStdString() << ","
-		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
-		<< QString(":)").toStdString() << " );" << std::endl;
-
-	btm->insertRows(row, 1);
-// 	btm->setData(btm->index(row, BatchTableModel::HId), row);
-	btm->setData(btm->index(row, BatchTableModel::HProdId), prod_id);
-	btm->setData(btm->index(row, BatchTableModel::HSpec), edit_spec->text());
-	btm->setData(btm->index(row, BatchTableModel::HExpire), edit_expiry->text());
-	btm->setData(btm->index(row, BatchTableModel::HStaQty), edit_qty->text());
-	btm->setData(btm->index(row, BatchTableModel::HUnit), edit_unit->text());
-	btm->setData(btm->index(row, BatchTableModel::HPrice), unitprice);
-	btm->setData(btm->index(row, BatchTableModel::HUsedQty), edit_qty->text());
-	btm->setData(btm->index(row, BatchTableModel::HInvoice), edit_invoice->text());
-	btm->setData(btm->index(row, BatchTableModel::HBook), edit_book->text(true));
-	btm->setData(btm->index(row, BatchTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
-	btm->setData(btm->index(row, BatchTableModel::HDesc), QString(":)"));
-	btm->submitAll();
+	db.addBatchRecord(prod_id, edit_spec->text(), edit_book->text(true), QDate::currentDate().toString(Qt::ISODate),
+		edit_expiry->text(), edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
 
 	clear_form();
 	edit_spec->setFocus();

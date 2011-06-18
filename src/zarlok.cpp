@@ -79,10 +79,11 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	MainTab->addTab(tdw, QIcon(":/resources/icons/folder-downloads.png"), tr("Distribute"));
 	MainTab->addTab(tmw, QIcon(":/resources/icons/folder-violet.png"), tr("Meal"));
 
-//	MainTab->setTabPosition(QTabWidget::North);
 	MainTab->setIconSize(QSize(48, 48));
 
+// 	MainTab->setDocumentMode(true);
 //	MainTab->setTabShape(QTabWidget::Triangular);
+//	MainTab->setTabPosition(QTabWidget::North);
 
 // 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
 // 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));

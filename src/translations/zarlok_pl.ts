@@ -611,15 +611,6 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
-    <name>DistributorTableModel</name>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="133"/>
-        <location filename="../models/DistributorTableModel.cpp" line="147"/>
-        <source>Parser error!</source>
-        <translation>Błąd przetwarzania!</translation>
-    </message>
-</context>
-<context>
     <name>DistributorTableView</name>
     <message>
         <location filename="../gui/views/DistributorTableView.cpp" line="33"/>
@@ -671,32 +662,32 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealTabWidget</name>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="82"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="85"/>
         <source>Breakfast</source>
         <translation type="unfinished">Śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="83"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="86"/>
         <source>2nd Breakfast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="84"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="87"/>
         <source>Lunch</source>
         <translation type="unfinished">Obiad</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="85"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="88"/>
         <source>Diner</source>
         <translation type="unfinished">Kolacja</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="86"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="89"/>
         <source>Other 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="87"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="90"/>
         <source>Other 2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -773,7 +764,7 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../models/ProductsTableModel.cpp" line="98"/>
-        <location filename="../models/DistributorTableModel.cpp" line="92"/>
+        <location filename="../models/DistributorTableModel.cpp" line="138"/>
         <location filename="../models/BatchTableModel.cpp" line="135"/>
         <source>ID</source>
         <translation>Lp.</translation>
@@ -810,7 +801,7 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="94"/>
+        <location filename="../models/DistributorTableModel.cpp" line="140"/>
         <location filename="../models/BatchTableModel.cpp" line="140"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
@@ -831,7 +822,7 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Wydane</translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="96"/>
+        <location filename="../models/DistributorTableModel.cpp" line="142"/>
         <location filename="../models/BatchTableModel.cpp" line="144"/>
         <source>Registered</source>
         <translation>Zaindeksowane</translation>
@@ -842,27 +833,27 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Opis</translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="93"/>
+        <location filename="../models/DistributorTableModel.cpp" line="139"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="95"/>
+        <location filename="../models/DistributorTableModel.cpp" line="141"/>
         <source>Distributing date</source>
         <translation>Data wydania</translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="97"/>
+        <location filename="../models/DistributorTableModel.cpp" line="143"/>
         <source>Main reason</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="98"/>
+        <location filename="../models/DistributorTableModel.cpp" line="144"/>
         <source>Sub reason</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../models/DistributorTableModel.cpp" line="99"/>
+        <location filename="../models/DistributorTableModel.cpp" line="145"/>
         <source>Extra reason</source>
         <translation type="unfinished"></translation>
     </message>
@@ -874,7 +865,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../DataParser.cpp" line="96"/>
         <source>%.2f zl</source>
-        <translation>%.2f zł</translation>
+        <translation type="unfinished">%.2f zl</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="26"/>
@@ -924,6 +915,11 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="78"/>
+        <source>Hide empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/TabBatchWidget.ui" line="92"/>
         <source>Add batc&amp;h</source>
         <translation>Dodaj &amp;partię</translation>
     </message>
@@ -949,7 +945,7 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation type="unfinished">Posiłki</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="41"/>
+        <location filename="../ui/TabMealWidget.ui" line="32"/>
         <source>Add</source>
         <translation type="unfinished">&amp;Dodaj</translation>
     </message>
@@ -975,7 +971,6 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../gui/widgets/TabMealWidget.cpp" line="51"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="212"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
     </message>
@@ -1077,17 +1072,17 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="191"/>
+        <location filename="../zarlok.cpp" line="192"/>
         <source>About Menu</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="192"/>
+        <location filename="../zarlok.cpp" line="193"/>
         <source>The &lt;b&gt;Menu&lt;/b&gt; example shows how to create menu-bar menus and context menus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="217"/>
+        <location filename="../zarlok.cpp" line="218"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>

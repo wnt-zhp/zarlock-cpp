@@ -30,9 +30,10 @@
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
-										   const QCheckBox * nexp, QObject * parent) :
+										   const QCheckBox * nexp, const QCheckBox * hide,
+										   QObject * parent) :
 												QSortFilterProxyModel(parent),
-												cb_exp(exp), cb_aexp(aexp), cb_nexp(nexp) {
+												cb_exp(exp), cb_aexp(aexp), cb_nexp(nexp), cb_hide(hide) {
 }
 
 /**
@@ -46,12 +47,15 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	QColor expcol = sourceModel()->index(sourceRow, BatchTableModel::HExpire, sourceParent).data(Qt::BackgroundRole).value<QColor>();
-// 	Qcolor expd = QDate::fromString(sourceModel()->data(expidx, Qt::DisplayRole).toString(), Qt::DefaultLocaleShortDate);
 
-// 	int daystoexp = QDate::currentDate().daysTo(expd);
-// 	PR(sourceRow);
-// 	PR(daystoexp);
-// 	PR(td.toStdString());
+	float total = sourceModel()->index(sourceRow, BatchTableModel::HStaQty, sourceParent).data(Qt::EditRole).toFloat();
+	float used = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty, sourceParent).data(Qt::EditRole).toFloat();
+
+	float free = total - used;
+
+	if (cb_hide->isChecked() and free == 0.0)
+		return false;
+
 	bool val = false;
 	if (cb_exp->isChecked())
 		val |= expcol == globals::item_expired ? true : false;
