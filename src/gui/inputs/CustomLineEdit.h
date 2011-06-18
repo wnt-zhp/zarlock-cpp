@@ -49,7 +49,7 @@ private slots:
 	bool verify(const QString &);
 
 signals:
-	void dateChanged();
+	void dataChanged();
 protected:
 	QString displaytext, rawtext;
 	bool edit_mode, is_ok;

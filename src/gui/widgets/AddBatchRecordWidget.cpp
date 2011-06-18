@@ -29,7 +29,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
-	connect(edit_book, SIGNAL(dateChanged()), edit_expiry, SLOT(doRefresh()));
+	connect(edit_book, SIGNAL(dataChanged()), edit_expiry, SLOT(doRefresh()));
 
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
 	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
@@ -37,6 +37,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 
 // 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateCB(int)));
+
 	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
@@ -64,7 +65,6 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 void AddBatchRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 	ProductsTableModel * ptm = db.CachedProducts();
-	BatchTableModel * btm = db.CachedBatch();
 
 	int idx = combo_products->currentIndex();
 	int prod_id = ptm->data(ptm->index(idx, 0)).toInt();
@@ -76,20 +76,6 @@ void AddBatchRecordWidget::insert_record() {
 	uprice.sprintf("%.2f+%d", price/edit_qty->text().toDouble(), int(tax));
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
-
-// 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
-// 		<< row << ","
-// 		<< prod_id << ","
-// 		<< edit_spec->text().toStdString() << ","
-// 		<< edit_expiry->text().toStdString() << ","
-// 		<< edit_qty->text().toStdString() << ","
-// 		<< edit_unit->text().toStdString() << ","
-// 		<< unitprice.toStdString() << ","
-// 		<< edit_qty->text().toStdString() << ","
-// 		<< edit_invoice->text().toStdString() << ","
-// 		<< edit_book->text(true).toStdString() << ","
-// 		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
-// 		<< QString(":)").toStdString() << " );" << std::endl;
 
 	db.addBatchRecord(prod_id, edit_spec->text(), edit_book->text(true), QDate::currentDate().toString(Qt::ISODate),
 		edit_expiry->text(), edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
@@ -123,10 +109,9 @@ void AddBatchRecordWidget::cancel_form() {
 
 void AddBatchRecordWidget::validateCB(int i) {
 	ProductsTableModel * ptm = Database::Instance().CachedProducts();
-	BatchTableModel * btm = Database::Instance().CachedBatch();
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
 
-	if (edit_expiry->text().isEmpty()) {
+	if (edit_expiry->text(true).isEmpty()) {
 		edit_expiry->setText(defexp);
 		edit_expiry->doRefresh();
 	}

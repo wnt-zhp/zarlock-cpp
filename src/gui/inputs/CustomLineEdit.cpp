@@ -22,6 +22,7 @@
 #include "CustomLineEdit.h"
 
 #include <QToolTip>
+#include <QContextMenuEvent>
 
 CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
 	connect(this, SIGNAL(textChanged(QString)), this, SLOT(verify(QString)));
@@ -39,6 +40,8 @@ bool CustomLineEdit::ok() {
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
+	PR(this);
+	PR(edit_mode);
 	if (edit_mode) {
 		rawtext = QLineEdit::text();
 	} else {
@@ -62,8 +65,6 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 		edit_mode = false;
     if (ev != NULL)
 		QLineEdit::focusOutEvent(ev);
-
-// 	emit dateChanged();
 }
 
 void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
@@ -90,12 +91,13 @@ bool CustomLineEdit::verify(const QString & t) {
 		if (verifyText(t, displaytext)) {
 			if (!t.isEmpty()) this->setPalette(globals::palette_ok);
 			is_ok = true;
-			emit dateChanged();
 		} else {
 			if (!t.isEmpty()) this->setPalette(globals::palette_bad);
 			is_ok = false;
 		}
 	}
+
+	emit dataChanged();
 
 	return is_ok;
 }
@@ -133,7 +135,9 @@ void CustomLineEdit::doReturnPressed() {
 void CustomLineEdit::doRefresh() {
 // 	edit_mode = true;
 // 	verify(rawtext);
-	edit_mode = false;
+PR(this);
+// 	edit_mode = false;
+	focusInEvent(NULL);
 	focusOutEvent(NULL);
 }
 
