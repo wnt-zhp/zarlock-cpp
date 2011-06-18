@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,35 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MEALTABLEMODELPROXY_H
-#define MEALTABLEMODELPROXY_H
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QSortFilterProxyModel>
+#ifndef MEALFOODLISTITEMNEW_H
+#define MEALFOODLISTITEMNEW_H
 
-/**
- * @brief Klasa dziedziczy po QSortFilterProxyModel i odpowiada za
- * sortowanie danych.
- **/
-class MealTableModelProxy : public QSortFilterProxyModel {
-Q_OBJECT
+#include <QWidget>
+
+
+class MealFoodListItemNewWidget : public QWidget {
 public:
-	MealTableModelProxy(QObject * parent = 0);
-						 
-	virtual ~MealTableModelProxy();
 
-	virtual void setRef(const QString & ref);
-	virtual void setKey(int key);
-
-	virtual const QString & ref() const;
-	virtual int key() const;
-
-private:
-	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-
-private:
-	QString dateref;
-	int mealkey;
 };
 
-#endif // MEALTABLEMODELPROXY_H
+#endif // MEALFOODLISTITEMNEW_H

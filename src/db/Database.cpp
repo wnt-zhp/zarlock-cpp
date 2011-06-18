@@ -380,7 +380,8 @@ void Database::updateBatchQty() {
 }
 
 void Database::updateBatchQty(const int pid) {
-	QSqlQuery qDist("SELECT quantity FROM distributor WHERE batch_id=?;");
+	QSqlQuery qDist;
+	qDist.prepare("SELECT quantity FROM distributor WHERE batch_id=?;");
 	qDist.bindValue(0, pid);
 	qDist.exec();
 	int qty = 0;
@@ -492,6 +493,42 @@ bool Database::doDBUpgrade(unsigned int & version) {
 		default:
 			return false;
 	}
+}
+
+bool Database::addDistributorRecord(int bid, const QString& qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+	int row = tab_distributor->rowCount();
+	tab_distributor->insertRows(row, 1);
+// 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HBatchId), bid);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HQty), qty);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HDistDate), ddate);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HRegDate), rdate);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason), re1);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason2), re2);
+	tab_distributor->setData(tab_distributor->index(row, DistributorTableModel::HReason3), re3);
+
+	tab_distributor->submitAll();
+	updateBatchQty(tab_distributor->index(row, 1).data(Qt::EditRole).toInt());
+	tab_batch->submitAll();
+// 	update_model();	
+}
+
+bool Database::updateDistributorRecord(int id, int bid, const QString& qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HBatchId), bid);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HQty), qty);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HDistDate), ddate);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HRegDate), rdate);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason), re1);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason2), re2);
+	tab_distributor->setData(tab_distributor->index(id, DistributorTableModel::HReason3), re3);
+
+	tab_distributor->submitAll();
+	updateBatchQty(tab_distributor->index(id, 1).data(Qt::EditRole).toInt());
+	tab_batch->submitAll();
+}
+
+bool Database::removeDistributorRecord(int recordid) {
+
 }
 
 #include "Database.moc"

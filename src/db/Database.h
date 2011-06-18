@@ -55,6 +55,18 @@ public:
 	void writeCampSettings();
 	void readCampSettings();
 
+// 	virtual bool addProductsRecord();
+// 	virtual bool updateProductsRecord();
+// 	virtual bool removeProductsRecord(int recordid);
+
+// 	virtual bool addBatchRecord();
+// 	virtual bool updateBatchRecord();
+// 	virtual bool removeBatchRecord(int recordid);
+	
+	virtual bool addDistributorRecord(int, const QString &, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
+	virtual bool updateDistributorRecord(int, int, const QString &, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
+	virtual bool removeDistributorRecord(int recordid);
+	
 	inline ProductsTableModel * CachedProducts() { return tab_products; }
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
 	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }

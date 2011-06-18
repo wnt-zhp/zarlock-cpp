@@ -29,7 +29,7 @@ int main(int argc, char ** argv/*, char ** env*/) {
 	globals::font_display.setItalic(false);
 // 	globals::font_bad.setBold(true);
 
-	QCoreApplication::setOrganizationName("Wydział nowych technologi Głównej Komendy ZHP");
+	QCoreApplication::setOrganizationName("Wydział nowych technologi Głównej Kwatery ZHP");
 	QCoreApplication::setOrganizationDomain("wnt.zhp.pl");
 	QCoreApplication::setApplicationName("Żarłok");
 	QCoreApplication::setApplicationVersion("3.0_dev");

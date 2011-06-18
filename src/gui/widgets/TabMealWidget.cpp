@@ -21,6 +21,9 @@
 #include "DataParser.h"
 #include "TabMealWidget.h"
 
+#include <QPushButton>
+#include <QToolButton>
+
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 modelproxy_meal(NULL) {
 
@@ -29,42 +32,66 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	mealcode[2] = tr("Lunch");
 	mealcode[3] = tr("Diner");
 
-	QSqlQuery mq;
+// 	QSqlQuery mq;
 
-	mq.exec("SELECT value FROM settings WHERE key='BeginOfTheCamp';");
+// 	mq.exec("SELECT value FROM settings WHERE key='BeginOfTheCamp';");
 
-	if (mq.next())
-		bd = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
+// 	if (mq.next())
+// 		bd = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
 
-	mq.exec("SELECT value FROM settings WHERE key='EndOfTheCamp';");
-	if (mq.next())
-		ed = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
+// 	mq.exec("SELECT value FROM settings WHERE key='EndOfTheCamp';");
+// 	if (mq.next())
+// 		ed = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
+
+	bd = Database::Instance().cs()->campDateBegin;
+	ed = Database::Instance().cs()->campDateEnd;
 
 	setupUi(this);
 
 	groupBox->setTitle(tr("Select meal to activate this section"));
 	groupBox->setEnabled(false);
 
+// 	QPushButton * b = new QPushButton("test");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(b, "tescik");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(tb, "tescik2");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(b, "tescik");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(b, "tescik");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(b, "tescik");
+// // 	tab_meals->printTabRect();
+// 	tab_meals->addTab(b, "tescik");
+
+
+// 	groupBox->layout()->addWidget(tb);
+
+	groupBox->setEnabled(true);
 	amrw = new AddMealRecordWidget(bd, ed);
 	afrw = new AddFoodRecordWidget();
 
-	tree_meal->setAutoExpandDelay(0);
-// 	tree_meal->setIndentation(0);
+// 	list_meal->setAutoExpandDelay(0);
+// 	list_meal->setIndentation(0);
 
 	activateUi(true);
 
-	action_addday->setEnabled(false);
-	tree_meal->setHeaderLabel("Day list");
-// 	connect(list_meal, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
+// 	action_addday->setEnabled(false);
+// 	list_meal->setsetHeaderLabel("Day list");
+// 	connect(, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
 
 // 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(&db, SIGNAL(dbSaved()), amrw, SLOT(update_model()));
-	connect(amrw, SIGNAL(dbmealupdated(bool)), this, SLOT(activateUi(bool)));
+// 	connect(amrw, SIGNAL(dbmealupdated(bool)), this, SLOT(activateUi(bool)));
+	connect(amrw, SIGNAL(dbmealupdated(bool)), this, SLOT(doRefresh()));
 	connect(action_addday, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 // 	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
 
-	connect(tree_meal, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(expand_single_item(QTreeWidgetItem*, int)));
-	connect(tree_meal, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), amrw, SLOT(showW(QTreeWidgetItem*,int)));
+	connect(list_meal, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
+// 	connect(list_meal, SIGNAL(itemDoubleClicked(QListWidgetItem*, int)), amrw, SLOT(showW(QListWidgetItem*,int)));
+
+	doRefresh();
 }
 
 TabMealWidget::~TabMealWidget() {
@@ -86,35 +113,59 @@ void TabMealWidget::activateUi(bool activate) {
 		if (modelproxy_meal) delete modelproxy_meal;
 		modelproxy_meal = new MealTableModelProxy();
 		modelproxy_meal->setSourceModel(db.CachedDistributor());
-		list_food->setModel(modelproxy_meal);
-		list_food->setModelColumn(DistributorTableModel::HBatchId);
+// 		list_food->setModel(modelproxy_meal);
+// 		list_food->setModelColumn(DistributorTableModel::HBatchId);
 
-		int total_days = bd.daysTo(ed);
-	
-		tree_meal->clear();
-		for (int i = 0; i <= total_days; ++i) {
-			QString date = bd.addDays(i).toString(Qt::ISODate);
+// 		int total_days = bd.daysTo(ed);
+// 	
+// 		list_meal->clear();
+// 
+// 		for (int i = 0; i <= total_days; ++i) {
+// 			QString date = bd.addDays(i).toString(Qt::ISODate);
+// 
+// 			QTreeWidgetItem * item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(date));
+// 			QSqlQuery mq(QString("SELECT * FROM meal WHERE distdate='%1' ORDER BY mealtype ASC;").arg(date));
+// 
+// 			mq.exec();
+// 			while (mq.next()) {
+// 				QString date = mq.value(TabMealWidget::MDate).toString();
+// 				int mealtype = mq.value(TabMealWidget::MType).toInt();
+// 				int mealid = mq.value(TabMealWidget::MId).toInt();
+// 				QString mealname;
+// 				if (mealtype > DistributorTableModel::MDiner) {
+// 					mealname = mq.value(TabMealWidget::MName).toString();
+// 				} else {
+// 					mealname = mealcode[mealtype];
+// 				}
+// 				QTreeWidgetItem * child = new QTreeWidgetItem(QStringList(mealname));
+// 				child->setData(0, Qt::UserRole, mq.value(TabMealWidget::MId));
+// // 				child->setData(0, Qt::UserRole+1, mealtype);
+// 				item->insertChild(item->childCount(), child);
+// 			}
+// 			list_meal->addTopLevelItem(item);
+// 		}
+	}
+}
 
-			QTreeWidgetItem * item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(date));
-			QSqlQuery mq(QString("SELECT * FROM meal WHERE distdate='%1' ORDER BY mealtype ASC;").arg(date));
+void TabMealWidget::doRefresh() {
+	QSqlQuery mq("SELECT * FROM meal ORDER BY distdate ASC, mealtype ASC;");
 
-			mq.exec();
-			while (mq.next()) {
-				QString date = mq.value(TabMealWidget::MDate).toString();
-				int mealtype = mq.value(TabMealWidget::MType).toInt();
-				int mealid = mq.value(TabMealWidget::MId).toInt();
-				QString mealname;
-				if (mealtype > DistributorTableModel::MDiner) {
-					mealname = mq.value(TabMealWidget::MName).toString();
-				} else {
-					mealname = mealcode[mealtype];
-				}
-				QTreeWidgetItem * child = new QTreeWidgetItem(QStringList(mealname));
-				child->setData(0, Qt::UserRole, mq.value(TabMealWidget::MId));
-// 				child->setData(0, Qt::UserRole+1, mealtype);
-				item->insertChild(item->childCount(), child);
-			}
-			tree_meal->addTopLevelItem(item);
+	QListWidgetItem * item;
+
+	mq.exec();
+	while (mq.next()) {
+		QString date = mq.value(TabMealWidget::MDate).toDate().toString(Qt::DefaultLocaleShortDate);
+		QString rdate = mq.value(TabMealWidget::MDate).toDate().toString(Qt::ISODate);
+
+		QList<QListWidgetItem *> ml = list_meal->findItems(date, Qt::MatchExactly);
+		if (ml.size() == 0){
+			item = new QListWidgetItem(date);
+			item->setData(Qt::UserRole, rdate);
+			item->setTextAlignment(4);
+			item->setSizeHint(QSize(0, 18));
+			list_meal->addItem(item);
+		} else {
+			item = ml.at(0);
 		}
 	}
 }
@@ -127,35 +178,18 @@ void TabMealWidget::edit_record(const QModelIndex& /*idx*/) {
 // 	}
 }
 
-void TabMealWidget::updateMealList(QTreeWidgetItem * item) {
-	
-	if (item and item->data(0, Qt::UserRole).isValid()) {
-		modelproxy_meal->setRef(item->data(0, Qt::UserRole).toInt());
+void TabMealWidget::updateMealList(QListWidgetItem * item) {
+	if (item and item->data(Qt::DisplayRole).isValid()) {
+		tab_meals->setDateRef(item->data(Qt::UserRole).toString());
+		groupBox->setTitle(item->text());
 	} else {
-		modelproxy_meal->setRef(-1);
+		tab_meals->setDateRef("");
 	}
-
-	modelproxy_meal->invalidate();
 }
 
 void TabMealWidget::add_mealday() {
 	amrw->setWindowFlags(Qt::Tool);
 	amrw->showW(NULL, 0);
-}
-
-void TabMealWidget::expand_single_item(QTreeWidgetItem * item, int /*column*/) {
-	if (!item->parent()) {
-		tree_meal->collapseAll();
-		tree_meal->expandItem(item);
-		updateMealList(NULL);
-		groupBox->setTitle(tr("Select meal to activate this section"));
-		groupBox->setEnabled(false);
-	} else {
-		updateMealList(item);
-		groupBox->setTitle(item->parent()->text(0));
-		groupBox->setEnabled(true);
-	}
-	
 }
 
 #include "TabMealWidget.moc"

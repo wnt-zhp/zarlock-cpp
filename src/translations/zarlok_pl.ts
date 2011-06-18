@@ -651,6 +651,57 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
+    <name>MealFoodListItemDataWidget</name>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="23"/>
+        <source>Batch name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="33"/>
+        <source>Qty value</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MealTabWidget</name>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="82"/>
+        <source>Breakfast</source>
+        <translation type="unfinished">Śniadanie</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="83"/>
+        <source>2nd Breakfast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="84"/>
+        <source>Lunch</source>
+        <translation type="unfinished">Obiad</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="85"/>
+        <source>Diner</source>
+        <translation type="unfinished">Kolacja</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="86"/>
+        <source>Other 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="87"/>
+        <source>Other 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PriceInput</name>
     <message>
         <location filename="../gui/inputs/PriceInput.cpp" line="25"/>
@@ -874,7 +925,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="78"/>
         <source>Add batc&amp;h</source>
-        <translation>Dodaj &amp;produkt</translation>
+        <translation>Dodaj &amp;partię</translation>
     </message>
 </context>
 <context>
@@ -898,49 +949,33 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation type="unfinished">Posiłki</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="29"/>
-        <source>Meal costs</source>
-        <translation>Koszt posiłku</translation>
-    </message>
-    <message>
-        <location filename="../ui/TabMealWidget.ui" line="36"/>
-        <source>0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/TabMealWidget.ui" line="61"/>
-        <location filename="../ui/TabMealWidget.ui" line="89"/>
+        <location filename="../ui/TabMealWidget.ui" line="41"/>
         <source>Add</source>
         <translation type="unfinished">&amp;Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="68"/>
-        <source>PushButton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="27"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="30"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="28"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="31"/>
         <source>2nd breakfast</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="29"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="32"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="30"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="33"/>
         <source>Diner</source>
         <translation>Kolacja</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="45"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="151"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="51"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="212"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
     </message>

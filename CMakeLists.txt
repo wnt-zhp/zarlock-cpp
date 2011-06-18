@@ -41,7 +41,7 @@ endmacro (QT4_ADD_BINRESOURCES)
 configure_file(config.h.in config.h @ONLY)
 # set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/items src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS
 									src/ui/MainWindow.ui
@@ -58,6 +58,7 @@ set(zarlok_widget_FORMS
 									src/ui/TabBatchWidget.ui
 									src/ui/TabDistributorWidget.ui
 									src/ui/TabMealWidget.ui
+									src/ui/MealFoodListItemDataWidget.ui
 )
 set(zarlok_dialogs_FORMS
 									src/ui/CampSettingsDialog.ui
@@ -84,10 +85,16 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/TabBatchWidget.cpp
 									src/gui/widgets/TabDistributorWidget.cpp
 									src/gui/widgets/TabMealWidget.cpp
-									src/gui/widgets/MainTabWidget.cpp
+									src/gui/widgets/MealTabWidget.cpp
+									src/gui/widgets/MealFoodList.cpp
 )
+
 set(zarlok_src_gui_dialogs_SRCS
 									src/gui/dialogs/CampSettingsDialog.cpp
+)
+set(zarlok_src_gui_items_SRCS
+									src/gui/items/MealFoodListItemDataWidget.cpp
+									src/gui/items/MealFoodListItemNewWidget.cpp
 )
 set(zarlok_src_models_SRCS
 									src/models/ModelsCommon.cpp
@@ -99,7 +106,16 @@ set(zarlok_src_models_SRCS
 )
 set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
-set(zarlok_SRCS ${zarlok_INCS} ${zarlok_src_gui_inputs_SRCS} ${zarlok_src_gui_views_SRCS} ${zarlok_src_gui_widgets_SRCS} ${zarlok_src_gui_dialogs_SRCS} ${zarlok_src_models_SRCS} ${zarlok_src_misc_SRCS})
+set(zarlok_SRCS
+									${zarlok_INCS}
+									${zarlok_src_gui_inputs_SRCS}
+									${zarlok_src_gui_items_SRCS}
+									${zarlok_src_gui_views_SRCS}
+									${zarlok_src_gui_widgets_SRCS}
+									${zarlok_src_gui_dialogs_SRCS}
+									${zarlok_src_models_SRCS}
+									${zarlok_src_misc_SRCS}
+)
 
 file (GLOB TS_FILES src/translations/zarlok_*.ts)
 set(zarlok_TS ${TS_FILES})

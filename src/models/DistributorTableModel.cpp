@@ -183,8 +183,11 @@ void DistributorTableModel::filterDB(const QString & f) {
 void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
 	PR(__func__);
 	submitAll();
+	PR(topleft.column());
+	PR(HQty);
 	if (topleft.column() == HQty) {
 		for (int i = topleft.row(); i <= bottomright.row(); ++i) {
+			PR(__LINE__);
 			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());
 		}
 		Database::Instance().CachedBatch()->submitAll();

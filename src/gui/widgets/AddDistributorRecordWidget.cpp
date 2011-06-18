@@ -60,21 +60,26 @@ bool AddDistributorRecordWidget::insert_record() {
 	int idx = combo_products->currentIndex();
 	int batch_id = btm->index(idx, 0).data().toInt();
 
-	int row = dtm->rowCount();
-	dtm->insertRows(row, 1);
-// 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
-	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
-	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
-	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
-	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
-	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
-	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
-	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RGeneral);
+// 	int row = dtm->rowCount();
+// 	dtm->insertRows(row, 1);
+// // 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
+// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RGeneral);
+// 
+// 	dtm->submitAll();
+// 	db.updateBatchQty(dtm->index(row, 1).data(Qt::EditRole).toInt());
+// 	btm->submitAll();
+// 	update_model();	
 
-	dtm->submitAll();
-	db.updateBatchQty(dtm->index(row, 1).data(Qt::EditRole).toInt());
-	btm->submitAll();
-	update_model();	
+	db.addDistributorRecord(batch_id, edit_qty->text(), edit_date->text(true),
+							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
+							edit_reason2->text(), DistributorTableModel::RGeneral);
+
 
 	combo_products->setFocus();
 	return /*status*/ true;

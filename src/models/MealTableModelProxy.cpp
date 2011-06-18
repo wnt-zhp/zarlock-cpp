@@ -31,7 +31,7 @@
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
 MealTableModelProxy::MealTableModelProxy(QObject * parent) : QSortFilterProxyModel(parent),
-															 midref(0) {
+															 mealkey(0), dateref("") {
 }
 
 /**
@@ -43,21 +43,31 @@ MealTableModelProxy::~MealTableModelProxy() {
 }
 
 
-bool MealTableModelProxy::filterAcceptsRow(int sourceRow,
-											const QModelIndex &sourceParent) const {
+bool MealTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	int rmeal = sourceModel()->index(sourceRow, DistributorTableModel::HReason3, sourceParent).data().toInt();
 	int mid = sourceModel()->index(sourceRow, DistributorTableModel::HReason, sourceParent).data().toInt();
-// 	PR(rmeal);
-// 	PR(DistributorTableModel::RMeal);
-// 	PR(mtype);
-// 	PR(mtyperef);
-// 	PR(mdate.toStdString());
-// 	PR(mdateref.toStdString());
-// 	PR((rmeal == DistributorTableModel::RMeal and mtype == mtyperef and mdate == mdateref));
-	if (rmeal == DistributorTableModel::RMeal and mid == midref)
+	QString mdate = sourceModel()->index(sourceRow, DistributorTableModel::HDistDate, sourceParent).data().toString();
+
+	if (rmeal == DistributorTableModel::RMeal and mid == mealkey and mdate == dateref)
 		return true;
 
 	return false;
+}
+
+void MealTableModelProxy::setKey(int key) {
+	mealkey = key;
+}
+
+void MealTableModelProxy::setRef(const QString & ref) {
+	dateref = ref;
+}
+
+int MealTableModelProxy::key() const {
+	return mealkey;
+}
+
+const QString& MealTableModelProxy::ref() const {
+	return dateref;
 }
 
 #include "MealTableModelProxy.moc"

@@ -37,13 +37,15 @@ public:
 	TabMealWidget(QWidget * parent = NULL);
 	virtual ~TabMealWidget();
 
+public slots:
+	void doRefresh();
+
 private slots:
 	void activateUi(bool activate = true);
 	void edit_record(const QModelIndex & idx);
 	void add_mealday();
-	void expand_single_item(QTreeWidgetItem * item, int column);
 
-	void updateMealList(QTreeWidgetItem * item);
+	void updateMealList(QListWidgetItem * item);
 
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
