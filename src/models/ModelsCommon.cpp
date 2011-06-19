@@ -40,28 +40,12 @@ void ModelsCommon::inputErrorMsgBox(const QString& val) {
 	msgBox.exec();
 }
 
-bool ModelsCommon::productRemoveConfirmation(const QString & prod) {
+bool ModelsCommon::productRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove product '%1'").arg(prod));
+	msgBox.setText(QObject::tr("You try to remove %1 product with all associated batches and distributtions.", "", count).arg(count));
 
-	msgBox.setInformativeText(QObject::tr("Are you sure?"));
-
-	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-	msgBox.setDefaultButton(QMessageBox::No);
-
-	if (msgBox.exec() == QMessageBox::Yes)
-		return true;
-
-	return false;
-}
-
-bool ModelsCommon::productRemoveConfirmation(const QString & prod, const QString & details) {
-	QMessageBox msgBox;
-	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove product '%1'").arg(prod));
-
-	msgBox.setInformativeText(QObject::tr("It has associated batches. All associated batches will be removed. Are you sure?"));
+	msgBox.setInformativeText(QObject::tr("All associated batches, distributions and meals will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
 
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -73,28 +57,12 @@ bool ModelsCommon::productRemoveConfirmation(const QString & prod, const QString
 	return false;
 }
 
-bool ModelsCommon::batchRemoveConfirmation(const QString & batch) {
+bool ModelsCommon::batchRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove batch '%1'").arg(batch));
+	msgBox.setText(QObject::tr("You try to remove %1 batch with all distributions.", "", count).arg(count));
 
-	msgBox.setInformativeText(QObject::tr("Are you sure?"));
-
-	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-	msgBox.setDefaultButton(QMessageBox::No);
-
-	if (msgBox.exec() == QMessageBox::Yes)
-		return true;
-
-	return false;
-}
-
-bool ModelsCommon::batchRemoveConfirmation(const QString & batch, const QString & details) {
-	QMessageBox msgBox;
-	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove batch '%1'").arg(batch));
-
-	msgBox.setInformativeText(QObject::tr("It has associated distributed products and meals. All distributions and meals will be removed. Are you sure?"));
+	msgBox.setInformativeText(QObject::tr("All distributions and meals will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
 
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -106,28 +74,12 @@ bool ModelsCommon::batchRemoveConfirmation(const QString & batch, const QString 
 	return false;
 }
 
-bool ModelsCommon::distributeRemoveConfirmation(const QString & batch) {
+bool ModelsCommon::distributeRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove distributed batch '%1'").arg(batch));
+	msgBox.setText(QObject::tr("You try to remove distributed %1 distribution.", "", count).arg(count));
 
-	msgBox.setInformativeText(QObject::tr("Are you sure?"));
-
-	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-	msgBox.setDefaultButton(QMessageBox::No);
-
-	if (msgBox.exec() == QMessageBox::Yes)
-		return true;
-
-	return false;
-}
-
-bool ModelsCommon::distributeRemoveConfirmation(const QString & batch, const QString & details) {
-	QMessageBox msgBox;
-	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove distributed batch '%1'").arg(batch));
-
-	msgBox.setInformativeText(QObject::tr("It has associated distributed products and meals. All distributions and meals will be removed. Are you sure?"));
+	msgBox.setInformativeText(QObject::tr("All distributions will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
 
 	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);

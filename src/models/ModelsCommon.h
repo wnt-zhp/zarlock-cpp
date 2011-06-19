@@ -24,14 +24,11 @@
 
 class ModelsCommon {
 public:
-	bool productRemoveConfirmation(const QString & prod);
-	bool productRemoveConfirmation(const QString & prod, const QString & details);
+	bool productRemoveConfirmation(int count, const QString & details);
 
-	bool batchRemoveConfirmation(const QString & batch);
-	bool batchRemoveConfirmation(const QString & batch, const QString & details);
+	bool batchRemoveConfirmation(int count, const QString & details);
 
-	bool distributeRemoveConfirmation(const QString & batch);
-	bool distributeRemoveConfirmation(const QString & batch, const QString & details);
+	bool distributeRemoveConfirmation(int count, const QString & details);
 
 protected:
 	void inputErrorMsgBox(const QString & val);

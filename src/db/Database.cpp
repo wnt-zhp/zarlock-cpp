@@ -378,19 +378,26 @@ void Database::updateBatchQty() {
 }
 
 void Database::updateBatchQty(const int pid) {
-	QSqlQuery qDist;
-	qDist.prepare("SELECT quantity FROM distributor WHERE batch_id=?;");
-	qDist.bindValue(0, pid);
-	qDist.exec();
-	int qty = 0;
-	while (qDist.next()) {
-		qty += qDist.value(0).toInt();
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		db.transaction();
+
+	QSqlQuery q;
+	q.prepare("SELECT quantity FROM distributor WHERE batch_id=?;");
+	q.bindValue(0, pid);
+	q.exec();
+	float qty = 0;
+	while (q.next()) {
+		qty += q.value(0).toFloat();
 	}
 
-	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
-	qBatch.bindValue(0, qty);
-	qBatch.bindValue(1, pid);
-	qBatch.exec();
+	q.prepare("UPDATE batch SET used_qty=? WHERE id=?;");
+	q.bindValue(0, qty);
+	q.bindValue(1, pid);
+	q.exec();
+
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		if (!db.commit())
+			db.rollback();
 }
 
 void Database::updateMealCosts() {
@@ -402,12 +409,12 @@ void Database::updateMealCosts() {
 }
 
 void Database::updateMealCosts(const int mid) {
-	QSqlQuery qDist("SELECT price FROM distributor WHERE reason=?;");
-	qDist.bindValue(0, mid);
-	qDist.exec();
+	QSqlQuery q("SELECT price FROM distributor WHERE reason=?;");
+	q.bindValue(0, mid);
+	q.exec();
 	int price = 0;
-	while (qDist.next()) {
-		price += qDist.value(0).toInt();
+	while (q.next()) {
+		price += q.value(0).toInt();
 	}
 
 // 	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
@@ -510,8 +517,8 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 	if (!status) {
 		tab_products->revertAll();
 		return false;
-	} else if (!tab_products->submitAll())
-		return false;
+	} else
+		return tab_products->submitAll();
 }
 
 bool Database::updateProductsRecord(int pid, const QString& name, const QString& unit, const QString& expiry) {
@@ -530,8 +537,9 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 	if (!status) {
 		tab_products->revertAll();
 		return false;
-	} else if (!tab_products->submitAll())
-		return false;
+	}
+
+	return tab_products->submitAll();
 }
 
 // bool Database::removeProductsRecord(int recordid, bool askForConfirmation) {
@@ -567,17 +575,16 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 
 bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation) {
 	bool status = false;
-	QString products, details;
+	QString details;
 	QModelIndexList bat;
 
+	int counter = 0;
 	if (askForConfirmation) {
 		for (int i = 0; i < idxl.count(); ++i) {
 			if (idxl.at(i).column() == ProductsTableModel::HName) {
 				QVariant pid = tab_products->index(idxl.at(i).row(), ProductsTableModel::HId).data();
 				QString prod = tab_products->index(idxl.at(i).row(), ProductsTableModel::HName).data().toString();
-				if (!products.isEmpty())
-					products = products % ", ";
-				products = products % prod;
+				++counter;
 				details = details % prod % "\n";
 				QModelIndexList batches = tab_batch->match(tab_batch->index(0, BatchTableModel::HProdId), Qt::EditRole, pid, -1);
 				for (int i = 0; i < batches.count(); ++i) {
@@ -586,7 +593,7 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 				bat.append(batches);
 			}
 		}
-		status = tab_products->productRemoveConfirmation(products, details);
+		status = tab_products->productRemoveConfirmation(counter, details);
 	}
 
 	if (askForConfirmation & !status )
@@ -649,12 +656,10 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 	if (!status) {
 		tab_batch->revertAll();
 		return false;
-	} else if (!tab_batch->submitAll())
-		return false;
-
+	}
+	
+	return tab_batch->submitAll();
 // 	update_model();	
-
-	return true;
 }
 
 bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc) {
@@ -690,12 +695,9 @@ bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QS
 	if (!status) {
 		tab_batch->revertAll();
 		return false;
-	} else if (!tab_batch->submitAll())
-		return false;
-
-// 	update_model();	
-
-	return true;
+	}
+	
+	return tab_batch->submitAll();
 }
 
 // bool Database::removeBatchRecord(int recordid, bool askForConfirmation) {
@@ -710,15 +712,16 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 
 	bool status = false;
 	QString details;
+	int counter = 0;
 
 	if (askForConfirmation) {
 		for (int i = 0; i < idxl.count(); ++i) {
-			if (idxl.at(i).column() == BatchTableModel::HProdId)
+			if (idxl.at(i).column() == BatchTableModel::HProdId) {
+				++counter;
 				details = details % tab_batch->data(tab_batch->index(idxl.at(i).row(), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
+			}
 		}
-		status = tab_batch->batchRemoveConfirmation("", details);
-	} else {
-		status = tab_batch->batchRemoveConfirmation("");
+		status = tab_batch->batchRemoveConfirmation(counter, details);
 	}
 
 	if (askForConfirmation & !status )
@@ -728,11 +731,11 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 		if (idxl.at(i).column() == BatchTableModel::HProdId) {
 			QVariant bid = tab_batch->data(tab_batch->index(idxl.at(i).row(), BatchTableModel::HId), Qt::EditRole);
 			QModelIndexList qmild = tab_distributor->match(tab_distributor->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bid, -1);
-			removeDistributorRecord(qmild, false, false);
-			tab_batch->removeRow(idxl.at(i).row());
+			if (removeDistributorRecord(qmild, false, false))
+				status = tab_batch->removeRow(idxl.at(i).row());
 		}
 	}
-	tab_batch->submitAll();
+	return (status && tab_batch->submitAll());
 }
 
 // bool Database::removeBatchRecord(const QModelIndex & idx, bool askForConfirmation) {
@@ -776,10 +779,8 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 		return false;
 
 	updateBatchQty(tab_distributor->index(row, 1).data(Qt::EditRole).toInt());
-	tab_batch->submitAll();
+	return tab_batch->submitAll();
 // 	update_model();	
-
-	return true;
 }
 
 bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
@@ -799,22 +800,25 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 		return false;
 
 	updateBatchQty(tab_distributor->index(id, 1).data(Qt::EditRole).toInt());
-	tab_batch->submitAll();
+	return tab_batch->submitAll();
 // 	update_model();	
-
-	return true;
 }
 
-bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation, bool submitBatches) {
+bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool /*askForConfirmation*/, bool submitBatches) {
+	bool status = true;
+
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
 			int bid = tab_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
-			tab_distributor->removeRow(idxl.at(i).row());
-			updateBatchQty(bid);
+			if (tab_distributor->removeRow(idxl.at(i).row()))
+				updateBatchQty(bid);
 		}
 	}
-	tab_distributor->submitAll();
-	if (submitBatches) tab_batch->submitAll();
+	status = tab_distributor->submitAll();
+	if (status && submitBatches)
+		status &= tab_batch->submitAll();
+
+	return status;
 }
 
 // bool Database::removeDistributorRecord(const QModelIndex & idx, bool askForConfirmation, bool submitBatches) {
@@ -829,11 +833,12 @@ bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bo
 	QString batch;
 	QVariant bid = tab_distributor->index(recordid, DistributorTableModel::HBatchId).data(Qt::EditRole);
 	bool status = true;
+
 	if (askForConfirmation) {
 		QModelIndexList batchl = tab_batch->match(tab_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
 		if (batchl.count())
 			batch = tab_batch->data(tab_batch->index(batchl.at(0).row(), BatchTableModel::HSpec)).toString();
-		status = tab_distributor->distributeRemoveConfirmation(batch);
+		status = tab_distributor->distributeRemoveConfirmation(1, batch);
 	}
 
 	if (status) {

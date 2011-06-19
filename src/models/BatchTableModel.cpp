@@ -52,10 +52,10 @@ BatchTableModel::~BatchTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::StatusTipRole)
+	if (role == Qt::EditRole)
 		return raw(idx);
 
-	if (role == Qt::EditRole or role == Qt::DisplayRole or role == Qt::BackgroundRole)
+	if (role == Qt::DisplayRole or role == Qt::BackgroundRole or role == Qt::StatusTipRole)
 		return display(idx, role);
 
 	int col = idx.column();
@@ -159,17 +159,6 @@ bool BatchTableModel::select() {
  **/
 QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
-		case Qt::EditRole:
-// 			if (idx.column() == HProdId) {
-// 				PR(QSqlTableModel::data(idx, Qt::EditRole).toString().toStdString());
-// 				return QSqlTableModel::data(idx, Qt::EditRole).toString();
-// 			}
-			break;
-
-			if (idx.column() == HBook) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
-			}
-			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HProdId) {
 				QModelIndexList qmil = Database::Instance().CachedProducts()->match(Database::Instance().CachedProducts()->index(0, ProductsTableModel::HId), Qt::EditRole, idx.data(Qt::EditRole));
@@ -177,11 +166,12 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 					return Database::Instance().CachedProducts()->index(qmil.first().row(), ProductsTableModel::HName).data(Qt::DisplayRole);
 				}
 			}
-			if (idx.column() == HSpec) {
+
+			else if (idx.column() == HSpec) {
 				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % QSqlTableModel::data(idx, Qt::EditRole).toString());
 			}
 
-			if (idx.column() == HPrice) {
+			else if (idx.column() == HPrice) {
 				QString data = idx.data(Qt::EditRole).toString();
 				double price, tax;
 				if (DataParser::price(data, price, tax)) {
@@ -195,7 +185,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				}
 			}
 
-			if (idx.column() == HUnit) {
+			else if (idx.column() == HUnit) {
 				QString unitf;
 				if (DataParser::unit(idx.data(Qt::EditRole).toString(), unitf)) {
 					return unitf;
@@ -207,11 +197,11 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				}
 			}
 
-			if (idx.column() == HBook) {
+			else if (idx.column() == HBook) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 
-			if (idx.column() == HExpire) {
+			else if (idx.column() == HExpire) {
 				QDate date;
 				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
 					return date.toString(Qt::DefaultLocaleShortDate);
@@ -223,12 +213,12 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				}
 			}
 
-			if (idx.column() == HStaQty) {
+			else if (idx.column() == HStaQty) {
 				float used = index(idx.row(), int(HUsedQty)).data().toFloat();
 				float total = raw(idx).toFloat();
 				float free = total - used;
 				QString qty;
-				return qty.sprintf("%.2f of %.2f", free, total);
+				return tr("%1 of %2").arg(free).arg(total);
 			}
 			break;
 		case Qt::BackgroundRole:
@@ -256,6 +246,17 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
  * @return QVariant
  **/
 QVariant BatchTableModel::raw(const QModelIndex & idx) const {
+// 	if (idx.column() == HProdId) {
+// 		PR(QSqlTableModel::data(idx, Qt::EditRole).toString().toStdString());
+// 		return QSqlTableModel::data(idx, Qt::EditRole).toString();
+// 	}
+// 	if (idx.column() == HRegDate) {
+// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+// 	}
+	if (idx.column() == HBook) {
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+	}
+
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 

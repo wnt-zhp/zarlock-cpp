@@ -111,7 +111,7 @@ bool ProductsTableModel::select() {
  * @param role przypisana rola
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
-QVariant ProductsTableModel::display(const QModelIndex & idx, const int role) const {
+QVariant ProductsTableModel::display(const QModelIndex & idx, const int /*role*/) const {
 // 	PR(idx.data(Qt::EditRole).toString().toStdString());
 // 	if (idx.column() == HExpire) {
 // 		QString data = idx.data(Qt::EditRole).toString();

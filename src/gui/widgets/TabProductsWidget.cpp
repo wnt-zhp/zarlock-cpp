@@ -49,7 +49,7 @@ TabProductsWidget::~TabProductsWidget() {
 	if (aprw) delete aprw;
 }
 
-void TabProductsWidget::set_filter(const QString & str) {
+void TabProductsWidget::set_filter(const QString & /*str*/) {
 
 }
 
