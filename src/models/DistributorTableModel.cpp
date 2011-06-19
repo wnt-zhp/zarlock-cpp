@@ -214,7 +214,8 @@ void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bot
 // 		revertAll();
 // 		return;
 // 	}
-// 	this->submitAll();
+	PR(this);
+	this->submitAll();
 	if (topleft.column() == HQty) {
 		for (int i = topleft.row(); i <= bottomright.row(); ++i)
 			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());

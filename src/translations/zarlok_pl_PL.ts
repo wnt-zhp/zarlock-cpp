@@ -358,11 +358,16 @@
 <context>
     <name>BatchTableModel</name>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="194"/>
-        <location filename="../models/BatchTableModel.cpp" line="206"/>
-        <location filename="../models/BatchTableModel.cpp" line="222"/>
+        <location filename="../models/BatchTableModel.cpp" line="184"/>
+        <location filename="../models/BatchTableModel.cpp" line="196"/>
+        <location filename="../models/BatchTableModel.cpp" line="212"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="221"/>
+        <source>%1 of %2</source>
+        <translation>%1 z %2</translation>
     </message>
 </context>
 <context>
@@ -559,12 +564,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="351"/>
+        <location filename="../db/Database.cpp" line="353"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="352"/>
+        <location filename="../db/Database.cpp" line="354"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -865,12 +870,12 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../DataParser.cpp" line="96"/>
         <source>%.2f zl</source>
-        <translation type="unfinished">%.2f zl</translation>
+        <translation>%.2f zl</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="35"/>
-        <source>Value &quot;%1&quot; which you try store in database is not valid.</source>
-        <translation>Wartość &quot;%1&quot;, którą próbujesz zapisać w bazie danych nie jest poprawna.</translation>
+        <source>Value &lt;b&gt;%1&lt;/b&gt; which you try store in database is not valid.</source>
+        <translation>Wartość &lt;b&gt;%1&lt;/b&gt;, którą cchesz zapisać w bazie danych nie jest prawidłowa.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="36"/>
@@ -879,39 +884,33 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="46"/>
-        <location filename="../models/ModelsCommon.cpp" line="62"/>
-        <source>You try to remove product &apos;%1&apos;</source>
-        <translation>Chcesz usunąć produkt &apos;%1&apos;</translation>
+        <source>You try to remove %n product(s) with all associated batches and distributtions.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="48"/>
-        <location filename="../models/ModelsCommon.cpp" line="81"/>
-        <location filename="../models/ModelsCommon.cpp" line="114"/>
-        <source>Are you sure?</source>
-        <translation>Jesteś pewien?</translation>
+        <source>All associated batches, distributions and meals will be removed. Are you sure?</source>
+        <translation>Wszystkie przypisane partie, wydania oraz posiłki zostaną również usuniete. Jesteś pewny?</translation>
     </message>
     <message>
-        <location filename="../models/ModelsCommon.cpp" line="64"/>
-        <source>It has associated batches. All associated batches will be removed. Are you sure?</source>
-        <translation>Ma on przypisane partie. Wszystkie przypisane partie zostaną również usunietę. Jesteś pewien?</translation>
+        <location filename="../models/ModelsCommon.cpp" line="63"/>
+        <source>You try to remove %n batch(es) with all distributions.</source>
+        <translation type="unfinished">Chcesz usunąć %n partii wraz ze wszystkimi przypisanymi wydawaniami oraz posiłkami.</translation>
     </message>
     <message>
-        <location filename="../models/ModelsCommon.cpp" line="79"/>
-        <location filename="../models/ModelsCommon.cpp" line="95"/>
-        <source>You try to remove batch &apos;%1&apos;</source>
-        <translation>Próbujesz usunąc partię &apos;%1&apos;</translation>
+        <location filename="../models/ModelsCommon.cpp" line="65"/>
+        <source>All distributions and meals will be removed. Are you sure?</source>
+        <translation>Wszystkie wydania oraz posiłki zostaną również usuniete. Jesteś pewny?</translation>
     </message>
     <message>
-        <location filename="../models/ModelsCommon.cpp" line="97"/>
-        <location filename="../models/ModelsCommon.cpp" line="130"/>
-        <source>It has associated distributed products and meals. All distributions and meals will be removed. Are you sure?</source>
-        <translation>Ma ona przypisaną wydania oraz posiłki. Wszystkie wydania i posiłki zostaną usunietę. Jesteś pewien?</translation>
+        <location filename="../models/ModelsCommon.cpp" line="80"/>
+        <source>You try to remove %n distribution(s).</source>
+        <translation type="unfinished">Chcesz usunąć %n wydawań partii.</translation>
     </message>
     <message>
-        <location filename="../models/ModelsCommon.cpp" line="112"/>
-        <location filename="../models/ModelsCommon.cpp" line="128"/>
-        <source>You try to remove distributed batch &apos;%1&apos;</source>
-        <translation>Próbujesz usunąć wydaną partię &apos;%1&apos;</translation>
+        <location filename="../models/ModelsCommon.cpp" line="82"/>
+        <source>All distributions will be removed. Are you sure?</source>
+        <translation>Wszystkie wybrane wydania zostaną usuniete. Jesteś pewien?</translation>
     </message>
 </context>
 <context>
@@ -1050,7 +1049,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../zarlok.cpp" line="30"/>
         <source>Zarlok by Rafal Lalik --- build: </source>
-        <translation type="unfinished"></translation>
+        <translation>Żarłok by Rafała Lalika ---- build:</translation>
     </message>
     <message>
         <location filename="../zarlok.cpp" line="32"/>

@@ -324,6 +324,8 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		if (db.driver()->hasFeature(QSqlDriver::Transactions))
 			db.commit();
 
+		updateBatchQty();
+
 		return true;
 	}
 
@@ -804,20 +806,40 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 // 	update_model();	
 }
 
-bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool /*askForConfirmation*/, bool submitBatches) {
+bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation, bool submitBatches) {
 	bool status = true;
+	int counter = 0;
+	QString details;
+	QMap<int, int> idmap;
+
+	if (askForConfirmation) {
+		for (int i = 0; i < idxl.count(); ++i) {
+			if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
+				++counter;
+				details = details % tab_distributor->data(tab_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId), Qt::DisplayRole).toString() % "\n";
+			}
+		}
+		status = tab_batch->distributeRemoveConfirmation(counter, details);
+	}
+
+	if (!status)
+		return false;
 
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
 			int bid = tab_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
 			if (tab_distributor->removeRow(idxl.at(i).row()))
-				updateBatchQty(bid);
+				idmap[bid]=1;
 		}
 	}
 	status = tab_distributor->submitAll();
-	if (status && submitBatches)
+	if (status && submitBatches) {
+		QMap<int, int>::iterator it = idmap.begin();
+		while(it != idmap.end()) {
+			updateBatchQty((it++).key());
+		}
 		status &= tab_batch->submitAll();
-
+	}
 	return status;
 }
 

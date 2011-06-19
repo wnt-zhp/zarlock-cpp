@@ -115,12 +115,14 @@ void DistributorTableView::contextMenuEvent(QContextMenuEvent * event) {
 void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-		if ((*it).column() == DistributorTableModel::HBatchId) {
-			
-			db.removeDistributorRecord((*it).row());
-		}
-	}
+	db.removeDistributorRecord(l);
+
+// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+// 		if ((*it).column() == DistributorTableModel::HBatchId) {
+// 			
+// 			db.removeDistributorRecord((*it).row());
+// 		}
+// 	}
 }
 
 #include "DistributorTableView.moc"

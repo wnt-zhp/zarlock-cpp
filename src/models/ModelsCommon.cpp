@@ -32,7 +32,7 @@
 
 void ModelsCommon::inputErrorMsgBox(const QString& val) {
 	QMessageBox msgBox;
-	msgBox.setText(QObject::tr("Value \"%1\" which you try store in database is not valid.").arg(val));
+	msgBox.setText(QObject::tr("Value <b>%1</b> which you try store in database is not valid.").arg(val));
 	msgBox.setInformativeText(QObject::tr("Try to edit your data again, pay attention to its validity."));
 	msgBox.setIcon(QMessageBox::Critical);
 	msgBox.setStandardButtons(QMessageBox::Ok);
@@ -43,7 +43,7 @@ void ModelsCommon::inputErrorMsgBox(const QString& val) {
 bool ModelsCommon::productRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove %1 product with all associated batches and distributtions.", "", count).arg(count));
+	msgBox.setText(QObject::tr("You try to remove %n product(s) with all associated batches and distributtions.", NULL, count));
 
 	msgBox.setInformativeText(QObject::tr("All associated batches, distributions and meals will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
@@ -60,7 +60,7 @@ bool ModelsCommon::productRemoveConfirmation(int count, const QString & details)
 bool ModelsCommon::batchRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove %1 batch with all distributions.", "", count).arg(count));
+	msgBox.setText(QObject::tr("You try to remove %n batch(es) with all distributions.", NULL, count));
 
 	msgBox.setInformativeText(QObject::tr("All distributions and meals will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
@@ -77,7 +77,7 @@ bool ModelsCommon::batchRemoveConfirmation(int count, const QString & details) {
 bool ModelsCommon::distributeRemoveConfirmation(int count, const QString & details) {
 	QMessageBox msgBox;
 	msgBox.setIcon(QMessageBox::Question);
-	msgBox.setText(QObject::tr("You try to remove distributed %1 distribution.", "", count).arg(count));
+	msgBox.setText(QObject::tr("You try to remove %n distribution(s).", NULL, count));
 
 	msgBox.setInformativeText(QObject::tr("All distributions will be removed. Are you sure?"));
 	msgBox.setDetailedText(details);
