@@ -27,8 +27,9 @@
 
 #include "BatchTableModel.h"
 #include "DataParser.h"
+#include "Database.h"
 
-BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
+BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
 }
 
@@ -63,7 +64,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
 		return Qt::AlignCenter;
 
-	return QSqlRelationalTableModel::data(idx, role);
+	return QSqlTableModel::data(idx, role);
 }
 
 /**
@@ -96,7 +97,7 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 			if (index.column() == HBook) {
 				QDate date;
 				if (DataParser::date(value.toString(), date)) {
-					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
+					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
 				} else {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -114,7 +115,7 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 			if (index.column() == HStaQty) {
 				float used = this->index(index.row(), HUsedQty).data().toFloat();
 				float total = value.toFloat();
-				float free = total - used;
+// 				float free = total - used;
 				if (total < used) {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -122,7 +123,7 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 			}
 			break;
 	}
-    return QSqlRelationalTableModel::setData(index, value, role);
+    return QSqlTableModel::setData(index, value, role);
 }
 
 /**
@@ -145,7 +146,7 @@ bool BatchTableModel::select() {
 	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
 	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice"));
 
-    return QSqlRelationalTableModel::select();
+    return QSqlTableModel::select();
 }
 
 /**
@@ -159,13 +160,25 @@ bool BatchTableModel::select() {
 QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
 		case Qt::EditRole:
+// 			if (idx.column() == HProdId) {
+// 				PR(QSqlTableModel::data(idx, Qt::EditRole).toString().toStdString());
+// 				return QSqlTableModel::data(idx, Qt::EditRole).toString();
+// 			}
+			break;
+
 			if (idx.column() == HBook) {
-				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 			break;
 		case Qt::DisplayRole:
+			if (idx.column() == HProdId) {
+				QModelIndexList qmil = Database::Instance().CachedProducts()->match(Database::Instance().CachedProducts()->index(0, ProductsTableModel::HId), Qt::EditRole, idx.data(Qt::EditRole));
+				if (!qmil.isEmpty()) {
+					return Database::Instance().CachedProducts()->index(qmil.first().row(), ProductsTableModel::HName).data(Qt::DisplayRole);
+				}
+			}
 			if (idx.column() == HSpec) {
-				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % QSqlRelationalTableModel::data(idx, Qt::EditRole).toString());
+				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % QSqlTableModel::data(idx, Qt::EditRole).toString());
 			}
 
 			if (idx.column() == HPrice) {
@@ -195,12 +208,12 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			if (idx.column() == HBook) {
-				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 
 			if (idx.column() == HExpire) {
 				QDate date;
-				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlRelationalTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
+				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
 					return date.toString(Qt::DefaultLocaleShortDate);
 				} else {
 					if (role == Qt::BackgroundRole)
@@ -233,7 +246,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			break;
 	}
-	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
+	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
 /**
@@ -243,7 +256,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
  * @return QVariant
  **/
 QVariant BatchTableModel::raw(const QModelIndex & idx) const {
-	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
+	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
 /**

@@ -55,7 +55,6 @@ AddDistributorRecordWidget::~AddDistributorRecordWidget() {
 bool AddDistributorRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 	BatchTableModel * btm = db.CachedBatch();
-	DistributorTableModel * dtm = db.CachedDistributor();
 
 	int idx = combo_products->currentIndex();
 	int batch_id = btm->index(idx, 0).data().toInt();

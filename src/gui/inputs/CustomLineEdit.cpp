@@ -40,8 +40,6 @@ bool CustomLineEdit::ok() {
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
-	PR(this);
-	PR(edit_mode);
 	if (edit_mode) {
 		rawtext = QLineEdit::text();
 	} else {
@@ -133,10 +131,6 @@ void CustomLineEdit::doReturnPressed() {
 }
 
 void CustomLineEdit::doRefresh() {
-// 	edit_mode = true;
-// 	verify(rawtext);
-PR(this);
-// 	edit_mode = false;
 	focusInEvent(NULL);
 	focusOutEvent(NULL);
 }

@@ -117,13 +117,12 @@ void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
  **/
 void BatchTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-// 		PR((*it).column());
-// 		PR((*it).row());
-		if ((*it).column() == BatchTableModel::HSpec)
-			model()->removeRow((*it).row());
-	}
-	db.CachedBatch()->submitAll();
+
+	db.removeBatchRecord(l, true);
+// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+// 		if ((*it).column() == BatchTableModel::HSpec)
+// 			db.removeBatchRecord((*it).row());
+// 	}
 }
 
 #include "BatchTableView.moc"

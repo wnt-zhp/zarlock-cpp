@@ -16,10 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
+
 #include <QtGui/QMessageBox>
 #include <QtCore/QString>
+#include <QPushButton>
 
 #include "ModelsCommon.h"
+#include <QLayout>
+#include <QCheckBox>
+#include <QAction>
+#include <Database.h>
+
+#include <QStringBuilder>
 
 void ModelsCommon::inputErrorMsgBox(const QString& val) {
 	QMessageBox msgBox;
@@ -30,3 +39,103 @@ void ModelsCommon::inputErrorMsgBox(const QString& val) {
 	msgBox.setDefaultButton(QMessageBox::Ok);
 	msgBox.exec();
 }
+
+bool ModelsCommon::productRemoveConfirmation(const QString & prod) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove product '%1'").arg(prod));
+
+	msgBox.setInformativeText(QObject::tr("Are you sure?"));
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+
+bool ModelsCommon::productRemoveConfirmation(const QString & prod, const QString & details) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove product '%1'").arg(prod));
+
+	msgBox.setInformativeText(QObject::tr("It has associated batches. All associated batches will be removed. Are you sure?"));
+	msgBox.setDetailedText(details);
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+
+bool ModelsCommon::batchRemoveConfirmation(const QString & batch) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove batch '%1'").arg(batch));
+
+	msgBox.setInformativeText(QObject::tr("Are you sure?"));
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+
+bool ModelsCommon::batchRemoveConfirmation(const QString & batch, const QString & details) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove batch '%1'").arg(batch));
+
+	msgBox.setInformativeText(QObject::tr("It has associated distributed products and meals. All distributions and meals will be removed. Are you sure?"));
+	msgBox.setDetailedText(details);
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+
+bool ModelsCommon::distributeRemoveConfirmation(const QString & batch) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove distributed batch '%1'").arg(batch));
+
+	msgBox.setInformativeText(QObject::tr("Are you sure?"));
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+
+bool ModelsCommon::distributeRemoveConfirmation(const QString & batch, const QString & details) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove distributed batch '%1'").arg(batch));
+
+	msgBox.setInformativeText(QObject::tr("It has associated distributed products and meals. All distributions and meals will be removed. Are you sure?"));
+	msgBox.setDetailedText(details);
+
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+
+	return false;
+}
+#include "ModelsCommon.moc"

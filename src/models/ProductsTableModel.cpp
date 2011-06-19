@@ -47,10 +47,10 @@ ProductsTableModel::~ProductsTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant ProductsTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole || role == Qt::StatusTipRole)
+	if (role == Qt::EditRole)
 		return raw(idx);
 
-	if (role == Qt::DisplayRole)
+	if (role == Qt::DisplayRole or role == Qt::StatusTipRole)
 		return display(idx);
 
 	return QSqlTableModel::data(idx, role);
@@ -130,7 +130,7 @@ QVariant ProductsTableModel::display(const QModelIndex & idx, const int role) co
 // 		QDate data = QDate::currentDate().addDays(idx.data(Qt::EditRole).toInt());
 // 		return data;
 // 	}
-	return QSqlTableModel::data(idx, Qt::DisplayRole).toString();
+	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
 /**
@@ -140,7 +140,7 @@ QVariant ProductsTableModel::display(const QModelIndex & idx, const int role) co
  * @return QVariant
  **/
 QVariant ProductsTableModel::raw(const QModelIndex & idx) const {
-	return QSqlTableModel::data(idx, Qt::DisplayRole).toString();
+	return QSqlTableModel::data(idx, Qt::EditRole);
 }
 
 /**

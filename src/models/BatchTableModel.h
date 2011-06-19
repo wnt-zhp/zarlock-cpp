@@ -19,16 +19,16 @@
 #ifndef BATCHTABLEMODEL_H
 #define BATCHTABLEMODEL_H
 
-#include <QtSql/QSqlRelationalTableModel>
+#include <QtSql/QSqlTableModel>
 #include "ModelsCommon.h"
 
 /**
- * @brief Klasa dziedziczy po QSqlRelationalTableModel i odpowiada za
+ * @brief Klasa dziedziczy po QSqlTableModel i odpowiada za
  * przechowywanie danych z tabeli 'batch'. Ta klasa jest przykładem, jak można
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class BatchTableModel : public QSqlRelationalTableModel, public ModelsCommon {
+class BatchTableModel : public QSqlTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	BatchTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());

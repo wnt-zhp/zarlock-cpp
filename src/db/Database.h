@@ -42,7 +42,7 @@ private:
 	Database(const Database &);
 
 public:
-	bool open_database(const QString & dbname, bool autoupgrade = true);
+	bool open_database(const QString& dbname, bool autoupgrade = true);
 	bool close_database();
 	void save_database();
 
@@ -55,17 +55,23 @@ public:
 	void writeCampSettings();
 	void readCampSettings();
 
-// 	virtual bool addProductsRecord();
-// 	virtual bool updateProductsRecord();
-// 	virtual bool removeProductsRecord(int recordid);
+	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry);
+	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry);
+// 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
+// 	virtual bool removeProductsRecord(const QModelIndex & idx, bool askForConfirmation = true);
+	virtual bool removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
 	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
 	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
-	virtual bool removeBatchRecord(int recordid);
-	
-	virtual bool addDistributorRecord(int, float, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
-	virtual bool updateDistributorRecord(int, int, float, const QString &, const QString &, const QString &, const QString &, DistributorTableModel::Reasons);
-	virtual bool removeDistributorRecord(int recordid);
+// 	virtual bool removeBatchRecord(int recordid, bool askForConfirmation = true);
+// 	virtual bool removeBatchRecord(const QModelIndex & idx, bool askForConfirmation = true);
+	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
+
+	virtual bool addDistributorRecord(int, float, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
+	virtual bool updateDistributorRecord(int, int, float, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
+	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
+// 	virtual bool removeDistributorRecord(const QModelIndex & idx, bool askForConfirmation = true, bool submitBatches = true);
+	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);
 	
 	inline ProductsTableModel * CachedProducts() { return tab_products; }
 	inline BatchTableModel * CachedBatch() { return tab_batch; }
@@ -74,8 +80,8 @@ public:
 	inline CampProperties * cs() { return camp; };
 
 private:
-	bool openDBFile(const QString & dbname, bool createifnotexists = false);
-	bool createDBFile(const QString & dbname, const QString & dbfilenoext);
+	bool openDBFile(const QString& dbname, bool createifnotexists = false);
+	bool createDBFile(const QString& dbname, const QString& dbfilenoext);
 
 signals:
 	void databaseDirty();

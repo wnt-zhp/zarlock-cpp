@@ -88,8 +88,6 @@ void MealFoodList::insertEmptySlot() {
 }
 
 void MealFoodList::removeEmptySlot() {
-	int num = proxy->rowCount();
-
 	this->clear();
 	for (int i = 0; i < proxy->rowCount()-1; ++i) {
 		if (((MealFoodListItemDataWidget *)itemWidget(item(i)))->isEmpty())
@@ -97,7 +95,7 @@ void MealFoodList::removeEmptySlot() {
 	}
 }
 
-void MealFoodList::removeItem(int row) {
+void MealFoodList::removeItem(int /*row*/) {
 // 	Database::Instance().removeDistributorRecord(row);
 	removeEmptySlot();
 // 	populateModel();

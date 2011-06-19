@@ -19,16 +19,16 @@
 #ifndef DISTRIBUTORTABLEMODEL_H
 #define DISTRIBUTORTABLEMODEL_H
 
-#include <QtSql/QSqlRelationalTableModel>
+#include <QtSql/QSqlTableModel>
 #include "ModelsCommon.h"
 
 /**
- * @brief Klasa dziedziczy po QSqlRelationalTableModel i odpowiada za
+ * @brief Klasa dziedziczy po QSqlTableModel i odpowiada za
  * przechowywanie danych z tabeli 'batch'. Ta klasa jest przykładem, jak można
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class DistributorTableModel : public QSqlRelationalTableModel, public ModelsCommon {
+class DistributorTableModel : public QSqlTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());

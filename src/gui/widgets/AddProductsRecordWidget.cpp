@@ -50,29 +50,11 @@ void AddProductsRecordWidget::setVisible(bool visible) {
 }
 
 void AddProductsRecordWidget::insert_record() {
-	Database & db = Database::Instance();
-	QSqlTableModel * tm = db.CachedProducts();
+// 	INFO PR(edit_name->text().toStdString());
+// 	INFO PR(edit_unit->text().toStdString());
+// 	INFO PR(edit_expiry->text().toStdString());
 
-	INFO PR(edit_name->text().toStdString());
-	INFO PR(edit_unit->text().toStdString());
-	INFO PR(edit_expiry->text().toStdString());
-
-	int row = tm->rowCount();
-
-	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
-		<< row << ","
-		<< edit_name->text().toStdString() << ","
-		<< edit_unit->text().toStdString() << ","
-		<< edit_expiry->text().toStdString() << " );" << std::endl;
-
-	tm->insertRows(row, 1);
-	tm->setData(tm->index(row, 1), edit_name->text());
-	tm->setData(tm->index(row, 2), edit_unit->text());
-	tm->setData(tm->index(row, 3), edit_expiry->text());
- 	if (!tm->submitAll()) {
-		std::cerr << "QUERY Error!\n";
-	}
-
+	Database::Instance().addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text());
 	clear_form();
 }
 

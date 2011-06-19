@@ -42,7 +42,13 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	pmenu_add.addAction(addRec);
 
 	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(filterRecords(QModelIndex)));
-	this->setEditTriggers(0);
+// 	this->setEditTriggers(0);
+
+// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+// 	horizontalHeader()->setMinimumSectionSize(0);
+
+	horizontalHeader()->setStretchLastSection(true);
+	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 /**
@@ -69,16 +75,11 @@ void ProductsTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 	hideColumn(ProductsTableModel::HId);
-
-// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-	horizontalHeader()->setStretchLastSection(true);
-// 	horizontalHeader()->setMinimumSectionSize(0);
-	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 void ProductsTableView::filterRecords(const QModelIndex &) {
 	QModelIndexList l = selectedIndexes();
-// 	PR(l.size());
+
 	QString filter, q;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
 		if (it->column() == ProductsTableModel::HName) {
@@ -121,13 +122,12 @@ void ProductsTableView::contextMenuEvent(QContextMenuEvent * event) {
  **/
 void ProductsTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
-// 		PR((*it).column());
-// 		PR((*it).row());
-		if ((*it).column() == ProductsTableModel::HName)
-			model()->removeRow((*it).row());
-	}
-	db.CachedProducts()->submitAll();
+
+	db.removeProductsRecord(l);
+// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+// 		if ((*it).column() == ProductsTableModel::HName)
+// 				db.removeProductsRecord((*it).row());
+// 	}
 }
 
 #include "ProductsTableView.moc"

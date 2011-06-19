@@ -61,10 +61,6 @@ void AddMealRecordWidget::showW(QTreeWidgetItem * item, int /*column*/) {
 }
 
 bool AddMealRecordWidget::insert_record() {
-	Database & db = Database::Instance();
-	BatchTableModel * btm = db.CachedBatch();
-	DistributorTableModel * dtm = db.CachedDistributor();
-
 	QMessageBox::warning(this, tr("Deleting meals"), tr("When you remove meal from the list all distributor records associated to this meal will be removed as w ell."));
 	QString qadd("INSERT INTO meal VALUES (NULL, '%1', %2, '%3', %4, %5);");
 	QString qdel("DELETE FROM meal WHERE id=%1;");

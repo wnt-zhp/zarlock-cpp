@@ -43,8 +43,8 @@ private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
-	QString dateref;
 	int mealkey;
+	QString dateref;
 };
 
 #endif // MEALTABLEMODELPROXY_H

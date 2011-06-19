@@ -35,8 +35,7 @@
  * @param parent rodzic
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
-DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): QSqlRelationalTableModel(parent, db) {
-	
+DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged(QModelIndex,QModelIndex)));
 }
 
@@ -67,7 +66,7 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
 	if (role == Qt::TextAlignmentRole and (col == HDistDate))
 		return Qt::AlignCenter;
 
-	return QSqlRelationalTableModel::data(idx, role);
+	return QSqlTableModel::data(idx, role);
 }
 
 /**
@@ -84,7 +83,7 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 			if (index.column() == HDistDate) {
 				QDate date;
 				if (DataParser::date(value.toString(), date)) {
-					return QSqlRelationalTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
+					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
 				} else {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -121,11 +120,11 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
-				return QSqlRelationalTableModel::setData(index, value, role);
+				return QSqlTableModel::setData(index, value, role);
 			}
 			break;
 	}
-    return QSqlRelationalTableModel::setData(index, value, role);
+    return QSqlTableModel::setData(index, value, role);
 }
 
 /**
@@ -144,7 +143,7 @@ bool DistributorTableModel::select() {
 	setHeaderData(HReason2,	Qt::Horizontal, QObject::tr("Sub reason"));
 	setHeaderData(HReason3,	Qt::Horizontal, QObject::tr("Extra reason"));
 
-    return QSqlRelationalTableModel::select();
+    return QSqlTableModel::select();
 }
 
 /**
@@ -159,12 +158,12 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 	switch (role) {
 		case Qt::EditRole:
 			if (idx.column() == HDistDate) {
-				return QSqlRelationalTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
-				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, 0), Qt::EditRole, idx.data(Qt::EditRole));
+				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(Qt::EditRole));
 				if (!qmil.isEmpty()) {
 					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
 				}
@@ -181,7 +180,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 		case Qt::BackgroundRole:
 			break;
 	}
-	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
+	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
 /**
@@ -192,9 +191,9 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
  **/
 QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
 // 	if (idx.column() == HSpec) {
-// 		return QSqlRelationalTableModel::data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString();
+// 		return QSqlTableModel::data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString();
 // 	}
-	return QSqlRelationalTableModel::data(idx, Qt::DisplayRole);
+	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
 /**
