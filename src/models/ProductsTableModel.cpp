@@ -53,6 +53,12 @@ QVariant ProductsTableModel::data(const QModelIndex & idx, int role) const {
 	if (role == Qt::DisplayRole or role == Qt::StatusTipRole)
 		return display(idx);
 
+	int col = idx.column();
+	if (role == Qt::TextAlignmentRole and (col == HExpire))
+		return Qt::AlignCenter;
+	if (role == Qt::TextAlignmentRole and (col == HUnit))
+		return Qt::AlignRight;
+
 	return QSqlTableModel::data(idx, role);
 }
 

@@ -27,6 +27,7 @@
 #include "AddProductsRecordWidget.h"
 
 #include <QCompleter>
+#include <BatchTableModelProxyP.h>
 
 class TabProductsWidget : public QWidget, public Ui::TabProductsWidget {
 Q_OBJECT
@@ -41,13 +42,16 @@ private slots:
 	void set_filter(const QString & str);
 	void add_prod_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
+	void doFilterBatches(const QModelIndex & idx);
 
 private:
 	Database & db;
+	BatchTableModelProxyP * model_batch_proxyP;
 	ProductsTableModel * model_prod;
-	QSqlQueryModel * model_batchbyid;
+// 	QSqlQueryModel * model_batchbyid;
 
 	AddProductsRecordWidget * aprw;
+	QVariant pid;
 };
 
 #endif // TABPRODUCTSWIDGET_H

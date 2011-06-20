@@ -22,7 +22,7 @@
 #include "DataParser.h"
 
 TabProductsWidget::TabProductsWidget(QWidget *) :
-	Ui::TabProductsWidget(), db(Database::Instance()), model_batchbyid(NULL) {
+	Ui::TabProductsWidget(), db(Database::Instance()), model_batch_proxyP(NULL) {
 
 	setupUi(this);
 
@@ -34,13 +34,15 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
 	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(add_prod_record(bool)));
 	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
-	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
+// 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
-	connect(&db, SIGNAL(dbSaved()), aprw, SLOT(update_model()));
+// TODO check this
+// 	connect(&db, SIGNAL(dbSaved()), aprw, SLOT(update_model()));
+
 // 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
+	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
 
-	table_products->setEditTriggers(QAbstractItemView::DoubleClicked);
-// 	table_products->setAlternatingRowColors(true);
+	table_products->setAlternatingRowColors(true);
 }
 
 TabProductsWidget::~TabProductsWidget() {
@@ -71,12 +73,13 @@ void TabProductsWidget::activateUi(bool activate) {
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
 			aprw->update_model();
 		}
-		if (model_batchbyid != NULL) delete model_batchbyid;
-		if ((model_batchbyid = new QSqlQueryModel())) {
-// 			model_batchbyid->setQuery("select \"spec\", \"used_qty\" from batch");
-			table_batchbyid->setModel(model_batchbyid);
-			table_batchbyid->show();
-		}
+
+		// batch proxy
+		model_batch_proxyP = new BatchTableModelProxyP(&pid);
+		model_batch_proxyP->setSourceModel(db.CachedBatch());
+		model_batch_proxyP->setDynamicSortFilter(true);
+		table_batchbyid->setModel(model_batch_proxyP);
+		table_batchbyid->hideColumn(BatchTableModel::HProdId);
 	}
 }
 
@@ -98,6 +101,13 @@ void TabProductsWidget::edit_record(const QModelIndex& idx) {
 	} else {
 		table_products->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	}
+}
+
+void TabProductsWidget::doFilterBatches(const QModelIndex& idx) {
+	pid = model_prod->index(idx.row(), ProductsTableModel::HId).data();
+	model_batch_proxyP->invalidate();
+	table_batchbyid->setModel(model_batch_proxyP);
+	table_batchbyid->hideColumn(BatchTableModel::HProdId);
 }
 
 #include "TabProductsWidget.moc"

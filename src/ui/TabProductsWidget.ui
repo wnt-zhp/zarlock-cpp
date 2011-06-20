@@ -6,60 +6,65 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>786</width>
-    <height>483</height>
+    <width>880</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Products Tab</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" rowspan="2">
-    <layout class="QVBoxLayout" name="ProductsLayout">
-     <item>
-      <layout class="QHBoxLayout" name="FilterLayout" stretch="0,0">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLineEdit" name="edit_filter_prod">
-         <property name="placeholderText">
-          <string>filter</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="FilterLayout" stretch="0,0">
+         <item>
+          <widget class="QLineEdit" name="edit_filter_prod">
+           <property name="placeholderText">
+            <string>filter</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="button_add_prod">
+           <property name="text">
+            <string>A&amp;dd products</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QToolButton" name="button_add_prod">
-         <property name="text">
-          <string>A&amp;dd products</string>
+        <widget class="ProductsTableView" name="table_products">
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
-         <property name="checkable">
+         <property name="sortingEnabled">
           <bool>true</bool>
          </property>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
         </widget>
        </item>
+       <item>
+        <widget class="QWidget" name="widget_add_products" native="true"/>
+       </item>
       </layout>
-     </item>
-     <item>
-      <widget class="ProductsTableView" name="table_products">
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>20</number>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="widget_add_products" native="true"/>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="2" rowspan="2">
-    <widget class="QTableView" name="table_batchbyid">
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
+     </widget>
+     <widget class="BatchTableView" name="table_batchbyid">
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -69,6 +74,11 @@
    <class>ProductsTableView</class>
    <extends>QTableView</extends>
    <header>ProductsTableView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BatchTableView</class>
+   <extends>QTableView</extends>
+   <header>BatchTableView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

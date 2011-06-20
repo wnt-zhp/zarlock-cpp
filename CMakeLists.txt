@@ -102,6 +102,7 @@ set(zarlok_src_models_SRCS
 									src/models/ProductsTableModel.cpp
 									src/models/DistributorTableModel.cpp
 									src/models/BatchTableModelProxy.cpp
+									src/models/BatchTableModelProxyP.cpp
 									src/models/MealTableModelProxy.cpp
 )
 set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
