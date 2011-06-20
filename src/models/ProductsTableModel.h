@@ -39,7 +39,7 @@ public:
 
     virtual bool select();
 
-	enum Headers {HId = 0, HName, HUnit, HExpire };
+	enum Headers {HId = 0, HName, HUnit, HExpire, HNotes };
 
 public slots:
 	void filterDB(const QString &);

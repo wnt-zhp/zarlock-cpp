@@ -55,14 +55,14 @@ public:
 	void writeCampSettings();
 	void readCampSettings();
 
-	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry);
-	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry);
+	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
+	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 // 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
 // 	virtual bool removeProductsRecord(const QModelIndex & idx, bool askForConfirmation = true);
 	virtual bool removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
-	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
-	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc);
+	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
+	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
 // 	virtual bool removeBatchRecord(int recordid, bool askForConfirmation = true);
 // 	virtual bool removeBatchRecord(const QModelIndex & idx, bool askForConfirmation = true);
 	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);

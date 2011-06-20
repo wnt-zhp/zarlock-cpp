@@ -54,7 +54,7 @@ void AddProductsRecordWidget::insert_record() {
 // 	INFO PR(edit_unit->text().toStdString());
 // 	INFO PR(edit_expiry->text().toStdString());
 
-	Database::Instance().addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text());
+	Database::Instance().addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), "");
 	clear_form();
 }
 

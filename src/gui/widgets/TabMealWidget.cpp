@@ -48,8 +48,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	setupUi(this);
 
-	groupBox->setTitle(tr("Select meal to activate this section"));
-	groupBox->setEnabled(false);
+	group_meals->setTitle(tr("Select meal to activate this section"));
+	group_meals->setEnabled(false);
 
 // 	QPushButton * b = new QPushButton("test");
 // // 	tab_meals->printTabRect();
@@ -66,9 +66,9 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 // 	tab_meals->addTab(b, "tescik");
 
 
-// 	groupBox->layout()->addWidget(tb);
+// 	group_meals->layout()->addWidget(tb);
 
-	groupBox->setEnabled(true);
+	group_meals->setEnabled(true);
 	amrw = new AddMealRecordWidget(bd, ed);
 	afrw = new AddFoodRecordWidget();
 
@@ -181,7 +181,7 @@ void TabMealWidget::edit_record(const QModelIndex& /*idx*/) {
 void TabMealWidget::updateMealList(QListWidgetItem * item) {
 	if (item and item->data(Qt::DisplayRole).isValid()) {
 		tab_meals->setDateRef(item->data(Qt::UserRole).toString());
-		groupBox->setTitle(item->text());
+		group_meals->setTitle(item->text());
 	} else {
 		tab_meals->setDateRef("");
 	}

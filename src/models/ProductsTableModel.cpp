@@ -95,10 +95,11 @@ bool ProductsTableModel::setData(const QModelIndex& index, const QVariant& value
  * @return bool stan otwarcia tabeli
  **/
 bool ProductsTableModel::select() {
-	setHeaderData(HId, Qt::Horizontal, QObject::tr("ID"));
-	setHeaderData(HName, Qt::Horizontal, QObject::tr("Name"));
-	setHeaderData(HUnit, Qt::Horizontal, QObject::tr("Unit"));
-	setHeaderData(HExpire, Qt::Horizontal, QObject::tr("Expire date (template)"));
+	setHeaderData(HId,		Qt::Horizontal,		tr("ID"));
+	setHeaderData(HName,	Qt::Horizontal,		tr("Name"));
+	setHeaderData(HUnit,	Qt::Horizontal,		tr("Unit"));
+	setHeaderData(HExpire,	Qt::Horizontal,		tr("Expire date (template)"));
+	setHeaderData(HNotes,	Qt::Horizontal,		tr("Notes"));
 
     return QSqlTableModel::select();
 }

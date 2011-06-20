@@ -502,7 +502,7 @@ bool Database::doDBUpgrade(unsigned int & version) {
 	}
 }
 
-bool Database::addProductsRecord(const QString& name, const QString& unit, const QString& expiry) {
+bool Database::addProductsRecord(const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
 	bool status = true;
 
 // 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
@@ -515,6 +515,7 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 	status &= tab_products->setData(tab_products->index(row, 1), name);
 	status &= tab_products->setData(tab_products->index(row, 2), unit);
 	status &= tab_products->setData(tab_products->index(row, 3), expiry);
+	status &= tab_products->setData(tab_products->index(row, 3), notes);
 
 	if (!status) {
 		tab_products->revertAll();
@@ -523,7 +524,7 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 		return tab_products->submitAll();
 }
 
-bool Database::updateProductsRecord(int pid, const QString& name, const QString& unit, const QString& expiry) {
+bool Database::updateProductsRecord(int pid, const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
 	bool status = true;
 
 // 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
@@ -535,6 +536,7 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 	status &= tab_products->setData(tab_products->index(pid, 1), name);
 	status &= tab_products->setData(tab_products->index(pid, 2), unit);
 	status &= tab_products->setData(tab_products->index(pid, 3), expiry);
+	status &= tab_products->setData(tab_products->index(pid, 3), notes);
 
 	if (!status) {
 		tab_products->revertAll();
@@ -578,7 +580,7 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation) {
 	bool status = false;
 	QString details;
-	QModelIndexList bat;
+// 	QModelIndexList bat;
 
 	int counter = 0;
 	if (askForConfirmation) {
@@ -592,7 +594,7 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 				for (int i = 0; i < batches.count(); ++i) {
 					details = details % "  \\--  " % tab_batch->data(tab_batch->index(batches.at(i).row(), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
 				}
-				bat.append(batches);
+// 				bat.append(batches);
 			}
 		}
 		status = tab_products->productRemoveConfirmation(counter, details);
@@ -601,7 +603,7 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 	if (askForConfirmation & !status )
 		return false;
 
-	removeBatchRecord(bat);
+// 	removeBatchRecord(bat, false);
 
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == ProductsTableModel::HName) {
@@ -612,7 +614,10 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 		}
 	}
 	
-	return tab_products->submitAll();
+	status = tab_products->submitAll();
+	rebuild_models();
+	
+	return status;
 }
 
 // bool Database::removeProductsRecord(const QModelIndex & idx, bool askForConfirmation) {
@@ -623,7 +628,7 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 // // 	tab_batch->submitAll();
 // }
 
-bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc) {
+bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
 	
 // 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
@@ -653,7 +658,7 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HInvoice), invoice);
 	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HBook), book);
 	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HRegDate), reg);
-	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HDesc), desc);
+	status &= tab_batch->setData(tab_batch->index(row, BatchTableModel::HNotes), notes);
 
 	if (!status) {
 		tab_batch->revertAll();
@@ -664,7 +669,7 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 // 	update_model();	
 }
 
-bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& desc) {
+bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
 	
 // 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
@@ -692,7 +697,7 @@ bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QS
 	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HInvoice), invoice);
 	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HBook), book);
 	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HRegDate), reg);
-	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HDesc), desc);
+	status &= tab_batch->setData(tab_batch->index(bid, BatchTableModel::HNotes), notes);
 
 	if (!status) {
 		tab_batch->revertAll();
@@ -731,13 +736,13 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == BatchTableModel::HProdId) {
-			QVariant bid = tab_batch->data(tab_batch->index(idxl.at(i).row(), BatchTableModel::HId), Qt::EditRole);
-			QModelIndexList qmild = tab_distributor->match(tab_distributor->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bid, -1);
-			if (removeDistributorRecord(qmild, false, false))
+// 			QVariant bid = tab_batch->data(tab_batch->index(idxl.at(i).row(), BatchTableModel::HId), Qt::EditRole);
+// 			QModelIndexList qmild = tab_distributor->match(tab_distributor->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bid, -1);
+// 			if (removeDistributorRecord(qmild, false, false))
 				status = tab_batch->removeRow(idxl.at(i).row());
 		}
 	}
-	return (status && tab_batch->submitAll());
+	return (status && tab_batch->submitAll() && rebuild_models());
 }
 
 // bool Database::removeBatchRecord(const QModelIndex & idx, bool askForConfirmation) {

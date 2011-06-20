@@ -13,11 +13,11 @@
   <property name="windowTitle">
    <string>Meal Tab</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
-   <item row="0" column="1" rowspan="3">
-    <widget class="QGroupBox" name="groupBox">
+  <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0" columnstretch="0,0">
+   <item row="2" column="1">
+    <widget class="QGroupBox" name="group_meals">
      <property name="title">
-      <string>GroupBox</string>
+      <string>@Day</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
@@ -26,15 +26,64 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="4" column="0">
     <widget class="QPushButton" name="action_addday">
      <property name="text">
       <string>Add</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="2">
+   <item row="0" column="0" rowspan="3">
     <widget class="QListWidget" name="list_meal"/>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_data">
+       <property name="text">
+        <string>@Data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="tools">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_scouts">
+       <property name="text">
+        <string>Scouts</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spin_scouts"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_leaders">
+       <property name="text">
+        <string>Leaders</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spin_leadres"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="calculate">
+       <property name="text">
+        <string>Calculate</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -46,6 +95,15 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>list_meal</tabstop>
+  <tabstop>action_addday</tabstop>
+  <tabstop>spin_scouts</tabstop>
+  <tabstop>spin_leadres</tabstop>
+  <tabstop>calculate</tabstop>
+  <tabstop>tools</tabstop>
+  <tabstop>tab_meals</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

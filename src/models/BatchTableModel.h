@@ -47,7 +47,7 @@ private:
 	QVariant raw(const QModelIndex & idx) const;
 
 public:
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HDesc, HInvoice };
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HNotes, HInvoice };
 };
 
 #endif // BATCHTABLEMODEL_H

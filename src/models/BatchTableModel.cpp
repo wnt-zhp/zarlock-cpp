@@ -133,18 +133,18 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
  * @return bool stan otwarcia tabeli
  **/
 bool BatchTableModel::select() {
-	setHeaderData(HId,		Qt::Horizontal, QObject::tr("ID"));
-	setHeaderData(HProdId,	Qt::Horizontal, QObject::tr("Product"));
-	setHeaderData(HSpec,	Qt::Horizontal, QObject::tr("Specificator"));
-	setHeaderData(HPrice,	Qt::Horizontal, QObject::tr("Price"));
-	setHeaderData(HUnit,	Qt::Horizontal, QObject::tr("Unit"));
-	setHeaderData(HStaQty,	Qt::Horizontal, QObject::tr("Quantity"));
-	setHeaderData(HBook,	Qt::Horizontal, QObject::tr("Booking"));
-	setHeaderData(HExpire,	Qt::Horizontal, QObject::tr("Expiry"));
-	setHeaderData(HUsedQty,	Qt::Horizontal, QObject::tr("Used"));
-	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
-	setHeaderData(HDesc,	Qt::Horizontal, QObject::tr("Desc"));
-	setHeaderData(HInvoice,	Qt::Horizontal, QObject::tr("Invoice"));
+	setHeaderData(HId,		Qt::Horizontal, tr("ID"));
+	setHeaderData(HProdId,	Qt::Horizontal, tr("Product"));
+	setHeaderData(HSpec,	Qt::Horizontal, tr("Specificator"));
+	setHeaderData(HPrice,	Qt::Horizontal, tr("Price"));
+	setHeaderData(HUnit,	Qt::Horizontal, tr("Unit"));
+	setHeaderData(HStaQty,	Qt::Horizontal, tr("Quantity"));
+	setHeaderData(HBook,	Qt::Horizontal, tr("Booking"));
+	setHeaderData(HExpire,	Qt::Horizontal, tr("Expiry"));
+	setHeaderData(HUsedQty,	Qt::Horizontal, tr("Used"));
+	setHeaderData(HRegDate,	Qt::Horizontal, tr("Registered"));
+	setHeaderData(HNotes,	Qt::Horizontal, tr("Notes"));
+	setHeaderData(HInvoice,	Qt::Horizontal, tr("Invoice"));
 
     return QSqlTableModel::select();
 }

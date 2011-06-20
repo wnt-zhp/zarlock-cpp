@@ -75,21 +75,18 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
 // 	msgb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 // 	msgb.setDefaultButton(QMessageBox::No);
 
-	foodlist[0] = new MealFoodList(this);
-	foodlist[1] = new MealFoodList(this);
-	foodlist[2] = new MealFoodList(this);
-	foodlist[3] = new MealFoodList(this);
-	foodlist[4] = new MealFoodList(this);
-	foodlist[5] = new MealFoodList(this);
+	for (int i = 0; i < meals; ++i)
+		foodlist[i] = new MealFoodList(this);
 
 	this->addTab(foodlist[0], tr("Breakfast"));
 	this->addTab(foodlist[1], tr("2nd Breakfast"));
 	this->addTab(foodlist[2], tr("Lunch"));
-	this->addTab(foodlist[3], tr("Diner"));
-	this->addTab(foodlist[4], tr("Other 1"));
-	this->addTab(foodlist[5], tr("Other 2"));
+	this->addTab(foodlist[3], tr("Tea"));
+	this->addTab(foodlist[4], tr("Diner"));
+	this->addTab(foodlist[5], tr("Other 1"));
+	this->addTab(foodlist[6], tr("Other 2"));
 
-	for (int i = 0; i < 6; ++i) {
+	for (int i = 0; i < meals; ++i) {
 		proxy[i] = new MealTableModelProxy();
 		proxy[i]->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
 	}
@@ -101,7 +98,7 @@ MealTabWidget::~MealTabWidget() {
 }
 
 void MealTabWidget::setDateRef(const QString& ref) {
-	for (int i = 0; i < 6; ++i) {
+	for (int i = 0; i < meals; ++i) {
 		foodlist[i]->setProxyModel(proxy[i]);
 		proxy[i]->setRef(ref);
 		proxy[i]->setKey(i);

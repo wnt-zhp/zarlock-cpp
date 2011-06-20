@@ -134,14 +134,14 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
  * @return bool stan otwarcia tabeli
  **/
 bool DistributorTableModel::select() {
-	setHeaderData(HId,		Qt::Horizontal, QObject::tr("ID"));
-	setHeaderData(HBatchId,	Qt::Horizontal, QObject::tr("Batch"));
-	setHeaderData(HQty,		Qt::Horizontal, QObject::tr("Quantity"));
-	setHeaderData(HDistDate,Qt::Horizontal, QObject::tr("Distributing date"));
-	setHeaderData(HRegDate,	Qt::Horizontal, QObject::tr("Registered"));
-	setHeaderData(HReason,	Qt::Horizontal, QObject::tr("Main reason"));
-	setHeaderData(HReason2,	Qt::Horizontal, QObject::tr("Sub reason"));
-	setHeaderData(HReason3,	Qt::Horizontal, QObject::tr("Extra reason"));
+	setHeaderData(HId,		Qt::Horizontal, tr("ID"));
+	setHeaderData(HBatchId,	Qt::Horizontal, tr("Batch"));
+	setHeaderData(HQty,		Qt::Horizontal, tr("Quantity"));
+	setHeaderData(HDistDate,Qt::Horizontal, tr("Distributing date"));
+	setHeaderData(HRegDate,	Qt::Horizontal, tr("Registered"));
+	setHeaderData(HReason,	Qt::Horizontal, tr("Main reason"));
+	setHeaderData(HReason2,	Qt::Horizontal, tr("Sub reason"));
+	setHeaderData(HReason3,	Qt::Horizontal, tr("Distribution type"));
 
     return QSqlTableModel::select();
 }

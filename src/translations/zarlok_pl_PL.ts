@@ -358,6 +358,66 @@
 <context>
     <name>BatchTableModel</name>
     <message>
+        <location filename="../models/BatchTableModel.cpp" line="136"/>
+        <source>ID</source>
+        <translation>Lp</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="137"/>
+        <source>Product</source>
+        <translation>Produkt</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="138"/>
+        <source>Specificator</source>
+        <translation>Specyfikacja</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="139"/>
+        <source>Price</source>
+        <translation>Cena</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="140"/>
+        <source>Unit</source>
+        <translation>Jednostka</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="141"/>
+        <source>Quantity</source>
+        <translation>Ilość</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="142"/>
+        <source>Booking</source>
+        <translation>Wpis na stan</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="143"/>
+        <source>Expiry</source>
+        <translation>Data ważności</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="144"/>
+        <source>Used</source>
+        <translation>Wydane</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="145"/>
+        <source>Registered</source>
+        <translation>Data księgowania</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="146"/>
+        <source>Notes</source>
+        <translation>Notatka</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="147"/>
+        <source>Invoice</source>
+        <translation>Faktura</translation>
+    </message>
+    <message>
         <location filename="../models/BatchTableModel.cpp" line="184"/>
         <location filename="../models/BatchTableModel.cpp" line="196"/>
         <location filename="../models/BatchTableModel.cpp" line="212"/>
@@ -616,6 +676,49 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
+    <name>DistributorTableModel</name>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="137"/>
+        <source>ID</source>
+        <translation>Lp</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="138"/>
+        <source>Batch</source>
+        <translation>Partia</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="139"/>
+        <source>Quantity</source>
+        <translation>Ilość</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="140"/>
+        <source>Distributing date</source>
+        <translation>Data wydania</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="141"/>
+        <source>Registered</source>
+        <translation>Zaindeksowane</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="142"/>
+        <source>Main reason</source>
+        <translation>Powód wydania</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="143"/>
+        <source>Sub reason</source>
+        <translation>Opis dodatkowy</translation>
+    </message>
+    <message>
+        <location filename="../models/DistributorTableModel.cpp" line="144"/>
+        <source>Distribution type</source>
+        <translation>Rodzaj wydania</translation>
+    </message>
+</context>
+<context>
     <name>DistributorTableView</name>
     <message>
         <location filename="../gui/views/DistributorTableView.cpp" line="33"/>
@@ -667,32 +770,37 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealTabWidget</name>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="85"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="81"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="86"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="82"/>
         <source>2nd Breakfast</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="87"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="83"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="88"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="84"/>
+        <source>Tea</source>
+        <translation>Podwieczorek</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="85"/>
         <source>Diner</source>
         <translation>Kolacja</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="89"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="86"/>
         <source>Other 1</source>
         <translation>Inny posiłek</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="90"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="87"/>
         <source>Other 2</source>
         <translation>Inny posiłek</translation>
     </message>
@@ -703,6 +811,34 @@ Wciśnij Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/PriceInput.cpp" line="25"/>
         <source>date</source>
         <translation>data</translation>
+    </message>
+</context>
+<context>
+    <name>ProductsTableModel</name>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="98"/>
+        <source>ID</source>
+        <translation>Lp</translation>
+    </message>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="99"/>
+        <source>Name</source>
+        <translation>Nazwa</translation>
+    </message>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="100"/>
+        <source>Unit</source>
+        <translation>Jednostka</translation>
+    </message>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="101"/>
+        <source>Expire date (template)</source>
+        <translation>Wzór daty ważności</translation>
+    </message>
+    <message>
+        <location filename="../models/ProductsTableModel.cpp" line="102"/>
+        <source>Notes</source>
+        <translation>Notatka</translation>
     </message>
 </context>
 <context>
@@ -768,106 +904,6 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="98"/>
-        <location filename="../models/DistributorTableModel.cpp" line="137"/>
-        <location filename="../models/BatchTableModel.cpp" line="136"/>
-        <source>ID</source>
-        <translation>Lp.</translation>
-    </message>
-    <message>
-        <location filename="../models/ProductsTableModel.cpp" line="101"/>
-        <source>Expire date (template)</source>
-        <translation>Wzór daty ważności</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="137"/>
-        <source>Product</source>
-        <translation>Produkt</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="138"/>
-        <source>Specificator</source>
-        <translation>Specyfikacja</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="139"/>
-        <source>Price</source>
-        <translation>Cena</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="147"/>
-        <source>Invoice</source>
-        <translation>Faktura</translation>
-    </message>
-    <message>
-        <location filename="../models/ProductsTableModel.cpp" line="100"/>
-        <location filename="../models/BatchTableModel.cpp" line="140"/>
-        <source>Unit</source>
-        <translation>Jednostka</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="139"/>
-        <location filename="../models/BatchTableModel.cpp" line="141"/>
-        <source>Quantity</source>
-        <translation>Ilość</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="142"/>
-        <source>Booking</source>
-        <translation>Wpis</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="143"/>
-        <source>Expiry</source>
-        <translation>Ważność</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="144"/>
-        <source>Used</source>
-        <translation>Wydane</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="141"/>
-        <location filename="../models/BatchTableModel.cpp" line="145"/>
-        <source>Registered</source>
-        <translation>Zaindeksowane</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="146"/>
-        <source>Desc</source>
-        <translation>Opis</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="138"/>
-        <source>Batch</source>
-        <translation>Partia</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="140"/>
-        <source>Distributing date</source>
-        <translation>Data wydania</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="142"/>
-        <source>Main reason</source>
-        <translation>Powód wydania</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="143"/>
-        <source>Sub reason</source>
-        <translation>Opis dodatkowy</translation>
-    </message>
-    <message>
-        <location filename="../models/DistributorTableModel.cpp" line="144"/>
-        <source>Extra reason</source>
-        <translation>Wydanie specjalne</translation>
-    </message>
-    <message>
-        <location filename="../models/ProductsTableModel.cpp" line="99"/>
-        <source>Name</source>
-        <translation>Nazwa</translation>
-    </message>
-    <message>
         <location filename="../DataParser.cpp" line="96"/>
         <source>%.2f zl</source>
         <translation>%.2f zl</translation>
@@ -885,7 +921,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="46"/>
         <source>You try to remove %n product(s) with all associated batches and distributtions.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Chcesz usunąć %n prodóktów wraz ze wszystkimi partiami i przypisanymi wydawaniami oraz posiłkami.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="48"/>
@@ -976,8 +1012,33 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="20"/>
-        <source>GroupBox</source>
-        <translation>Posiłki</translation>
+        <source>@Day</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="44"/>
+        <source>@Data</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="51"/>
+        <source>...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="62"/>
+        <source>Scouts</source>
+        <translation>Harcerzy</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="72"/>
+        <source>Leaders</source>
+        <translation>Kadry</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="82"/>
+        <source>Calculate</source>
+        <translation>Oblicz</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="32"/>
@@ -1026,6 +1087,24 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../ui/TabProductsWidget.ui" line="31"/>
         <source>A&amp;dd products</source>
         <translation>&amp;Dodaj produkt</translation>
+    </message>
+</context>
+<context>
+    <name>TabRaportsWidget</name>
+    <message>
+        <location filename="../ui/TabRaportsWidget.ui" line="14"/>
+        <source>Meal Tab</source>
+        <translation type="unfinished">Zakładka posiłków</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabRaportsWidget.ui" line="20"/>
+        <source>GroupBox</source>
+        <translation type="unfinished">Posiłki</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabRaportsWidget.ui" line="32"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

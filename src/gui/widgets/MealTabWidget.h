@@ -57,8 +57,10 @@ private:
 // 
 // 	QMessageBox msgb;
 
-	MealFoodList * foodlist[6];
-	MealTableModelProxy * proxy[6];
+	static const int meals = 7;
+
+	MealFoodList * foodlist[meals];
+	MealTableModelProxy * proxy[meals];
 };
 
 #endif // MEALTABWIDGET_H
