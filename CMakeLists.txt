@@ -103,9 +103,15 @@ set(zarlok_src_models_SRCS
 									src/models/DistributorTableModel.cpp
 									src/models/BatchTableModelProxy.cpp
 									src/models/BatchTableModelProxyP.cpp
+									src/models/MealTableModel.cpp
 									src/models/MealTableModelProxy.cpp
 )
-set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/DataParser.cpp src/db/DBReports.cpp src/db/Database.cpp src/zarlok.cpp main.cpp)
+set(zarlok_src_db_SRCS
+									src/db/DBReports.cpp
+									src/db/Database.cpp
+									src/db/CampProperties.cpp
+)
+set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/DataParser.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS
 									${zarlok_INCS}
@@ -115,6 +121,7 @@ set(zarlok_SRCS
 									${zarlok_src_gui_widgets_SRCS}
 									${zarlok_src_gui_dialogs_SRCS}
 									${zarlok_src_models_SRCS}
+									${zarlok_src_db_SRCS}
 									${zarlok_src_misc_SRCS}
 )
 

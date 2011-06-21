@@ -42,12 +42,10 @@ public:
 
 signals:
 	void addRecordRequested(bool);
-	void recordsFilter(QString);
 
 private slots:
 	void removeRecord();
 	void addRecord() { emit addRecordRequested(true); }
-	void filterRecords(const QModelIndex & index);
 
 protected:
     void contextMenuEvent(QContextMenuEvent*);

@@ -24,9 +24,8 @@
 
 #include "Database.h"
 #include "DistributorTableModel.h"
+#include "MealTableModel.h"
 #include "MealTableModelProxy.h"
-#include "AddMealRecordWidget.h"
-#include "AddFoodRecordWidget.h"
 
 #include <QtSql>
 #include <QCompleter>
@@ -37,15 +36,11 @@ public:
 	TabMealWidget(QWidget * parent = NULL);
 	virtual ~TabMealWidget();
 
-public slots:
-	void doRefresh();
-
 private slots:
 	void activateUi(bool activate = true);
-	void edit_record(const QModelIndex & idx);
 	void add_mealday();
-
-	void updateMealList(QListWidgetItem * item);
+	void toggle_calendar(bool show);
+	void hightlight_day(const QDate & date);
 
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
@@ -56,8 +51,6 @@ private:
 	DistributorTableModel * model_dist;
 	MealTableModelProxy * modelproxy_meal;
 
-	AddMealRecordWidget * amrw;
-	AddFoodRecordWidget * afrw;
 	QDate bd;
 	QDate ed;
 };

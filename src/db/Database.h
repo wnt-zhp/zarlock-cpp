@@ -25,6 +25,7 @@
 #include "ProductsTableModel.h"
 #include "BatchTableModel.h"
 #include "DistributorTableModel.h"
+#include "MealTableModel.h"
 
 #include "CampProperties.h"
 
@@ -52,9 +53,6 @@ public:
 	void updateMealCosts();
 	void updateMealCosts(const int);
 
-	void writeCampSettings();
-	void readCampSettings();
-
 	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 // 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
@@ -72,10 +70,17 @@ public:
 	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
 // 	virtual bool removeDistributorRecord(const QModelIndex & idx, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);
-	
-	inline ProductsTableModel * CachedProducts() { return tab_products; }
-	inline BatchTableModel * CachedBatch() { return tab_batch; }
-	inline DistributorTableModel * CachedDistributor() { return tab_distributor; }
+
+	virtual bool addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
+	virtual bool updateMealRecord(int Mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
+// 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
+// 	virtual bool removeProductsRecord(const QModelIndex & idx, bool askForConfirmation = true);
+	virtual bool removeMealRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
+
+	inline ProductsTableModel * CachedProducts() { return model_products; }
+	inline BatchTableModel * CachedBatch() { return model_batch; }
+	inline DistributorTableModel * CachedDistributor() { return model_distributor; }
+	inline MealTableModel * CachedMeal() { return model_meal; }
 
 	inline CampProperties * cs() { return camp; };
 
@@ -96,9 +101,10 @@ private:
 
 	CampProperties * camp;
 
-	ProductsTableModel * tab_products;
-	BatchTableModel * tab_batch;
-	DistributorTableModel * tab_distributor;
+	ProductsTableModel * model_products;
+	BatchTableModel * model_batch;
+	DistributorTableModel * model_distributor;
+	MealTableModel * model_meal;
 
 	bool doDBUpgrade(unsigned int & version);
 

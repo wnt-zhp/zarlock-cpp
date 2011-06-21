@@ -69,36 +69,32 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 // 	group_meals->layout()->addWidget(tb);
 
 	group_meals->setEnabled(true);
-	amrw = new AddMealRecordWidget(bd, ed);
-	afrw = new AddFoodRecordWidget();
+// 	amrw = new AddMealRecordWidget(bd, ed);
+// 	afrw = new AddFoodRecordWidget();
 
 // 	list_meal->setAutoExpandDelay(0);
 // 	list_meal->setIndentation(0);
 
 	activateUi(true);
 
+	action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
 // 	action_addday->setEnabled(false);
 // 	list_meal->setsetHeaderLabel("Day list");
 // 	connect(, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
 
 // 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
-	connect(&db, SIGNAL(dbSaved()), amrw, SLOT(update_model()));
-// 	connect(amrw, SIGNAL(dbmealupdated(bool)), this, SLOT(activateUi(bool)));
-	connect(amrw, SIGNAL(dbmealupdated(bool)), this, SLOT(doRefresh()));
-	connect(action_addday, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
-// 	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
 
-	connect(list_meal, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
-// 	connect(list_meal, SIGNAL(itemDoubleClicked(QListWidgetItem*, int)), amrw, SLOT(showW(QListWidgetItem*,int)));
+	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
+	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
+	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
 
-	doRefresh();
+	action_toggle->setChecked(true);
+	hightlight_day(QDate::currentDate());
 }
 
 TabMealWidget::~TabMealWidget() {
 	FPR(__func__);
 	activateUi(false);
-	if (amrw) delete amrw;
-	if (afrw) delete afrw;
 }
 
 /**
@@ -113,83 +109,48 @@ void TabMealWidget::activateUi(bool activate) {
 		if (modelproxy_meal) delete modelproxy_meal;
 		modelproxy_meal = new MealTableModelProxy();
 		modelproxy_meal->setSourceModel(db.CachedDistributor());
+
+		list_meal->setModel(db.CachedMeal());
+		list_meal->setModelColumn(MealTableModel::HDistDate);
+		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
+		list_meal->setIconSize(QSize(100, 32));
+		db.CachedMeal()->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
+		list_meal->update();
+
 // 		list_food->setModel(modelproxy_meal);
 // 		list_food->setModelColumn(DistributorTableModel::HBatchId);
-
-// 		int total_days = bd.daysTo(ed);
-// 	
-// 		list_meal->clear();
-// 
-// 		for (int i = 0; i <= total_days; ++i) {
-// 			QString date = bd.addDays(i).toString(Qt::ISODate);
-// 
-// 			QTreeWidgetItem * item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(date));
-// 			QSqlQuery mq(QString("SELECT * FROM meal WHERE distdate='%1' ORDER BY mealtype ASC;").arg(date));
-// 
-// 			mq.exec();
-// 			while (mq.next()) {
-// 				QString date = mq.value(TabMealWidget::MDate).toString();
-// 				int mealtype = mq.value(TabMealWidget::MType).toInt();
-// 				int mealid = mq.value(TabMealWidget::MId).toInt();
-// 				QString mealname;
-// 				if (mealtype > DistributorTableModel::MDiner) {
-// 					mealname = mq.value(TabMealWidget::MName).toString();
-// 				} else {
-// 					mealname = mealcode[mealtype];
-// 				}
-// 				QTreeWidgetItem * child = new QTreeWidgetItem(QStringList(mealname));
-// 				child->setData(0, Qt::UserRole, mq.value(TabMealWidget::MId));
-// // 				child->setData(0, Qt::UserRole+1, mealtype);
-// 				item->insertChild(item->childCount(), child);
-// 			}
-// 			list_meal->addTopLevelItem(item);
-// 		}
-	}
-}
-
-void TabMealWidget::doRefresh() {
-	QSqlQuery mq("SELECT * FROM meal ORDER BY distdate ASC, mealtype ASC;");
-
-	QListWidgetItem * item;
-
-	mq.exec();
-	while (mq.next()) {
-		QString date = mq.value(TabMealWidget::MDate).toDate().toString(Qt::DefaultLocaleShortDate);
-		QString rdate = mq.value(TabMealWidget::MDate).toDate().toString(Qt::ISODate);
-
-		QList<QListWidgetItem *> ml = list_meal->findItems(date, Qt::MatchExactly);
-		if (ml.size() == 0){
-			item = new QListWidgetItem(date);
-			item->setData(Qt::UserRole, rdate);
-			item->setTextAlignment(4);
-			item->setSizeHint(QSize(0, 18));
-			list_meal->addItem(item);
-		} else {
-			item = ml.at(0);
-		}
-	}
-}
-
-void TabMealWidget::edit_record(const QModelIndex& /*idx*/) {
-// 	if (model_dist->isDirty(idx)) {
-// 		table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
-// 	} else {
-// 		table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-// 	}
-}
-
-void TabMealWidget::updateMealList(QListWidgetItem * item) {
-	if (item and item->data(Qt::DisplayRole).isValid()) {
-		tab_meals->setDateRef(item->data(Qt::UserRole).toString());
-		group_meals->setTitle(item->text());
-	} else {
-		tab_meals->setDateRef("");
 	}
 }
 
 void TabMealWidget::add_mealday() {
-	amrw->setWindowFlags(Qt::Tool);
-	amrw->showW(NULL, 0);
+	db.addMealRecord(calendar->selectedDate().toString(Qt::ISODate), false, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->");
+	PR(db.cs()->scoutsNo);
+	hightlight_day(calendar->selectedDate());
+}
+
+void TabMealWidget::toggle_calendar(bool show) {
+	calendar->setVisible(show);
+	if (show) {
+		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
+		hightlight_day(calendar->selectedDate());
+	}
+	else {
+		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
+		action_insert->setEnabled(false);
+	}
+}
+
+void TabMealWidget::hightlight_day(const QDate & date) {
+	QModelIndexList ml = db.CachedMeal()->match(db.CachedMeal()->index(0, MealTableModel::HDistDate), Qt::EditRole, date.toString(Qt::ISODate));
+
+	if (ml.count()) {
+		list_meal->setCurrentIndex(ml.at(0));
+		action_insert->setEnabled(false);
+		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogNoButton));
+	} else {
+		action_insert->setEnabled(true);
+		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogApplyButton));
+	}
 }
 
 #include "TabMealWidget.moc"

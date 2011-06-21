@@ -41,7 +41,6 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
 
-	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(filterRecords(QModelIndex)));
 // 	this->setEditTriggers(0);
 
 // 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -75,25 +74,6 @@ void ProductsTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 	hideColumn(ProductsTableModel::HId);
-}
-
-void ProductsTableView::filterRecords(const QModelIndex &) {
-	QModelIndexList l = selectedIndexes();
-
-	QString filter, q;
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); it++) {
-		if (it->column() == ProductsTableModel::HName) {
-			q.sprintf("prod_id=%d", model()->data(model()->index(it->row(), 0)).toInt());
-
-			if (it != l.begin())
-				filter.append(" OR ");
-			else
-				filter.append(" WHERE ");
-			filter.append(q);
-		}
-	}
-	PR(filter.toStdString());
-	emit recordsFilter(filter);
 }
 
 /**

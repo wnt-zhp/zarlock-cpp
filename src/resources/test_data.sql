@@ -8,23 +8,23 @@ INSERT INTO batch VALUES (3, 1, "pełnoziarnisty", "2+7", "1kg", 20.0, "2010-12-
 INSERT INTO batch VALUES (4, 2, "lipowy", "2+7", "1l", 20.0, "2010-12-22", "+10", 0.0, "2011-04-10", ":)", "svdft2fdsfy");
 INSERT INTO batch VALUES (5, 2, "akacjowy", "2+7", "1l", 20.0, "2010-12-22", "+10", 0.0, "2011-12-22", ":)", "svdft2fdsfy");
 
-INSERT INTO distributor VALUES (1, 1, 1, "2010-06-18", "2010-06-18", 0, 0, 2);
+INSERT INTO distributor VALUES (1, 1, 1, "2010-06-18", "2010-06-18", 1, 0, 2);
 INSERT INTO distributor VALUES (2, 2, 2, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (3, 3, 3, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (4, 1, 4, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (5, 2, 5, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (6, 3, 6, "2010-06-18", "2010-06-18", 0, 0, 2);
+INSERT INTO distributor VALUES (3, 3, 3, "2010-06-18", "2010-06-18", 1, 0, 2);
+INSERT INTO distributor VALUES (4, 1, 4, "2010-06-18", "2010-06-18", 2, 0, 2);
+INSERT INTO distributor VALUES (5, 2, 5, "2010-06-18", "2010-06-18", 3, 0, 2);
+INSERT INTO distributor VALUES (6, 3, 6, "2010-06-18", "2010-06-18", 2, 0, 2);
 INSERT INTO distributor VALUES (7, 1, 1, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (8, 2, 2, "2010-06-18", "2010-06-18", 0, 0, 2);
+INSERT INTO distributor VALUES (8, 2, 2, "2010-06-18", "2010-06-18", 4, 0, 2);
 INSERT INTO distributor VALUES (9, 3, 3, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (10, 4, 4, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (11, 5, 5, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (12, 4, 6, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (13, 5, 1, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (14, 4, 2, "2010-06-18", "2010-06-18", 0, 0, 2);
+INSERT INTO distributor VALUES (10, 4, 4, "2010-06-18", "2010-06-18", 1, 0, 2);
+INSERT INTO distributor VALUES (11, 5, 5, "2010-06-18", "2010-06-18", 1, 0, 2);
+INSERT INTO distributor VALUES (12, 4, 6, "2010-06-18", "2010-06-18", 1, 0, 2);
+INSERT INTO distributor VALUES (13, 5, 1, "2010-06-18", "2010-06-18", 2, 0, 2);
+INSERT INTO distributor VALUES (14, 4, 2, "2010-06-18", "2010-06-18", 2, 0, 2);
 INSERT INTO distributor VALUES (15, 5, 3, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (16, 4, 4, "2010-06-18", "2010-06-18", 0, 0, 2);
-INSERT INTO distributor VALUES (17, 5, 5, "2010-06-18", "2010-06-18", 0, 0, 2);
+INSERT INTO distributor VALUES (16, 4, 4, "2010-06-18", "2010-06-18", 1, 0, 2);
+INSERT INTO distributor VALUES (17, 5, 5, "2010-06-18", "2010-06-18", 1, 0, 2);
 
 DELETE FROM settings;
 INSERT INTO settings VALUES (1, 1);

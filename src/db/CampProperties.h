@@ -44,6 +44,8 @@ struct CampProperties {
 					HcampQuarter	= 0x100,
 					HcampOthers		= 0x200
 	};
+	void writeCampSettings();
+	void readCampSettings();
 };
 
 #endif /* __CAMPPROPERTIES_H__ */

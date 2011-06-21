@@ -172,7 +172,7 @@ void zarlok::printDailyReport() {
 void zarlok::doCampSettings() {
 	CampSettingsDialog csd(db.cs());
 	if (csd.exec()) {
-		db.writeCampSettings();
+		db.cs()->writeCampSettings();
 		dbiw->update(db.cs());
 	}
 	activateUi(db.cs()->isCorrect);

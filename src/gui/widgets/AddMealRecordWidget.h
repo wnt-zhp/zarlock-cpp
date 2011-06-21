@@ -38,17 +38,13 @@ signals:
 public slots:
 	void showW(QTreeWidgetItem * item, int column);
 	void update_model();
-	void set_caldate(const QDate & date);
-	void calDayChanged();
 
 private slots:
 	bool insert_record();
-	void clear_form();
 	void cancel_form();
-	void validateAdd();
 
 private:
-	QCompleter * completer_other;
+
 };
 
 #endif // ADDMEALRECORDWIDGET_H
