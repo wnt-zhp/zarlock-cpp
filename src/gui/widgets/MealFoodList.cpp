@@ -26,30 +26,7 @@
 #include "Database.h"
 #include "DistributorTableModel.h"
 
-// #include "MealFoodListItemData.h"
-// #include "MealFoodListItemNew.h"
-
 MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1) {
-// 	this->setResizeMode(Adjust);
-// 	this->
-// 	this->res
-// Lipken ?
-
-// 	QListWidgetItem * qlwi = new QListWidgetItem();
-// 	qlwi->setSizeHint(QSize(100, 48));
-// 
-// 	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget;
-// 	this->addItem(qlwi);
-// 	this->setItemWidget(qlwi, (QWidget *)mflidw);
-// 
-// 	mflidw->convertToData();
-
-// 	proxy = new MealTableModelProxy();
-// 	proxy->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
-
-// 	populateModel();
-// 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
-// 	connect(dtm, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(populateModel()));
 	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(doItemEdit(QListWidgetItem*)));
 }
 
@@ -61,7 +38,6 @@ void MealFoodList::populateModel() {
 
 	this->clear();
 	for (int i = 0; i < num; ++i) {
-
 		QListWidgetItem * qlwi = new QListWidgetItem(this);
 		qlwi->setSizeHint(QSize(100, 48));
 

@@ -42,12 +42,6 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(
 	pmenu_add.addAction(addRec);
 
 // 	this->setEditTriggers(0);
-
-// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-// 	horizontalHeader()->setMinimumSectionSize(0);
-
-	horizontalHeader()->setStretchLastSection(true);
-	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 /**
@@ -74,6 +68,11 @@ void ProductsTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 	hideColumn(ProductsTableModel::HId);
+
+	horizontalHeader()->setResizeMode(ProductsTableModel::HName, QHeaderView::Stretch);
+	horizontalHeader()->setResizeMode(ProductsTableModel::HUnit, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(ProductsTableModel::HExpire, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(ProductsTableModel::HNotes, QHeaderView::ResizeToContents);
 }
 
 /**

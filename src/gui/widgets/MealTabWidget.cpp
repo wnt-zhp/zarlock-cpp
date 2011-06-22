@@ -27,64 +27,21 @@
 #include <QAction>
 
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
-// 	fakeIcon = style()->standardIcon(QStyle::SP_DirClosedIcon);
-// 	fakeLabel = tr("Add meal to activate tab");
-// 	fakeWidget = new QWidget(this);
-// 
-// 	addTab(fakeWidget, fakeIcon, fakeLabel);
-// 
-// 	this->setTabsClosable(true);
-// 
-// 	aBreakfast = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("Breakfast"), this);
-// 	a2ndBreakfast = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("2nd Breakfast"), this);
-// 	aLunch = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("Lunch"), this);
-// 	aDiner = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("Diner"), this);
-// 	aOther1 = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("Other 1"), this);
-// 	aOther2 = new QAction(style()->standardIcon(QStyle::SP_DialogApplyButton), tr("Other 2"), this);
-
-// 	connect(aBreakfast, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 	connect(a2ndBreakfast, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 	connect(aLunch, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 	connect(aDiner, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 	connect(aOther1, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 	connect(aOther2, SIGNAL(triggered(bool)), this, SLOT(insertNewTab()));
-// 
-// 	b = new QToolButton(this);
-// 	b->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
-// 	b->setPopupMode(QToolButton::InstantPopup);
-// 	b->addAction(aBreakfast);
-// 	b->addAction(a2ndBreakfast);
-// 	b->addAction(aLunch);
-// 	b->addAction(aDiner);
-// 	b->addAction(aOther1);
-// 	b->addAction(aOther2);
-// 	this->setCornerWidget(b, Qt::TopRightCorner);
-// 
-// 	PR(aBreakfast);
-// 	PR(a2ndBreakfast);
-// 	PR(aLunch);
-// 	PR(aDiner);
-// 	PR(aOther1);
-// 	PR(aOther2);
 	this->setDocumentMode(true);
-// 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeNewTab(int)));
-// 
-// 	msgb.setText(tr("Remove meal from database"));
-// 	msgb.setInformativeText(tr("Ary you sure you want delete meal from databas"));
-// 	msgb.setIcon(QMessageBox::Question);
-// 	msgb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-// 	msgb.setDefaultButton(QMessageBox::No);
+	this->setIconSize(QSize(24, 24));
 
 	for (int i = 0; i < meals; ++i)
 		foodlist[i] = new MealFoodList(this);
 
-	this->addTab(foodlist[0], tr("Breakfast"));
+	this->addTab(foodlist[0], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Breakfast"));
 	this->addTab(foodlist[1], tr("2nd Breakfast"));
-	this->addTab(foodlist[2], tr("Lunch"));
-	this->addTab(foodlist[3], tr("Tea"));
-	this->addTab(foodlist[4], tr("Diner"));
+	this->addTab(foodlist[2], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Lunch"));
+	this->addTab(foodlist[3], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Tea"));
+	this->addTab(foodlist[4], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Diner"));
 	this->addTab(foodlist[5], tr("Other 1"));
 	this->addTab(foodlist[6], tr("Other 2"));
+
+	this->setTabIcon(0, style()->standardPixmap(QStyle::SP_MessageBoxInformation));
 
 	for (int i = 0; i < meals; ++i) {
 		proxy[i] = new MealTableModelProxy();
@@ -94,7 +51,6 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
 
 MealTabWidget::~MealTabWidget() {
 	FPR(__func__);
-// 	if (b) delete b;
 }
 
 void MealTabWidget::setDateRef(const QString& ref) {
@@ -106,35 +62,5 @@ void MealTabWidget::setDateRef(const QString& ref) {
 		foodlist[i]->populateModel();
 	}
 }
-
-
-// void MealTabWidget::tabInserted(int index) {
-// 	int num = count();
-// 	if (num > 1 && this->widget(num-1) == fakeWidget) {
-// 		this->removeTab(num-1);
-// 	}
-// 
-//     QTabWidget::tabInserted(index);
-// }
-// 
-// void MealTabWidget::tabRemoved(int index) {
-// 	if (count() == 0) {
-// 		this->addTab(fakeWidget, fakeIcon, fakeLabel);
-// 	}
-// 
-//     QTabWidget::tabRemoved(index);
-// }
-// 
-// void MealTabWidget::insertNewTab() {
-// 	PR(this->sender());
-// 	this->insertTab(count()-1, new MealFoodList(), "asdas");
-// }
-// 
-// void MealTabWidget::removeNewTab(int index) {
-// 	if (this->widget(index) != fakeWidget) {
-// 		if (msgb.exec() == QMessageBox::Yes)
-// 			this->removeTab(index);
-// 	}
-// }
 
 #include "MealTabWidget.moc"

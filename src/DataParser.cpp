@@ -83,9 +83,7 @@ bool DataParser::price(const QString & data, double & price_formated, double & t
 		price_formated = rx.cap(1).toDouble();
 		tax_formated = rx.cap(4).toDouble();
 		return true;
-		PR(true);
 	}
-	PR(false);
 	return false;
 }
 

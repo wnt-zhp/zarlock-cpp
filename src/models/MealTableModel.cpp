@@ -52,10 +52,16 @@ MealTableModel::~MealTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
-// 	if (role == Qt::EditRole)
-// 		return raw(idx);
+	if (role == Qt::BackgroundRole) {
+		QDate d = QSqlTableModel::data(idx, Qt::DisplayRole).toDate();
+		if ((d > Database::Instance().cs()->campDateBegin) and (d < Database::Instance().cs()->campDateEnd))
+			return Qt::yellow;
+	}
 
-	if (role == Qt::DisplayRole or role == Qt::BackgroundRole or role == Qt::StatusTipRole)
+	if (role == Qt::TextAlignmentRole and idx.column() != HDistDate)
+		return Qt::AlignRight + Qt::AlignVCenter;
+
+	if (role == Qt::DisplayRole or role == Qt::StatusTipRole)
 		return display(idx, role);
 
 	return QSqlTableModel::data(idx, role);
@@ -71,6 +77,7 @@ QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
  **/
 bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 	switch (role) {
+		case Qt::DisplayRole:
 			if (index.column() == HDistDate) {
 				QDate date;
 				if (!DataParser::date(value.toString(), date, this->index(index.row(), HDistDate).data(Qt::DisplayRole).toDate())) {
@@ -78,6 +85,7 @@ bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, 
 					return false;
 				}
 			}
+			break;
 	}
     return QSqlTableModel::setData(index, value, role);
 }
@@ -90,13 +98,13 @@ bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, 
  **/
 bool MealTableModel::select() {
 	setHeaderData(HId,			Qt::Horizontal, tr("ID"));
-	setHeaderData(HDistDate,	Qt::Horizontal, tr("Product"));
-	setHeaderData(HDirty,		Qt::Horizontal, tr("Specificator"));
-	setHeaderData(HScouts,		Qt::Horizontal, tr("Price"));
-	setHeaderData(HLeaders,		Qt::Horizontal, tr("Unit"));
-	setHeaderData(HOthers,		Qt::Horizontal, tr("Quantity"));
-	setHeaderData(HAvgCosts,	Qt::Horizontal, tr("Booking"));
-	setHeaderData(HNotes,		Qt::Horizontal, tr("Expiry"));
+	setHeaderData(HDistDate,	Qt::Horizontal, tr("Date"));
+	setHeaderData(HDirty,		Qt::Horizontal, tr("isDirty"));
+	setHeaderData(HScouts,		Qt::Horizontal, tr("S"));
+	setHeaderData(HLeaders,		Qt::Horizontal, tr("L"));
+	setHeaderData(HOthers,		Qt::Horizontal, tr("O"));
+	setHeaderData(HAvgCosts,	Qt::Horizontal, tr("Avg Costs"));
+	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));
 
     return QSqlTableModel::select();
 }
@@ -115,7 +123,11 @@ QVariant MealTableModel::display(const QModelIndex & idx, const int role) const 
 			if (idx.column() == HDistDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
-		break;
+
+			if (idx.column() == HAvgCosts) {
+				return QVariant(QSqlTableModel::data(idx, role).toString() % tr(" zl"));
+			}
+			break;
 	}
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }

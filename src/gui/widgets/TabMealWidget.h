@@ -29,6 +29,7 @@
 
 #include <QtSql>
 #include <QCompleter>
+#include <QDataWidgetMapper>
 
 class TabMealWidget : public QWidget, public Ui::TabMealWidget {
 Q_OBJECT
@@ -41,6 +42,7 @@ private slots:
 	void add_mealday();
 	void toggle_calendar(bool show);
 	void hightlight_day(const QDate & date);
+	void selectDay(const QModelIndex& idx);
 
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
@@ -50,9 +52,7 @@ private:
 	Database & db;
 	DistributorTableModel * model_dist;
 	MealTableModelProxy * modelproxy_meal;
-
-	QDate bd;
-	QDate ed;
+	QDataWidgetMapper * wmap;
 };
 
 #endif // TABMEALWIDGET_H

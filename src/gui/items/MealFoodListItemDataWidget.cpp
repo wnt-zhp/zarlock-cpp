@@ -27,8 +27,13 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 		QWidget(parent, f) {
 
 	setupUi(this);
+
+// 	batch->setEditable(true);
+	batch->setInsertPolicy(QComboBox::NoInsert);
 	batch->setModel(Database::Instance().CachedBatch());
 	batch->setModelColumn(2);
+	batch->setAutoCompletion(true);
+	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
 
 	addB->setMaximumSize(24, 24);
 	addB->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
@@ -45,6 +50,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 	mfl = (MealFoodList *)parent;
 
 	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
+// 	connect(batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
@@ -78,6 +84,7 @@ void MealFoodListItemDataWidget::render(bool doRender) {
 }
 
 void MealFoodListItemDataWidget::validateAdd() {
+// 	PR(batch->currentIndex());
 	if (qty->value() && batch->currentIndex() >= 0) {
 		addB->setEnabled(true);
 	} else {
@@ -88,7 +95,7 @@ void MealFoodListItemDataWidget::validateAdd() {
 void MealFoodListItemDataWidget::convertToEmpty() {
 // 	if (empty)
 	batch->setModelColumn(2);
-// 		batch->setCurrentIndex(-1);
+	batch->setCurrentIndex(-1);
 		
 	qty->setValue(0.0);
 	empty = true;

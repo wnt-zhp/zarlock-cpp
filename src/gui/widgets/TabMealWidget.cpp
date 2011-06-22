@@ -43,37 +43,16 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 // 	if (mq.next())
 // 		ed = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
 
-	bd = Database::Instance().cs()->campDateBegin;
-	ed = Database::Instance().cs()->campDateEnd;
-
 	setupUi(this);
 
 	group_meals->setTitle(tr("Select meal to activate this section"));
 	group_meals->setEnabled(false);
 
-// 	QPushButton * b = new QPushButton("test");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(b, "tescik");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(tb, "tescik2");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(b, "tescik");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(b, "tescik");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(b, "tescik");
-// // 	tab_meals->printTabRect();
-// 	tab_meals->addTab(b, "tescik");
-
-
-// 	group_meals->layout()->addWidget(tb);
-
 	group_meals->setEnabled(true);
-// 	amrw = new AddMealRecordWidget(bd, ed);
-// 	afrw = new AddFoodRecordWidget();
 
-// 	list_meal->setAutoExpandDelay(0);
-// 	list_meal->setIndentation(0);
+	spin_scouts->setMaximum(9999);
+	spin_leadres->setMaximum(9999);
+	spin_others->setMaximum(9999);
 
 	activateUi(true);
 
@@ -87,6 +66,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
 	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
+	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 
 	action_toggle->setChecked(true);
 	hightlight_day(QDate::currentDate());
@@ -110,15 +90,34 @@ void TabMealWidget::activateUi(bool activate) {
 		modelproxy_meal = new MealTableModelProxy();
 		modelproxy_meal->setSourceModel(db.CachedDistributor());
 
-		list_meal->setModel(db.CachedMeal());
-		list_meal->setModelColumn(MealTableModel::HDistDate);
-		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
-		list_meal->setIconSize(QSize(100, 32));
 		db.CachedMeal()->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
+
+		list_meal->setModel(db.CachedMeal());
+		list_meal->hideColumn(MealTableModel::HId);
+		list_meal->hideColumn(MealTableModel::HDirty);
+		list_meal->hideColumn(MealTableModel::HNotes);
+
+		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HDistDate, QHeaderView::Stretch);
+		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HScouts, QHeaderView::ResizeToContents);
+		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HLeaders, QHeaderView::ResizeToContents);
+		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HOthers, QHeaderView::ResizeToContents);
+		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HAvgCosts, QHeaderView::ResizeToContents);
+		
+		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+		list_meal->setSortingEnabled(true);
+		list_meal->setSelectionBehavior(QAbstractItemView::SelectRows);
+		list_meal->setSelectionMode(QAbstractItemView::SingleSelection);
+
 		list_meal->update();
 
-// 		list_food->setModel(modelproxy_meal);
-// 		list_food->setModelColumn(DistributorTableModel::HBatchId);
+		if (wmap) delete wmap;
+		wmap = new QDataWidgetMapper;
+		wmap->setModel(db.CachedMeal());
+		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
+		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
+		wmap->addMapping(spin_others, MealTableModel::HOthers);
+		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 	}
 }
 
@@ -147,10 +146,16 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 		list_meal->setCurrentIndex(ml.at(0));
 		action_insert->setEnabled(false);
 		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogNoButton));
+		selectDay(ml.at(0));
 	} else {
 		action_insert->setEnabled(true);
 		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogApplyButton));
 	}
+}
+
+void TabMealWidget::selectDay(const QModelIndex& idx) {
+	wmap->setCurrentIndex(idx.row());
+	tab_meals->setDateRef(db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString());
 }
 
 #include "TabMealWidget.moc"

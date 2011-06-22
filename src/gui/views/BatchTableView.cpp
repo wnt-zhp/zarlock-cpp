@@ -45,11 +45,6 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Databa
 	//  Łączymy akcję kliknięcia w menu "Add" z funkcją (slotem), która to wykona.
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
-
-	// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-	horizontalHeader()->setStretchLastSection(true);
-// 	horizontalHeader()->setMinimumSectionSize(0);
-	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 /**
@@ -80,6 +75,16 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 	hideColumn(BatchTableModel::HRegDate);
 	hideColumn(BatchTableModel::HNotes);
 	hideColumn(BatchTableModel::HUsedQty);
+
+	horizontalHeader()->setResizeMode(BatchTableModel::HProdId, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HSpec, QHeaderView::Stretch);
+	horizontalHeader()->setResizeMode(BatchTableModel::HPrice, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HUnit, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HStaQty, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HRegDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HExpire, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
 }
 
 /**

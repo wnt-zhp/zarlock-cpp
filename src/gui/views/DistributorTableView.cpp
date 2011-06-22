@@ -44,12 +44,6 @@ DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent
 	//  Łączymy akcję kliknięcia w menu "Add" z funkcją (slotem), która to wykona.
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
-
-// 	// 	horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-// 	// 	horizontalHeader()->setMinimumSectionSize(0);
-	horizontalHeader()->setStretchLastSection(true);
-	horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-// 	resizeColumnsToContents();
 }
 
 /**
@@ -77,6 +71,13 @@ void DistributorTableView::setModel(QAbstractItemModel * model) {
 	hideColumn(DistributorTableModel::HId);
 	hideColumn(DistributorTableModel::HRegDate);
 // 	hideColumn(DistributorTableModel::HReason3);
+
+	horizontalHeader()->setResizeMode(DistributorTableModel::HBatchId, QHeaderView::Stretch);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HQty, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HDistDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HReason, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HReason2, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HReason3, QHeaderView::ResizeToContents);
 }
 
 /**

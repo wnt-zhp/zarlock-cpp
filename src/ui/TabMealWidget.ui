@@ -22,7 +22,7 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
        <item>
-        <widget class="QListView" name="list_meal"/>
+        <widget class="QTableView" name="list_meal"/>
        </item>
        <item>
         <widget class="QCalendarWidget" name="calendar"/>
