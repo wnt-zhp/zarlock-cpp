@@ -853,7 +853,7 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 	int row = model_meal->rowCount();
 	status &= model_meal->insertRows(row, 1);
 	status &= model_meal->setData(model_meal->index(row, 1), date);
-	status &= model_meal->setData(model_meal->index(row, 2), dirty);
+	status &= model_meal->setData(model_meal->index(row, 2), (int)dirty);
 	status &= model_meal->setData(model_meal->index(row, 3), scouts);
 	status &= model_meal->setData(model_meal->index(row, 4), leaders);
 	status &= model_meal->setData(model_meal->index(row, 5), others);
@@ -871,7 +871,7 @@ bool Database::updateMealRecord(int mid, const QString& date, bool dirty, int sc
 	bool status = true;
 
 	status &= model_meal->setData(model_meal->index(mid, 1), date);
-	status &= model_meal->setData(model_meal->index(mid, 2), dirty);
+	status &= model_meal->setData(model_meal->index(mid, 2), (int)dirty);
 	status &= model_meal->setData(model_meal->index(mid, 3), scouts);
 	status &= model_meal->setData(model_meal->index(mid, 4), leaders);
 	status &= model_meal->setData(model_meal->index(mid, 5), others);

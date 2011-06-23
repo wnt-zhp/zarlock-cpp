@@ -25,7 +25,6 @@
 #include "Database.h"
 #include "DistributorTableModel.h"
 #include "MealTableModel.h"
-#include "MealTableModelProxy.h"
 
 #include <QtSql>
 #include <QCompleter>
@@ -51,7 +50,6 @@ public:
 private:
 	Database & db;
 	DistributorTableModel * model_dist;
-	MealTableModelProxy * modelproxy_meal;
 	QDataWidgetMapper * wmap;
 };
 

@@ -62,6 +62,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	dbtoolbar->setIconSize(QSize(64, 64));
 	dbiw = new DBItemWidget();
+
 // 	dbiw->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 	dbiw->resize(QSize(64, 300));
 

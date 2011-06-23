@@ -19,10 +19,7 @@
 #include "globals.h"
 
 #include <QAbstractTableModel>
-#include <QDate>
-#include <QTime>
-#include <QColor>
-#include <QMessageBox>
+#include <QStyle>
 #include <QStringBuilder>
 
 #include "MealTableModel.h"
@@ -56,6 +53,11 @@ QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
 		QDate d = QSqlTableModel::data(idx, Qt::DisplayRole).toDate();
 		if ((d > Database::Instance().cs()->campDateBegin) and (d < Database::Instance().cs()->campDateEnd))
 			return Qt::yellow;
+	}
+
+	if (role == Qt::DecorationRole) {
+		if (Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty).data().toBool())
+			return QStyle::SP_BrowserReload;
 	}
 
 	if (role == Qt::TextAlignmentRole and idx.column() != HDistDate)

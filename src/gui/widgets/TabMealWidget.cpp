@@ -25,25 +25,10 @@
 #include <QToolButton>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-												 modelproxy_meal(NULL) {
-
-	mealcode[0] = tr("Breakfast");
-	mealcode[1] = tr("2nd breakfast");
-	mealcode[2] = tr("Lunch");
-	mealcode[3] = tr("Diner");
-
-// 	QSqlQuery mq;
-
-// 	mq.exec("SELECT value FROM settings WHERE key='BeginOfTheCamp';");
-
-// 	if (mq.next())
-// 		bd = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
-
-// 	mq.exec("SELECT value FROM settings WHERE key='EndOfTheCamp';");
-// 	if (mq.next())
-// 		ed = QDate::fromString(mq.value(0).toString(), Qt::ISODate);
-
+												 wmap(NULL) {
 	setupUi(this);
+
+	activateUi(true);
 
 	group_meals->setTitle(tr("Select meal to activate this section"));
 	group_meals->setEnabled(false);
@@ -54,14 +39,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	spin_leadres->setMaximum(9999);
 	spin_others->setMaximum(9999);
 
-	activateUi(true);
-
 	action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
-// 	action_addday->setEnabled(false);
-// 	list_meal->setsetHeaderLabel("Day list");
-// 	connect(, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(updateMealList(QListWidgetItem*)));
-
-// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 
 	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
@@ -86,12 +64,6 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
-		if (modelproxy_meal) delete modelproxy_meal;
-		modelproxy_meal = new MealTableModelProxy();
-		modelproxy_meal->setSourceModel(db.CachedDistributor());
-
-		db.CachedMeal()->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
-
 		list_meal->setModel(db.CachedMeal());
 		list_meal->hideColumn(MealTableModel::HId);
 		list_meal->hideColumn(MealTableModel::HDirty);
@@ -102,7 +74,7 @@ void TabMealWidget::activateUi(bool activate) {
 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HLeaders, QHeaderView::ResizeToContents);
 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HOthers, QHeaderView::ResizeToContents);
 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HAvgCosts, QHeaderView::ResizeToContents);
-		
+
 		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 		list_meal->setSortingEnabled(true);
@@ -111,19 +83,23 @@ void TabMealWidget::activateUi(bool activate) {
 
 		list_meal->update();
 
-		if (wmap) delete wmap;
+		db.CachedMeal()->setParent(this);
+
+		db.CachedMeal()->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
+
 		wmap = new QDataWidgetMapper;
 		wmap->setModel(db.CachedMeal());
 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
 		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
 		wmap->addMapping(spin_others, MealTableModel::HOthers);
-		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
+// 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
+
+		calculate->setIcon(style()->standardPixmap(QStyle::SP_BrowserReload));
 	}
 }
 
 void TabMealWidget::add_mealday() {
 	db.addMealRecord(calendar->selectedDate().toString(Qt::ISODate), false, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->");
-	PR(db.cs()->scoutsNo);
 	hightlight_day(calendar->selectedDate());
 }
 
