@@ -42,6 +42,7 @@ private slots:
 	void toggle_calendar(bool show);
 	void hightlight_day(const QDate & date);
 	void selectDay(const QModelIndex& idx);
+	void doRecalculate();
 
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
@@ -51,6 +52,7 @@ private:
 	Database & db;
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
+	QModelIndex lastidx;
 };
 
 #endif // TABMEALWIDGET_H

@@ -89,8 +89,7 @@ bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, 
 			}
 			break;
 	}
-	PR(value.toString().toStdString());
-    return QSqlTableModel::setData(index, value, role);
+	return QSqlTableModel::setData(index, value, role);
 }
 
 /**

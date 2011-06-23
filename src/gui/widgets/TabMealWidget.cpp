@@ -45,6 +45,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
 	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
+	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
 
 	action_toggle->setChecked(true);
 	hightlight_day(QDate::currentDate());
@@ -129,8 +130,15 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 }
 
 void TabMealWidget::selectDay(const QModelIndex& idx) {
+	lastidx = idx;
 	wmap->setCurrentIndex(idx.row());
-	tab_meals->setDateRef(db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString());
+	tab_meals->setIndex(idx);
+}
+
+void TabMealWidget::doRecalculate() {
+	int mid = db.CachedMeal()->index(lastidx.row(), MealTableModel::HId).data().toInt();
+	db.updateMealCosts(mid);
+	db.CachedMeal()->select();
 }
 
 #include "TabMealWidget.moc"

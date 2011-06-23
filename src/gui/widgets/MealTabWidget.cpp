@@ -50,13 +50,14 @@ MealTabWidget::~MealTabWidget() {
 	FPR(__func__);
 }
 
-void MealTabWidget::setDateRef(const QString& ref) {
+void MealTabWidget::setIndex(const QModelIndex& index) {
 	for (int i = 0; i < meals; ++i) {
 		foodlist[i]->setProxyModel(proxy[i]);
-		proxy[i]->setRef(ref);
+		proxy[i]->setRef(Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString());
 		proxy[i]->setKey(i);
 		proxy[i]->invalidate();
 		foodlist[i]->populateModel();
+		foodlist[i]->setIndex(index);
 	}
 }
 

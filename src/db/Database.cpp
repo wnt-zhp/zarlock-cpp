@@ -28,6 +28,7 @@
 #include <QStringBuilder>
 
 #include "Database.h"
+#include "DataParser.h"
 #include "globals.h"
 #include "config.h"
 
@@ -425,18 +426,41 @@ void Database::updateMealCosts() {
 }
 
 void Database::updateMealCosts(const int mid) {
-	QSqlQuery q("SELECT price FROM distributor WHERE reason=?;");
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		db.transaction();
+
+	QString distdate;
+	float costs = 0.0;
+	int mealpersons = 0;
+
+	QSqlQuery q;
+	q.prepare("SELECT distdate, scouts, leaders, others FROM meal WHERE id=?;");
 	q.bindValue(0, mid);
 	q.exec();
-	int price = 0;
+
 	while (q.next()) {
-		price += q.value(0).toInt();
+		mealpersons = q.value(1).toInt() + q.value(2).toInt() + q.value(3).toInt();
+		distdate = q.value(0).toString();
 	}
 
-// 	QSqlQuery qBatch("UPDATE batch SET used_qty=? WHERE id=?;");
-// 	qBatch.bindValue(0, price);
-// 	qBatch.bindValue(1, pid);
-// 	qBatch.exec();
+	q.prepare("SELECT batch.price,distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
+	q.bindValue(0, distdate);
+	q.exec();
+	while (q.next()) {
+		double netto, tax;
+		DataParser::price(q.value(0).toString(), netto, tax);
+		costs += netto*(1.0 + tax/100.0)*q.value(1).toFloat();
+	}
+
+	QString c;
+	q.prepare("UPDATE meal SET dirty=0,avcosts=? WHERE id=?;");
+	q.bindValue(0, c.sprintf("%.2f", costs/mealpersons));
+	q.bindValue(1, mid);
+	q.exec();
+
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		if (!db.commit())
+			db.rollback();
 }
 
 /** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.

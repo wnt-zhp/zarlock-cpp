@@ -43,6 +43,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 	removeB->setIcon(style()->standardIcon(QStyle::SP_TrashIcon));
 
 	qty->setMaximumSize(128, 24);
+	qty->setMaximum(9999);
 	qty_label->setMaximumSize(128, 24);
 
 // 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(printStatus()));
@@ -108,9 +109,9 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	int batch_id = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId).data().toInt();
 	if (empty) {
 		if (db.addDistributorRecord(batch_id, qty->text().toFloat(),
-								mfl->proxyModel()->ref(),
-								mfl->proxyModel()->ref(),
-								QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+				mfl->proxyModel()->ref(),
+				mfl->proxyModel()->ref(),
+				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 // 			mfl->populateModel();
 			mfl->insertEmptySlot();
@@ -118,13 +119,14 @@ void MealFoodListItemDataWidget::buttonAdd() {
 			return;
 	} else {
 		if (db.updateDistributorRecord(idx.row(), batch_id, qty->text().toFloat(),
-								mfl->proxyModel()->ref(),
-								mfl->proxyModel()->ref(),
-								QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+				mfl->proxyModel()->ref(),
+				mfl->proxyModel()->ref(),
+				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 		} else
 			return;
 	}
+	mfl->markDirty();
 	render(true);
 }
 

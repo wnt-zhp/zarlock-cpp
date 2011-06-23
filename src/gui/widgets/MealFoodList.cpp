@@ -97,4 +97,14 @@ void MealFoodList::doItemEdit(QListWidgetItem* item) {
 	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
 }
 
+void MealFoodList::markDirty() {
+	Database::Instance().CachedMeal()->setData(Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty), 1, Qt::EditRole);
+	Database::Instance().CachedMeal()->submitAll();
+// 	this->update();
+}
+
+void MealFoodList::setIndex(const QModelIndex& index) {
+	idx = index;
+}
+
 #include "MealFoodList.moc"

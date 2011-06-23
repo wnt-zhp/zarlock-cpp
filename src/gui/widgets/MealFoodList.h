@@ -40,9 +40,12 @@ public:
 	virtual void insertEmptySlot();
 	virtual void removeEmptySlot();
 
+	virtual void setIndex(const QModelIndex& index);
+
 public slots:
 	virtual void populateModel();
 	virtual void removeItem(int row);
+	virtual void markDirty();
 
 private slots:
 	virtual void doItemEdit(QListWidgetItem * item);
@@ -51,6 +54,7 @@ private:
 	bool isdirty;
 	MealTableModelProxy * proxy;
 	int foodkey;
+	QModelIndex idx;
 };
 
 #endif // MEALFOODLIST_H

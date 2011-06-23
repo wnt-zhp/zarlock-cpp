@@ -33,7 +33,7 @@ public:
 	virtual ~MealTabWidget();
 
 public slots:
-	virtual void setDateRef(const QString & ref);
+	virtual void setIndex(const QModelIndex& index);
 // 	void insertNewTab();
 // 	void removeNewTab(int index);
 
