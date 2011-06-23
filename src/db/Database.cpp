@@ -178,6 +178,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	model_meal = new MealTableModel;
 	model_meal->setTable("meal");
 	model_meal->setEditStrategy(QSqlTableModel::OnManualSubmit);
+	model_meal->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
 
 	camp = new CampProperties;
 	camp->readCampSettings();
@@ -845,11 +846,16 @@ bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bo
 bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes) {
 	bool status = true;
 
-// 	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
-// 		<< row << ","
-// 		<< edit_name->text().toStdString() << ","
-// 		<< edit_unit->text().toStdString() << ","
-// 		<< edit_expiry->text().toStdString() << " );" << std::endl;
+	INFO std::cout << "QUERY: INSERT INTO products VALUES ( "
+		<< 0 << ","
+		<< date.toStdString() << ","
+		<< dirty << ","
+		<< scouts << ","
+		<< leaders << ","
+		<< others << ","
+		<< avgcosts << ","
+		<< notes.toStdString() << " );" << std::endl;
+	
 	int row = model_meal->rowCount();
 	status &= model_meal->insertRows(row, 1);
 	status &= model_meal->setData(model_meal->index(row, 1), date);
@@ -859,7 +865,7 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 	status &= model_meal->setData(model_meal->index(row, 5), others);
 	status &= model_meal->setData(model_meal->index(row, 6), avgcosts);
 	status &= model_meal->setData(model_meal->index(row, 7), notes);
-
+PR(status);
 	if (!status) {
 		model_meal->revertAll();
 		return false;

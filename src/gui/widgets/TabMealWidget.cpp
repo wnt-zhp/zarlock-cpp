@@ -64,6 +64,9 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
+		db.CachedMeal()->setDirtyIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+// 		db.CachedMeal()->select();
+
 		list_meal->setModel(db.CachedMeal());
 		list_meal->hideColumn(MealTableModel::HId);
 		list_meal->hideColumn(MealTableModel::HDirty);
@@ -77,15 +80,11 @@ void TabMealWidget::activateUi(bool activate) {
 
 		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-		list_meal->setSortingEnabled(true);
+// 		list_meal->setSortingEnabled(true);
 		list_meal->setSelectionBehavior(QAbstractItemView::SelectRows);
 		list_meal->setSelectionMode(QAbstractItemView::SingleSelection);
 
 		list_meal->update();
-
-		db.CachedMeal()->setParent(this);
-
-		db.CachedMeal()->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
 
 		wmap = new QDataWidgetMapper;
 		wmap->setModel(db.CachedMeal());
@@ -94,12 +93,12 @@ void TabMealWidget::activateUi(bool activate) {
 		wmap->addMapping(spin_others, MealTableModel::HOthers);
 // 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 
-		calculate->setIcon(style()->standardPixmap(QStyle::SP_BrowserReload));
+		calculate->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 	}
 }
 
 void TabMealWidget::add_mealday() {
-	db.addMealRecord(calendar->selectedDate().toString(Qt::ISODate), false, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->");
+	db.addMealRecord(calendar->selectedDate().toString(Qt::ISODate), true, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->");
 	hightlight_day(calendar->selectedDate());
 }
 
@@ -121,11 +120,11 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 	if (ml.count()) {
 		list_meal->setCurrentIndex(ml.at(0));
 		action_insert->setEnabled(false);
-		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogNoButton));
+		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogNoButton));
 		selectDay(ml.at(0));
 	} else {
 		action_insert->setEnabled(true);
-		action_insert->setIcon(style()->standardPixmap(QStyle::SP_DialogApplyButton));
+		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
 	}
 }
 

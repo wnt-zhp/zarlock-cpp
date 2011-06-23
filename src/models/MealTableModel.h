@@ -21,6 +21,7 @@
 
 #include <QtSql/QSqlTableModel>
 #include "ModelsCommon.h"
+#include <QIcon>
 
 /**
  * @brief Klasa dziedziczy po QSqlTableModel i odpowiada za
@@ -39,6 +40,8 @@ public:
 
     virtual bool select();
 
+	virtual void setDirtyIcon(const QIcon& icon);
+
 public slots:
 	void filterDB(const QString &);
 
@@ -48,6 +51,9 @@ private:
 
 public:
 	enum Headers {HId = 0, HDistDate, HDirty, HScouts, HLeaders, HOthers, HAvgCosts, HNotes };
+
+private:
+	QIcon dirtyIcon;
 };
 
 #endif // MEALTABLEMODEL_H

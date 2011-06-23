@@ -28,20 +28,17 @@
 
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
 	this->setDocumentMode(true);
-	this->setIconSize(QSize(24, 24));
 
 	for (int i = 0; i < meals; ++i)
 		foodlist[i] = new MealFoodList(this);
 
-	this->addTab(foodlist[0], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Breakfast"));
+	this->addTab(foodlist[0], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Breakfast"));
 	this->addTab(foodlist[1], tr("2nd Breakfast"));
-	this->addTab(foodlist[2], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Lunch"));
-	this->addTab(foodlist[3], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Tea"));
-	this->addTab(foodlist[4], style()->standardPixmap(QStyle::SP_MessageBoxInformation), tr("Diner"));
+	this->addTab(foodlist[2], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Lunch"));
+	this->addTab(foodlist[3], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Tea"));
+	this->addTab(foodlist[4], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Diner"));
 	this->addTab(foodlist[5], tr("Other 1"));
 	this->addTab(foodlist[6], tr("Other 2"));
-
-	this->setTabIcon(0, style()->standardPixmap(QStyle::SP_MessageBoxInformation));
 
 	for (int i = 0; i < meals; ++i) {
 		proxy[i] = new MealTableModelProxy();

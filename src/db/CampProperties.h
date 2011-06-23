@@ -37,12 +37,12 @@ struct CampProperties {
 	enum dbkeys {	HisCorrect		= 0x001,
 					HcampName		= 0x002,
 					HcampDateBegin	= 0x004,
-					HcampDateEnd	= 0x010,
-					HscoutsNo		= 0x020,
-					HleadersNo		= 0x040,
-					HcampLeader		= 0x080,
-					HcampQuarter	= 0x100,
-					HcampOthers		= 0x200
+					HcampDateEnd	= 0x008,
+					HscoutsNo		= 0x010,
+					HleadersNo		= 0x020,
+					HcampLeader		= 0x040,
+					HcampQuarter	= 0x080,
+					HcampOthers		= 0x100
 	};
 	void writeCampSettings();
 	void readCampSettings();

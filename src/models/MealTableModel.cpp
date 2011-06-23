@@ -27,7 +27,7 @@
 #include "Database.h"
 
 MealTableModel::MealTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
+// 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
 }
 
 MealTableModel::~MealTableModel() {
@@ -55,9 +55,9 @@ QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
 			return Qt::yellow;
 	}
 
-	if (role == Qt::DecorationRole) {
+	if (role == Qt::DecorationRole and idx.column() == HAvgCosts) {
 		if (Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty).data().toBool())
-			return QStyle::SP_BrowserReload;
+			return dirtyIcon;
 	}
 
 	if (role == Qt::TextAlignmentRole and idx.column() != HDistDate)
@@ -82,13 +82,14 @@ bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, 
 		case Qt::DisplayRole:
 			if (index.column() == HDistDate) {
 				QDate date;
-				if (!DataParser::date(value.toString(), date, this->index(index.row(), HDistDate).data(Qt::DisplayRole).toDate())) {
+				if (!DataParser::date(value.toString(), date)) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
 			}
 			break;
 	}
+	PR(value.toString().toStdString());
     return QSqlTableModel::setData(index, value, role);
 }
 
@@ -166,6 +167,10 @@ void MealTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
+}
+
+void MealTableModel::setDirtyIcon(const QIcon& icon) {
+	dirtyIcon = icon;
 }
 
 #include "MealTableModel.moc"
