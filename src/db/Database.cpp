@@ -878,13 +878,13 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 	
 	int row = model_meal->rowCount();
 	status &= model_meal->insertRows(row, 1);
-	status &= model_meal->setData(model_meal->index(row, 1), date);
-	status &= model_meal->setData(model_meal->index(row, 2), (int)dirty);
-	status &= model_meal->setData(model_meal->index(row, 3), scouts);
-	status &= model_meal->setData(model_meal->index(row, 4), leaders);
-	status &= model_meal->setData(model_meal->index(row, 5), others);
-	status &= model_meal->setData(model_meal->index(row, 6), avgcosts);
-	status &= model_meal->setData(model_meal->index(row, 7), notes);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDistDate), date);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDirty), (int)dirty);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HScouts), scouts);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HLeaders), leaders);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HOthers), others);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HAvgCosts), avgcosts);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HNotes), notes);
 
 	if (!status) {
 		model_meal->revertAll();

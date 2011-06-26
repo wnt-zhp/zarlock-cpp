@@ -137,6 +137,7 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 
 void TabMealWidget::doRecalculate() {
 // 	int mid = db.CachedMeal()->index(lastidx.row(), MealTableModel::HId).data().toInt();
+	PR(lastidx.row());
 	db.updateMealCosts(lastidx);
 // 	db.CachedMeal()->select();
 }

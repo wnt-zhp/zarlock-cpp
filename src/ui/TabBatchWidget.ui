@@ -13,8 +13,11 @@
   <property name="windowTitle">
    <string>Batch Tab</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0">
+   <item>
+    <widget class="QListWidget" name="list_messages"/>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="MainLayout">
      <item>
       <widget class="QLineEdit" name="edit_filter_batch">
@@ -98,7 +101,7 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item>
     <widget class="BatchTableView" name="table_batch">
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
@@ -111,7 +114,7 @@
      </attribute>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item>
     <widget class="QWidget" name="widget_add_batch" native="true"/>
    </item>
   </layout>

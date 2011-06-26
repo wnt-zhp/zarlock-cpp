@@ -37,8 +37,8 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 		edit_leader->setText(camp->campLeader);
 		edit_qmaster->setText(camp->campQuarter);
 		edit_others->setText(camp->campOthers);
-		spin_partnr->setValue(camp->scoutsNo);
-		spin_stuffnr->setValue(camp->leadersNo);
+		spin_scouts->setValue(camp->scoutsNo);
+		spin_leaders->setValue(camp->leadersNo);
 		period_start->setDate(camp->campDateBegin);
 		period_stop->setDate(camp->campDateEnd);
 	} else {
@@ -51,8 +51,8 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(edit_leader, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(edit_qmaster, SIGNAL(textChanged(QString)), this, SLOT(verify()));
-	connect(spin_partnr, SIGNAL(valueChanged(int)), this, SLOT(verify()));
-	connect(spin_stuffnr, SIGNAL(valueChanged(int)), this, SLOT(verify()));
+	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
+	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(period_start, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 	connect(period_stop, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 
@@ -77,8 +77,8 @@ void CampSettingsDialog::verify() {
 	if (	!edit_name->text().isEmpty()		&&
 			!edit_leader->text().isEmpty()		&&
 			!edit_qmaster->text().isEmpty()		&&
-			spin_partnr->value()				&&
-			spin_stuffnr->value()
+			spin_scouts->value()				&&
+			spin_leaders->value()
 	) {
 		buttonBox->button(QDialogButtonBox::Save)->setEnabled(true);
 	} else {
@@ -92,8 +92,8 @@ void CampSettingsDialog::accept() {
 	camp->campLeader = edit_leader->text();
 	camp->campQuarter = edit_qmaster->text();
 	camp->campOthers = edit_others->text();
-	camp->scoutsNo = spin_partnr->value();
-	camp->leadersNo = spin_stuffnr->value();
+	camp->scoutsNo = spin_scouts->value();
+	camp->leadersNo = spin_leaders->value();
 	camp->campDateBegin = period_start->date();
 	camp->campDateEnd = period_stop->date();
 

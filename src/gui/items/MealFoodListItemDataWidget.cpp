@@ -174,6 +174,8 @@ void MealFoodListItemDataWidget::buttonRemove() {
 	Database & db = Database::Instance();
 
 	db.removeDistributorRecord(dist_idx.row());
+	mfl->markDirty();
+
 	convertToEmpty();
 	mfl->populateModel();
 }
