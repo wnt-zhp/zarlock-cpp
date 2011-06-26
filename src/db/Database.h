@@ -51,7 +51,7 @@ public:
 	void updateBatchQty(const int);
 
 	void updateMealCosts();
-	void updateMealCosts(const int);
+	void updateMealCosts(const QModelIndex& idx);
 
 	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);

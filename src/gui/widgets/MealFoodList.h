@@ -31,20 +31,15 @@ public:
 	explicit MealFoodList(QWidget* parent = 0);
 	virtual ~MealFoodList();
 
-	void setDirty(bool dirty);
-	bool isDirty();
-
 	virtual void setProxyModel(MealTableModelProxy * model);
 	virtual const MealTableModelProxy * proxyModel();
 
 	virtual void insertEmptySlot();
-	virtual void removeEmptySlot();
 
 	virtual void setIndex(const QModelIndex& index);
 
 public slots:
 	virtual void populateModel();
-	virtual void removeItem(int row);
 	virtual void markDirty();
 
 private slots:

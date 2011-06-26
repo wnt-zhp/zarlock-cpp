@@ -24,7 +24,7 @@
 #include "Database.h"
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::WindowFlags f):
-		QWidget(parent, f) {
+		QWidget(parent, f), lock(false) {
 
 	setupUi(this);
 
@@ -50,15 +50,13 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 
 	mfl = (MealFoodList *)parent;
 
-	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
-// 	connect(batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
+	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateBatchAdd()));
+// 	connect(batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateBatchAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
-
-	connect(this, SIGNAL(removeRecord(int)), mfl, SLOT(removeItem(int)));
 
 	convertToEmpty();
 }
@@ -68,24 +66,42 @@ MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
 }
 
 void MealFoodListItemDataWidget::render(bool doRender) {
-	if (doRender) {
-		batch_label->setText(batch->currentText());
-		qty_label->setText(qty->text());
-	} else {
-	}
 	addB->setVisible(!doRender);
 	updateB->setVisible(doRender);
 	removeB->setVisible(!empty);
 
 	qty->setVisible(!doRender);
 	qty_label->setVisible(doRender);
+// 	qty_label->setVisible(false);
+// 	qty->setReadOnly(doRender);
+// 	qty->setFrame(!doRender);
+// 	qty->setButtonSymbols((doRender ? QAbstractSpinBox::NoButtons : QAbstractSpinBox::UpDownArrows));
+
 	batch->setVisible(!doRender);
 	batch_label->setVisible(doRender);
-
 }
 
+	
+void MealFoodListItemDataWidget::validateBatchAdd() {
+	if (!lock)
+		return;
+
+	double qtyused = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HUsedQty).data().toDouble();
+	double qtytotal = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
+
+	if (batch->currentIndex() >= 0) {
+		if (batch->currentIndex() != batch_idx.row())
+			qty->setMaximum(qtytotal-qtyused);
+		else
+			qty->setMaximum(qtytotal-qtyused + quantity);
+	} else {
+		qty->setMaximum(9999);
+	}
+
+	validateAdd();
+}
+	
 void MealFoodListItemDataWidget::validateAdd() {
-// 	PR(batch->currentIndex());
 	if (qty->value() && batch->currentIndex() >= 0) {
 		addB->setEnabled(true);
 	} else {
@@ -105,64 +121,82 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 
 void MealFoodListItemDataWidget::buttonAdd() {
 	Database & db = Database::Instance();
+	lock = false;
 
-	int batch_id = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId).data().toInt();
+	int old_bid = batch_idx.data().toInt();
+
+	batch_idx = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId);
+	quantity = qty->value();
+	batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+
 	if (empty) {
-		if (db.addDistributorRecord(batch_id, qty->text().toFloat(),
-				mfl->proxyModel()->ref(),
-				mfl->proxyModel()->ref(),
+		if (db.addDistributorRecord(batch_idx.data().toInt(), quantity,
+				mfl->proxyModel()->ref(), mfl->proxyModel()->ref(),
 				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
-// 			mfl->populateModel();
 			mfl->insertEmptySlot();
+			dist_idx = db.CachedDistributor()->index(db.CachedDistributor()->rowCount()-1, DistributorTableModel::HId);
 		} else
 			return;
 	} else {
-		if (db.updateDistributorRecord(idx.row(), batch_id, qty->text().toFloat(),
-				mfl->proxyModel()->ref(),
-				mfl->proxyModel()->ref(),
+		if (db.updateDistributorRecord(dist_idx.row(), batch_idx.data().toInt(), quantity,
+				mfl->proxyModel()->ref(), mfl->proxyModel()->ref(),
 				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 		} else
 			return;
 	}
+	if (old_bid != batch_idx.data().toInt())
+		db.updateBatchQty(old_bid);
+	db.updateBatchQty(batch_idx.data().toInt());
+
+	batch_label->setText(batchlabel);
+	qty_label->setText(QString("%1").arg((int)quantity));
+
 	mfl->markDirty();
 	render(true);
 }
 
 void MealFoodListItemDataWidget::buttonUpdate() {
+	if (lock)
+		return;
+
+	lock = true;
+
+	batch->setCurrentIndex(batch_idx.row());
+	qty->setValue(quantity);
+
+
 	render(false);
 }
 
 void MealFoodListItemDataWidget::buttonRemove() {
 	Database & db = Database::Instance();
 
-	db.removeDistributorRecord(idx.row());
+	db.removeDistributorRecord(dist_idx.row());
 	convertToEmpty();
 	mfl->populateModel();
-// 	emit removeRecord(idx.row());
-// 	PR(removeB);
-
-// 	qlwi->listWidget()->takeItem(qlwi->listWidget()->row(qlwi));
-}
-void MealFoodListItemDataWidget::printStatus() {
-	int curIdx = batch->currentIndex();
-	PR(curIdx);
-	PR(batch->model()->data(batch->model()->index(curIdx, BatchTableModel::HId)).toString().toStdString());
-	PR(batch->model()->data(batch->model()->index(curIdx, BatchTableModel::HSpec)).toString().toStdString());
 }
 
-void MealFoodListItemDataWidget::setBatchData(const QModelIndex & didx) {
-	if (idx != didx)
-		idx = didx;
+void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
+	dist_idx = idx;
 
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
 
-	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, didx.data(Qt::EditRole));
+	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
 	if (qmil.count()) {
-		batch->setCurrentIndex(qmil.at(0).row());
-		qty->setValue(dtm->data(dtm->index(didx.row(), DistributorTableModel::HQty)).toDouble());
+		batch_idx = qmil.at(0);
+
+		quantity = dtm->data(dtm->index(dist_idx.row(), DistributorTableModel::HQty)).toDouble();
+		batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+
+// 		batch->setCurrentIndex(batch_idx.row());
+// 		qty->setValue(quantity);
+
+		batch_label->setText(batchlabel);
+		qty_label->setText(QString("%1").arg((int)quantity));
+
 		empty = false;
 		render(true);
 	}

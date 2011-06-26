@@ -41,8 +41,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
 
-	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
+	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
@@ -136,9 +136,9 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 }
 
 void TabMealWidget::doRecalculate() {
-	int mid = db.CachedMeal()->index(lastidx.row(), MealTableModel::HId).data().toInt();
-	db.updateMealCosts(mid);
-	db.CachedMeal()->select();
+// 	int mid = db.CachedMeal()->index(lastidx.row(), MealTableModel::HId).data().toInt();
+	db.updateMealCosts(lastidx);
+// 	db.CachedMeal()->select();
 }
 
 #include "TabMealWidget.moc"

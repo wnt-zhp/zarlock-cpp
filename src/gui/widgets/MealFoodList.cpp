@@ -63,28 +63,6 @@ void MealFoodList::insertEmptySlot() {
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
 }
 
-void MealFoodList::removeEmptySlot() {
-	this->clear();
-	for (int i = 0; i < proxy->rowCount()-1; ++i) {
-		if (((MealFoodListItemDataWidget *)itemWidget(item(i)))->isEmpty())
-			takeItem(i);
-	}
-}
-
-void MealFoodList::removeItem(int /*row*/) {
-// 	Database::Instance().removeDistributorRecord(row);
-	removeEmptySlot();
-// 	populateModel();
-}
-
-void MealFoodList::setDirty(bool dirty) {
-	isdirty = dirty;
-}
-
-bool MealFoodList::isDirty() {
-	return isdirty;
-}
-
 void MealFoodList::setProxyModel(MealTableModelProxy* model) {
 	proxy = model;
 }
@@ -100,7 +78,6 @@ void MealFoodList::doItemEdit(QListWidgetItem* item) {
 void MealFoodList::markDirty() {
 	Database::Instance().CachedMeal()->setData(Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty), 1, Qt::EditRole);
 	Database::Instance().CachedMeal()->submitAll();
-// 	this->update();
 }
 
 void MealFoodList::setIndex(const QModelIndex& index) {

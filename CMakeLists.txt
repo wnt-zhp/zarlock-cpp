@@ -94,7 +94,6 @@ set(zarlok_src_gui_dialogs_SRCS
 )
 set(zarlok_src_gui_items_SRCS
 									src/gui/items/MealFoodListItemDataWidget.cpp
-									src/gui/items/MealFoodListItemNewWidget.cpp
 )
 set(zarlok_src_models_SRCS
 									src/models/ModelsCommon.cpp

@@ -214,6 +214,7 @@ void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bot
 // 		revertAll();
 // 		return;
 // 	}
+// 	PR(topleft.data().toString().toStdString());
 	this->submitAll();
 	if (topleft.column() == HQty) {
 		for (int i = topleft.row(); i <= bottomright.row(); ++i)

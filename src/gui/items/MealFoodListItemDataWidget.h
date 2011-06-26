@@ -39,20 +39,22 @@ public slots:
 	void buttonUpdate();
 	void buttonRemove();
 
-	void printStatus();
-
-	void setBatchData(const QModelIndex & didx);
+	void setBatchData(const QModelIndex & idx);
 	void convertToEmpty();
 
 protected slots:
+	void validateBatchAdd();
 	void validateAdd();
 
-signals:
-	void removeRecord(int);
-
 private:
-	bool empty;
-	QModelIndex idx;
+	bool empty, lock;
+
+	double quantity;
+	QString batchlabel;
+
+	QModelIndex batch_idx;
+	QModelIndex dist_idx;
+
 	MealFoodList * mfl;
 };
 

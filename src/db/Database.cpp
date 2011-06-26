@@ -394,49 +394,48 @@ void Database::updateBatchQty() {
 	}
 }
 
-void Database::updateBatchQty(const int pid) {
+void Database::updateBatchQty(const int bid) {
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
 
 	QSqlQuery q;
 	q.prepare("SELECT quantity FROM distributor WHERE batch_id=?;");
-	q.bindValue(0, pid);
+	q.bindValue(0, bid);
 	q.exec();
 	float qty = 0;
 	while (q.next()) {
 		qty += q.value(0).toFloat();
 	}
 
-	q.prepare("UPDATE batch SET used_qty=? WHERE id=?;");
-	q.bindValue(0, qty);
-	q.bindValue(1, pid);
-	q.exec();
-
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
 			db.rollback();
+
+	QModelIndexList idxl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+	if (idxl.count())
+		model_batch->setData(model_batch->index(idxl.at(0).row(), BatchTableModel::HUsedQty), qty);
 }
 
 void Database::updateMealCosts() {
-	QSqlQuery qMeal("SELECT id FROM meal;");
-	qMeal.exec();
-	while (qMeal.next()) {
-		updateMealCosts(qMeal.value(0).toInt());
-	}
+	for (int i = 0; i < model_meal->rowCount(); ++i)
+		updateMealCosts(model_meal->index(i, MealTableModel::HId));
 }
 
-void Database::updateMealCosts(const int mid) {
+void Database::updateMealCosts(const QModelIndex& idx) {
+
+	int mid = model_meal->index(idx.row(), MealTableModel::HId).data().toInt();
+
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
-
-	QString distdate;
-	float costs = 0.0;
-	int mealpersons = 0;
 
 	QSqlQuery q;
 	q.prepare("SELECT distdate, scouts, leaders, others FROM meal WHERE id=?;");
 	q.bindValue(0, mid);
 	q.exec();
+
+	QString distdate;
+	float costs = 0.0;
+	int mealpersons = 0;
 
 	while (q.next()) {
 		mealpersons = q.value(1).toInt() + q.value(2).toInt() + q.value(3).toInt();
@@ -452,15 +451,12 @@ void Database::updateMealCosts(const int mid) {
 		costs += netto*(1.0 + tax/100.0)*q.value(1).toFloat();
 	}
 
-	QString c;
-	q.prepare("UPDATE meal SET dirty=0,avcosts=? WHERE id=?;");
-	q.bindValue(0, c.sprintf("%.2f", costs/mealpersons));
-	q.bindValue(1, mid);
-	q.exec();
-
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
 			db.rollback();
+
+	model_meal->setData(model_meal->index(idx.row(), MealTableModel::HDirty), 0);
+	model_meal->setData(model_meal->index(idx.row(), MealTableModel::HAvgCosts), distdate.sprintf("%.2f", costs/mealpersons));
 }
 
 /** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
@@ -889,7 +885,7 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 	status &= model_meal->setData(model_meal->index(row, 5), others);
 	status &= model_meal->setData(model_meal->index(row, 6), avgcosts);
 	status &= model_meal->setData(model_meal->index(row, 7), notes);
-PR(status);
+
 	if (!status) {
 		model_meal->revertAll();
 		return false;
@@ -985,7 +981,7 @@ bool Database::removeMealRecord(const QModelIndexList & idxl, bool askForConfirm
 	}
 	
 	status = model_meal->submitAll();
-	rebuild_models();
+// 	rebuild_models();
 	
 	return status;
 }
