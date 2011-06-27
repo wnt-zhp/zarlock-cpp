@@ -133,7 +133,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 		msgBox.exec();
 		return false;
 	}
-			
+
 	if (dbversion != DBVERSION) {
 		if (!autoupgrade) {
 			QMessageBox msgBox;
@@ -342,9 +342,11 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		query.exec(qdbv.arg(DBVERSION));
 
 		if (db.driver()->hasFeature(QSqlDriver::Transactions))
-			db.commit();
+			if (!db.commit())
+				db.rollback();
 
-		updateBatchQty();
+
+// 		updateBatchQty();
 
 		return true;
 	}
@@ -417,6 +419,7 @@ void Database::updateBatchQty(const int bid) {
 			db.rollback();
 
 	QModelIndexList idxl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+
 	if (idxl.count())
 		model_batch->setData(model_batch->index(idxl.at(0).row(), BatchTableModel::HUsedQty), qty);
 }

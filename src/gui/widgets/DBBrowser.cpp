@@ -80,8 +80,10 @@ void DBBrowser::openZarlock(const QString & dbname) {
 		globals::appSettings->beginGroup("Database");
 		globals::appSettings->setValue("RecentDatabase", dbname);
 		globals::appSettings->endGroup();
+
 		z = new zarlok();
 		z->show();
+
 // 		connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
 		connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
 	}
@@ -161,7 +163,8 @@ void DBBrowser::refreshList(int sort, int order) {
 void DBBrowser::newDatabaseCreator(bool autoopen) {
 	bool wasOK = false;
 	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"),QLineEdit::Normal, "", &wasOK);
-
+PR(wasOK);
+PR(autoopen);
 	if (wasOK && autoopen) {
 // 		Database::Instance().open_database(dbname, true);
 		openZarlock(dbname);
