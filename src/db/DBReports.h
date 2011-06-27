@@ -29,6 +29,8 @@ public:
 	virtual ~DBReports();
 
 	static void printDailyReport(const QString & dbname, const QDate & date);
+
+	static void showDailyMealReport(const QString & date, QString * reportfile = NULL, bool displayPDF = false);
 };
 
 #endif // DBREPORTS_H

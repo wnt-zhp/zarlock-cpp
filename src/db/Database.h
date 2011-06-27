@@ -83,6 +83,7 @@ public:
 	inline MealTableModel * CachedMeal() { return model_meal; }
 
 	inline CampProperties * cs() { return camp; };
+	inline const QString & openedDatabas() { return opened_db; }
 
 private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
@@ -109,6 +110,8 @@ private:
 	bool doDBUpgrade(unsigned int & version);
 
 	bool locked;
+
+	QString opened_db;
 
 	static const unsigned int DBVERSION = 0x000030;
 };

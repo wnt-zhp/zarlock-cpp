@@ -53,6 +53,8 @@ private:
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
 	QModelIndex lastidx;
+
+	QAction * viewPDF;
 };
 
 #endif // TABMEALWIDGET_H

@@ -193,6 +193,8 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 
 	locked = true;
 
+	opened_db = dbname;
+
 	return rebuild_models();
 }
 
@@ -215,6 +217,9 @@ bool Database::close_database() {
 
 	if (db.isOpen())
 		db.close();
+
+	opened_db.clear();
+
 	return true;
 }
 
@@ -495,10 +500,10 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 // 		<< edit_expiry->text().toStdString() << " );" << std::endl;
 	int row = model_products->rowCount();
 	status &= model_products->insertRows(row, 1);
-	status &= model_products->setData(model_products->index(row, 1), name);
-	status &= model_products->setData(model_products->index(row, 2), unit);
-	status &= model_products->setData(model_products->index(row, 3), expiry);
-	status &= model_products->setData(model_products->index(row, 3), notes);
+	status &= model_products->setData(model_products->index(row, ProductsTableModel::HName), name);
+	status &= model_products->setData(model_products->index(row, ProductsTableModel::HUnit), unit);
+	status &= model_products->setData(model_products->index(row, ProductsTableModel::HExpire), expiry);
+	status &= model_products->setData(model_products->index(row, ProductsTableModel::HNotes), notes);
 
 	if (!status) {
 		model_products->revertAll();

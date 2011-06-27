@@ -19,9 +19,11 @@
 
 #include "DBReports.h"
 
-#include "Database.h"
 #include "globals.h"
 #include "config.h"
+
+#include "DataParser.h"
+#include "Database.h"
 
 #include <QDir>
 #include <QFile>
@@ -30,6 +32,10 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextStream>
+#include <QStringBuilder>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 DBReports::DBReports() {
 
@@ -110,5 +116,108 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	doc.print(&printer);
 }
 
+void DBReports::showDailyMealReport(const QString& date, QString * reportfile, bool displayPDF) {
+	QFile daymeal_tpl(":/resources/report_daymeal.tpl");
+	if (!daymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+			QObject::tr("Unable to find resources in ") +
+						daymeal_tpl.fileName() + "\n" +
+						QObject::tr("Check your installation and try to run again.\n"
+						"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QFile sheet_css(":/resources/report.css");
+	if (!sheet_css.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+			QObject::tr("Unable to find resources in ") +
+						sheet_css.fileName() + "\n" +
+						QObject::tr("Check your installation and try to run again.\n"
+						"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QTextStream daymeal_tstream(&daymeal_tpl);
+	QTextStream sheet_tstream(&sheet_css);
+
+	// Prepare printer
+	QPrinter printer(QPrinter::HighResolution);
+	printer.setPaperSize(QPrinter::A4);
+	printer.setColorMode(QPrinter::Color);
+	printer.setOutputFormat(QPrinter::PdfFormat);
+	printer.setOrientation(QPrinter::Landscape);
+
+	Database & db = Database::Instance();
+
+	QString ofile =
+		QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabas() %
+		QString("/") % date % QString("_daymeal.pdf");
+	PR(ofile.toStdString());
+	printer.setOutputFileName(ofile);
+
+	// Prepare document
+	QTextDocument doc;
+	QString sheet = sheet_tstream.readAll();
+	doc.setDefaultStyleSheet(sheet);
+// 	PR(sheet.toStdString());
+	QTextCursor cur(&doc);
+	cur.movePosition(QTextCursor::Start);
+
+	// Products table preparation
+	int p_rows = db.CachedBatch()->rowCount();
+	int p_cols = 4;//model_daymeal->columnCount();
+	int daymeal_map[4] = { 0, 2, 4, 3 };
+	QString tcont;
+
+	QSqlQuery q;
+
+	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+		QSqlDatabase::database().transaction();
+
+	q.prepare("SELECT distdate, scouts, leaders, others FROM meal WHERE distdate=?;");
+	q.bindValue(0, date);
+	q.exec();
+
+	QString distdate;
+	float costs = 0.0;
+	int mealpersons = 0;
+
+	while (q.next()) {
+		mealpersons = q.value(1).toInt() + q.value(2).toInt() + q.value(3).toInt();
+		distdate = q.value(0).toString();
+	}
+
+	q.prepare("SELECT batch.price,distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
+	q.bindValue(0, distdate);
+	q.exec();
+	while (q.next()) {
+		double netto, tax;
+		DataParser::price(q.value(0).toString(), netto, tax);
+		costs += netto*(1.0 + tax/100.0)*q.value(1).toFloat();
+	}
+
+	if (q.driver()->hasFeature(QSqlDriver::Transactions))
+		if (!QSqlDatabase::database().commit())
+			QSqlDatabase::database().rollback();
+
+	for (int i = 0; i < p_rows; i++) {
+		tcont += "<tr>";
+		for (int j = 0; j < p_cols; j++) {
+// 			QTextCursor cur = products_table->cellAt(i, j).firstCursorPosition();
+// 			cur.insertText(model_prod->index(i, j).data().toString());
+			tcont += "<td>" + db.CachedBatch()->index(i, daymeal_map[j]).data().toString() + "</td>";
+		}
+		tcont += "</tr>";
+	}
+
+	// Print document
+
+	QString tpl = daymeal_tstream.readAll();
+	tpl.replace("@DATE@", (QDate::currentDate()).toString());
+	tpl.replace("@TABLE_CONTENT@", tcont);
+	doc.setHtml(tpl);
+
+	doc.print(&printer);
+}
 
 #include "DBReports.moc"
