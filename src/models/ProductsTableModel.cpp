@@ -24,8 +24,8 @@
 #include "ProductsTableModel.h"
 #include "DataParser.h"
 
-ProductsTableModel::ProductsTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
+ProductsTableModel::ProductsTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
+	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
 ProductsTableModel::~ProductsTableModel() {
@@ -161,6 +161,16 @@ void ProductsTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "name GLOB '" + f + "*'";
 	setFilter(filter);
+}
+
+void ProductsTableModel::autoSubmit(bool asub) {
+	autosubmit = asub;
+}
+
+void ProductsTableModel::trigDataChanged() {
+	if (autosubmit) {
+		this->submitAll();
+	}
 }
 
 #include "ProductsTableModel.moc"

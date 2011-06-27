@@ -498,12 +498,14 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 // 		<< edit_name->text().toStdString() << ","
 // 		<< edit_unit->text().toStdString() << ","
 // 		<< edit_expiry->text().toStdString() << " );" << std::endl;
+	model_products->autoSubmit(false);
 	int row = model_products->rowCount();
 	status &= model_products->insertRows(row, 1);
 	status &= model_products->setData(model_products->index(row, ProductsTableModel::HName), name);
 	status &= model_products->setData(model_products->index(row, ProductsTableModel::HUnit), unit);
 	status &= model_products->setData(model_products->index(row, ProductsTableModel::HExpire), expiry);
 	status &= model_products->setData(model_products->index(row, ProductsTableModel::HNotes), notes);
+	model_products->autoSubmit(true);
 
 	if (!status) {
 		model_products->revertAll();
@@ -520,11 +522,12 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 // 		<< edit_name->text().toStdString() << ","
 // 		<< edit_unit->text().toStdString() << ","
 // 		<< edit_expiry->text().toStdString() << " );" << std::endl;
-
-	status &= model_products->setData(model_products->index(pid, 1), name);
-	status &= model_products->setData(model_products->index(pid, 2), unit);
-	status &= model_products->setData(model_products->index(pid, 3), expiry);
-	status &= model_products->setData(model_products->index(pid, 3), notes);
+	model_products->autoSubmit(false);
+	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HName), name);
+	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HUnit), unit);
+	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HExpire), expiry);
+	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HName), notes);
+	model_products->autoSubmit(true);
 
 	if (!status) {
 		model_products->revertAll();
@@ -634,6 +637,8 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 // 		<< QString(":)").toStdString() << " );" << std::endl;
 
 	int row = model_batch->rowCount();
+
+	model_batch->autoSubmit(false);
 	status &= model_batch->insertRows(row, 1);
 // 	model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
@@ -647,6 +652,7 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HBook), book);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
+	model_batch->autoSubmit(true);
 
 	if (!status) {
 		model_batch->revertAll();
@@ -674,7 +680,8 @@ bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QS
 // 		<< QDate::currentDate().toString(Qt::ISODate).toStdString() << ","
 // 		<< QString(":)").toStdString() << " );" << std::endl;
 
-// 	model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
+	model_batch->autoSubmit(false);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HProdId), pid);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HSpec), spec);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HExpire), expiry);
@@ -686,6 +693,7 @@ bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QS
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HBook), book);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HRegDate), reg);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HNotes), notes);
+	model_batch->autoSubmit(true);
 
 	if (!status) {
 		model_batch->revertAll();
@@ -757,6 +765,7 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 // PR(re3);
 // return false;
 
+	model_distributor->autoSubmit(false);
 	status &= model_distributor->insertRows(row, 1);
 // 	status &= model_distributor->setData(btm->index(row, DistributorTableModel::HId), row);
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
@@ -766,6 +775,7 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HReason), re1);
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HReason2), re2);
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HReason3), re3);
+	model_distributor->autoSubmit(true);
 
 	if (!status) {
 		model_distributor->revertAll();
@@ -780,6 +790,8 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 
 bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
+
+	model_distributor->autoSubmit(false);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HBatchId), bid);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HQty), qty);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HDistDate), ddate);
@@ -787,6 +799,7 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HReason), re1);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HReason2), re2);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HReason3), re3);
+	model_distributor->autoSubmit(true);
 
 	if (!status) {
 		model_distributor->revertAll();
@@ -882,6 +895,8 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 		<< notes.toStdString() << " );" << std::endl;
 	
 	int row = model_meal->rowCount();
+
+	model_meal->autoSubmit(false);
 	status &= model_meal->insertRows(row, 1);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDistDate), date);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDirty), (int)dirty);
@@ -890,6 +905,7 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HOthers), others);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HAvgCosts), avgcosts);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HNotes), notes);
+	model_meal->autoSubmit(true);
 
 	if (!status) {
 		model_meal->revertAll();
@@ -901,6 +917,7 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 bool Database::updateMealRecord(int mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes) {
 	bool status = true;
 
+	model_meal->autoSubmit(false);
 	status &= model_meal->setData(model_meal->index(mid, 1), date);
 	status &= model_meal->setData(model_meal->index(mid, 2), (int)dirty);
 	status &= model_meal->setData(model_meal->index(mid, 3), scouts);
@@ -908,6 +925,7 @@ bool Database::updateMealRecord(int mid, const QString& date, bool dirty, int sc
 	status &= model_meal->setData(model_meal->index(mid, 5), others);
 	status &= model_meal->setData(model_meal->index(mid, 6), avgcosts);
 	status &= model_meal->setData(model_meal->index(mid, 7), notes);
+	model_meal->autoSubmit(true);
 
 	if (!status) {
 		model_meal->revertAll();

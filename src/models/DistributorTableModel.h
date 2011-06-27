@@ -37,7 +37,8 @@ public:
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-    virtual bool select();
+	virtual bool select();
+	virtual void autoSubmit(bool asub = true);
 
 	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };
 	enum Reasons {RGeneral = 0, RExpired, RMeal };
@@ -47,9 +48,11 @@ public slots:
 	void filterDB(const QString &);
 	void trigDataChanged(QModelIndex topleft , QModelIndex bottomright);
 
-private:
+protected:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
+
+	bool autosubmit;
 };
 
 #endif // DISTRIBUTORTABLEMODEL_H

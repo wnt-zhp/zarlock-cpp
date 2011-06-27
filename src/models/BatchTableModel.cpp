@@ -29,8 +29,8 @@
 #include "DataParser.h"
 #include "Database.h"
 
-BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
+BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
+	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
 BatchTableModel::~BatchTableModel() {
@@ -271,6 +271,16 @@ void BatchTableModel::filterDB(const QString & f) {
 	if (!f.isEmpty())
 		filter = "spec GLOB '" % f % "*'";
 	setFilter(filter);
+}
+
+void BatchTableModel::autoSubmit(bool asub) {
+	autosubmit = asub;
+}
+
+void BatchTableModel::trigDataChanged() {
+	if (autosubmit) {
+		this->submitAll();
+	}
 }
 
 #include "BatchTableModel.moc"

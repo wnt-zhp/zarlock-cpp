@@ -38,15 +38,22 @@ public:
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     virtual bool select();
+	virtual void autoSubmit(bool asub = true);
 
 	enum Headers {HId = 0, HName, HUnit, HExpire, HNotes };
 
 public slots:
 	void filterDB(const QString &);
 
-private:
+private slots:
+	void trigDataChanged();
+
+protected:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
+
+protected:
+	bool autosubmit;
 };
 
 // a.krempowski@gmail.com

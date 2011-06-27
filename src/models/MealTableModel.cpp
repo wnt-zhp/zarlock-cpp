@@ -26,8 +26,8 @@
 #include "DataParser.h"
 #include "Database.h"
 
-MealTableModel::MealTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
-// 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(submitAll()));
+MealTableModel::MealTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
+	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
 MealTableModel::~MealTableModel() {
@@ -172,4 +172,13 @@ void MealTableModel::setDirtyIcon(const QIcon& icon) {
 	dirtyIcon = icon;
 }
 
+void MealTableModel::autoSubmit(bool asub) {
+	autosubmit = asub;
+}
+
+void MealTableModel::trigDataChanged() {
+	if (autosubmit) {
+		this->submitAll();
+	}
+}
 #include "MealTableModel.moc"

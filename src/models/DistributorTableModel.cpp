@@ -35,7 +35,7 @@
  * @param parent rodzic
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
-DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db) {
+DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged(QModelIndex,QModelIndex)));
 }
 
@@ -210,6 +210,8 @@ void DistributorTableModel::filterDB(const QString & f) {
 }
 
 void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
+	if (!autosubmit)
+		return;
 // 	if (submitAll()) {;
 // 		revertAll();
 // 		return;
@@ -222,6 +224,10 @@ void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bot
 
 		Database::Instance().CachedBatch()->submitAll();
 	}
+}
+
+void DistributorTableModel::autoSubmit(bool asub) {
+	autosubmit = asub;
 }
 
 #include "DistributorTableModel.moc"

@@ -37,17 +37,23 @@ public:
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-    virtual bool select();
+	virtual bool select();
+	virtual void autoSubmit(bool asub = true);
+
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HNotes, HInvoice };
 
 public slots:
 	void filterDB(const QString &);
+
+private slots:
+	void trigDataChanged();
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
 
-public:
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HNotes, HInvoice };
+protected:
+	bool autosubmit;
 };
 
 #endif // BATCHTABLEMODEL_H

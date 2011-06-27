@@ -38,12 +38,16 @@ public:
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-    virtual bool select();
+	virtual bool select();
+	virtual void autoSubmit(bool asub = true);
 
 	virtual void setDirtyIcon(const QIcon& icon);
 
 public slots:
 	void filterDB(const QString &);
+
+private slots:
+	void trigDataChanged();
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
@@ -52,7 +56,8 @@ private:
 public:
 	enum Headers {HId = 0, HDistDate, HDirty, HScouts, HLeaders, HOthers, HAvgCosts, HNotes };
 
-private:
+protected:
+	bool autosubmit;
 	QIcon dirtyIcon;
 };
 
