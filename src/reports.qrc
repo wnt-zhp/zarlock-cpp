@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 	<file>resources/report_batch.tpl</file>
-	<file>resources/report_mealday.tpl</file>
+	<file>resources/report_dailymeal.tpl</file>
 	<file>resources/report.css</file>
 </qresource>
 </RCC>

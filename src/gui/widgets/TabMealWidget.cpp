@@ -20,6 +20,7 @@
 #include "Database.h"
 #include "DataParser.h"
 #include "TabMealWidget.h"
+#include "DBReports.h"
 
 #include <QPushButton>
 #include <QToolButton>
@@ -51,7 +52,11 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	tools->setPopupMode(QToolButton::InstantPopup);
 	tools->addAction(viewPDF);
-	
+
+	connect(viewPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
+
+	seldate = QDate::currentDate().toString(Qt::ISODate);
+
 	action_toggle->setChecked(true);
 	hightlight_day(QDate::currentDate());
 }
@@ -138,12 +143,20 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	lastidx = idx;
 	wmap->setCurrentIndex(idx.row());
 	tab_meals->setIndex(idx);
+	seldate = db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString();
 }
 
 void TabMealWidget::doRecalculate() {
 // 	int mid = db.CachedMeal()->index(lastidx.row(), MealTableModel::HId).data().toInt();
 	db.updateMealCosts(lastidx);
 // 	db.CachedMeal()->select();
+}
+
+void TabMealWidget::doPrepareReport() {
+	QString fn;
+	DBReports::showDailyMealReport(seldate, &fn);
+
+	PR(fn.toStdString());
 }
 
 #include "TabMealWidget.moc"

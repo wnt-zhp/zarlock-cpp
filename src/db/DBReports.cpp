@@ -117,11 +117,11 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 }
 
 void DBReports::showDailyMealReport(const QString& date, QString * reportfile, bool displayPDF) {
-	QFile daymeal_tpl(":/resources/report_daymeal.tpl");
-	if (!daymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
+	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
+	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 			QObject::tr("Unable to find resources in ") +
-						daymeal_tpl.fileName() + "\n" +
+						dailymeal_tpl.fileName() + "\n" +
 						QObject::tr("Check your installation and try to run again.\n"
 						"Click Close to exit."), QMessageBox::Close);
 		exit(EXIT_FAILURE);
@@ -137,7 +137,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 		exit(EXIT_FAILURE);
 	}
 
-	QTextStream daymeal_tstream(&daymeal_tpl);
+	QTextStream dailymeal_tstream(&dailymeal_tpl);
 	QTextStream sheet_tstream(&sheet_css);
 
 	// Prepare printer
@@ -151,7 +151,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 
 	QString ofile =
 		QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabas() %
-		QString("/") % date % QString("_daymeal.pdf");
+		QString("/") % date % QString("_dailymeal.pdf");
 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
@@ -165,8 +165,8 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 
 	// Products table preparation
 	int p_rows = db.CachedBatch()->rowCount();
-	int p_cols = 4;//model_daymeal->columnCount();
-	int daymeal_map[4] = { 0, 2, 4, 3 };
+	int p_cols = 4;//model_dailymeal->columnCount();
+	int dailymeal_map[4] = { 0, 2, 4, 3 };
 	QString tcont;
 
 	QSqlQuery q;
@@ -205,14 +205,14 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 		for (int j = 0; j < p_cols; j++) {
 // 			QTextCursor cur = products_table->cellAt(i, j).firstCursorPosition();
 // 			cur.insertText(model_prod->index(i, j).data().toString());
-			tcont += "<td>" + db.CachedBatch()->index(i, daymeal_map[j]).data().toString() + "</td>";
+			tcont += "<td>" + db.CachedBatch()->index(i, dailymeal_map[j]).data().toString() + "</td>";
 		}
 		tcont += "</tr>";
 	}
 
 	// Print document
 
-	QString tpl = daymeal_tstream.readAll();
+	QString tpl = dailymeal_tstream.readAll();
 	tpl.replace("@DATE@", (QDate::currentDate()).toString());
 	tpl.replace("@TABLE_CONTENT@", tcont);
 	doc.setHtml(tpl);

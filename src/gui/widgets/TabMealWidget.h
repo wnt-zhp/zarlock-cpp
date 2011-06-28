@@ -44,6 +44,8 @@ private slots:
 	void selectDay(const QModelIndex& idx);
 	void doRecalculate();
 
+	void doPrepareReport();
+
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
 	QString mealcode[4];
@@ -53,6 +55,7 @@ private:
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
 	QModelIndex lastidx;
+	QString seldate;
 
 	QAction * viewPDF;
 };
