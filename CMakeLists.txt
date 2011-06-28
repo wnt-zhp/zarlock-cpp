@@ -146,7 +146,9 @@ qt4_add_binresources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES} OP
 qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTIONS -binary)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
-add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC})
+add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
+	${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})

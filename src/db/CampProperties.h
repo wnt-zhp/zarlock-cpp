@@ -26,23 +26,29 @@
 struct CampProperties {
 	bool isCorrect;				// is camp set correct
 	QString campName;			// camp name
+	QString campPlace;			// camp place
+	QString campOrg;			// camp organizator
 	QDate campDateBegin;		// camp begin date
 	QDate campDateEnd;			// camp end date
 	int scoutsNo;				// amount of scoutsNo
 	int leadersNo;				// amount of leaders
+	double avgCosts;			// average meal costs per day
 	QString campLeader;			// leader's name
 	QString campQuarter;		// quartermaster's name
 	QString campOthers;			// others
 
 	enum dbkeys {	HisCorrect		= 0x001,
 					HcampName		= 0x002,
-					HcampDateBegin	= 0x004,
-					HcampDateEnd	= 0x008,
-					HscoutsNo		= 0x010,
-					HleadersNo		= 0x020,
-					HcampLeader		= 0x040,
-					HcampQuarter	= 0x080,
-					HcampOthers		= 0x100
+					HcampPlace		= 0x003,
+					HcampOrg		= 0x004,
+					HcampDateBegin	= 0x005,
+					HcampDateEnd	= 0x006,
+					HscoutsNo		= 0x007,
+					HleadersNo		= 0x008,
+					HAvgCosts		= 0x009,
+					HcampLeader		= 0x00a,
+					HcampQuarter	= 0x00b,
+					HcampOthers		= 0x00c
 	};
 	void writeCampSettings();
 	void readCampSettings();

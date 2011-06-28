@@ -1,35 +1,99 @@
 <!DOCTYPE html>
 <html lang="pl">
-<html>
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="report.css" />
-</head>
 
 <body style="height: 100%;">
-<div align="right" class="date">@CAMP@, @DATE@</div>
-<div align="center" class="header">@CAMP@, @DATE@</div>
+<table class="header" style="width: 100%;">
+<tr>
+<td>Związek Harcerstwa Polskiego</td>
+</tr><tr>
+<td>Obóz w: @PLACE@</td><td />
+</t><tr>
+<td>Organizator: @ORG@</td><td />
+</tr></table>
 
-<div align="center">
+<div align="center" class="title">
+<br /><br />
+Zapotrzebowanie żywnościowe
+<br /><br />
+</div>
+
+<table class="header">
+<tr>
+<td>Data: @DATE@</td>
+</tr><tr>
+<td>Zatwierdzona w planie żywnościowym średnia stawka dzienna: @AVGCOSTS@ zł</td>
+</tr></table>
+
+<br />
 
 <table class="maincont" width="100%" border="1">
 <thead><tr>
-	<td>Pozycja</td>
-	<td>Produkt</td>
-	<td>Ilość</td>
-	<tD>koszt</td>
+	<td width="25%">Śniadanie</td>
+	<td width="25%">Obiad</td>
+	<td width="25%">Podwieczorek</td>
+	<td width="25%">Kolacja</td>
 </tr></thead>
 <tbody>
-@TABLE_CONTENT@
+<tr><td>
+@TABLE_CONTENT_1@
+</td><td>
+@TABLE_CONTENT_2@
+</td><td>
+@TABLE_CONTENT_3@
+</td><td>
+@TABLE_CONTENT_4@
+</td></tr>
 </tbody>
 <tfoot>
 </tfoot>
 </table>
 
+<br />
+<div style="height: auto;">
+Posiłki dodatkowe - wyszczególnienie:<br />
+@TABLE_CONTENT_ADD@
 </div>
+<br />
+<div>Dane o stanie żywieniowym:<br />
+1. Liczba uczestników obozu: @SCOUTSNO@<br />
+2. Liczba kadry obozowej: @LEADERSNO@<br />
+3. Pozostali: @OTHERSNO@<br />
+Stan żywionych razem: @ALL@
+</div>
+<br />
+<div>Przeciętny koszt wyżywienia jednej osoby: @AVG@ zł</div>
+<br />
+<table class="maincont" width="100%" border="2">
+<thead><tr>
+	<td>Sporządził</td>
+	<td>Sprawdził</td>
+	<td>Zatwierdził</td>
+</tr></thead>
+<tbody>
+<tr><td height="200px">
 
-<div style="height: auto;">srodek</div>
+</td><td>
 
-<div style="height: 100px; margin-bottom: 0px;">@FOOTER@</div>
+</td><td>
+
+</td></tr>
+<tr><td>
+@QUATER@
+</td><td>
+@OTHER@
+</td><td>
+@LEADER@
+</td></tr>
+<tr><td>
+Kwatermistrz lub zaopatrzeniowiec
+</td><td>
+Przestawiciel rady obozu
+</td><td>
+Komendant obozu
+</td></tr>
+</tbody>
+<tfoot>
+</tfoot>
+</table>
 </body>
 </html>

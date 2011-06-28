@@ -32,6 +32,8 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	period_stop->calendarWidget()->setFirstDayOfWeek(Qt::Monday);
 
 	edit_name->setText(camp->campName);
+	edit_place->setText(camp->campPlace);
+	edit_org->setText(camp->campOrg);
 
 	if (camp->isCorrect) {
 		edit_leader->setText(camp->campLeader);
@@ -39,6 +41,7 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 		edit_others->setText(camp->campOthers);
 		spin_scouts->setValue(camp->scoutsNo);
 		spin_leaders->setValue(camp->leadersNo);
+		spin_avgcosts->setValue(camp->avgCosts);
 		period_start->setDate(camp->campDateBegin);
 		period_stop->setDate(camp->campDateEnd);
 	} else {
@@ -49,10 +52,13 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	}
 
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(verify()));
+	connect(edit_place, SIGNAL(textChanged(QString)), this, SLOT(verify()));
+	connect(edit_org, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(edit_leader, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(edit_qmaster, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(verify()));
+	connect(spin_avgcosts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(period_start, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 	connect(period_stop, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 
@@ -75,10 +81,13 @@ void CampSettingsDialog::verifyDate() {
 
 void CampSettingsDialog::verify() {
 	if (	!edit_name->text().isEmpty()		&&
+			!edit_place->text().isEmpty()		&&
+			!edit_org->text().isEmpty()			&&
 			!edit_leader->text().isEmpty()		&&
 			!edit_qmaster->text().isEmpty()		&&
 			spin_scouts->value()				&&
-			spin_leaders->value()
+			spin_leaders->value()				&&
+			spin_avgcosts->value()
 	) {
 		buttonBox->button(QDialogButtonBox::Save)->setEnabled(true);
 	} else {
@@ -89,11 +98,14 @@ void CampSettingsDialog::verify() {
 void CampSettingsDialog::accept() {
 	camp->isCorrect = true;
 	camp->campName = edit_name->text();
+	camp->campPlace = edit_place->text();
+	camp->campOrg = edit_org->text();
 	camp->campLeader = edit_leader->text();
 	camp->campQuarter = edit_qmaster->text();
 	camp->campOthers = edit_others->text();
 	camp->scoutsNo = spin_scouts->value();
 	camp->leadersNo = spin_leaders->value();
+	camp->avgCosts= spin_avgcosts->value();
 	camp->campDateBegin = period_start->date();
 	camp->campDateEnd = period_stop->date();
 

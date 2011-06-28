@@ -164,57 +164,96 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	cur.movePosition(QTextCursor::Start);
 
 	// Products table preparation
-	int p_rows = db.CachedBatch()->rowCount();
-	int p_cols = 4;//model_dailymeal->columnCount();
-	int dailymeal_map[4] = { 0, 2, 4, 3 };
-	QString tcont;
-
 	QSqlQuery q;
 
 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
 		QSqlDatabase::database().transaction();
 
-	q.prepare("SELECT distdate, scouts, leaders, others FROM meal WHERE distdate=?;");
+	q.prepare("SELECT scouts, leaders, others FROM meal WHERE distdate=?;");
 	q.bindValue(0, date);
 	q.exec();
 
 	QString distdate;
-	float costs = 0.0;
-	int mealpersons = 0;
+	int sco = 0, lea = 0, oth = 0, all = 0;
 
 	while (q.next()) {
-		mealpersons = q.value(1).toInt() + q.value(2).toInt() + q.value(3).toInt();
-		distdate = q.value(0).toString();
+		sco = q.value(0).toInt();
+		lea = q.value(1).toInt();
+		oth = q.value(2).toInt();
+		all = lea+sco+oth;
+		distdate = QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleLongDate);
 	}
 
-	q.prepare("SELECT batch.price,distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
-	q.bindValue(0, distdate);
-	q.exec();
+	QString cont1, cont2, cont3, cont4, contadd, unit, spec;
+	double qty, costs;
+
+	QModelIndexList idxl = db.CachedDistributor()->match(db.CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
+	for (int i = 0; i < idxl.count(); ++i) {
+		if (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HReason3).data().toInt() != 2)
+			continue;
+
+		spec = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data().toString();
+		qty = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HQty).data().toDouble();
+
+		q.prepare("SELECT batch.unit,batch.price FROM batch WHERE batch.id=?;");
+		q.bindValue(0, db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt());
+		q.exec();
+		if (q.next()) {
+			unit = q.value(0).toString();
+			double netto, tax;
+			if (DataParser::price(q.value(1).toString(), netto, tax)) {
+				costs += netto*(1.0 + tax/100.0)*qty;
+			}
+		}
+
+		switch (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HReason).data().toInt()) {
+			case 0:
+				cont1.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				break;
+			case 2:
+				cont2.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				break;
+			case 3:
+				cont3.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				break;
+			case 4:
+				cont4.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				break;
+			default:
+				contadd.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
+				break;
+		}
+	}
+
 	while (q.next()) {
-		double netto, tax;
-		DataParser::price(q.value(0).toString(), netto, tax);
-		costs += netto*(1.0 + tax/100.0)*q.value(1).toFloat();
+		cont1.append("%1 - %2 x %3\n").arg(q.value(0).toString()).arg(q.value(2).toFloat()).arg(q.value(1).toString());
 	}
 
 	if (q.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!QSqlDatabase::database().commit())
 			QSqlDatabase::database().rollback();
 
-	for (int i = 0; i < p_rows; i++) {
-		tcont += "<tr>";
-		for (int j = 0; j < p_cols; j++) {
-// 			QTextCursor cur = products_table->cellAt(i, j).firstCursorPosition();
-// 			cur.insertText(model_prod->index(i, j).data().toString());
-			tcont += "<td>" + db.CachedBatch()->index(i, dailymeal_map[j]).data().toString() + "</td>";
-		}
-		tcont += "</tr>";
-	}
-
 	// Print document
 
 	QString tpl = dailymeal_tstream.readAll();
-	tpl.replace("@DATE@", (QDate::currentDate()).toString());
-	tpl.replace("@TABLE_CONTENT@", tcont);
+	tpl.replace("@DATE@", date);
+	tpl.replace("@PLACE@", db.cs()->campPlace);
+	tpl.replace("@ORG@", db.cs()->campOrg);
+	tpl.replace("@QUATER@", db.cs()->campQuarter);
+	tpl.replace("@OTHER@", db.cs()->campOthers);
+	tpl.replace("@LEADER@", db.cs()->campLeader);
+	tpl.replace("@SCOUTSNO@", QString().sprintf("%d", sco));
+	tpl.replace("@LEADERSNO@", QString().sprintf("%d", lea));
+	tpl.replace("@OTHERSNO@", QString().sprintf("%d", oth));
+	tpl.replace("@ALL@", QString().sprintf("%d", all));
+	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db.cs()->avgCosts));
+	tpl.replace("@AVG@", QString().sprintf("%.2f", costs/all));
+
+	tpl.replace("@TABLE_CONTENT_1@", cont1);
+	tpl.replace("@TABLE_CONTENT_2@", cont2);
+	tpl.replace("@TABLE_CONTENT_3@", cont3);
+	tpl.replace("@TABLE_CONTENT_4@", cont4);
+	tpl.replace("@TABLE_CONTENT_ADD@", contadd);
 	doc.setHtml(tpl);
 
 	doc.print(&printer);

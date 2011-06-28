@@ -27,10 +27,13 @@ void CampProperties::writeCampSettings() {
 
 	csq.exec(query.arg(CampProperties::HisCorrect).arg(this->isCorrect));
 	csq.exec(query.arg(CampProperties::HcampName).arg(this->campName));
+	csq.exec(query.arg(CampProperties::HcampPlace).arg(this->campPlace));
+	csq.exec(query.arg(CampProperties::HcampOrg).arg(this->campOrg));
 	csq.exec(query.arg(CampProperties::HcampDateBegin).arg(this->campDateBegin.toString(Qt::ISODate)));
 	csq.exec(query.arg(CampProperties::HcampDateEnd).arg(this->campDateEnd.toString(Qt::ISODate)));
 	csq.exec(query.arg(CampProperties::HscoutsNo).arg(this->scoutsNo));
 	csq.exec(query.arg(CampProperties::HleadersNo).arg(this->leadersNo));
+	csq.exec(query.arg(CampProperties::HAvgCosts).arg(this->avgCosts));
 	csq.exec(query.arg(CampProperties::HcampLeader).arg(this->campLeader));
 	csq.exec(query.arg(CampProperties::HcampQuarter).arg(this->campQuarter));
 	csq.exec(query.arg(CampProperties::HcampOthers).arg(this->campOthers));
@@ -47,6 +50,12 @@ void CampProperties::readCampSettings() {
 			case CampProperties::HcampName:
 				this->campName = csq.value(1).toString();
 				break;
+			case CampProperties::HcampPlace:
+				this->campPlace = csq.value(1).toString();
+				break;
+			case CampProperties::HcampOrg:
+				this->campOrg = csq.value(1).toString();
+				break;
 			case CampProperties::HcampDateBegin:
 				this->campDateBegin = csq.value(1).toDate();
 				break;
@@ -58,6 +67,9 @@ void CampProperties::readCampSettings() {
 				break;
 			case CampProperties::HleadersNo:
 				this->leadersNo = csq.value(1).toInt();
+				break;
+			case CampProperties::HAvgCosts:
+				this->avgCosts = csq.value(1).toDouble();
 				break;
 			case CampProperties::HcampLeader:
 				this->campLeader = csq.value(1).toString();

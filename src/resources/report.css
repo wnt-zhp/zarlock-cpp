@@ -2,34 +2,42 @@
 body {
 	color:			black;
 	text-align:		center;
+	font:			large;
 }
 
 div {
 	width:			100%;
 }
 
+table {
+	border-color:	black;
+	border-style:	solid;
+}
+
 .date {
-	width:			100%;
-	border:			1px solid red;
+	float:			right;
+	width:			40%;
 }
 
 .header {
-	margin-top:		80px;
-	margin-bottom:	50px;
 	width:			100%;
-	font-size:		large;
+}
+
+.title {
+	padding-top:		80px;
+	padding-bottom:		50px;
+	font-weight:		bold;
 }
 
 .maincont {
-	width:			80%;
+	width:			100%;
+	border-color:	black;
 	border-style:	solid;
-	border-color:	red;
 }
 
 .maincont thead td {
 	text-align:		left;
-/* 	padding-left:	10px; */
-/* 	text-indent:	10px; */
-	border-bottom:	1px solid black;
+	border-color:	black;
+	border-style:	solid;
 	font-weight:	bold;
 }

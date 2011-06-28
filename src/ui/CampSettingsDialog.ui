@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>532</width>
-    <height>314</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,14 +40,42 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_place">
+        <property name="text">
+         <string>Camp place</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="edit_place">
+        <property name="maxLength">
+         <number>64</number>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0">
+       <widget class="QLabel" name="label_org">
+        <property name="text">
+         <string>Organizator</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="edit_org">
+        <property name="maxLength">
+         <number>64</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QLabel" name="label_period">
         <property name="text">
          <string>Period</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QDateEdit" name="period_start">
@@ -86,6 +114,16 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="1">
+       <widget class="QSpinBox" name="spin_scouts">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::PlusMinus</enum>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+       </widget>
+      </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_participants">
         <property name="text">
@@ -100,13 +138,20 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QSpinBox" name="spin_scouts">
-        <property name="buttonSymbols">
-         <enum>QAbstractSpinBox::PlusMinus</enum>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_avgcosts">
+        <property name="text">
+         <string>Average meals/day costs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="spin_avgcosts">
+        <property name="suffix">
+         <string> zl</string>
         </property>
         <property name="maximum">
-         <number>99999</number>
+         <double>9999.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -181,9 +226,13 @@
  </widget>
  <tabstops>
   <tabstop>edit_name</tabstop>
+  <tabstop>edit_place</tabstop>
+  <tabstop>edit_org</tabstop>
+  <tabstop>period_start</tabstop>
   <tabstop>period_stop</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leaders</tabstop>
+  <tabstop>doubleSpinBox</tabstop>
   <tabstop>edit_leader</tabstop>
   <tabstop>edit_qmaster</tabstop>
   <tabstop>edit_others</tabstop>
