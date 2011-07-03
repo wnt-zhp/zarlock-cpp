@@ -48,34 +48,30 @@ Zapotrzebowanie żywnościowe
 </tfoot>
 </table>
 
-<br />
-<div style="height: auto;">
+<p>
 Posiłki dodatkowe - wyszczególnienie:<br />
 @TABLE_CONTENT_ADD@
-</div>
-<br />
-<div>Dane o stanie żywieniowym:<br />
+</p>
+<p>Dane o stanie żywieniowym:<br />
 1. Liczba uczestników obozu: @SCOUTSNO@<br />
 2. Liczba kadry obozowej: @LEADERSNO@<br />
 3. Pozostali: @OTHERSNO@<br />
 Stan żywionych razem: @ALL@
-</div>
+</p>
+<p>Przeciętny koszt wyżywienia jednej osoby: @AVG@ zł</p>
 <br />
-<div>Przeciętny koszt wyżywienia jednej osoby: @AVG@ zł</div>
-<br />
-<table class="maincont" width="100%" border="2">
+<table class="maincont" width="100%" border="0">
 <thead><tr>
 	<td>Sporządził</td>
 	<td>Sprawdził</td>
 	<td>Zatwierdził</td>
 </tr></thead>
 <tbody>
-<tr><td height="200px">
-
+<tr><td height="100px">
+<br />
+<br />
 </td><td>
-
 </td><td>
-
 </td></tr>
 <tr><td>
 @QUATER@

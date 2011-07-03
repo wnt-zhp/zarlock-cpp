@@ -146,6 +146,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	printer.setColorMode(QPrinter::Color);
 	printer.setOutputFormat(QPrinter::PdfFormat);
 	printer.setOrientation(QPrinter::Landscape);
+	printer.setPageMargins(10, 10, 10, 10, QPrinter::Millimeter);
 
 	Database & db = Database::Instance();
 
@@ -184,7 +185,9 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 		distdate = QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleLongDate);
 	}
 
-	QString cont1, cont2, cont3, cont4, contadd, unit, spec;
+	QString cont0, cont2, cont3, cont4;
+	QString cont1, cont5, cont6;
+	QString contadd, spec, unit;
 	double qty, costs;
 
 	QModelIndexList idxl = db.CachedDistributor()->match(db.CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
@@ -208,7 +211,10 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 
 		switch (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HReason).data().toInt()) {
 			case 0:
-				cont1.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				cont0.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
+				break;
+			case 1:
+				cont1.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
 				break;
 			case 2:
 				cont2.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
@@ -219,8 +225,11 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 			case 4:
 				cont4.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
 				break;
-			default:
-				contadd.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
+			case 5:
+				cont5.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
+				break;
+			case 6:
+				cont6.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
 				break;
 		}
 	}
@@ -234,6 +243,13 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 			QSqlDatabase::database().rollback();
 
 	// Print document
+
+	if (!cont1.isEmpty())
+		contadd.append("* " % QObject::tr("2nd breakfast") % ": " % cont1 % "<br />");
+	if (!cont5.isEmpty())
+		contadd.append("* " % QObject::tr("Other 1") % ": " % cont5 % "<br />");
+	if (!cont6.isEmpty())
+		contadd.append("* " % QObject::tr("Other 2") % ": " % cont6 % "<br />");
 
 	QString tpl = dailymeal_tstream.readAll();
 	tpl.replace("@DATE@", date);
@@ -249,7 +265,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db.cs()->avgCosts));
 	tpl.replace("@AVG@", QString().sprintf("%.2f", costs/all));
 
-	tpl.replace("@TABLE_CONTENT_1@", cont1);
+	tpl.replace("@TABLE_CONTENT_1@", cont0);
 	tpl.replace("@TABLE_CONTENT_2@", cont2);
 	tpl.replace("@TABLE_CONTENT_3@", cont3);
 	tpl.replace("@TABLE_CONTENT_4@", cont4);

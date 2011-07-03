@@ -428,51 +428,71 @@
     </message>
     <message>
         <location filename="../ui/CampSettingsDialog.ui" line="46"/>
+        <source>Camp place</source>
+        <translation>Miejsce obozu</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="60"/>
+        <source>Organizator</source>
+        <translation>Organizator</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="74"/>
         <source>Period</source>
         <translation>Okres trwania</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="62"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="90"/>
         <source>-</source>
         <translation>do</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="76"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="104"/>
         <source>@days</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="85"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="113"/>
         <source>Amount of scouts</source>
         <translation>Liczba harcerzy</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="92"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="130"/>
         <source>Amount of leaders</source>
         <translation>Liczba kadry</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="119"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="144"/>
+        <source>Average meals/day costs</source>
+        <translation>Średni dzienny koszt posiłu</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="151"/>
+        <source> zl</source>
+        <translation> zł</translation>
+    </message>
+    <message>
+        <location filename="../ui/CampSettingsDialog.ui" line="164"/>
         <source>Leaders</source>
         <translation>Komenda</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="125"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="170"/>
         <source>Camp Leader</source>
         <translation>Komendant</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="153"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="198"/>
         <source>Quartermaster</source>
         <translation>Kwatermistrz</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="160"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="205"/>
         <source>Other</source>
         <translation>Pozostali</translation>
     </message>
     <message numerus="yes">
-        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="71"/>
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="77"/>
         <source>%n days</source>
         <translation>
             <numerusform>%n dzień</numerusform>
@@ -492,12 +512,12 @@
 <context>
     <name>DBBrowser</name>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="163"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="165"/>
         <source>Create new database</source>
         <translation>Stwórz nową bazę danych dla obozu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="163"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="165"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
     </message>
@@ -565,27 +585,27 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="275"/>
+        <location filename="../db/Database.cpp" line="280"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="298"/>
+        <location filename="../db/Database.cpp" line="303"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="299"/>
+        <location filename="../db/Database.cpp" line="304"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="368"/>
+        <location filename="../db/Database.cpp" line="375"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="369"/>
+        <location filename="../db/Database.cpp" line="376"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -872,8 +892,10 @@ Wciśnij Zamknij aby wyjść.</translation>
     <name>QObject</name>
     <message>
         <location filename="../../main.cpp" line="46"/>
-        <location filename="../db/DBReports.cpp" line="45"/>
-        <location filename="../db/DBReports.cpp" line="55"/>
+        <location filename="../db/DBReports.cpp" line="51"/>
+        <location filename="../db/DBReports.cpp" line="61"/>
+        <location filename="../db/DBReports.cpp" line="122"/>
+        <location filename="../db/DBReports.cpp" line="132"/>
         <source>Cannot find resources</source>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
@@ -887,29 +909,48 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="48"/>
-        <location filename="../db/DBReports.cpp" line="58"/>
+        <location filename="../db/DBReports.cpp" line="54"/>
+        <location filename="../db/DBReports.cpp" line="64"/>
+        <location filename="../db/DBReports.cpp" line="125"/>
+        <location filename="../db/DBReports.cpp" line="135"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
         <translation>Sprawdź instalację programu i uruchom ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="240"/>
-        <location filename="../db/Database.cpp" line="246"/>
-        <location filename="../db/Database.cpp" line="252"/>
-        <location filename="../db/Database.cpp" line="258"/>
+        <location filename="../db/DBReports.cpp" line="248"/>
+        <source>2nd breakfast</source>
+        <translation>Drugie śniadanie</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="250"/>
+        <source>Other 1</source>
+        <translation>Inny posiłek</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="252"/>
+        <source>Other 2</source>
+        <translation>Inny posiłek</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="245"/>
+        <location filename="../db/Database.cpp" line="251"/>
+        <location filename="../db/Database.cpp" line="257"/>
+        <location filename="../db/Database.cpp" line="263"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="46"/>
-        <location filename="../db/DBReports.cpp" line="56"/>
+        <location filename="../db/DBReports.cpp" line="52"/>
+        <location filename="../db/DBReports.cpp" line="62"/>
+        <location filename="../db/DBReports.cpp" line="123"/>
+        <location filename="../db/DBReports.cpp" line="133"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>
     <message>
-        <location filename="../DataParser.cpp" line="94"/>
+        <location filename="../DataParser.cpp" line="95"/>
         <source>%.2f zl</source>
         <translation>%.2f zl</translation>
     </message>
@@ -970,32 +1011,32 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Zakładka magazynu</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="22"/>
+        <location filename="../ui/TabBatchWidget.ui" line="25"/>
         <source>filter</source>
         <translation>filtr</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="36"/>
+        <location filename="../ui/TabBatchWidget.ui" line="39"/>
         <source>Expired</source>
         <translation>Przeterminowane</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="50"/>
+        <location filename="../ui/TabBatchWidget.ui" line="53"/>
         <source>Today expire</source>
         <translation>Traci ważność dzisiaj</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="64"/>
+        <location filename="../ui/TabBatchWidget.ui" line="67"/>
         <source>Valid</source>
         <translation>Przydatne do spożycia</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="78"/>
+        <location filename="../ui/TabBatchWidget.ui" line="81"/>
         <source>Hide empty</source>
         <translation>Ukryj puste partie</translation>
     </message>
     <message>
-        <location filename="../ui/TabBatchWidget.ui" line="92"/>
+        <location filename="../ui/TabBatchWidget.ui" line="95"/>
         <source>Add batc&amp;h</source>
         <translation>Dodaj &amp;partię</translation>
     </message>
@@ -1066,9 +1107,19 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="33"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="34"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="51"/>
+        <source>View PDF report</source>
+        <translation>Zobacz raport w PDF</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="55"/>
+        <source>Tools</source>
+        <translation>Narzędzia</translation>
     </message>
 </context>
 <context>

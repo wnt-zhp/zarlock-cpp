@@ -48,9 +48,12 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
 
-	viewPDF = new QAction(tr("View PDF report"), this);
+	viewPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("View PDF report"), this);
 
 	tools->setPopupMode(QToolButton::InstantPopup);
+	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
+	tools->setText(tr("Tools"));
+	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	tools->addAction(viewPDF);
 
 	connect(viewPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
