@@ -314,74 +314,80 @@
 <context>
     <name>BatchTableModel</name>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="136"/>
+        <location filename="../models/BatchTableModel.cpp" line="67"/>
+        <location filename="../models/BatchTableModel.cpp" line="247"/>
+        <source> (quantity: %1)</source>
+        <translation> (ilość: %1)</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="156"/>
         <source>ID</source>
         <translation>Lp</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="137"/>
+        <location filename="../models/BatchTableModel.cpp" line="157"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="138"/>
+        <location filename="../models/BatchTableModel.cpp" line="158"/>
         <source>Specificator</source>
         <translation>Specyfikacja</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="139"/>
+        <location filename="../models/BatchTableModel.cpp" line="159"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="140"/>
+        <location filename="../models/BatchTableModel.cpp" line="160"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="141"/>
+        <location filename="../models/BatchTableModel.cpp" line="161"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="142"/>
+        <location filename="../models/BatchTableModel.cpp" line="162"/>
         <source>Booking</source>
         <translation>Wpis na stan</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="143"/>
+        <location filename="../models/BatchTableModel.cpp" line="163"/>
         <source>Expiry</source>
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="144"/>
+        <location filename="../models/BatchTableModel.cpp" line="164"/>
         <source>Used</source>
         <translation>Wydane</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="145"/>
+        <location filename="../models/BatchTableModel.cpp" line="165"/>
         <source>Registered</source>
         <translation>Data księgowania</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="146"/>
+        <location filename="../models/BatchTableModel.cpp" line="166"/>
         <source>Notes</source>
         <translation>Notatka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="147"/>
+        <location filename="../models/BatchTableModel.cpp" line="167"/>
         <source>Invoice</source>
         <translation>Faktura</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="184"/>
-        <location filename="../models/BatchTableModel.cpp" line="196"/>
-        <location filename="../models/BatchTableModel.cpp" line="212"/>
+        <location filename="../models/BatchTableModel.cpp" line="204"/>
+        <location filename="../models/BatchTableModel.cpp" line="216"/>
+        <location filename="../models/BatchTableModel.cpp" line="232"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="221"/>
+        <location filename="../models/BatchTableModel.cpp" line="241"/>
         <source>%1 of %2</source>
         <translation>%1 z %2</translation>
     </message>
@@ -741,6 +747,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="33"/>
         <source>Qty value</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="95"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="98"/>
+        <source> of %1</source>
+        <translation> z %1</translation>
     </message>
 </context>
 <context>

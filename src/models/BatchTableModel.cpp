@@ -52,11 +52,31 @@ BatchTableModel::~BatchTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::EditRole)
-		return raw(idx);
-
-	if (role == Qt::DisplayRole or role == Qt::BackgroundRole or role == Qt::StatusTipRole)
-		return display(idx, role);
+	switch (role) {
+		case RFreeQty:
+			if (idx.column() == HUsedQty) {
+				float used = raw(idx).toFloat();
+				float total = index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+				return QVariant(total - used);
+			}
+			break;
+		case RNameQty:
+			if (idx.column() == HSpec) {
+				return QString(
+					this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " %
+					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toFloat())
+				);
+			}
+			break;
+		case Qt::EditRole:
+			return raw(idx);
+			break;
+		case Qt::DisplayRole:
+		case Qt::BackgroundRole:
+		case Qt::StatusTipRole:
+			return display(idx, role);
+			break;
+	}
 
 	int col = idx.column();
 	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit or col == HStaQty))
@@ -219,6 +239,13 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				float free = total - used;
 				QString qty;
 				return tr("%1 of %2").arg(free).arg(total);
+			}
+
+			else if (idx.column() == HENameQty) {
+				return QString(
+					this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " %
+					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toFloat())
+				);
 			}
 			break;
 		case Qt::BackgroundRole:

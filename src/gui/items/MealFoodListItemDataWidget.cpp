@@ -24,7 +24,7 @@
 #include "Database.h"
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::WindowFlags f):
-		QWidget(parent, f), lock(false) {
+		QWidget(parent, f), lock(true) {
 
 	setupUi(this);
 
@@ -59,6 +59,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
 
 	convertToEmpty();
+	validateBatchAdd();
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
@@ -86,14 +87,16 @@ void MealFoodListItemDataWidget::validateBatchAdd() {
 	if (!lock)
 		return;
 
-	double qtyused = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HUsedQty).data().toDouble();
-	double qtytotal = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
+	double free = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
 	if (batch->currentIndex() >= 0) {
-		if (batch->currentIndex() != batch_idx.row())
-			qty->setMaximum(qtytotal-qtyused);
-		else
-			qty->setMaximum(qtytotal-qtyused + quantity);
+		if (batch->currentIndex() != batch_idx.row()) {
+			qty->setMaximum(free);
+			qty->setSuffix(tr(" of %1").arg(free));
+		} else {
+			qty->setMaximum(free + quantity);
+			qty->setSuffix(tr(" of %1").arg(free + quantity));
+		}
 	} else {
 		qty->setMaximum(9999);
 	}
@@ -113,7 +116,7 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 // 	if (empty)
 	batch->setModelColumn(2);
 	batch->setCurrentIndex(-1);
-		
+
 	qty->setValue(0.0);
 	empty = true;
 	render(false);
@@ -193,14 +196,12 @@ void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 		quantity = dtm->data(dtm->index(dist_idx.row(), DistributorTableModel::HQty)).toDouble();
 		batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
-// 		batch->setCurrentIndex(batch_idx.row());
-// 		qty->setValue(quantity);
-
 		batch_label->setText(batchlabel);
 		qty_label->setText(QString("%1").arg((int)quantity));
 
 		empty = false;
 		render(true);
+		lock = false;
 	}
 }
 

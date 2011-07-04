@@ -40,7 +40,8 @@ public:
 	virtual bool select();
 	virtual void autoSubmit(bool asub = true);
 
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HNotes, HInvoice };
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HRegDate, HNotes, HInvoice, HENameQty = 100 };
+	enum UserRoles { RNameQty = Qt::UserRole + 10, RFreeQty };
 
 public slots:
 	void filterDB(const QString &);
