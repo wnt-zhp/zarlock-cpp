@@ -22,6 +22,7 @@
 
 #include "ui_MealFoodListItemDataWidget.h"
 #include "MealFoodList.h"
+#include "BatchTableModelProxy.h"
 
 class MealFoodListItemDataWidget : public QWidget, public Ui::MealFoodListItemDataWidget {
 Q_OBJECT
@@ -56,6 +57,8 @@ private:
 	QModelIndex dist_idx;
 
 	MealFoodList * mfl;
+	BatchTableModelProxy * btmp;
+	QCheckBox * che;
 };
 
 #endif // MEALFOODLISTITEMDATAWIDGET_H

@@ -29,6 +29,17 @@
  * @param parent rodzic
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
+BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
+												QSortFilterProxyModel(parent),
+												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL), cb_hide(hide) {
+}
+
+/**
+ * @brief Konstruktor - nic się nie dzieje.
+ *
+ * @param parent rodzic
+ * @param db Połączenie do bazy danych, z których model będzie pobierał dane
+ **/
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
 										   const QCheckBox * nexp, const QCheckBox * hide,
 										   QObject * parent) :
@@ -46,22 +57,19 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 
 
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-	QColor expcol = sourceModel()->index(sourceRow, BatchTableModel::HExpire, sourceParent).data(Qt::BackgroundRole).value<QColor>();
+	float free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
-	float total = sourceModel()->index(sourceRow, BatchTableModel::HStaQty, sourceParent).data(Qt::EditRole).toFloat();
-	float used = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty, sourceParent).data(Qt::EditRole).toFloat();
-
-	float free = total - used;
-
-	if (cb_hide->isChecked() and free == 0.0)
+	if (cb_hide and cb_hide->isChecked() and free == 0.0)
 		return false;
 
-	bool val = false;
-	if (cb_exp->isChecked())
-		val |= expcol == globals::item_expired ? true : false;
-	if (cb_aexp->isChecked())
+	QColor expcol = sourceModel()->index(sourceRow, BatchTableModel::HExpire, sourceParent).data(Qt::BackgroundRole).value<QColor>();
+	bool val = true;
+
+	if (cb_exp and cb_exp->isChecked())
+		val &= expcol == globals::item_expired ? true : false;
+	if (cb_aexp and cb_aexp->isChecked())
 		val |= expcol == globals::item_aexpired ? true : false;
-	if (cb_nexp->isChecked())
+	if (cb_nexp and cb_nexp->isChecked())
 		val |= expcol == globals::item_nexpired ? true : false;
 
 	return val;

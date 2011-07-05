@@ -28,9 +28,18 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 
 	setupUi(this);
 
+	che = new QCheckBox();
+	che->setChecked(true);
+
+	btmp = new BatchTableModelProxy(che);
+	btmp->setDynamicSortFilter(true);
+
+	btmp->setSourceModel(Database::Instance().CachedBatch());
+
 // 	batch->setEditable(true);
 	batch->setInsertPolicy(QComboBox::NoInsert);
-	batch->setModel(Database::Instance().CachedBatch());
+	batch->setModel(btmp);
+
 	batch->setModelColumn(2);
 	batch->setAutoCompletion(true);
 	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
@@ -63,6 +72,8 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
+	delete btmp;
+	delete che;
 // 	PR(__func__);
 }
 
@@ -87,7 +98,7 @@ void MealFoodListItemDataWidget::validateBatchAdd() {
 	if (!lock)
 		return;
 
-	double free = Database::Instance().CachedBatch()->index(batch->currentIndex(), BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
+	double free = btmp->index(batch->currentIndex(), BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
 	if (batch->currentIndex() >= 0) {
 		if (batch->currentIndex() != batch_idx.row()) {
@@ -113,8 +124,6 @@ void MealFoodListItemDataWidget::validateAdd() {
 }
 
 void MealFoodListItemDataWidget::convertToEmpty() {
-// 	if (empty)
-	batch->setModelColumn(2);
 	batch->setCurrentIndex(-1);
 
 	qty->setValue(0.0);
@@ -154,7 +163,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	db.updateBatchQty(batch_idx.data().toInt());
 
 	batch_label->setText(batchlabel);
-	qty_label->setText(QString("%1").arg((int)quantity));
+	qty_label->setText(QString("%1").arg(quantity));
 
 	mfl->markDirty();
 	render(true);
@@ -197,7 +206,7 @@ void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 		batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
 		batch_label->setText(batchlabel);
-		qty_label->setText(QString("%1").arg((int)quantity));
+		qty_label->setText(QString("%1").arg(quantity));
 
 		empty = false;
 		render(true);

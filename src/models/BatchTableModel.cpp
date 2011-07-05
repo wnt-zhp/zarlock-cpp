@@ -251,7 +251,6 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 		case Qt::BackgroundRole:
 			QModelIndex expidx = index(idx.row(), BatchTableModel::HExpire);
 			QDate expd = QDate::fromString(data(expidx, Qt::DisplayRole).toString(), Qt::DefaultLocaleShortDate);
-
 			int daystoexp = expd.daysTo(QDate::currentDate());
 
 			if (daystoexp > 0) {

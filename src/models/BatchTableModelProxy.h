@@ -29,6 +29,7 @@
 class BatchTableModelProxy : public QSortFilterProxyModel {
 Q_OBJECT
 public:
+	BatchTableModelProxy(const QCheckBox * hide, QObject * parent = 0);
 	BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
 						 const QCheckBox * nexp, const QCheckBox * hide, QObject * parent = 0);
 						 
