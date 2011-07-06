@@ -25,6 +25,7 @@
 #include "MealFoodListItemDataWidget.h"
 #include "Database.h"
 #include "DistributorTableModel.h"
+#include "MealTabWidget.h"
 
 MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1) {
 	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(doItemEdit(QListWidgetItem*)));

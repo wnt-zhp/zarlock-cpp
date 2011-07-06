@@ -25,12 +25,15 @@
 #include <QMessageBox>
 
 #include "MealFoodList.h"
+#include "BatchTableModelProxy.h"
 
 class MealTabWidget : public QTabWidget {
 Q_OBJECT
 public:
 	explicit MealTabWidget(QWidget* parent = 0);
 	virtual ~MealTabWidget();
+
+	virtual BatchTableModelProxy * getBatchProxyModel();
 
 public slots:
 	virtual void setIndex(const QModelIndex& index);
@@ -61,6 +64,9 @@ private:
 
 	MealFoodList * foodlist[meals];
 	MealTableModelProxy * proxy[meals];
+	BatchTableModelProxy * btmp;
+	QCheckBox * che;
+	QCheckBox * cexp;
 };
 
 #endif // MEALTABWIDGET_H

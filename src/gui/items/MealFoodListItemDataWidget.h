@@ -58,7 +58,6 @@ private:
 
 	MealFoodList * mfl;
 	BatchTableModelProxy * btmp;
-	QCheckBox * che;
 };
 
 #endif // MEALFOODLISTITEMDATAWIDGET_H

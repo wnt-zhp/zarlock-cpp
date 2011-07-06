@@ -29,6 +29,16 @@
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
 	this->setDocumentMode(true);
 
+	che = new QCheckBox;
+	che->setChecked(true);
+	cexp = new QCheckBox;
+	cexp->setChecked(false);
+
+	btmp = new BatchTableModelProxy(cexp, NULL, NULL, che);
+	btmp->setSourceModel(Database::Instance().CachedBatch());
+	btmp->setDynamicSortFilter(true);
+	btmp->invalidate();
+
 	for (int i = 0; i < meals; ++i)
 		foodlist[i] = new MealFoodList(this);
 
@@ -47,18 +57,30 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
 }
 
 MealTabWidget::~MealTabWidget() {
+	delete btmp;
+	delete che;
+	delete cexp;
 	FPR(__func__);
 }
 
 void MealTabWidget::setIndex(const QModelIndex& index) {
+	QString sref = Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString();
+
+	btmp->setDateKey(sref);
+	btmp->invalidate();
+
 	for (int i = 0; i < meals; ++i) {
 		foodlist[i]->setProxyModel(proxy[i]);
-		proxy[i]->setRef(Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString());
+		proxy[i]->setRef(sref);
 		proxy[i]->setKey(i);
 		proxy[i]->invalidate();
 		foodlist[i]->populateModel();
 		foodlist[i]->setIndex(index);
 	}
+}
+
+BatchTableModelProxy* MealTabWidget::getBatchProxyModel() {
+	return btmp;
 }
 
 #include "MealTabWidget.moc"

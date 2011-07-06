@@ -62,21 +62,31 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 	if (cb_hide and cb_hide->isChecked() and free == 0.0)
 		return false;
 
-	QColor expcol = sourceModel()->index(sourceRow, BatchTableModel::HExpire, sourceParent).data(Qt::BackgroundRole).value<QColor>();
-	bool val = true;
+	QDate refd;
+	if (!datekey.isEmpty())
+		refd = QDate::fromString(datekey, Qt::ISODate);
+	else
+		refd = QDate::currentDate();
 
-	if (cb_exp and cb_exp->isChecked())
-		val &= expcol == globals::item_expired ? true : false;
-	if (cb_aexp and cb_aexp->isChecked())
-		val |= expcol == globals::item_aexpired ? true : false;
-	if (cb_nexp and cb_nexp->isChecked())
-		val |= expcol == globals::item_nexpired ? true : false;
+	QDate expd = QDate::fromString(sourceModel()->index(sourceRow, BatchTableModel::HExpire).data().toString(), Qt::DefaultLocaleShortDate);
+	int daystoexp = refd.daysTo(expd);
 
-	return val;
+	if (cb_exp and daystoexp < 0)
+		return cb_exp->isChecked();
+	if (cb_aexp and daystoexp == 0)
+		return cb_aexp->isChecked();
+	if (cb_nexp and daystoexp > 0)
+		return cb_nexp->isChecked();
+
+	return true;
 }
 
 QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 	return QSortFilterProxyModel::data(index, role);
+}
+
+void BatchTableModelProxy::setDateKey(const QString& dk) {
+	datekey = dk;
 }
 
 #include "BatchTableModelProxy.moc"

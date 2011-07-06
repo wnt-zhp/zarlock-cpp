@@ -20,21 +20,15 @@
 
 #include "MealFoodListItemDataWidget.h"
 #include "MealFoodList.h"
+#include "MealTabWidget.h"
 
 #include "Database.h"
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::WindowFlags f):
 		QWidget(parent, f), lock(true) {
-
+	mfl = (MealFoodList *)parent;
 	setupUi(this);
-
-	che = new QCheckBox();
-	che->setChecked(true);
-
-	btmp = new BatchTableModelProxy(che);
-	btmp->setDynamicSortFilter(true);
-
-	btmp->setSourceModel(Database::Instance().CachedBatch());
+	btmp = ((MealTabWidget *)(mfl->parent()->parent()))->getBatchProxyModel();
 
 // 	batch->setEditable(true);
 	batch->setInsertPolicy(QComboBox::NoInsert);
@@ -57,8 +51,6 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 
 // 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(printStatus()));
 
-	mfl = (MealFoodList *)parent;
-
 	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateBatchAdd()));
 // 	connect(batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateBatchAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
@@ -72,8 +64,6 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
-	delete btmp;
-	delete che;
 // 	PR(__func__);
 }
 
@@ -198,7 +188,7 @@ void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
 
-	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
+	QModelIndexList qmil = btmp->match(btmp->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
 	if (qmil.count()) {
 		batch_idx = qmil.at(0);
 
