@@ -100,6 +100,10 @@ void TabMealWidget::activateUi(bool activate) {
 
 		list_meal->update();
 
+		label_data->setIndent(14);
+		label_data->setText(QObject::tr("No day selected yet"));
+// 		label_data->setAlignment(Qt::AlignCenter);
+
 		wmap = new QDataWidgetMapper;
 		wmap->setModel(db.CachedMeal());
 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
@@ -146,7 +150,9 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	lastidx = idx;
 	wmap->setCurrentIndex(idx.row());
 	tab_meals->setIndex(idx);
-	seldate = db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString();
+	QDate sd = db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toDate();
+	seldate = sd.toString(Qt::ISODate);
+	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 }
 
 void TabMealWidget::doRecalculate() {

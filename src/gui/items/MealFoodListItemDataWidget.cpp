@@ -127,7 +127,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 
 	int old_bid = batch_idx.data().toInt();
 
-	batch_idx = db.CachedBatch()->index(batch->currentIndex(), BatchTableModel::HId);
+	batch_idx = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId));
 	quantity = qty->value();
 	batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
@@ -165,7 +165,7 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 
 	lock = true;
 
-	batch->setCurrentIndex(batch_idx.row());
+	batch->setCurrentIndex(btmp->mapFromSource(batch_idx).row());
 	qty->setValue(quantity);
 
 
@@ -188,7 +188,7 @@ void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
 
-	QModelIndexList qmil = btmp->match(btmp->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
+	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
 	if (qmil.count()) {
 		batch_idx = qmil.at(0);
 
