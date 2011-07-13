@@ -151,7 +151,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	Database & db = Database::Instance();
 
 	QString ofile =
-		QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabas() %
+		QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabase() %
 		QString("/") % date % QString("_dailymeal.pdf");
 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);

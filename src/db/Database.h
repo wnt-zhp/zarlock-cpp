@@ -93,7 +93,7 @@ public:
 	inline const QVector<QStringList> & DistributorWordList()	{ return dlist; }
 
 	inline CampProperties * cs() { return camp; };
-	inline const QString & openedDatabas() { return opened_db; }
+	inline const QString & openedDatabase() { return opened_db; }
 
 private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);

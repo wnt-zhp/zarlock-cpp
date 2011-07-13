@@ -45,6 +45,7 @@ private slots:
 	void doRecalculate();
 
 	void doPrepareReport();
+	void doBrowseReports();
 
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
@@ -58,6 +59,7 @@ private:
 	QString seldate;
 
 	QAction * viewPDF;
+	QAction * browsePDF;
 };
 
 #endif // TABMEALWIDGET_H

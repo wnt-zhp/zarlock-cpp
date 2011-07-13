@@ -17,6 +17,7 @@
 */
 
 #include "globals.h"
+#include "config.h"
 #include "Database.h"
 #include "DataParser.h"
 #include "TabMealWidget.h"
@@ -24,6 +25,7 @@
 
 #include <QPushButton>
 #include <QToolButton>
+#include <QDesktopServices>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 wmap(NULL) {
@@ -49,14 +51,18 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
 
 	viewPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("View PDF report"), this);
+	browsePDF = new QAction(tr("Browse reports directory"), this);
 
 	tools->setPopupMode(QToolButton::InstantPopup);
 	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
 	tools->setText(tr("Tools"));
 	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
 	tools->addAction(viewPDF);
+	tools->addAction(browsePDF);
 
 	connect(viewPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
+	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
 	seldate = QDate::currentDate().toString(Qt::ISODate);
 
@@ -166,6 +172,13 @@ void TabMealWidget::doPrepareReport() {
 	DBReports::showDailyMealReport(seldate, &fn);
 
 	PR(fn.toStdString());
+}
+
+void TabMealWidget::doBrowseReports() {
+	Database & db = Database::Instance();
+
+// 	QDesktopServices::openUrl(QUrl("file:///home"));
+	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabase()));
 }
 
 #include "TabMealWidget.moc"
