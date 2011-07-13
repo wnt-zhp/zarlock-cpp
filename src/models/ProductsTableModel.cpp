@@ -21,6 +21,7 @@
 #include <QDate>
 #include <QColor>
 
+#include "Database.h"
 #include "ProductsTableModel.h"
 #include "DataParser.h"
 
@@ -170,6 +171,7 @@ void ProductsTableModel::autoSubmit(bool asub) {
 void ProductsTableModel::trigDataChanged() {
 	if (autosubmit) {
 		this->submitAll();
+		Database::Instance().ProductsWordList();
 	}
 }
 

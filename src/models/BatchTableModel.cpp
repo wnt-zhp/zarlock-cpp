@@ -306,6 +306,7 @@ void BatchTableModel::autoSubmit(bool asub) {
 void BatchTableModel::trigDataChanged() {
 	if (autosubmit) {
 		this->submitAll();
+		Database::Instance().updateBatchWordList();
 	}
 }
 

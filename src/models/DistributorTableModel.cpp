@@ -224,6 +224,7 @@ void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bot
 
 		Database::Instance().CachedBatch()->submitAll();
 	}
+	Database::Instance().updateDistributorWordList();
 }
 
 void DistributorTableModel::autoSubmit(bool asub) {

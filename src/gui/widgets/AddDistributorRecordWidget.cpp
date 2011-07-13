@@ -39,6 +39,8 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	connect(edit_reason, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
+	connect(&Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(update_model()));
+
 // 	connect(Database::Instance().CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
 	edit_reason2->enableEmpty();
@@ -58,22 +60,6 @@ bool AddDistributorRecordWidget::insert_record() {
 
 	int idx = combo_products->currentIndex();
 	int batch_id = btm->index(idx, 0).data().toInt();
-
-// 	int row = dtm->rowCount();
-// 	dtm->insertRows(row, 1);
-// // 	btm->setData(btm->index(row, DistributorTableModel::HId), row);
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HBatchId), batch_id);
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HQty), edit_qty->text());
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HDistDate), edit_date->text(true));
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HRegDate), QDate::currentDate().toString(Qt::ISODate));
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason), edit_reason->text());
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason2), edit_reason2->text());
-// 	dtm->setData(dtm->index(row, DistributorTableModel::HReason3), DistributorTableModel::RGeneral);
-// 
-// 	dtm->submitAll();
-// 	db.updateBatchQty(dtm->index(row, 1).data(Qt::EditRole).toInt());
-// 	btm->submitAll();
-// 	update_model();	
 
 	db.addDistributorRecord(batch_id, edit_qty->text().toFloat(), edit_date->text(true),
 							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
@@ -120,21 +106,10 @@ void AddDistributorRecordWidget::update_model() {
 	if (completer_reason) delete completer_reason;
 	if (completer_reason2) delete completer_reason2;
 
-	completer_qty = new QCompleter(edit_qty);
-	completer_date = new QCompleter(edit_date);
-	completer_reason = new QCompleter(edit_reason);
-	completer_reason2 = new QCompleter(edit_reason2);
-
-	Database & db = Database::Instance();
-	completer_qty->setModel(db.CachedDistributor());
-	completer_date->setModel(db.CachedDistributor());
-	completer_reason->setModel(db.CachedDistributor());
-	completer_reason2->setModel(db.CachedDistributor());
-
-	completer_qty->setCompletionColumn(DistributorTableModel::HQty);
-	completer_date->setCompletionColumn(DistributorTableModel::HDistDate);
-	completer_reason->setCompletionColumn(DistributorTableModel::HReason);
-	completer_reason2->setCompletionColumn(DistributorTableModel::HReason2);
+	completer_qty = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWqty), edit_qty);
+	completer_date = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWdist), edit_date);
+	completer_reason = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWreason), edit_reason);
+	completer_reason2 = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWoptional), edit_reason2);
 
 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_date->setModelSorting(QCompleter::CaseInsensitivelySortedModel);

@@ -35,6 +35,8 @@ AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidg
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+
+	connect(&Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
 }
 
 AddProductsRecordWidget::~AddProductsRecordWidget() {
@@ -50,10 +52,6 @@ void AddProductsRecordWidget::setVisible(bool visible) {
 }
 
 void AddProductsRecordWidget::insert_record() {
-// 	INFO PR(edit_name->text().toStdString());
-// 	INFO PR(edit_unit->text().toStdString());
-// 	INFO PR(edit_expiry->text().toStdString());
-
 	Database::Instance().addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)");
 	clear_form();
 }
@@ -88,18 +86,13 @@ void AddProductsRecordWidget::update_model() {
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;
 
-	completer_name = new QCompleter(edit_name);
-	completer_unit = new QCompleter(edit_unit);
-	completer_expiry = new QCompleter(edit_expiry);
+	completer_name = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWname), edit_name);
+	completer_unit = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWunit), edit_unit);
+	completer_expiry = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWexpire), edit_expiry);
 
-	Database & db = Database::Instance();
-	completer_name->setModel(db.CachedProducts());
-	completer_unit->setModel(db.CachedProducts());
-	completer_expiry->setModel(db.CachedProducts());
-
-	completer_name->setCompletionColumn(ProductsTableModel::HName);
-	completer_unit->setCompletionColumn(ProductsTableModel::HUnit);
-	completer_expiry->setCompletionColumn(ProductsTableModel::HExpire);
+	completer_name->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+	completer_unit->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+	completer_expiry->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 
 	edit_name->setCompleter(completer_name);
 	edit_unit->setCompleter(completer_unit);

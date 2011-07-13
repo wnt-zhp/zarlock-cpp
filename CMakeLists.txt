@@ -72,7 +72,14 @@ set(zarlok_icons_RESOURCES src/icons.qrc)
 set(zarlok_icons_RESOURCES_RCC icons.rcc)
 
 set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp src/gui/views/DistributorTableView.cpp)
-set(zarlok_src_gui_inputs_SRCS src/gui/inputs/CustomLineEdit.cpp src/gui/inputs/DateInput.cpp src/gui/inputs/UnitInput.cpp src/gui/inputs/PriceInput.cpp src/gui/inputs/QtyInput.cpp  src/gui/inputs/TextInput.cpp)
+set(zarlok_src_gui_inputs_SRCS
+									src/gui/inputs/CustomLineEdit.cpp
+									src/gui/inputs/DateInput.cpp
+									src/gui/inputs/UnitInput.cpp
+									src/gui/inputs/PriceInput.cpp
+									src/gui/inputs/QtyInput.cpp
+									src/gui/inputs/TextInput.cpp
+)
 set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/AddProductsRecordWidget.cpp
 									src/gui/widgets/AddBatchRecordWidget.cpp

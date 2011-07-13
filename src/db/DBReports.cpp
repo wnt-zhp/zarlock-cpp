@@ -156,6 +156,9 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
+	if (reportfile)
+		*reportfile = ofile;
+
 	// Prepare document
 	QTextDocument doc;
 	QString sheet = sheet_tstream.readAll();
@@ -188,7 +191,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	QString cont0, cont2, cont3, cont4;
 	QString cont1, cont5, cont6;
 	QString contadd, spec, unit;
-	double qty, costs;
+	double qty, costs = 0;
 
 	QModelIndexList idxl = db.CachedDistributor()->match(db.CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
 	for (int i = 0; i < idxl.count(); ++i) {

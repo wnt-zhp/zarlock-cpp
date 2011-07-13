@@ -21,6 +21,8 @@
 #define DATABASE_H
 
 #include <QSqlDatabase>
+#include <QVector>
+#include <QStringList>
 
 #include "ProductsTableModel.h"
 #include "BatchTableModel.h"
@@ -53,6 +55,10 @@ public:
 	void updateMealCosts();
 	void updateMealCosts(const QModelIndex& idx);
 
+	void updateProductsWordList();
+	void updateBatchWordList();
+	void updateDistributorWordList();
+
 	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 // 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
@@ -82,6 +88,10 @@ public:
 	inline DistributorTableModel * CachedDistributor() { return model_distributor; }
 	inline MealTableModel * CachedMeal() { return model_meal; }
 
+	inline const QVector<QStringList> & ProductsWordList()		{ return plist; }
+	inline const QVector<QStringList> & BatchWordList()			{ return blist; }
+	inline const QVector<QStringList> & DistributorWordList()	{ return dlist; }
+
 	inline CampProperties * cs() { return camp; };
 	inline const QString & openedDatabas() { return opened_db; }
 
@@ -96,6 +106,19 @@ signals:
 private slots:
 	bool rebuild_models();
 
+signals:
+	void productsWordListUpdated();
+	void batchWordListUpdated();
+	void distributorWordListUpdated();
+
+public:
+	static const int plist_size;
+	static const int blist_size;
+	static const int dlist_size;
+	enum ProductsWL		{ PWname, PWunit, PWexpire };
+	enum BatchWL		{ BWspec, BWunit, BWprice, BWqty, BWinvoice, BWbooking, BWexpire };
+	enum DistributorWL	{ DWqty, DWdist, DWreason, DWoptional };
+
 private:
 	static Database * dbi;
 	QSqlDatabase db;
@@ -106,6 +129,10 @@ private:
 	BatchTableModel * model_batch;
 	DistributorTableModel * model_distributor;
 	MealTableModel * model_meal;
+
+	QVector<QStringList> plist;
+	QVector<QStringList> blist;
+	QVector<QStringList> dlist;
 
 	bool doDBUpgrade(unsigned int & version);
 

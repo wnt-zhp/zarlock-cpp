@@ -121,20 +121,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="TextInput" name="edit_spec">
-        <property name="placeholderText">
-         <string>specificator</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="UnitInput" name="edit_unit">
-        <property name="placeholderText">
-         <string>unit</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="3">
        <widget class="TextInput" name="edit_invoice">
         <property name="placeholderText">
@@ -146,6 +132,20 @@
        <widget class="DateInput" name="edit_expiry">
         <property name="placeholderText">
          <string>expiry date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="TextInput" name="edit_spec">
+        <property name="placeholderText">
+         <string>specificator</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="UnitInput" name="edit_unit">
+        <property name="placeholderText">
+         <string>unit</string>
         </property>
        </widget>
       </item>
@@ -191,11 +191,6 @@
    <header>TextInput.h</header>
   </customwidget>
   <customwidget>
-   <class>UnitInput</class>
-   <extends>QLineEdit</extends>
-   <header>UnitInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>QtyInput</class>
    <extends>QLineEdit</extends>
    <header>QtyInput.h</header>
@@ -204,6 +199,11 @@
    <class>PriceInput</class>
    <extends>QLineEdit</extends>
    <header>PriceInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>UnitInput</class>
+   <extends>QLineEdit</extends>
+   <header>UnitInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

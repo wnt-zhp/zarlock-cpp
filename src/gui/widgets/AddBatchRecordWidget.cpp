@@ -21,6 +21,9 @@
 #include "Database.h"
 #include "DataParser.h"
 
+#include <QStringList>
+#include <QSqlQuery>
+
 AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL) {
@@ -38,15 +41,17 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 // 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateCB(int)));
 
-	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+// 	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+// 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_price, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(check_uprice, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
 	connect(edit_invoice, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_book, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+
+	connect(&Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
 
 	edit_expiry->setDateReferenceObj(edit_book);
 }
@@ -82,6 +87,7 @@ void AddBatchRecordWidget::insert_record() {
 
 	clear_form();
 	edit_spec->setFocus();
+// 	combo_spec->clear();
 }
 
 void AddBatchRecordWidget::insert_record_and_exit() {
@@ -91,12 +97,11 @@ void AddBatchRecordWidget::insert_record_and_exit() {
 
 void AddBatchRecordWidget::clear_form() {
 	edit_spec->clear();
-	edit_unit->clear();
+// 	combo_spec->clear();
 	edit_expiry->clear();
-	edit_spec->clear();
-// 	edit_expiry->clear();
 	edit_qty->clear();
 	edit_unit->clear();
+// 	combo_unit->clear();
 	edit_price->clear();
 // 	check_uprice->setCheckState(Qt::Checked);
 // 	edit_invoice->clear();
@@ -138,12 +143,6 @@ void AddBatchRecordWidget::validateAdd() {
 void AddBatchRecordWidget::update_model() {
 	combo_products->setModel(Database::Instance().CachedProducts());
 	combo_products->setModelColumn(1);
-// 	combo_products->setEditable(true);
-
-// 	completer = new QCompleter(combo_products->model(), this);
-// 	completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-// 	completer->setCompletionColumn(ProductsTableModel::HName);
-// 	combo_products->setCompleter(completer);
 
 	if (completer_spec) delete completer_spec;
 	if (completer_qty) delete completer_qty;
@@ -153,30 +152,13 @@ void AddBatchRecordWidget::update_model() {
 	if (completer_book) delete completer_book;
 	if (completer_expiry) delete completer_expiry;
 
-	completer_spec = new QCompleter(edit_spec);
-	completer_qty = new QCompleter(edit_qty);
-	completer_unit = new QCompleter(edit_unit);
-	completer_price = new QCompleter(edit_price);
-	completer_invoice = new QCompleter(edit_invoice);
-	completer_book = new QCompleter(edit_book);
-	completer_expiry = new QCompleter(edit_expiry);
-
-	Database & db = Database::Instance();
-	completer_spec->setModel(db.CachedBatch());
-	completer_qty->setModel(db.CachedBatch());
-	completer_unit->setModel(db.CachedBatch());
-	completer_price->setModel(db.CachedBatch());
-	completer_invoice->setModel(db.CachedBatch());
-	completer_book->setModel(db.CachedBatch());
-	completer_expiry->setModel(db.CachedBatch());
-
-	completer_spec->setCompletionColumn(BatchTableModel::HSpec);
-	completer_qty->setCompletionColumn(BatchTableModel::HUsedQty);
-	completer_unit->setCompletionColumn(BatchTableModel::HUnit);
-	completer_price->setCompletionColumn(BatchTableModel::HPrice);
-	completer_invoice->setCompletionColumn(BatchTableModel::HInvoice);
-	completer_book->setCompletionColumn(BatchTableModel::HBook);
-	completer_expiry->setCompletionColumn(BatchTableModel::HExpire);
+	completer_spec = new QCompleter(Database::Instance().BatchWordList().at(Database::BWspec), edit_spec);
+	completer_qty = new QCompleter(Database::Instance().BatchWordList().at(Database::BWqty), edit_qty);
+	completer_unit = new QCompleter(Database::Instance().BatchWordList().at(Database::BWunit), edit_unit);
+	completer_price = new QCompleter(Database::Instance().BatchWordList().at(Database::BWprice), edit_price);
+	completer_invoice = new QCompleter(Database::Instance().BatchWordList().at(Database::BWinvoice), edit_invoice);
+	completer_book = new QCompleter(Database::Instance().BatchWordList().at(Database::BWbooking), edit_book);
+	completer_expiry = new QCompleter(Database::Instance().BatchWordList().at(Database::BWexpire), edit_expiry);
 
 	completer_spec->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
