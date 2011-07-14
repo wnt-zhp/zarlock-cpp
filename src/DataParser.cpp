@@ -98,7 +98,7 @@ bool DataParser::price(const QString & data, QString & price_formated) {
 }
 
 bool DataParser::unit(const QString & data, QString & unit_formated) {
-	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*(ml|l|mg|g|kg|szt)?\\s*$");
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*(ml|l|mg|g|kg|szt|op)?\\s*$");
 
 // 	PR(rx.indexIn(data));
 // 	PR(rx.cap(0).toStdString());
