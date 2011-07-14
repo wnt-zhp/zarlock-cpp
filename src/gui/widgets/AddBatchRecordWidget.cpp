@@ -115,10 +115,13 @@ void AddBatchRecordWidget::cancel_form() {
 void AddBatchRecordWidget::validateCB(int i) {
 	ProductsTableModel * ptm = Database::Instance().CachedProducts();
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
+	QString defunit = ptm->index(i, ProductsTableModel::HUnit).data().toString();
 
 	if (edit_expiry->text(true).isEmpty()) {
 		edit_expiry->setText(defexp);
 		edit_expiry->doRefresh();
+		edit_unit->setText(defunit);
+		edit_unit->doRefresh();
 	}
 
 	validateAdd();
