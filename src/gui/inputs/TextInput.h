@@ -27,7 +27,7 @@ Q_OBJECT
 public:
     TextInput(QWidget * parent);
 	
-	inline void enableEmpty(bool en = true) { allow_empty = en; }
+	inline void enableEmpty(bool en = true) { allow_empty = en; is_ok = en; }
 
 private slots:
 	bool verifyText(const QString &, QString & );

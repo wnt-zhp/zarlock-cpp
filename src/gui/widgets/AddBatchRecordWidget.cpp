@@ -53,6 +53,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 
 	connect(&Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
 
+	edit_spec->enableEmpty(true);
 	edit_expiry->setDateReferenceObj(edit_book);
 }
 

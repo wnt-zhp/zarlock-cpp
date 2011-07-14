@@ -37,7 +37,7 @@ bool DataParser::text(const QString & data, QString & text_formated, bool allow_
 		text_formated = data;
 		return true;
 	}
-	return false;
+	return allow_empty;
 }
 
 bool DataParser::quantity(const QString & data, double & qty_formated) {
