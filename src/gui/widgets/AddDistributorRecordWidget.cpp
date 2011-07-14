@@ -44,6 +44,8 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 // 	connect(Database::Instance().CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
 	edit_reason2->enableEmpty();
+	// TODO: do it better
+	combo_products->setStyleSheet("color: black;");
 }
 
 AddDistributorRecordWidget::~AddDistributorRecordWidget() {
