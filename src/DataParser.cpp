@@ -98,7 +98,7 @@ bool DataParser::price(const QString & data, QString & price_formated) {
 }
 
 bool DataParser::unit(const QString & data, QString & unit_formated) {
-	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*(ml|l|mg|g|kg|szt|op)?\\s*$");
+	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)?\\s*(ml|l|mg|g|kg|szt|op)?\\s*$");
 
 // 	PR(rx.indexIn(data));
 // 	PR(rx.cap(0).toStdString());
@@ -108,7 +108,7 @@ bool DataParser::unit(const QString & data, QString & unit_formated) {
 
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
-		unit_formated.sprintf("%.2f %s", rx.cap(1).toDouble(), rx.cap(3).toStdString().c_str());
+		unit_formated.sprintf("%.2f %s", rx.cap(1).isEmpty() ? 1.0 : rx.cap(1).toDouble(), rx.cap(3).toStdString().c_str());
 		return true;
 	}
 	return false;
