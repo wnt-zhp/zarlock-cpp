@@ -75,7 +75,7 @@ void AddBatchRecordWidget::insert_record() {
 	int idx = combo_products->currentIndex();
 	int prod_id = ptm->data(ptm->index(idx, 0)).toInt();
 
-	// proce
+	// price
 	double price, tax;
 	DataParser::price(edit_price->text(), price, tax);
 	QString uprice;
@@ -145,9 +145,13 @@ void AddBatchRecordWidget::validateAdd() {
 }
 
 void AddBatchRecordWidget::update_model() {
-	combo_products->setModel(Database::Instance().CachedProducts());
+	if (pproxy) delete pproxy;
+	pproxy = new QProxyModel();
+	pproxy->setModel(Database::Instance().CachedProducts());
+	pproxy->sort(1, Qt::AscendingOrder);
+	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(1);
-
+	
 	if (completer_spec) delete completer_spec;
 	if (completer_qty) delete completer_qty;
 	if (completer_unit) delete completer_unit;

@@ -39,6 +39,7 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NU
 	btmp = new BatchTableModelProxy(cexp, NULL, NULL, che);
 	btmp->setSourceModel(Database::Instance().CachedBatch());
 	btmp->setDynamicSortFilter(true);
+	btmp->sort(2, Qt::AscendingOrder);
 	btmp->invalidate();
 
 	for (int i = 0; i < meals; ++i)

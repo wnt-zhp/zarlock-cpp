@@ -21,6 +21,7 @@
 #define ADDBATCHRECORDWIDGET_H
 
 #include <QCompleter>
+#include <QProxyModel>
 
 #include "ui_AddBatchRecordWidget.h"
 
@@ -51,7 +52,9 @@ private:
 	QCompleter * completer_price;
 	QCompleter * completer_invoice;
 	QCompleter * completer_book;
-	QCompleter * completer_expiry;	
+	QCompleter * completer_expiry;
+
+	QProxyModel * pproxy;
 };
 
 #endif // ADDBATCHRECORDWIDGET_H

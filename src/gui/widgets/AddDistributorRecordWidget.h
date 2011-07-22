@@ -21,8 +21,10 @@
 #define ADDDISTRIBUTERECORDWIDGET_H
 
 #include <QCompleter>
+#include <QProxyModel>
 
 #include "ui_AddDistributorRecordWidget.h"
+#include "BatchTableModelProxy.h"
 
 class AddDistributorRecordWidget : public QWidget, public Ui::ADRWidget {
 Q_OBJECT
@@ -47,6 +49,8 @@ private:
 	QCompleter * completer_date;
 	QCompleter * completer_reason;
 	QCompleter * completer_reason2;
+
+	BatchTableModelProxy * pproxy;
 };
 
 #endif // ADDDISTRIBUTERECORDWIDGET_H
