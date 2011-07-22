@@ -85,6 +85,9 @@ void AddDistributorRecordWidget::cancel_form() {
 void AddDistributorRecordWidget::validateAdd() {
 	float qtyused = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUsedQty).data().toFloat();
 	float qtytotal = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+	QString qunit = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+
+	label_max->setText(tr("x %1, maximal").arg(qunit));
 
 	QString max;
 	label_maxvalue->setText(max.sprintf("%.2f", qtytotal-qtyused));
