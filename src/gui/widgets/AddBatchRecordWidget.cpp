@@ -73,7 +73,7 @@ void AddBatchRecordWidget::insert_record() {
 	ProductsTableModel * ptm = db.CachedProducts();
 
 	int idx = combo_products->currentIndex();
-	int prod_id = ptm->data(ptm->index(idx, 0)).toInt();
+	int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
 	// price
 	double price, tax;
@@ -146,9 +146,10 @@ void AddBatchRecordWidget::validateAdd() {
 
 void AddBatchRecordWidget::update_model() {
 	if (pproxy) delete pproxy;
-	pproxy = new QProxyModel();
-	pproxy->setModel(Database::Instance().CachedProducts());
+	pproxy = new QSortFilterProxyModel();
+	pproxy->setSourceModel(Database::Instance().CachedProducts());
 	pproxy->sort(1, Qt::AscendingOrder);
+	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(1);
 	

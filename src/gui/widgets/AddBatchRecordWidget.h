@@ -21,7 +21,7 @@
 #define ADDBATCHRECORDWIDGET_H
 
 #include <QCompleter>
-#include <QProxyModel>
+#include <QSortFilterProxyModel>
 
 #include "ui_AddBatchRecordWidget.h"
 
@@ -54,7 +54,7 @@ private:
 	QCompleter * completer_book;
 	QCompleter * completer_expiry;
 
-	QProxyModel * pproxy;
+	QSortFilterProxyModel * pproxy;
 };
 
 #endif // ADDBATCHRECORDWIDGET_H

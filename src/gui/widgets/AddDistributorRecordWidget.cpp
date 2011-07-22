@@ -60,7 +60,7 @@ bool AddDistributorRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
-	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();// 	int batch_id = btm->index(idx, 0).data().toInt();
+	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
 	db.addDistributorRecord(batch_id, edit_qty->text().toFloat(), edit_date->text(true),
 							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
@@ -104,6 +104,7 @@ void AddDistributorRecordWidget::update_model() {
 
 	pproxy->setSourceModel(Database::Instance().CachedBatch());
 	pproxy->setDynamicSortFilter(true);
+	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	pproxy->sort(2, Qt::AscendingOrder);
 	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(2);

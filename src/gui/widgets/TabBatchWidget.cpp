@@ -83,6 +83,7 @@ void TabBatchWidget::activateUi(bool activate) {
 		if (!modelproxy_batch) {
 			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired, cb_hideempty);
 			modelproxy_batch->setDynamicSortFilter(true);
+			modelproxy_batch->setSortCaseSensitivity(Qt::CaseInsensitive);
 
 			// TODO: Co z tym zrobić?
 // 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
