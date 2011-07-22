@@ -38,6 +38,7 @@ public:
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
 	virtual void setDateKey(const QString & dk);
+	virtual void setItemNum(int * item);
 
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -48,6 +49,7 @@ private:
 	const QCheckBox * cb_nexp;
 	const QCheckBox * cb_hide;
 	QString datekey;
+	int * itemnum;
 };
 
 #endif // BATCHTABLEMODELPROXY_H

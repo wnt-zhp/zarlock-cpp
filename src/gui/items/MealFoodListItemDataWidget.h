@@ -27,7 +27,7 @@
 class MealFoodListItemDataWidget : public QWidget, public Ui::MealFoodListItemDataWidget {
 Q_OBJECT
 public:
-	explicit MealFoodListItemDataWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+	explicit MealFoodListItemDataWidget(QWidget* parent = 0, QListWidgetItem * item = 0, Qt::WindowFlags f = 0);
 
 	virtual ~MealFoodListItemDataWidget();
 
@@ -38,6 +38,7 @@ public slots:
 
 	void buttonAdd();
 	void buttonUpdate();
+	void buttonClose();
 	void buttonRemove();
 
 	void setBatchData(const QModelIndex & idx);
@@ -52,11 +53,13 @@ private:
 
 	double quantity;
 	QString batchlabel;
+	int proxyindex;
 
 	QModelIndex batch_idx;
 	QModelIndex dist_idx;
 
 	MealFoodList * mfl;
+	QListWidgetItem * owner;
 	BatchTableModelProxy * btmp;
 };
 

@@ -37,6 +37,7 @@ public:
 	virtual void insertEmptySlot();
 
 	virtual void setIndex(const QModelIndex& index);
+	virtual const QModelIndex& getIndex();
 
 public slots:
 	virtual void populateModel();

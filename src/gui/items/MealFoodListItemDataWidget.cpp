@@ -24,8 +24,8 @@
 
 #include "Database.h"
 
-MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::WindowFlags f):
-		QWidget(parent, f), lock(true) {
+MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWidgetItem * item, Qt::WindowFlags f):
+		QWidget(parent, f), lock(true), owner(item) {
 	mfl = (MealFoodList *)parent;
 	setupUi(this);
 	btmp = ((MealTabWidget *)(mfl->parent()->parent()))->getBatchProxyModel();
@@ -44,11 +44,15 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 	updateB->setIcon(style()->standardIcon(QStyle::SP_DialogOpenButton));
 	removeB->setMaximumSize(24, 24);
 	removeB->setIcon(style()->standardIcon(QStyle::SP_TrashIcon));
+	closeB->setMaximumSize(24, 24);
+	closeB->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
 
 	qty->setMaximumSize(128, 24);
 	qty->setMaximum(9999);
 	qty_label->setMaximumSize(128, 24);
 
+	proxyindex = -1;
+	btmp->setItemNum(&proxyindex);
 // 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(printStatus()));
 
 	connect(batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateBatchAdd()));
@@ -58,6 +62,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, Qt::Wind
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
+	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenedItems()));
 
 	convertToEmpty();
 	validateBatchAdd();
@@ -71,6 +76,7 @@ void MealFoodListItemDataWidget::render(bool doRender) {
 	addB->setVisible(!doRender);
 	updateB->setVisible(doRender);
 	removeB->setVisible(!empty);
+	closeB->setVisible(!doRender and !empty);
 
 	qty->setVisible(!doRender);
 	qty_label->setVisible(doRender);
@@ -163,13 +169,26 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	if (lock)
 		return;
 
+	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenedItems();
+	((MealTabWidget *)(mfl->parent()->parent()))->markOpenedItems(owner);
 	lock = true;
-
+// 	proxyindex = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId)).row();
+	proxyindex = batch_idx.row();
+	btmp->setItemNum(&proxyindex);
+	btmp->invalidate();
 	batch->setCurrentIndex(btmp->mapFromSource(batch_idx).row());
+
+	double free = btmp->index(batch->currentIndex(), BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
+	qty->setMaximum(free+quantity);
+	qty->setSuffix(tr(" of %1").arg(free + quantity));
 	qty->setValue(quantity);
 
-
 	render(false);
+}
+
+void MealFoodListItemDataWidget::buttonClose() {
+	lock = false;
+	render(true);
 }
 
 void MealFoodListItemDataWidget::buttonRemove() {

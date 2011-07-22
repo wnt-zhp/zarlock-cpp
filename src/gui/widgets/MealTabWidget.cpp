@@ -22,11 +22,13 @@
 
 #include "DistributorTableModel.h"
 #include "Database.h"
+#include "MealFoodListItemDataWidget.h"
 
+#include <QListWidgetItem>
 #include <QStyle>
 #include <QAction>
 
-MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent) {
+MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NULL) {
 	this->setDocumentMode(true);
 
 	che = new QCheckBox;
@@ -70,17 +72,27 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 	btmp->invalidate();
 
 	for (int i = 0; i < meals; ++i) {
+		foodlist[i]->setIndex(index);
 		foodlist[i]->setProxyModel(proxy[i]);
 		proxy[i]->setRef(sref);
 		proxy[i]->setKey(i);
 		proxy[i]->invalidate();
 		foodlist[i]->populateModel();
-		foodlist[i]->setIndex(index);
 	}
 }
 
 BatchTableModelProxy* MealTabWidget::getBatchProxyModel() {
 	return btmp;
+}
+
+void MealTabWidget::markOpenedItems(QListWidgetItem* item) {
+	openeditem = item;
+}
+
+void MealTabWidget::closeOpenedItems() {
+	if (openeditem)
+		((MealFoodListItemDataWidget *)openeditem->listWidget()->itemWidget(openeditem))->buttonClose();
+	openeditem = NULL;
 }
 
 #include "MealTabWidget.moc"

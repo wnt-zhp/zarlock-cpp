@@ -35,8 +35,12 @@ public:
 
 	virtual BatchTableModelProxy * getBatchProxyModel();
 
+
 public slots:
 	virtual void setIndex(const QModelIndex& index);
+
+	virtual void markOpenedItems(QListWidgetItem* item);
+	virtual void closeOpenedItems();
 // 	void insertNewTab();
 // 	void removeNewTab(int index);
 
@@ -67,6 +71,7 @@ private:
 	BatchTableModelProxy * btmp;
 	QCheckBox * che;
 	QCheckBox * cexp;
+	QListWidgetItem * openeditem;
 };
 
 #endif // MEALTABWIDGET_H

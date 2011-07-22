@@ -42,7 +42,7 @@ void MealFoodList::populateModel() {
 		QListWidgetItem * qlwi = new QListWidgetItem(this);
 		qlwi->setSizeHint(QSize(100, 48));
 
-		MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this);
+		MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
 
 		QModelIndex didx = proxy->mapToSource(proxy->index(i, DistributorTableModel::HBatchId));
 
@@ -58,7 +58,7 @@ void MealFoodList::insertEmptySlot() {
 	QListWidgetItem * qlwi = new QListWidgetItem(this);
 	qlwi->setSizeHint(QSize(100, 48));
 
-	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this);
+	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
 
 	this->addItem(qlwi);
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
@@ -73,6 +73,8 @@ const MealTableModelProxy* MealFoodList::proxyModel() {
 }
 
 void MealFoodList::doItemEdit(QListWidgetItem* item) {
+	((MealTabWidget *)parent())->closeOpenedItems();
+	((MealTabWidget *)parent())->markOpenedItems(item);
 	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
 }
 
@@ -86,6 +88,10 @@ void MealFoodList::markDirty() {
 
 void MealFoodList::setIndex(const QModelIndex& index) {
 	idx = index;
+}
+
+const QModelIndex& MealFoodList::getIndex() {
+	return idx;
 }
 
 #include "MealFoodList.moc"
