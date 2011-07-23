@@ -122,7 +122,7 @@
         <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="36"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="125"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
@@ -132,47 +132,47 @@
         <translation>Wydaj nową partię produktu</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="43"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="57"/>
         <source>Optional</source>
         <translation>Opcjonalny</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="50"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="36"/>
         <source>Reason</source>
         <translation>Powód</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="57"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="71"/>
         <source>Date</source>
         <translation>Data wydania</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="66"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="87"/>
         <source>quantity</source>
         <translation>ilość</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="73"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="94"/>
         <source>max:</source>
         <translation>maksymalnie:</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="92"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="113"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="104"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="78"/>
         <source>distribute date</source>
         <translation>data wydania</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="111"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="43"/>
         <source>reason</source>
         <translation>przyczyna wydania</translation>
     </message>
     <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="118"/>
+        <location filename="../ui/AddDistributorRecordWidget.ui" line="64"/>
         <source>additional reason</source>
         <translation>dodatkowy opis</translation>
     </message>
@@ -244,12 +244,12 @@
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="30"/>
-        <source>Add</source>
+        <source>&amp;Add</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
         <location filename="../ui/AddMealRecordWidget.ui" line="37"/>
-        <source>Cancel</source>
+        <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
 </context>
@@ -309,6 +309,14 @@
         <location filename="../ui/AddProductsRecordWidget.ui" line="84"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
+    </message>
+</context>
+<context>
+    <name>AddDistributorRecordWidget</name>
+    <message>
+        <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="97"/>
+        <source>x %1, maximal</source>
+        <translation>x %1, maksymalnie</translation>
     </message>
 </context>
 <context>
@@ -512,13 +520,13 @@
     <message>
         <location filename="../gui/inputs/CustomComboBox.cpp" line="52"/>
         <source>Parser error!</source>
-        <translation type="unfinished">Błąd przetwarzania!</translation>
+        <translation>Błąd przetwarzania!</translation>
     </message>
 </context>
 <context>
     <name>CustomLineEdit</name>
     <message>
-        <location filename="../gui/inputs/CustomLineEdit.cpp" line="55"/>
+        <location filename="../gui/inputs/CustomLineEdit.cpp" line="69"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
     </message>
@@ -757,8 +765,9 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="96"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="99"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="102"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="105"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="183"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
@@ -766,37 +775,37 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealTabWidget</name>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="45"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="49"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="46"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="50"/>
         <source>2nd Breakfast</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="47"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="51"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="48"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="52"/>
         <source>Tea</source>
         <translation>Podwieczorek</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="49"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="53"/>
         <source>Diner</source>
         <translation>Kolacja</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="50"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="54"/>
         <source>Other 1</source>
         <translation>Inny posiłek</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="51"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="55"/>
         <source>Other 2</source>
         <translation>Inny posiłek</translation>
     </message>
@@ -1087,6 +1096,21 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Zakładka posiłków</translation>
     </message>
     <message>
+        <location filename="../ui/TabMealWidget.ui" line="35"/>
+        <source>&amp;Insert</source>
+        <translation>&amp;Dodaj</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="42"/>
+        <source>&amp;Show</source>
+        <translation>&amp;Pokaż</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabMealWidget.ui" line="99"/>
+        <source>&amp;Calculate</source>
+        <translation>&amp;Oblicz</translation>
+    </message>
+    <message>
         <location filename="../ui/TabMealWidget.ui" line="126"/>
         <source>@Day</source>
         <translation></translation>
@@ -1107,16 +1131,6 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Harcerzy</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="35"/>
-        <source>Insert</source>
-        <translation>Dodaj</translation>
-    </message>
-    <message>
-        <location filename="../ui/TabMealWidget.ui" line="42"/>
-        <source>Show</source>
-        <translation>Pokaż</translation>
-    </message>
-    <message>
         <location filename="../ui/TabMealWidget.ui" line="73"/>
         <source>Leaders</source>
         <translation>Kadry</translation>
@@ -1125,16 +1139,6 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../ui/TabMealWidget.ui" line="86"/>
         <source>Other</source>
         <translation>Pozostali</translation>
-    </message>
-    <message>
-        <location filename="../ui/TabMealWidget.ui" line="99"/>
-        <source>Calculate</source>
-        <translation>Oblicz</translation>
-    </message>
-    <message>
-        <location filename="../ui/TabMealWidget.ui" line="142"/>
-        <source>adsa</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../gui/widgets/TabMealWidget.cpp" line="36"/>

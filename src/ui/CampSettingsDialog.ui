@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>532</width>
-    <height>360</height>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -232,7 +232,6 @@
   <tabstop>period_stop</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leaders</tabstop>
-  <tabstop>doubleSpinBox</tabstop>
   <tabstop>edit_leader</tabstop>
   <tabstop>edit_qmaster</tabstop>
   <tabstop>edit_others</tabstop>

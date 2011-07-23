@@ -32,14 +32,14 @@
          <item>
           <widget class="QPushButton" name="action_insert">
            <property name="text">
-            <string>Insert</string>
+            <string>&amp;Insert</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="action_toggle">
            <property name="text">
-            <string>Show</string>
+            <string>&amp;Show</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -96,7 +96,7 @@
          <item>
           <widget class="QPushButton" name="calculate">
            <property name="text">
-            <string>Calculate</string>
+            <string>&amp;Calculate</string>
            </property>
           </widget>
          </item>
@@ -137,11 +137,6 @@
     </widget>
    </item>
   </layout>
-  <action name="actionAdsa">
-   <property name="text">
-    <string>adsa</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
