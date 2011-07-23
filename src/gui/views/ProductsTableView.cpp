@@ -67,12 +67,16 @@ ProductsTableView::~ProductsTableView() {
 void ProductsTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
-	hideColumn(ProductsTableModel::HId);
+// 	hideColumn(ProductsTableModel::HId);
 
+	horizontalHeader()->setResizeMode(ProductsTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(ProductsTableModel::HName, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(ProductsTableModel::HUnit, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(ProductsTableModel::HExpire, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(ProductsTableModel::HNotes, QHeaderView::ResizeToContents);
+
+	sortByColumn(ProductsTableModel::HId, Qt::AscendingOrder);
+	setSortingEnabled(true);
 }
 
 /**

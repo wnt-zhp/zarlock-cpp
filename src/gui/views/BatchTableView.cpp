@@ -70,12 +70,13 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 // 	setColumnHidden(BatchTableModel::HId, true);
-	hideColumn(BatchTableModel::HId);
+// 	hideColumn(BatchTableModel::HId);
 // 	hideColumn(BatchTableModel::HProdId);
 	hideColumn(BatchTableModel::HRegDate);
 	hideColumn(BatchTableModel::HNotes);
 	hideColumn(BatchTableModel::HUsedQty);
 
+	horizontalHeader()->setResizeMode(BatchTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HProdId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HSpec, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(BatchTableModel::HPrice, QHeaderView::ResizeToContents);
@@ -85,6 +86,9 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 	horizontalHeader()->setResizeMode(BatchTableModel::HExpire, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
+
+	sortByColumn(BatchTableModel::HId, Qt::AscendingOrder);
+	setSortingEnabled(true);
 }
 
 /**

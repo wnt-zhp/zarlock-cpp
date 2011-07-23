@@ -68,16 +68,20 @@ DistributorTableView::~DistributorTableView() {
 void DistributorTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
-	hideColumn(DistributorTableModel::HId);
+// 	hideColumn(DistributorTableModel::HId);
 	hideColumn(DistributorTableModel::HRegDate);
 // 	hideColumn(DistributorTableModel::HReason3);
 
+	horizontalHeader()->setResizeMode(DistributorTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HBatchId, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HQty, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HDistDate, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HReason, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HReason2, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HReason3, QHeaderView::ResizeToContents);
+
+	sortByColumn(DistributorTableModel::HId, Qt::AscendingOrder);
+	setSortingEnabled(true);
 }
 
 /**
