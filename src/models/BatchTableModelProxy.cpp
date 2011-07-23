@@ -63,9 +63,12 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
 
 	QDate refd;
-	if (!datekey.isEmpty())
+	if (!datekey.isEmpty()) {
 		refd = QDate::fromString(datekey, Qt::ISODate);
-	else
+		QDate regd = QDate::fromString(sourceModel()->index(sourceRow, BatchTableModel::HBook).data().toString(), Qt::DefaultLocaleShortDate);
+		if (regd.daysTo(refd) < 0)
+			return false;
+	} else
 		refd = QDate::currentDate();
 
 	QDate expd = QDate::fromString(sourceModel()->index(sourceRow, BatchTableModel::HExpire).data().toString(), Qt::DefaultLocaleShortDate);
