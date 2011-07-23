@@ -176,6 +176,14 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			if (idx.column() == HDistDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
+			if (idx.column() == HReason2) {
+				if (index(idx.row(), DistributorTableModel::HReason3).data().toInt() == RMeal) {
+					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(Qt::EditRole));
+					if (!qmil.isEmpty()) {
+						return Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole);
+					}
+				}
+			}
 			break;
 		case Qt::BackgroundRole:
 			break;
