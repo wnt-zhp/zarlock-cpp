@@ -20,7 +20,7 @@
    <item>
     <layout class="QHBoxLayout" name="MainLayout">
      <item>
-      <widget class="QLineEdit" name="edit_filter_batch">
+      <widget class="TextInput" name="edit_filter_batch">
        <property name="placeholderText">
         <string>filter</string>
        </property>
@@ -120,6 +120,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>TextInput</class>
+   <extends>QLineEdit</extends>
+   <header>TextInput.h</header>
+  </customwidget>
   <customwidget>
    <class>BatchTableView</class>
    <extends>QTableView</extends>

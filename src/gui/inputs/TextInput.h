@@ -25,8 +25,8 @@
 class TextInput : public CustomLineEdit {
 Q_OBJECT
 public:
-    TextInput(QWidget * parent);
-	
+	TextInput(QWidget * parent);
+
 	inline void enableEmpty(bool en = true) { allow_empty = en; is_ok = en; }
 
 private slots:

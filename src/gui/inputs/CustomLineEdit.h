@@ -21,6 +21,7 @@
 #define CUSTOMLINEEDIT_H
 
 #include <QtGui/QLineEdit>
+#include <QtGui/QToolButton>
 
 class CustomLineEdit : public QLineEdit {
 Q_OBJECT
@@ -39,6 +40,9 @@ public:
 	virtual void setText(const QString & t);
 
 protected:
+	void resizeEvent(QResizeEvent *);
+
+protected:
 	virtual bool verifyText(const QString &, QString & ) = 0;
 
 public slots:
@@ -47,13 +51,18 @@ public slots:
 
 private slots:
 	bool verify(const QString &);
+	void updateClearButton(const QString &text);
 
 signals:
 	void dataChanged();
+
 protected:
 	QString displaytext, rawtext;
 	bool edit_mode, is_ok;
 	QPalette defpal;
+
+private:
+	QToolButton * clearButton;
 };
 
 #endif // CUSTOMLINEEDI

@@ -21,17 +21,31 @@
 
 #include "CustomLineEdit.h"
 
-#include <QToolTip>
-#include <QContextMenuEvent>
+#include <QStyle>
 
 CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
 	connect(this, SIGNAL(textChanged(QString)), this, SLOT(verify(QString)));
 	connect(this, SIGNAL(returnPressed()), this, SLOT(doReturnPressed()));
 
 	defpal = this->palette();
+
+	clearButton = new QToolButton(this);
+	clearButton->setIcon(style()->standardIcon(QStyle::SP_DockWidgetCloseButton));
+// 	clearButton->setIconSize(pixmap.size());
+	clearButton->setCursor(Qt::ArrowCursor);
+	clearButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
+	clearButton->hide();
+	connect(clearButton, SIGNAL(clicked()), this, SLOT(clear()));
+// 	connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(updateClearButton(const QString&)));
+	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+	setStyleSheet(QString("QLineEdit { padding-right: %1px; } ").arg(clearButton->sizeHint().width() + frameWidth + 1));
+	QSize msz = minimumSizeHint();
+	setMinimumSize(qMax(msz.width(), clearButton->sizeHint().height() + frameWidth * 2 + 2),
+				   qMax(msz.height(), clearButton->sizeHint().height() + frameWidth * 2 + 2));
 }
 
 CustomLineEdit::~CustomLineEdit() {
+	delete clearButton;
 	FPR(__func__);
 }
 
@@ -78,6 +92,8 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 }
 
 bool CustomLineEdit::verify(const QString & t) {
+	updateClearButton(t);
+
 	if (!edit_mode) {
 		QLineEdit::setText(rawtext);
 		edit_mode = true;
@@ -135,7 +151,7 @@ void CustomLineEdit::doRefresh() {
 	focusOutEvent(NULL);
 }
 
-const  QString CustomLineEdit::text(bool placeholdertext) {
+const QString CustomLineEdit::text(bool placeholdertext) {
 	return placeholdertext ? displaytext : rawtext;
 }
 
@@ -143,5 +159,16 @@ const  QString CustomLineEdit::text(bool placeholdertext) {
 // TODO Poniższy fuck, spolszczony oczywiście, jest niezbitym świadectwem wysokiej klasy tego kodu.
 // TODO "Ja już tu k***a sam nie wiem co napisałem w tej klasie i jak to działa :) :( :/ :\"
 // TODO Ja tu jeszcze wrócę!
+
+void CustomLineEdit::resizeEvent(QResizeEvent *) {
+	QSize sz = clearButton->sizeHint();
+	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+	clearButton->move(rect().right() - frameWidth - sz.width(),
+					  (rect().bottom() + 1 - sz.height())/2);
+}
+
+void CustomLineEdit::updateClearButton(const QString& text) {
+	clearButton->setVisible(!text.isEmpty());
+}
 
 #include "CustomLineEdit.moc"
