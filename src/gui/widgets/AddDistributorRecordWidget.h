@@ -51,6 +51,7 @@ private:
 	QCompleter * completer_reason2;
 
 	BatchTableModelProxy * pproxy;
+	QCheckBox * hideempty;
 };
 
 #endif // ADDDISTRIBUTERECORDWIDGET_H

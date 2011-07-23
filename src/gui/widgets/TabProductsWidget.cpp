@@ -41,6 +41,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 // 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
+// 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
 
 	table_products->setAlternatingRowColors(true);
 }

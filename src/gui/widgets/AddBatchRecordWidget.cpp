@@ -26,7 +26,7 @@
 
 AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
-	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL) {
+	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL) {
 	setupUi(parent);
 
 	action_addexit->setEnabled(false);
@@ -66,11 +66,11 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 	if (completer_invoice) delete completer_invoice;
 	if (completer_book) delete completer_book;
 	if (completer_expiry) delete completer_expiry;
+	if (pproxy) delete pproxy;
 }
 
 void AddBatchRecordWidget::insert_record() {
 	Database & db = Database::Instance();
-	ProductsTableModel * ptm = db.CachedProducts();
 
 	int idx = combo_products->currentIndex();
 	int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();

@@ -22,8 +22,11 @@
 #include "DataParser.h"
 
 AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::ADRWidget(),
-	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL) {
+	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL), pproxy(NULL), hideempty(NULL) {
 	setupUi(parent);
+
+	hideempty = new QCheckBox;
+	hideempty->setChecked(true);
 
 	action_add->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogDiscardButton) );
@@ -54,6 +57,8 @@ AddDistributorRecordWidget::~AddDistributorRecordWidget() {
 	if (completer_date) delete completer_date;
 	if (completer_reason) delete completer_reason;
 	if (completer_reason2) delete completer_reason2;
+	if (pproxy) delete pproxy;
+	delete hideempty;
 }
 
 bool AddDistributorRecordWidget::insert_record() {
@@ -83,9 +88,11 @@ void AddDistributorRecordWidget::cancel_form() {
 }
 
 void AddDistributorRecordWidget::validateAdd() {
-	float qtyused = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUsedQty).data().toFloat();
-	float qtytotal = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
-	QString qunit = Database::Instance().CachedBatch()->index(combo_products->currentIndex(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+	QModelIndex idx = pproxy->mapToSource(pproxy->index(combo_products->currentIndex(), 0));
+
+	float qtyused = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toFloat();
+	float qtytotal = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+	QString qunit = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
 	label_max->setText(tr("x %1, maximal").arg(qunit));
 
@@ -103,7 +110,7 @@ void AddDistributorRecordWidget::validateAdd() {
 
 void AddDistributorRecordWidget::update_model() {
 	if (pproxy) delete pproxy;
-	pproxy = new BatchTableModelProxy(NULL);
+	pproxy = new BatchTableModelProxy(hideempty);
 
 	pproxy->setSourceModel(Database::Instance().CachedBatch());
 	pproxy->setDynamicSortFilter(true);
