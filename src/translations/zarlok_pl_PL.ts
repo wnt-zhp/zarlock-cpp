@@ -1024,12 +1024,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Wszystkie wybrane wydania zostaną usuniete. Jesteś pewien?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="115"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="116"/>
         <source>No day selected yet</source>
         <translation>Nie wybrano żadnego dnia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="166"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="167"/>
         <source>Selected day: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Dzień: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -1141,29 +1141,39 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Pozostali</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="36"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="37"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="53"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="54"/>
         <source>Create PDF report</source>
         <translation>Twórz raport w PDF</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="54"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="55"/>
         <source>Create all PDF reports</source>
         <translation>Twórz raporty dla wszystkich</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="55"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="56"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="59"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="60"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="187"/>
+        <source>Printing reports...</source>
+        <translation>Drukowanie raportów...</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="187"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Anuluj</translation>
     </message>
 </context>
 <context>

@@ -26,6 +26,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QDesktopServices>
+#include <QProgressDialog>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 wmap(NULL) {
@@ -181,13 +182,22 @@ void TabMealWidget::doPrepareReport() {
 
 void TabMealWidget::doPrepareReports() {
 	QString fn;
+	int num = db.CachedMeal()->rowCount();
 
-	for (int i = 0; i < db.CachedMeal()->rowCount(); ++i) {
+	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
+	progress.setWindowModality(Qt::WindowModal);
+
+	for (int i = 0; i < num; ++i) {
+		progress.setValue(i);
+
 		QDate sd = db.CachedMeal()->index(i, MealTableModel::HDistDate).data(Qt::EditRole).toDate();
 		seldate = sd.toString(Qt::ISODate);
 		DBReports::printDailyMealReport(seldate, &fn);
 // 		PR(fn.toStdString());
+		if (progress.wasCanceled())
+			break;
 	}
+	progress.setValue(num);
 }
 
 void TabMealWidget::doBrowseReports() {
