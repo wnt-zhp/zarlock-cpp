@@ -51,6 +51,9 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	connect(edit_book, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 
+	connect(check_inf, SIGNAL(toggled(bool)), edit_expiry, SLOT(setDisabled(bool)));
+	connect(check_inf, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
+
 	connect(&Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
 
 	edit_spec->enableEmpty(true);
@@ -83,8 +86,14 @@ void AddBatchRecordWidget::insert_record() {
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
+	QString expdate;
+	if (check_inf->isChecked())
+		expdate = "inf";
+	else
+		expdate = edit_expiry->text();
+		
 	db.addBatchRecord(prod_id, edit_spec->text(), edit_book->text(true), QDate::currentDate().toString(Qt::ISODate),
-		edit_expiry->text(), edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
+		expdate, edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
 
 	clear_form();
 	edit_spec->setFocus();
@@ -134,8 +143,8 @@ void AddBatchRecordWidget::validateAdd() {
 
 	if (edit_spec->ok() and edit_unit->ok() and
 		edit_book->ok() and edit_price->ok() and
-		edit_qty->ok() and edit_expiry->ok() and
-		edit_invoice->ok()) {
+		edit_qty->ok() and edit_invoice->ok() and
+		(edit_expiry->ok() or check_inf->isChecked())) {
 		action_addnext->setEnabled(true);
 		action_addexit->setEnabled(true);
 	} else {

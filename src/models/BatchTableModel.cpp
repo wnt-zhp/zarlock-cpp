@@ -126,6 +126,7 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 
 			if (index.column() == HExpire) {
 				QDate date;
+				if (value.toString() != QString("inf"))
 				if (!DataParser::date(value.toString(), date, this->index(index.row(), HBook).data(Qt::DisplayRole).toDate())) {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -222,6 +223,9 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			else if (idx.column() == HExpire) {
+				if (idx.data(Qt::EditRole).toString() == QString("inf"))
+					return QString(new QChar(0x221e), 1);
+		
 				QDate date;
 				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
 					return date.toString(Qt::DefaultLocaleShortDate);

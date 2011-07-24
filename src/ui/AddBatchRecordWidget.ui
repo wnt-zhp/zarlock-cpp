@@ -22,7 +22,7 @@
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
       <item row="0" column="1">
        <widget class="QComboBox" name="combo_products">
         <property name="insertPolicy">
@@ -80,7 +80,7 @@
            <enum>Qt::RightToLeft</enum>
           </property>
           <property name="text">
-           <string>U&amp;nit price</string>
+           <string>&amp;Unit price</string>
           </property>
          </widget>
         </item>
@@ -128,13 +128,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="DateInput" name="edit_expiry">
-        <property name="placeholderText">
-         <string>expiry date</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="TextInput" name="edit_spec">
         <property name="placeholderText">
@@ -148,6 +141,24 @@
          <string>unit</string>
         </property>
        </widget>
+      </item>
+      <item row="3" column="3">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="DateInput" name="edit_expiry">
+          <property name="placeholderText">
+           <string>expiry date</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="check_inf">
+          <property name="text">
+           <string>&amp;No expire</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -216,6 +227,7 @@
   <tabstop>edit_invoice</tabstop>
   <tabstop>edit_book</tabstop>
   <tabstop>edit_expiry</tabstop>
+  <tabstop>check_inf</tabstop>
   <tabstop>action_addnext</tabstop>
   <tabstop>action_addexit</tabstop>
   <tabstop>action_cancel</tabstop>

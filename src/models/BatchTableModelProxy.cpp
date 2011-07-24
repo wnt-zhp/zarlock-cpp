@@ -32,6 +32,7 @@
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
 												QSortFilterProxyModel(parent),
 												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL), cb_hide(hide), itemnum(NULL) {
+	infsymb = QString(new QChar(0x221e), 1);
 }
 
 /**
@@ -71,7 +72,12 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 	} else
 		refd = QDate::currentDate();
 
-	QDate expd = QDate::fromString(sourceModel()->index(sourceRow, BatchTableModel::HExpire).data().toString(), Qt::DefaultLocaleShortDate);
+	QString expds = sourceModel()->index(sourceRow, BatchTableModel::HExpire).data().toString();
+	if (expds == infsymb)
+		return true;
+
+	QDate expd = QDate::fromString(expds, Qt::DefaultLocaleShortDate);
+
 	int daystoexp = refd.daysTo(expd);
 
 	if (cb_exp and daystoexp < 0)

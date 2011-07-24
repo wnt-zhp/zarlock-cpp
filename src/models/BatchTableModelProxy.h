@@ -50,6 +50,7 @@ private:
 	const QCheckBox * cb_hide;
 	QString datekey;
 	int * itemnum;
+	QString infsymb;
 };
 
 #endif // BATCHTABLEMODELPROXY_H
