@@ -77,7 +77,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	QString ofile =
 		QDir::homePath() + QString(ZARLOK_HOME ZARLOK_REPORTS) + dbname +
 		QString("/") + date.toString(Qt::ISODate) + QString("_raport.pdf");
-	PR(ofile.toStdString());
+// 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
 	// Prepare document
@@ -116,7 +116,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	doc.print(&printer);
 }
 
-void DBReports::showDailyMealReport(const QString& date, QString * reportfile, bool displayPDF) {
+void DBReports::printDailyMealReport(const QString& date, QString * reportfile, bool displayPDF) {
 	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
@@ -153,7 +153,7 @@ void DBReports::showDailyMealReport(const QString& date, QString * reportfile, b
 	QString ofile =
 		QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabase() %
 		QString("/") % date % QString("_dailymeal.pdf");
-	PR(ofile.toStdString());
+// 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
 	if (reportfile)

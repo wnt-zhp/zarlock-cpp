@@ -1024,12 +1024,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Wszystkie wybrane wydania zostaną usuniete. Jesteś pewien?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="110"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="115"/>
         <source>No day selected yet</source>
         <translation>Nie wybrano żadnego dnia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="161"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="166"/>
         <source>Selected day: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Dzień: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -1147,16 +1147,21 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../gui/widgets/TabMealWidget.cpp" line="53"/>
-        <source>View PDF report</source>
-        <translation>Zobacz raport w PDF</translation>
+        <source>Create PDF report</source>
+        <translation>Twórz raport w PDF</translation>
     </message>
     <message>
         <location filename="../gui/widgets/TabMealWidget.cpp" line="54"/>
+        <source>Create all PDF reports</source>
+        <translation>Twórz raporty dla wszystkich</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="55"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="58"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="59"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
@@ -1194,7 +1199,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/TabRaportsWidget.ui" line="32"/>
         <source>Add</source>
-        <translation>&amp;Dodaj</translation>
+        <translation>Dodaj</translation>
     </message>
 </context>
 <context>

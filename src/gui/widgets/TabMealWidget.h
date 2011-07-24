@@ -45,6 +45,7 @@ private slots:
 	void doRecalculate();
 
 	void doPrepareReport();
+	void doPrepareReports();
 	void doBrowseReports();
 
 public:
@@ -58,7 +59,8 @@ private:
 	QModelIndex lastidx;
 	QString seldate;
 
-	QAction * viewPDF;
+	QAction * createPDF;
+	QAction * createPDFAll;
 	QAction * browsePDF;
 };
 

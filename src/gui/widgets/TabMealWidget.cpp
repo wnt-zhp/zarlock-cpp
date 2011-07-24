@@ -50,18 +50,23 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
 
-	viewPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("View PDF report"), this);
-	browsePDF = new QAction(tr("Browse reports directory"), this);
+	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create PDF report"), this);
+	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
+	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
 
 	tools->setPopupMode(QToolButton::InstantPopup);
 	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
 	tools->setText(tr("Tools"));
 	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-	tools->addAction(viewPDF);
+	tools->addAction(createPDF);
+	tools->addAction(createPDFAll);
 	tools->addAction(browsePDF);
 
-	connect(viewPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
+	createPDF->setEnabled(false);
+
+	connect(createPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
+	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
 	seldate = QDate::currentDate().toString(Qt::ISODate);
@@ -159,6 +164,7 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	QDate sd = db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toDate();
 	seldate = sd.toString(Qt::ISODate);
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
+	createPDF->setEnabled(true);
 }
 
 void TabMealWidget::doRecalculate() {
@@ -169,9 +175,19 @@ void TabMealWidget::doRecalculate() {
 
 void TabMealWidget::doPrepareReport() {
 	QString fn;
-	DBReports::showDailyMealReport(seldate, &fn);
+	DBReports::printDailyMealReport(seldate, &fn);
+// 	PR(fn.toStdString());
+}
 
-	PR(fn.toStdString());
+void TabMealWidget::doPrepareReports() {
+	QString fn;
+
+	for (int i = 0; i < db.CachedMeal()->rowCount(); ++i) {
+		QDate sd = db.CachedMeal()->index(i, MealTableModel::HDistDate).data(Qt::EditRole).toDate();
+		seldate = sd.toString(Qt::ISODate);
+		DBReports::printDailyMealReport(seldate, &fn);
+// 		PR(fn.toStdString());
+	}
 }
 
 void TabMealWidget::doBrowseReports() {
