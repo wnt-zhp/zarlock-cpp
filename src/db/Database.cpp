@@ -418,13 +418,11 @@ void Database::updateBatchQty(const int bid) {
 		db.transaction();
 
 	QSqlQuery q;
-	q.prepare("SELECT quantity FROM distributor WHERE batch_id=?;");
+        q.prepare("SELECT SUM(quantity) FROM distributor WHERE batch_id=?;");
 	q.bindValue(0, bid);
 	q.exec();
-	float qty = 0;
-	while (q.next()) {
-		qty += q.value(0).toFloat();
-	}
+        q.next();
+        float qty = q.value(0).toFloat();
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
@@ -462,7 +460,7 @@ void Database::updateMealCosts(const QModelIndex& idx) {
 		distdate = q.value(0).toString();
 	}
 
-	q.prepare("SELECT batch.price,distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
+        q.prepare("SELECT batch.price, distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
 	q.bindValue(0, distdate);
 	q.exec();
 	while (q.next()) {
@@ -786,6 +784,8 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
 
+        int seconds = time(NULL);
+
 	int row = model_distributor->rowCount();
 
 	model_distributor->autoSubmit(false);
@@ -800,23 +800,31 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HReason3), re3);
 	model_distributor->autoSubmit(true);
 
+        std::cout << "updateDistributorRecord checkpoint 1" << time(NULL) - seconds << "s." << std::endl;
+
 	if (!status) {
 		model_distributor->revertAll();
 		return false;
 	} else if (!model_distributor->submitAll())
 		return false;
 
+        std::cout << "updateDistributorRecord checkpoint 2" << time(NULL) - seconds << "s." << std::endl;
+
 	updateBatchQty(model_distributor->index(row, 1).data(Qt::EditRole).toInt());
 	status =  model_batch->submitAll();
 
-	if (status)
-		updateDistributorWordList();
+        std::cout << "updateDistributorRecord checkpoint 3" << time(NULL) - seconds << "s." << std::endl;
+
+//	if (status)
+//		updateDistributorWordList();
 	
 	return status;
 }
 
 bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
+
+        int seconds = time(NULL);
 
 	model_distributor->autoSubmit(false);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HBatchId), bid);
@@ -828,17 +836,25 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HReason3), re3);
 	model_distributor->autoSubmit(true);
 
+        std::cout << "updateDistributorRecord checkpoint 1" << time(NULL) - seconds << "s." << std::endl;
+
 	if (!status) {
 		model_distributor->revertAll();
 		return false;
 	} else if (!model_distributor->submitAll())
 		return false;
 
+        std::cout << "updateDistributorRecord checkpoint 2" << time(NULL) - seconds << "s." << std::endl;
+
+        std::cout << "updateBatchQty("  << model_distributor->index(id, 1).data(Qt::EditRole).toInt() << ") 1" << std::endl;
+
 	updateBatchQty(model_distributor->index(id, 1).data(Qt::EditRole).toInt());
 	status = model_batch->submitAll();
 
-	if (status)
-		updateDistributorWordList();
+        std::cout << "updateDistributorRecord checkpoint 3" << time(NULL) - seconds << "s." << std::endl;
+
+        //if (status)
+        //	updateDistributorWordList();
 
 	return status;
 }
