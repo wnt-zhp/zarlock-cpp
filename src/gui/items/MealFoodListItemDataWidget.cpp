@@ -133,7 +133,7 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 }
 
 void MealFoodListItemDataWidget::buttonAdd() {
-    int seconds = time(NULL);
+	int seconds = time(NULL);
 
 	Database & db = Database::Instance();
 	lock = false;
@@ -163,16 +163,16 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		} else
 			return;
 	}
-        std::cout << "buttonAdd checkpoint 2 " << time(NULL) - seconds << "s" << std::endl;
-        if (old_bid != batch_idx.data().toInt() && old_bid != 0){
-		db.updateBatchQty(old_bid);
-                std::cout << "updateBatchQty("  << old_bid << ") 2 " << std::endl;
-        }
-        std::cout << "buttonAdd checkpoint 3 " << time(NULL) - seconds << "s" << std::endl;
-	db.updateBatchQty(batch_idx.data().toInt());
-
-        std::cout << "updateBatchQty("  << batch_idx.data().toInt() << ") 3" << std::endl;
-
+//         std::cout << "buttonAdd checkpoint 2 " << time(NULL) - seconds << "s" << std::endl;
+//         if (old_bid != batch_idx.data().toInt() && old_bid != 0){
+// 		db.updateBatchQty(old_bid);
+//                 std::cout << "updateBatchQty("  << old_bid << ") 2 " << std::endl;
+//         }
+//         std::cout << "buttonAdd checkpoint 3 " << time(NULL) - seconds << "s" << std::endl;
+// 	db.updateBatchQty(batch_idx.data().toInt());
+// 
+//         std::cout << "updateBatchQty("  << batch_idx.data().toInt() << ") 3" << std::endl;
+// 
         std::cout << "buttonAdd checkpoint 4 " << time(NULL) - seconds << "s" << std::endl;
 
 	batch_label->setText(batchlabel);

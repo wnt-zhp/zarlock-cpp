@@ -5,6 +5,9 @@
 #define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "| in " << __FILE__ << " at line " << __LINE__ << "\n";
 #define FPR(x) //std::cout << "++DEBUG: " << #x << " = |" << x << "| in " << __FILE__ << " at line " << __LINE__ << "\n";
 
+#define TD int seconds = time(NULL);
+#define TM std::cout << "+++ TIME: " << __func__ << " " << time(NULL) - seconds << "s. in " << __FILE__ << " at line " << __LINE__ << std::endl;
+
 #define INFO if (true)
 
 #include <QtGui/QPalette>

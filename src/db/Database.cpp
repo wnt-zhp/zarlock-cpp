@@ -233,11 +233,12 @@ bool Database::close_database() {
 
 void Database::save_database() {
 	model_products->submitAll();
-	model_batch->submitAll();
 	model_distributor->submitAll();
-	model_meal->submitAll();
 
 	updateBatchQty();
+	model_batch->submitAll();
+
+	model_meal->submitAll();
 
 	emit dbSaved();
 }
@@ -413,7 +414,7 @@ void Database::updateBatchQty() {
 	}
 }
 
-void Database::updateBatchQty(const int bid) {
+void Database::updateBatchQty(const int bid) {PR(bid); TD TM
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
 
@@ -421,17 +422,23 @@ void Database::updateBatchQty(const int bid) {
         q.prepare("SELECT SUM(quantity) FROM distributor WHERE batch_id=?;");
 	q.bindValue(0, bid);
 	q.exec();
-        q.next();
-        float qty = q.value(0).toFloat();
+
+	float qty = 0.0;
+	if (q.next())
+        qty = q.value(0).toFloat();
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
 			db.rollback();
+	int rnum = model_batch->idRow(bid);
 
-	QModelIndexList idxl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+// 	QModelIndexList idxl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
 
-	if (idxl.count())
-		model_batch->setData(model_batch->index(idxl.at(0).row(), BatchTableModel::HUsedQty), qty);
+// 	if (idxl.count())
+	model_batch->autoSubmit(false);
+	model_batch->setData(model_batch->index(rnum, BatchTableModel::HUsedQty), qty);
+	model_batch->autoSubmit(true);
+	model_batch->submitAll(); TM
 }
 
 void Database::updateMealCosts() {
@@ -675,7 +682,8 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 
 bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
-	
+TD
+TM
 	int row = model_batch->rowCount();
 
 	model_batch->autoSubmit(false);
@@ -702,13 +710,13 @@ bool Database::addBatchRecord(int pid, const QString& spec, const QString& book,
 	status = model_batch->submitAll();
 	if (status)
 		updateBatchWordList();
-
+TM
 	return status;
 }
 
 bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
-	
+
 	model_batch->autoSubmit(false);
 // 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HProdId), pid);
@@ -800,7 +808,7 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HReason3), re3);
 	model_distributor->autoSubmit(true);
 
-        std::cout << "updateDistributorRecord checkpoint 1" << time(NULL) - seconds << "s." << std::endl;
+        std::cout << "addDistributorRecord checkpoint 1: " << time(NULL) - seconds << "s." << std::endl;
 
 	if (!status) {
 		model_distributor->revertAll();
@@ -808,12 +816,12 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 	} else if (!model_distributor->submitAll())
 		return false;
 
-        std::cout << "updateDistributorRecord checkpoint 2" << time(NULL) - seconds << "s." << std::endl;
+        std::cout << "addDistributorRecord checkpoint 2: " << time(NULL) - seconds << "s." << std::endl;
 
-	updateBatchQty(model_distributor->index(row, 1).data(Qt::EditRole).toInt());
-	status =  model_batch->submitAll();
-
-        std::cout << "updateDistributorRecord checkpoint 3" << time(NULL) - seconds << "s." << std::endl;
+	updateBatchQty(bid);
+	std::cout << "addDistributorRecord checkpoint 3: " << time(NULL) - seconds << "s." << std::endl;
+// 	status = model_batch->submitAll();
+	std::cout << "addDistributorRecord checkpoint 4: " << time(NULL) - seconds << "s." << std::endl;
 
 //	if (status)
 //		updateDistributorWordList();
@@ -823,9 +831,7 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 
 bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
-
-        int seconds = time(NULL);
-
+int seconds = time(NULL);
 	model_distributor->autoSubmit(false);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HBatchId), bid);
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HQty), qty);
@@ -836,7 +842,7 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 	status &= model_distributor->setData(model_distributor->index(id, DistributorTableModel::HReason3), re3);
 	model_distributor->autoSubmit(true);
 
-        std::cout << "updateDistributorRecord checkpoint 1" << time(NULL) - seconds << "s." << std::endl;
+        std::cout << "updateDistributorRecord checkpoint 1: " << time(NULL) - seconds << "s." << std::endl;
 
 	if (!status) {
 		model_distributor->revertAll();
@@ -844,14 +850,14 @@ bool Database::updateDistributorRecord(int id, int bid, float qty, const QString
 	} else if (!model_distributor->submitAll())
 		return false;
 
-        std::cout << "updateDistributorRecord checkpoint 2" << time(NULL) - seconds << "s." << std::endl;
+        std::cout << "updateDistributorRecord checkpoint 2: " << time(NULL) - seconds << "s." << std::endl;
 
         std::cout << "updateBatchQty("  << model_distributor->index(id, 1).data(Qt::EditRole).toInt() << ") 1" << std::endl;
 
 	updateBatchQty(model_distributor->index(id, 1).data(Qt::EditRole).toInt());
 	status = model_batch->submitAll();
 
-        std::cout << "updateDistributorRecord checkpoint 3" << time(NULL) - seconds << "s." << std::endl;
+        std::cout << "updateDistributorRecord checkpoint 3: " << time(NULL) - seconds << "s." << std::endl;
 
         //if (status)
         //	updateDistributorWordList();

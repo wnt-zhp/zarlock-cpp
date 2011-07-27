@@ -24,6 +24,7 @@
 #include <QColor>
 #include <QMessageBox>
 #include <QStringBuilder>
+#include <QSqlQuery>
 
 #include "BatchTableModel.h"
 #include "DataParser.h"
@@ -167,7 +168,25 @@ bool BatchTableModel::select() {
 	setHeaderData(HNotes,	Qt::Horizontal, tr("Notes"));
 	setHeaderData(HInvoice,	Qt::Horizontal, tr("Invoice"));
 
-    return QSqlTableModel::select();
+	if (!QSqlTableModel::select())
+		return false;
+TD
+TM
+	fetchMore();
+
+	int maxval = 0;
+	QSqlQuery q;
+	q.exec("SELECT id FROM batch ORDER BY id DESC LIMIT 1;");
+	if (q.next())
+		maxval = q.value(0).toInt();
+
+	idmap.resize(maxval+1);
+
+	for (int i = 0; i < rowCount(); ++i) {
+		idmap[this->index(i, HId).data().toInt()] = i;
+	}
+TM
+    return true;
 }
 
 /**
@@ -312,6 +331,10 @@ void BatchTableModel::trigDataChanged() {
 		this->submitAll();
 		Database::Instance().updateBatchWordList();
 	}
+}
+
+int BatchTableModel::idRow(int id) {
+	return idmap[id];
 }
 
 #include "BatchTableModel.moc"
