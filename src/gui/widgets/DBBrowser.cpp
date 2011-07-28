@@ -162,9 +162,8 @@ void DBBrowser::refreshList(int sort, int order) {
 
 void DBBrowser::newDatabaseCreator(bool autoopen) {
 	bool wasOK = false;
-	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"),QLineEdit::Normal, "", &wasOK);
-PR(wasOK);
-PR(autoopen);
+	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"), QLineEdit::Normal, "", &wasOK);
+
 	if (wasOK && autoopen) {
 // 		Database::Instance().open_database(dbname, true);
 		openZarlock(dbname);

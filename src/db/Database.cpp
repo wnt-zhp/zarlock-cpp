@@ -23,6 +23,8 @@
 #include <QtSql/QSqlError>
 #include <QtGui/QMessageBox>
 
+#include <QProgressDialog>
+
 #include <QFile>
 #include <QDir>
 #include <QStringBuilder>
@@ -235,7 +237,7 @@ void Database::save_database() {
 	model_products->submitAll();
 	model_distributor->submitAll();
 
-	updateBatchQty();
+// 	updateBatchQty();
 	model_batch->submitAll();
 
 	model_meal->submitAll();
@@ -249,33 +251,39 @@ void Database::save_database() {
  * @return bool
  **/
 bool Database::rebuild_models() {
+	QProgressDialog progress(tr("Loading database..."), tr("&Cancel"), 0, 7);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setValue(0);
 	// products
 	if (!model_products->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_products->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-
+	progress.setValue(1);
 	// batch
 	if (!model_batch->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_batch->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-
+	progress.setValue(2);
 	// distributor
 	if (!model_distributor->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-
+	progress.setValue(3);
 	// meal
 	if (!model_meal->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_meal->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-
+	progress.setValue(4);
 	updateProductsWordList();
+	progress.setValue(5);
 	updateBatchWordList();
+	progress.setValue(6);
 	updateDistributorWordList();
+	progress.setValue(7);
 
 	return true;
 }
@@ -437,7 +445,7 @@ void Database::updateBatchQty(const int bid) {PR(bid); TD TM
 // 	if (idxl.count())
 	model_batch->autoSubmit(false);
 	model_batch->setData(model_batch->index(rnum, BatchTableModel::HUsedQty), qty);
-	model_batch->autoSubmit(true);
+	model_batch->autoSubmit(true); TM
 	model_batch->submitAll(); TM
 }
 

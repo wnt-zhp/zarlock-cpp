@@ -150,11 +150,11 @@ void zarlok::writeSettings() {
 }
 
 void zarlok::readSettings() {
-	 globals::appSettings->beginGroup("WindowSettings");
-	 resize			(globals::appSettings->value("size", QSize(860, 620)).toSize());
-	 move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
-	 restoreState	(globals::appSettings->value("state").toByteArray());
-	 globals::appSettings->endGroup();
+	globals::appSettings->beginGroup("WindowSettings");
+	resize			(globals::appSettings->value("size", QSize(860, 620)).toSize());
+	move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
+	restoreState	(globals::appSettings->value("state").toByteArray());
+	globals::appSettings->endGroup();
 }
 
 void zarlok::closeEvent(QCloseEvent *event) {

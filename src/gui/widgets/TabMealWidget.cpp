@@ -186,16 +186,20 @@ void TabMealWidget::doPrepareReports() {
 
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
 	progress.setWindowModality(Qt::WindowModal);
+	progress.setValue(0);
 
 	for (int i = 0; i < num; ++i) {
-		progress.setValue(i);
-
 		QDate sd = db.CachedMeal()->index(i, MealTableModel::HDistDate).data(Qt::EditRole).toDate();
-		seldate = sd.toString(Qt::ISODate);
-		DBReports::printDailyMealReport(seldate, &fn);
-// 		PR(fn.toStdString());
+
+		progress.setValue(i);
+		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
 		if (progress.wasCanceled())
 			break;
+
+// 		sleep(1);
+
+		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
+// 		PR(fn.toStdString());
 	}
 	progress.setValue(num);
 }
