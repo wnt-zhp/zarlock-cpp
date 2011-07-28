@@ -51,7 +51,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
 
-	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create PDF report"), this);
+	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
 	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
 	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
 
@@ -177,6 +177,7 @@ void TabMealWidget::doRecalculate() {
 void TabMealWidget::doPrepareReport() {
 	QString fn;
 	DBReports::printDailyMealReport(seldate, &fn);
+	QDesktopServices::openUrl(QUrl("file://" % fn));
 // 	PR(fn.toStdString());
 }
 

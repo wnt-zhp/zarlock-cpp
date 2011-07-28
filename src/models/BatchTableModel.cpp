@@ -174,9 +174,6 @@ bool BatchTableModel::select() {
 		return false;
 	fetchMore();
 
-EGTD
-GTM
-
 	int maxval = 0;
 	QSqlQuery q;
 	q.exec("SELECT id FROM batch ORDER BY id DESC LIMIT 1;");
@@ -188,7 +185,6 @@ GTM
 	for (int i = 0; i < rowCount(); ++i) {
 		idmap[this->index(i, HId).data().toInt()] = i;
 	}
-GTM
 
     return true;
 }

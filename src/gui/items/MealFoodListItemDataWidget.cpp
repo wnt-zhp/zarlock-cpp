@@ -210,14 +210,17 @@ void MealFoodListItemDataWidget::buttonClose() {
 	render(true);
 }
 
-void MealFoodListItemDataWidget::buttonRemove() {
+void MealFoodListItemDataWidget::buttonRemove() { EGTD
 	Database & db = Database::Instance();
-
+GTM
 	db.removeDistributorRecord(dist_idx.row());
+GTM
 	mfl->markDirty();
-
+GTM
 	convertToEmpty();
+GTM
 	mfl->populateModel();
+GTM
 }
 
 void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {

@@ -884,12 +884,12 @@ int seconds = time(NULL);
 	return status;
 }
 
-bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation, bool submitBatches) {
+bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation, bool submitBatches) {EGTD
 	bool status = true;
 	int counter = 0;
 	QString details;
 	QMap<int, int> idmap;
-TD TM
+GTM
 	if (askForConfirmation) {
 		for (int i = 0; i < idxl.count(); ++i) {
 			if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
@@ -902,7 +902,7 @@ TD TM
 
 	if (!status)
 		return false;
-TM
+GTM
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
 			int bid = model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
@@ -910,7 +910,7 @@ TM
 				idmap[bid]=1;
 		}
 	}
-TM
+GTM
 	status = model_distributor->submitAll();
 	if (status && submitBatches) {
 		QMap<int, int>::iterator it = idmap.begin();
@@ -919,7 +919,7 @@ TM
 		}
 		status &= model_batch->submitAll();
 	}
-TM
+GTM
 	return status;
 }
 
@@ -931,27 +931,27 @@ TM
 // 	if (submitBatches) model_batch->submitAll();
 // }
 
-bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bool submitBatches) {
+bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bool submitBatches) {EGTD
 	QString batch;
 	QVariant bid = model_distributor->index(recordid, DistributorTableModel::HBatchId).data(Qt::EditRole);
 	bool status = true;
-
+GTM
 	if (askForConfirmation) {
 		QModelIndexList batchl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
 		if (batchl.count())
 			batch = model_batch->data(model_batch->index(batchl.at(0).row(), BatchTableModel::HSpec)).toString();
 		status = model_distributor->distributeRemoveConfirmation(1, batch);
 	}
-
-	if (status) {
+GTM
+	if (status) {GTM
 		if (!model_distributor->removeRow(recordid)) {
 			model_distributor->revertAll();
 			return false;
-		}
-		status = model_distributor->submitAll();
-		updateBatchQty(bid.toInt());
-		if (submitBatches) model_batch->submitAll();
-	}
+		}GTM
+		status = model_distributor->submitAll();GTM
+		updateBatchQty(bid.toInt());GTM
+		if (submitBatches) model_batch->submitAll();GTM
+	}GTM
 	return status;
 }
 
