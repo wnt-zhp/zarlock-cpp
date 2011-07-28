@@ -16,7 +16,7 @@
 
 #include "CampSettingsDialog.h"
 // public members
-
+GTD
 /**
  * @brief Główny konstruktor klasy Zarlok. Klasa Zarlok jest główną klasą,
  * odpowiada za wyświetlanie głównego formularza (jest pochodną klasy

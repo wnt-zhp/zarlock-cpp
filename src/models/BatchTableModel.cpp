@@ -170,8 +170,8 @@ bool BatchTableModel::select() {
 
 	if (!QSqlTableModel::select())
 		return false;
-TD
-TM
+EGTD
+GTM
 	fetchMore();
 
 	int maxval = 0;
@@ -185,7 +185,7 @@ TM
 	for (int i = 0; i < rowCount(); ++i) {
 		idmap[this->index(i, HId).data().toInt()] = i;
 	}
-TM
+GTM
     return true;
 }
 

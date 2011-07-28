@@ -422,7 +422,7 @@ void Database::updateBatchQty() {
 	}
 }
 
-void Database::updateBatchQty(const int bid) {PR(bid); TD TM
+void Database::updateBatchQty(const int bid) {PR(bid); EGTD GTM
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
 
@@ -445,8 +445,7 @@ void Database::updateBatchQty(const int bid) {PR(bid); TD TM
 // 	if (idxl.count())
 	model_batch->autoSubmit(false);
 	model_batch->setData(model_batch->index(rnum, BatchTableModel::HUsedQty), qty);
-	model_batch->autoSubmit(true); TM
-	model_batch->submitAll(); TM
+	model_batch->autoSubmit(true); GTM
 }
 
 void Database::updateMealCosts() {
@@ -828,7 +827,12 @@ bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, co
 
 	updateBatchQty(bid);
 	std::cout << "addDistributorRecord checkpoint 3: " << time(NULL) - seconds << "s." << std::endl;
-// 	status = model_batch->submitAll();
+if (db.driver()->hasFeature(QSqlDriver::Transactions))
+db.transaction();
+	model_batch->submitAll();
+if (db.driver()->hasFeature(QSqlDriver::Transactions))
+if (!db.commit())
+db.rollback();
 	std::cout << "addDistributorRecord checkpoint 4: " << time(NULL) - seconds << "s." << std::endl;
 
 //	if (status)
@@ -878,7 +882,7 @@ bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askFor
 	int counter = 0;
 	QString details;
 	QMap<int, int> idmap;
-
+TD TM
 	if (askForConfirmation) {
 		for (int i = 0; i < idxl.count(); ++i) {
 			if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
@@ -891,7 +895,7 @@ bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askFor
 
 	if (!status)
 		return false;
-
+TM
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
 			int bid = model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
@@ -899,6 +903,7 @@ bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askFor
 				idmap[bid]=1;
 		}
 	}
+TM
 	status = model_distributor->submitAll();
 	if (status && submitBatches) {
 		QMap<int, int>::iterator it = idmap.begin();
@@ -907,6 +912,7 @@ bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askFor
 		}
 		status &= model_batch->submitAll();
 	}
+TM
 	return status;
 }
 
