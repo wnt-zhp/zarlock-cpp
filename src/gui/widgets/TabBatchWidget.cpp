@@ -59,6 +59,25 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
+
+	syncdb = new QAction(tr("Sync database"), this);
+	createZZrep = new QAction(tr("Create ZZ reports"), this);
+// 	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
+
+	tools->setPopupMode(QToolButton::InstantPopup);
+	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
+	tools->setText(tr("Tools"));
+	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+	tools->addAction(syncdb);
+	tools->addAction(createZZrep);
+// 	tools->addAction(browsePDF);
+
+	createZZrep->setDisabled(true);
+
+	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
+// 	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
+// 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -127,6 +146,10 @@ void TabBatchWidget::edit_record(const QModelIndex& idx) {
 void TabBatchWidget::set_filter() {
 	modelproxy_batch->invalidate();
 	table_batch->setModel(modelproxy_batch);
+}
+
+void TabBatchWidget::syncDB() {
+	Database::Instance().updateBatchQty();
 }
 
 #include "TabBatchWidget.moc"

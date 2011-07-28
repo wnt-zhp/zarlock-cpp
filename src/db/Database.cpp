@@ -251,39 +251,33 @@ void Database::save_database() {
  * @return bool
  **/
 bool Database::rebuild_models() {
-	QProgressDialog progress(tr("Loading database..."), tr("&Cancel"), 0, 7);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setValue(0);
 	// products
 	if (!model_products->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_products->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-	progress.setValue(1);
+
 	// batch
 	if (!model_batch->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_batch->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-	progress.setValue(2);
+
 	// distributor
 	if (!model_distributor->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-	progress.setValue(3);
+
 	// meal
 	if (!model_meal->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_meal->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
-	progress.setValue(4);
+
 	updateProductsWordList();
-	progress.setValue(5);
 	updateBatchWordList();
-	progress.setValue(6);
 	updateDistributorWordList();
-	progress.setValue(7);
 
 	return true;
 }
@@ -415,11 +409,25 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 }
 
 void Database::updateBatchQty() {
+	int maxval = model_batch->rowCount()+1;
+
+	QProgressDialog progress(tr("Synchronizing..."), tr("&Cancel"), 0, maxval);
+	progress.setMinimumDuration(0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setCancelButton(NULL);
+// 	progress.show();
+
+	int i = 0;
 	QSqlQuery qBatch("SELECT id FROM batch;");
 	qBatch.exec();
 	while (qBatch.next()) {
+		progress.setValue(i++);
 		updateBatchQty(qBatch.value(0).toInt());
 	}
+
+	progress.setValue(i);
+	model_batch->submitAll();
+	progress.setValue(i+1);
 }
 
 void Database::updateBatchQty(const int bid) {PR(bid); EGTD GTM

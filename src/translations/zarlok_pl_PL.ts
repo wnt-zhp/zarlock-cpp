@@ -44,11 +44,6 @@
         <translation>cena</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="83"/>
-        <source>U&amp;nit price</source>
-        <translation>Cena/&amp;jednostkę</translation>
-    </message>
-    <message>
         <location filename="../ui/AddBatchRecordWidget.ui" line="92"/>
         <source>booking time</source>
         <translation>data katalogowania</translation>
@@ -74,12 +69,12 @@
         <translation>Ważność</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="141"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="134"/>
         <source>specificator</source>
         <translation>specyfikator produktu</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="148"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="141"/>
         <source>unit</source>
         <translation>jednostka</translation>
     </message>
@@ -89,22 +84,32 @@
         <translation>numer faktury</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="134"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="83"/>
+        <source>&amp;Unit price</source>
+        <translation>&amp;Cena jednostkowa</translation>
+    </message>
+    <message>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="150"/>
         <source>expiry date</source>
         <translation>data ważności produktu</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="160"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="157"/>
+        <source>&amp;No expire</source>
+        <translation>&amp;Nie traci ważnosci</translation>
+    </message>
+    <message>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="171"/>
         <source>&amp;Save and Add next</source>
         <translation>&amp;Zapisz i dodaj kolejny</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="167"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="178"/>
         <source>Save and &amp;Exit</source>
         <translation>Zapisz i &amp;wyjdź</translation>
     </message>
     <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="174"/>
+        <location filename="../ui/AddBatchRecordWidget.ui" line="185"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -322,80 +327,80 @@
 <context>
     <name>BatchTableModel</name>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="67"/>
-        <location filename="../models/BatchTableModel.cpp" line="247"/>
+        <location filename="../models/BatchTableModel.cpp" line="68"/>
+        <location filename="../models/BatchTableModel.cpp" line="270"/>
         <source> (quantity: %1)</source>
         <translation> (ilość: %1)</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="156"/>
+        <location filename="../models/BatchTableModel.cpp" line="158"/>
         <source>ID</source>
         <translation>Lp</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="157"/>
+        <location filename="../models/BatchTableModel.cpp" line="159"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="158"/>
+        <location filename="../models/BatchTableModel.cpp" line="160"/>
         <source>Specificator</source>
         <translation>Specyfikacja</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="159"/>
+        <location filename="../models/BatchTableModel.cpp" line="161"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="160"/>
+        <location filename="../models/BatchTableModel.cpp" line="162"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="161"/>
+        <location filename="../models/BatchTableModel.cpp" line="163"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="162"/>
+        <location filename="../models/BatchTableModel.cpp" line="164"/>
         <source>Booking</source>
         <translation>Wpis na stan</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="163"/>
+        <location filename="../models/BatchTableModel.cpp" line="165"/>
         <source>Expiry</source>
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="164"/>
+        <location filename="../models/BatchTableModel.cpp" line="166"/>
         <source>Used</source>
         <translation>Wydane</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="165"/>
+        <location filename="../models/BatchTableModel.cpp" line="167"/>
         <source>Registered</source>
         <translation>Data księgowania</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="166"/>
+        <location filename="../models/BatchTableModel.cpp" line="168"/>
         <source>Notes</source>
         <translation>Notatka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="167"/>
+        <location filename="../models/BatchTableModel.cpp" line="169"/>
         <source>Invoice</source>
         <translation>Faktura</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="204"/>
-        <location filename="../models/BatchTableModel.cpp" line="216"/>
-        <location filename="../models/BatchTableModel.cpp" line="232"/>
+        <location filename="../models/BatchTableModel.cpp" line="224"/>
+        <location filename="../models/BatchTableModel.cpp" line="236"/>
+        <location filename="../models/BatchTableModel.cpp" line="255"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="241"/>
+        <location filename="../models/BatchTableModel.cpp" line="264"/>
         <source>%1 of %2</source>
         <translation>%1 z %2</translation>
     </message>
@@ -555,12 +560,12 @@
 <context>
     <name>Database</name>
     <message>
-        <location filename="../db/Database.cpp" line="102"/>
+        <location filename="../db/Database.cpp" line="104"/>
         <source>Cannot create database</source>
         <translation>Nie mogę stworzyć bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="103"/>
+        <location filename="../db/Database.cpp" line="105"/>
         <source>Unable to establish a database connection.
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
@@ -571,63 +576,73 @@ Ta aplikacja wymaga wsparcia dla SQLite. Proszę zapoznań się z dokumentacją 
 Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="122"/>
+        <location filename="../db/Database.cpp" line="124"/>
         <source>Your database &quot;%1&quot; is corrupted. Unable to find version number.</source>
         <translation>Twoja baza danych &quot;%1&quot; jest uszkodzona. Nie można znaleźć numeru wersji.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="123"/>
-        <location filename="../db/Database.cpp" line="161"/>
+        <location filename="../db/Database.cpp" line="125"/>
+        <location filename="../db/Database.cpp" line="163"/>
         <source>This is critical error and if your database has important data, please contact with Zarlok team in WNT GK to help you solve your problem.</source>
         <translation>To jest krytyczny błąd i jeśli Twoja baza danych zawiera ważne dane, skontaktuj się z zespołem Żarłoka w WNT GK, który pomoże rozwiązać Twój problem.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="136"/>
+        <location filename="../db/Database.cpp" line="138"/>
         <source>Your database &quot;%1&quot; is in version %2 and is newer than supported version %3.</source>
         <translation>Baza danych&quot;%1&quot; jest w wersji %2 i jest nowsza niż wspierana wersja %3.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="137"/>
+        <location filename="../db/Database.cpp" line="139"/>
         <source>Please upgrade Zarlok to the newest version.</source>
         <translation>Proszę zaktualizować Żarłoka do najnowszej wersji.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="148"/>
+        <location filename="../db/Database.cpp" line="150"/>
         <source>You have been asked for upgrade of database &quot;%1&quot; from version %2 to version %3.</source>
         <translation>Zostałeś poproszony o aktualizację bazy danych &quot;%1&quot; z wersji %2 do wersji %3.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="160"/>
+        <location filename="../db/Database.cpp" line="162"/>
         <source>Database &quot;%1&quot; upgrade failed.</source>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="149"/>
+        <location filename="../db/Database.cpp" line="414"/>
+        <source>Synchronizing...</source>
+        <translation>Synchronizacja...</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="414"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Anuluj</translation>
+    </message>
+    <message>
+        <location filename="../db/Database.cpp" line="151"/>
         <source>Do you want to upgrade?</source>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="292"/>
+        <location filename="../db/Database.cpp" line="295"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="315"/>
+        <location filename="../db/Database.cpp" line="318"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="316"/>
+        <location filename="../db/Database.cpp" line="319"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="387"/>
+        <location filename="../db/Database.cpp" line="390"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="388"/>
+        <location filename="../db/Database.cpp" line="391"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -765,9 +780,9 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="102"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="105"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="183"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="107"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="110"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="202"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
@@ -948,25 +963,25 @@ Click Close to exit.</source>
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="251"/>
+        <location filename="../db/DBReports.cpp" line="253"/>
         <source>2nd breakfast</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="253"/>
+        <location filename="../db/DBReports.cpp" line="255"/>
         <source>Other 1</source>
         <translation>Inny posiłek</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="255"/>
+        <location filename="../db/DBReports.cpp" line="257"/>
         <source>Other 2</source>
         <translation>Inny posiłek</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="253"/>
-        <location filename="../db/Database.cpp" line="259"/>
-        <location filename="../db/Database.cpp" line="265"/>
-        <location filename="../db/Database.cpp" line="271"/>
+        <location filename="../db/Database.cpp" line="256"/>
+        <location filename="../db/Database.cpp" line="262"/>
+        <location filename="../db/Database.cpp" line="268"/>
+        <location filename="../db/Database.cpp" line="274"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
@@ -1076,8 +1091,28 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/TabBatchWidget.ui" line="95"/>
+        <source>...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../ui/TabBatchWidget.ui" line="102"/>
         <source>Add batc&amp;h</source>
         <translation>Dodaj &amp;partię</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="63"/>
+        <source>Sync database</source>
+        <translation>Synchronizuj bazę danych</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="64"/>
+        <source>Create ZZ reports</source>
+        <translation>Twórz raporty ZZ</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="69"/>
+        <source>Tools</source>
+        <translation>Narzędzia</translation>
     </message>
 </context>
 <context>
@@ -1174,6 +1209,11 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../gui/widgets/TabMealWidget.cpp" line="187"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="196"/>
+        <source>Creating report for day: </source>
+        <translation>Twórzenie raportu dla dnia: </translation>
     </message>
 </context>
 <context>

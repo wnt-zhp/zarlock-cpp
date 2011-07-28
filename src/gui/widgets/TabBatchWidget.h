@@ -44,6 +44,8 @@ private slots:
 	void edit_record(const QModelIndex & idx);
 	void set_filter();
 
+	virtual void syncDB();
+
 private:
 	Database & db;
 	BatchTableModel * model_batch;
@@ -51,6 +53,9 @@ private:
 	QSqlRelationalDelegate * model_batch_delegate;
 
 	AddBatchRecordWidget * abrw;
+
+	QAction * syncdb;
+	QAction * createZZrep;
 };
 
 #endif // TABBATCHWIDGET_H

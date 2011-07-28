@@ -185,6 +185,7 @@ void TabMealWidget::doPrepareReports() {
 	int num = db.CachedMeal()->rowCount();
 
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
+	progress.setMinimumDuration(0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setValue(0);
 
