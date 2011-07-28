@@ -115,7 +115,7 @@ void MealFoodListItemDataWidget::validateBatchAdd() {
 
 	validateAdd();
 }
-	
+
 void MealFoodListItemDataWidget::validateAdd() {
 	if (qty->value() && batch->currentIndex() >= 0) {
 		addB->setEnabled(true);

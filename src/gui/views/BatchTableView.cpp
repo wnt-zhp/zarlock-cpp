@@ -67,7 +67,7 @@ BatchTableView::~BatchTableView() {
  * @return void
  **/
 void BatchTableView::setModel(QAbstractItemModel * model) {
-    QTableView::setModel(model);
+	QTableView::setModel(model);
 
 // 	setColumnHidden(BatchTableModel::HId, true);
 // 	hideColumn(BatchTableModel::HId);

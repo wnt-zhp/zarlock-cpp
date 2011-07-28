@@ -415,7 +415,6 @@ void Database::updateBatchQty() {
 	progress.setMinimumDuration(0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setCancelButton(NULL);
-// 	progress.show();
 
 	int i = 0;
 	QSqlQuery qBatch("SELECT id FROM batch;");
@@ -426,11 +425,11 @@ void Database::updateBatchQty() {
 	}
 
 	progress.setValue(i);
-	model_batch->submitAll();
+	PR(model_batch->submitAll());
 	progress.setValue(i+1);
 }
 
-void Database::updateBatchQty(const int bid) {PR(bid); EGTD GTM
+void Database::updateBatchQty(const int bid) {
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
 
@@ -453,7 +452,7 @@ void Database::updateBatchQty(const int bid) {PR(bid); EGTD GTM
 // 	if (idxl.count())
 	model_batch->autoSubmit(false);
 	model_batch->setData(model_batch->index(rnum, BatchTableModel::HUsedQty), qty);
-	model_batch->autoSubmit(true); GTM
+	model_batch->autoSubmit(true);
 }
 
 void Database::updateMealCosts() {

@@ -143,7 +143,11 @@ bool DistributorTableModel::select() {
 	setHeaderData(HReason2,	Qt::Horizontal, tr("Sub reason"));
 	setHeaderData(HReason3,	Qt::Horizontal, tr("Distribution type"));
 
-    return QSqlTableModel::select();
+	if (!QSqlTableModel::select())
+		return false;
+	fetchMore();
+
+	return true;
 }
 
 /**

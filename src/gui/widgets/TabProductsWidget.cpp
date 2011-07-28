@@ -79,8 +79,8 @@ void TabProductsWidget::activateUi(bool activate) {
 		model_batch_proxyP = new BatchTableModelProxyP(&pid);
 		model_batch_proxyP->setSourceModel(db.CachedBatch());
 		model_batch_proxyP->setDynamicSortFilter(true);
-		table_batchbyid->setModel(model_batch_proxyP);
-		table_batchbyid->hideColumn(BatchTableModel::HProdId);
+// 		table_batchbyid->setModel(model_batch_proxyP);
+// 		table_batchbyid->hideColumn(BatchTableModel::HProdId);
 	}
 }
 

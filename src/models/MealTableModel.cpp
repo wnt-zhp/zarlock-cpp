@@ -108,7 +108,11 @@ bool MealTableModel::select() {
 	setHeaderData(HAvgCosts,	Qt::Horizontal, tr("Avg Costs"));
 	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));
 
-    return QSqlTableModel::select();
+	if (!QSqlTableModel::select())
+		return false;
+	fetchMore();
+
+	return true;
 }
 
 /**

@@ -29,6 +29,8 @@
 #include "BatchTableModel.h"
 #include "DataParser.h"
 #include "Database.h"
+#include <qsqlresult.h>
+#include <qsqlrecord.h>
 
 BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
@@ -170,9 +172,10 @@ bool BatchTableModel::select() {
 
 	if (!QSqlTableModel::select())
 		return false;
+	fetchMore();
+
 EGTD
 GTM
-	fetchMore();
 
 	int maxval = 0;
 	QSqlQuery q;
@@ -186,6 +189,7 @@ GTM
 		idmap[this->index(i, HId).data().toInt()] = i;
 	}
 GTM
+
     return true;
 }
 

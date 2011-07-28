@@ -108,7 +108,11 @@ bool ProductsTableModel::select() {
 	setHeaderData(HExpire,	Qt::Horizontal,		tr("Expire date (template)"));
 	setHeaderData(HNotes,	Qt::Horizontal,		tr("Notes"));
 
-    return QSqlTableModel::select();
+	if (!QSqlTableModel::select())
+		return false;
+	fetchMore();
+
+	return true;
 }
 
 /**
