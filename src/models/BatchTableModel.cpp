@@ -172,7 +172,8 @@ bool BatchTableModel::select() {
 
 	if (!QSqlTableModel::select())
 		return false;
-	fetchMore();
+	while (canFetchMore())
+		fetchMore();
 
 	int maxval = 0;
 	QSqlQuery q;

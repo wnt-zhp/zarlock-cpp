@@ -145,7 +145,8 @@ bool DistributorTableModel::select() {
 
 	if (!QSqlTableModel::select())
 		return false;
-	fetchMore();
+	while (canFetchMore())
+		fetchMore();
 
 	return true;
 }

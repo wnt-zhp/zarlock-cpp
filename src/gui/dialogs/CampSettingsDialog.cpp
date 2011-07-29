@@ -58,7 +58,7 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	connect(edit_qmaster, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(verify()));
-	connect(spin_avgcosts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
+	connect(spin_avgcosts, SIGNAL(valueChanged(double)), this, SLOT(verify()));
 	connect(period_start, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 	connect(period_stop, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
 
