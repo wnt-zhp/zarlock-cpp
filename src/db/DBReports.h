@@ -30,7 +30,9 @@ public:
 
 	static void printDailyReport(const QString & dbname, const QDate & date);
 
-	static void printDailyMealReport(const QString & date, QString * reportfile = NULL, bool displayPDF = false);
+	static void printDailyMealReport(const QString & date, QString * reportfile = NULL);
+
+	static void printSMReport(QString * reportsdir = NULL);
 };
 
 #endif // DBREPORTS_H

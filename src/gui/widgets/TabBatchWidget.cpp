@@ -20,6 +20,7 @@
 #include "TabBatchWidget.h"
 #include "Database.h"
 #include "DataParser.h"
+#include "DBReports.h"
 
 TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(Database::Instance()),
 	model_batch(NULL), modelproxy_batch(NULL)/*, model_batch_delegate(NULL)*/ {
@@ -61,7 +62,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
 
 	syncdb = new QAction(tr("Sync database"), this);
-	createZZrep = new QAction(tr("Create ZZ reports"), this);
+	createSMrep = new QAction(tr("Create SM reports"), this);
 // 	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
 
 	tools->setPopupMode(QToolButton::InstantPopup);
@@ -70,14 +71,14 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
 	tools->addAction(syncdb);
-	tools->addAction(createZZrep);
+	tools->addAction(createSMrep);
 // 	tools->addAction(browsePDF);
 
-	createZZrep->setDisabled(true);
-
 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
-// 	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
+	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 // 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
+
+	DBReports::printSMReport();
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -152,4 +153,7 @@ void TabBatchWidget::syncDB() {
 	Database::Instance().updateBatchQty();
 }
 
+void TabBatchWidget::doCreateSMreports() {
+	DBReports::printSMReport();
+}
 #include "TabBatchWidget.moc"

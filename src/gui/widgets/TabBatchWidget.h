@@ -36,6 +36,9 @@ public:
 	TabBatchWidget(QWidget * parent = NULL);
 	virtual ~TabBatchWidget();
 
+public slots:
+	virtual void doCreateSMreports();
+
 private:
 	void activateUi(bool activate = true);
 
@@ -55,7 +58,7 @@ private:
 	AddBatchRecordWidget * abrw;
 
 	QAction * syncdb;
-	QAction * createZZrep;
+	QAction * createSMrep;
 };
 
 #endif // TABBATCHWIDGET_H

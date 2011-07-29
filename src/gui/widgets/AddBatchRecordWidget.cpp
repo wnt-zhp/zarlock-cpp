@@ -96,8 +96,7 @@ void AddBatchRecordWidget::insert_record() {
 		expdate, edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
 
 	clear_form();
-	edit_spec->setFocus();
-// 	combo_spec->clear();
+	combo_products->setFocus();
 }
 
 void AddBatchRecordWidget::insert_record_and_exit() {

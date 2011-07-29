@@ -116,7 +116,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	doc.print(&printer);
 }
 
-void DBReports::printDailyMealReport(const QString& date, QString * reportfile, bool displayPDF) {
+void DBReports::printDailyMealReport(const QString& date, QString * reportfile) {
 	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
@@ -278,6 +278,39 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile, 
 	doc.setHtml(tpl);
 
 	doc.print(&printer);
+}
+
+void DBReports::printSMReport(QString* reportsdir) {
+	QDate b_min, b_max, d_min, d_max;
+
+	QSqlQuery q;
+	q.exec("SELECT date FROM batch ORDER BY date ASC LIMIT 1;");
+	if (q.next())
+		b_min = q.value(0).toDate();
+	q.exec("SELECT date FROM batch ORDER BY date DESC LIMIT 1;");
+	if (q.next())
+		b_max = q.value(0).toDate();
+	q.exec("SELECT distdate FROM distributor ORDER BY distdate ASC LIMIT 1;");
+	if (q.next())
+		d_min = q.value(0).toDate();
+	q.exec("SELECT distdate FROM distributor ORDER BY distdate DESC LIMIT 1;");
+	if (q.next())
+		d_max = q.value(0).toDate();
+
+	PR(b_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+	PR(b_max.toString(Qt::DefaultLocaleShortDate).toStdString());
+	PR(d_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+	PR(d_max.toString(Qt::DefaultLocaleShortDate).toStdString());
+
+	QMap<QString, QString> blackbox;
+
+	int totdays;
+	if (b_max.daysTo(d_max))
+		totdays = b_min.daysTo(d_max);
+	else
+		totdays = b_min.daysTo(b_max);
+
+	PR(totdays);
 }
 
 #include "DBReports.moc"
