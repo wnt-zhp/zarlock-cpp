@@ -712,7 +712,7 @@ TM
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), used);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HBook), book);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
+	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), reg);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
 	model_batch->autoSubmit(true);
 
@@ -742,7 +742,7 @@ bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QS
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HUsedQty), used);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HInvoice), invoice);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HBook), book);
-	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HRegDate), reg);
+	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HEntryDate), reg);
 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HNotes), notes);
 	model_batch->autoSubmit(true);
 

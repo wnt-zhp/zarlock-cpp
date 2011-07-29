@@ -72,7 +72,7 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 // 	setColumnHidden(BatchTableModel::HId, true);
 // 	hideColumn(BatchTableModel::HId);
 // 	hideColumn(BatchTableModel::HProdId);
-	hideColumn(BatchTableModel::HRegDate);
+	hideColumn(BatchTableModel::HEntryDate);
 	hideColumn(BatchTableModel::HNotes);
 	hideColumn(BatchTableModel::HUsedQty);
 
@@ -82,7 +82,7 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 	horizontalHeader()->setResizeMode(BatchTableModel::HPrice, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HUnit, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HStaQty, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HRegDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HEntryDate, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HExpire, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);

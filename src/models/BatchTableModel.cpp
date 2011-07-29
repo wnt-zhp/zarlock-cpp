@@ -157,18 +157,18 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
  * @return bool stan otwarcia tabeli
  **/
 bool BatchTableModel::select() {
-	setHeaderData(HId,		Qt::Horizontal, tr("ID"));
-	setHeaderData(HProdId,	Qt::Horizontal, tr("Product"));
-	setHeaderData(HSpec,	Qt::Horizontal, tr("Specificator"));
-	setHeaderData(HPrice,	Qt::Horizontal, tr("Price"));
-	setHeaderData(HUnit,	Qt::Horizontal, tr("Unit"));
-	setHeaderData(HStaQty,	Qt::Horizontal, tr("Quantity"));
-	setHeaderData(HBook,	Qt::Horizontal, tr("Booking"));
-	setHeaderData(HExpire,	Qt::Horizontal, tr("Expiry"));
-	setHeaderData(HUsedQty,	Qt::Horizontal, tr("Used"));
-	setHeaderData(HRegDate,	Qt::Horizontal, tr("Registered"));
-	setHeaderData(HNotes,	Qt::Horizontal, tr("Notes"));
-	setHeaderData(HInvoice,	Qt::Horizontal, tr("Invoice"));
+	setHeaderData(HId,			Qt::Horizontal, tr("ID"));
+	setHeaderData(HProdId,		Qt::Horizontal, tr("Product"));
+	setHeaderData(HSpec,		Qt::Horizontal, tr("Specificator"));
+	setHeaderData(HPrice,		Qt::Horizontal, tr("Price"));
+	setHeaderData(HUnit,		Qt::Horizontal, tr("Unit"));
+	setHeaderData(HStaQty,		Qt::Horizontal, tr("Quantity"));
+	setHeaderData(HBook,		Qt::Horizontal, tr("Booking"));
+	setHeaderData(HExpire,		Qt::Horizontal, tr("Expiry"));
+	setHeaderData(HUsedQty,		Qt::Horizontal, tr("Used"));
+	setHeaderData(HEntryDate,	Qt::Horizontal, tr("Entry date"));
+	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));
+	setHeaderData(HInvoice,		Qt::Horizontal, tr("Invoice"));
 
 	if (!QSqlTableModel::select())
 		return false;

@@ -284,10 +284,10 @@ void DBReports::printSMReport(QString* reportsdir) {
 	QDate b_min, b_max, d_min, d_max;
 
 	QSqlQuery q;
-	q.exec("SELECT date FROM batch ORDER BY date ASC LIMIT 1;");
+	q.exec("SELECT booking FROM batch ORDER BY booking ASC LIMIT 1;");
 	if (q.next())
 		b_min = q.value(0).toDate();
-	q.exec("SELECT date FROM batch ORDER BY date DESC LIMIT 1;");
+	q.exec("SELECT booking FROM batch ORDER BY booking DESC LIMIT 1;");
 	if (q.next())
 		b_max = q.value(0).toDate();
 	q.exec("SELECT distdate FROM distributor ORDER BY distdate ASC LIMIT 1;");
@@ -305,12 +305,11 @@ void DBReports::printSMReport(QString* reportsdir) {
 	QMap<QString, QString> blackbox;
 
 	int totdays;
-	if (b_max.daysTo(d_max))
+	if (b_max.daysTo(d_max) > 0)
 		totdays = b_min.daysTo(d_max);
 	else
 		totdays = b_min.daysTo(b_max);
 
-	PR(totdays);
 }
 
 #include "DBReports.moc"

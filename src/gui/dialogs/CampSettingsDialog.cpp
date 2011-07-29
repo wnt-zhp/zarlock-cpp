@@ -85,9 +85,9 @@ void CampSettingsDialog::verify() {
 			!edit_org->text().isEmpty()			&&
 			!edit_leader->text().isEmpty()		&&
 			!edit_qmaster->text().isEmpty()		&&
-			spin_scouts->value()				&&
-			spin_leaders->value()				&&
-			spin_avgcosts->value()
+			spin_scouts->value() >= 0			&&
+			spin_leaders->value()>= 0			&&
+			spin_avgcosts->value()>= 0
 	) {
 		buttonBox->button(QDialogButtonBox::Save)->setEnabled(true);
 	} else {
