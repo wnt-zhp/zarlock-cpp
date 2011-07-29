@@ -411,7 +411,7 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 void Database::updateBatchQty() {
 	int maxval = model_batch->rowCount()+1;
 
-	QProgressDialog progress(tr("Synchronizing..."), tr("&Cancel"), 0, maxval);
+	QProgressDialog progress(tr("Synchronizing quantity..."), tr("&Cancel"), 0, maxval);
 	progress.setMinimumDuration(0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setCancelButton(NULL);
@@ -456,8 +456,21 @@ void Database::updateBatchQty(const int bid) {
 }
 
 void Database::updateMealCosts() {
-	for (int i = 0; i < model_meal->rowCount(); ++i)
+	int maxval = model_meal->rowCount()+1;
+
+	QProgressDialog progress(tr("Synchronizing costs..."), tr("&Cancel"), 0, maxval);
+	progress.setMinimumDuration(0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setCancelButton(NULL);
+
+	for (int i = 0; i < model_meal->rowCount(); ++i) {
+		progress.setValue(i++);
 		updateMealCosts(model_meal->index(i, MealTableModel::HId));
+	}
+
+	progress.setValue(maxval-1);
+	PR(model_meal->submitAll());
+	progress.setValue(maxval);
 }
 
 void Database::updateMealCosts(const QModelIndex& idx) {
@@ -481,7 +494,7 @@ void Database::updateMealCosts(const QModelIndex& idx) {
 		distdate = q.value(0).toString();
 	}
 
-        q.prepare("SELECT batch.price, distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
+	q.prepare("SELECT batch.price, distributor.quantity FROM batch,distributor where distributor.distdate=? AND batch.id=distributor.batch_id;");
 	q.bindValue(0, distdate);
 	q.exec();
 	while (q.next()) {

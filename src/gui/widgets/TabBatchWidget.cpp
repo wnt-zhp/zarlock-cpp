@@ -151,6 +151,7 @@ void TabBatchWidget::set_filter() {
 
 void TabBatchWidget::syncDB() {
 	Database::Instance().updateBatchQty();
+	Database::Instance().updateMealCosts();
 }
 
 void TabBatchWidget::doCreateSMreports() {
