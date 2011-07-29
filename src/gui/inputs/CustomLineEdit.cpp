@@ -30,7 +30,7 @@ CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(
 	defpal = this->palette();
 
 	clearButton = new QToolButton(this);
-	clearButton->setIcon(style()->standardIcon(QStyle::SP_DockWidgetCloseButton));
+	clearButton->setIcon(QIcon(":/resources/icons/edit-clear-locationbar-rtl.png"));
 // 	clearButton->setIconSize(pixmap.size());
 	clearButton->setCursor(Qt::ArrowCursor);
 	clearButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");

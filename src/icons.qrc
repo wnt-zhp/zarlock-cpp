@@ -13,5 +13,6 @@
 	<file>resources/icons/folder-violet.png</file>
 	<file>resources/icons/user-home.png</file>
 	<file>resources/icons/tools-wizard.png</file>
+	<file>resources/icons/edit-clear-locationbar-rtl.png</file>
 </qresource>
 </RCC>
