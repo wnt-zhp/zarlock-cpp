@@ -77,8 +77,6 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
 	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 // 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
-
-	DBReports::printSMReport();
 }
 
 TabBatchWidget::~TabBatchWidget() {

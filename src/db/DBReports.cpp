@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cstdio>
 
 #include "DBReports.h"
 
@@ -36,14 +37,6 @@
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
-
-DBReports::DBReports() {
-
-}
-
-DBReports::~DBReports() {
-
-}
 
 void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	QFile batch_tpl(":/resources/report_batch.tpl");
@@ -280,10 +273,80 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	doc.print(&printer);
 }
 
-void DBReports::printSMReport(QString* reportsdir) {
+void DBReports::printSMReport(QString* reportsdir) {	
 	QDate b_min, b_max, d_min, d_max;
 
-	QSqlQuery q;
+	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+		QSqlDatabase::database().transaction();
+
+	QSqlQuery q, q2;
+
+	// create product names list
+	int pnum = 0;
+	q.exec("SELECT MAX(id) FROM products;");
+	if (q.next())
+		pnum = q.value(0).toInt()+1;
+	else
+		pnum = 0;
+
+	QVector<QString> pnames(pnum);
+
+	q.exec("SELECT id, name FROM products;");
+	while (q.next()) {
+		pnames[q.value(0).toInt()] = q.value(1).toString().toUtf8();
+	}
+
+	// create batches names list
+	int bnum = 0;
+	q.exec("SELECT MAX(id) FROM batch;");
+	if (q.next())
+		bnum = q.value(0).toInt()+1;
+	else
+		bnum = 0;
+
+
+	QMap<QString, int> ubatches;
+	QVector<QString> bidnames;
+	QVector<QString> bnames;
+	QVector<QString> bunits;
+	QVector<int> bids(bnum);
+
+	q.exec("SELECT prod_id, spec, unit, start_qty, id FROM batch;");
+	while (q.next()) {
+		QString bname = pnames[q.value(0).toInt()].trimmed() % " " % q.value(1).toString().toUtf8().trimmed();
+
+		QString bunit;
+		double bqty;
+
+		DataParser::unit(q.value(2).toString(), bunit);
+		DataParser::quantity(q.value(3).toString(), bqty);
+
+		QString bidname = "_" % pnames[q.value(0).toInt()].trimmed() % "_" % q.value(1).toString().toUtf8().trimmed() % "_" % bunit % "_";
+		if (!ubatches.contains(bidname)) {
+			int bid = bidnames.size();
+
+			bidnames.push_back(bidname);
+			bnames.push_back(bname);
+			bunits.push_back(bunit);
+
+			ubatches.insert(bidname, bid);
+			bids[q.value(4).toInt()] = bid;
+		} else {
+			bids[q.value(4).toInt()] = ubatches.value(bidname);
+		}
+	}
+	bnum = bidnames.count();
+
+	QMap<QString, int> batches_in_stock;
+	QVector<float> batches_in_stock_num(bnum);
+	QMap<QString, int> batches_new;
+	QVector<float> batches_new_num(bnum);
+	QMap<QString, int> batches_removed;
+	QVector<float> batches_removed_num(bnum);
+	QMap<QString, int> batches_bilans;
+	QVector<float> batches_bilans_num(bnum);
+
+	// calculate number of days to proceed
 	q.exec("SELECT booking FROM batch ORDER BY booking ASC LIMIT 1;");
 	if (q.next())
 		b_min = q.value(0).toDate();
@@ -297,12 +360,10 @@ void DBReports::printSMReport(QString* reportsdir) {
 	if (q.next())
 		d_max = q.value(0).toDate();
 
-	PR(b_min.toString(Qt::DefaultLocaleShortDate).toStdString());
-	PR(b_max.toString(Qt::DefaultLocaleShortDate).toStdString());
-	PR(d_min.toString(Qt::DefaultLocaleShortDate).toStdString());
-	PR(d_max.toString(Qt::DefaultLocaleShortDate).toStdString());
-
-	QMap<QString, QString> blackbox;
+// 	PR(b_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+// 	PR(b_max.toString(Qt::DefaultLocaleShortDate).toStdString());
+// 	PR(d_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+// 	PR(d_max.toString(Qt::DefaultLocaleShortDate).toStdString());
 
 	int totdays;
 	if (b_max.daysTo(d_max) > 0)
@@ -310,6 +371,153 @@ void DBReports::printSMReport(QString* reportsdir) {
 	else
 		totdays = b_min.daysTo(b_max);
 
+	QString bidname, bunit;
+	double bqty;
+
+	q.prepare("SELECT * FROM batch WHERE booking=?;");
+	q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
+
+	//##############################################
+	for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
+		QString cdate = b_min.addDays(i).toString(Qt::ISODate);
+
+		QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
+		if (!dbsavepath.exists())
+			dbsavepath.mkpath(dbsavepath.absolutePath());
+
+		QString ofile = dbsavepath.absolutePath() % QString("/") % "SM_" % cdate % ".csv";
+
+		QFile file(ofile);
+		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+			return;
+
+		QTextStream out(&file);
+
+		batches_new.clear();
+		batches_removed.clear();
+		batches_bilans.clear();
+
+		//*************************************************************
+		// in stock
+// 		std::printf("## batches in database for day %s\n", cdate.toStdString().c_str());
+// 		out << "## batches in database for day " << cdate.toStdString().c_str() << "\n";
+// 		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
+// 			int idx = it.value();
+// 			if (batches_in_stock_num[idx] > 0) {
+// 				std::printf("--S %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
+// 				out << "--S " << bnames[idx] << " " << bunits[idx].toStdString().c_str() << " " << batches_in_stock_num[idx] << endl;
+// 			}
+// 		}
+
+		//*************************************************************
+		// new inserions
+		q.bindValue(0, cdate);
+		q.exec();
+
+		while (q.next()) {
+			DataParser::unit(q.value(BatchTableModel::HUnit).toString(), bunit);
+			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
+
+			bidname = "_" % pnames[q.value(BatchTableModel::HProdId).toInt()].trimmed() %
+						"_" % q.value(BatchTableModel::HSpec).toString().toUtf8().trimmed() % "_" % bunit % "_";
+
+			int cbid = -1;
+
+			if (ubatches.contains(bidname)) {
+				cbid = ubatches.value(bidname);
+			} else {
+				continue;
+			}
+
+			if (!batches_in_stock.contains(bidname)) {
+				batches_in_stock.insert(bidname, cbid);
+			} else {
+			}
+
+			if (!batches_new.contains(bidname)) {
+				batches_new.insert(bidname, cbid);
+			} else {
+			}
+
+			batches_new_num[cbid] = batches_new_num[cbid] + bqty;
+		}
+
+// 		std::printf("## batches inserted for day %s\n", cdate.toStdString().c_str());
+// 		out << "## batches inserted for day " << cdate.toStdString().c_str() << "\n";
+// 		for (QMap<QString, int>::iterator it = batches_new.begin(); it != batches_new.end(); ++it) {
+// 			int idx = it.value();
+// 			std::printf("--A %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_new_num[idx]);
+// 			out << "--A " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_new_num[idx] << endl;
+// 		}
+
+		//*************************************************************
+		// removals
+		q2.bindValue(0, cdate);
+		q2.exec();
+
+		while (q2.next()) {
+			int cbid = bids[q2.value(DistributorTableModel::HBatchId).toInt()];
+			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
+
+			bidname = bidnames[cbid];
+
+			if (!batches_removed.contains(bidname)) {
+				batches_removed.insert(bidname, cbid);
+			} else {
+			}
+
+			batches_removed_num[cbid] += bqty;
+		}
+
+// 		std::printf("## batches removed for day %s\n", cdate.toStdString().c_str());
+// 		out << "## batches removed for day " << cdate.toStdString().c_str() << "\n";
+// 		for (QMap<QString, int>::iterator it = batches_removed.begin(); it != batches_removed.end(); ++it) {
+// 			int idx = it.value();
+// 			std::printf("--R %s (%s) => -%.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_removed_num[idx]);
+// 			out << "--R " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_removed_num[idx] << endl;
+// 		}
+
+		addVectors(batches_in_stock_num, batches_new_num);
+		batches_new_num.fill(0);
+		subVectors(batches_in_stock_num, batches_removed_num);
+		batches_removed_num.fill(0);
+
+// 		std::printf("## batches bilans for day %s\n", cdate.toStdString().c_str());
+// 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
+		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
+			int idx = it.value();
+			if (batches_in_stock_num[idx] > 0) {
+// 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
+				out << QString::fromUtf8(bnames[idx].toStdString().c_str()) << ";" << QString::fromUtf8(bunits[idx].toStdString().c_str()) << ";" << batches_in_stock_num[idx] << endl;
+			}
+		}
+	}
+
+	if (q.driver()->hasFeature(QSqlDriver::Transactions))
+		if (!QSqlDatabase::database().commit())
+			QSqlDatabase::database().rollback();
+}
+
+void DBReports::addVectors(QVector< float >& target, const QVector< float >& source) {
+	int st = target.size();
+	int ss = source.size();
+
+	if (st < ss)
+		target.resize(ss);
+
+	for (int i = 0; i < ss; ++i)
+		target[i] += source.at(i);
+}
+
+void DBReports::subVectors(QVector< float >& target, const QVector< float >& source) {
+	int st = target.size();
+	int ss = source.size();
+
+	if (st < ss)
+		target.resize(ss);
+
+	for (int i = 0; i < ss; ++i)
+		target[i] -= source.at(i);
 }
 
 #include "DBReports.moc"

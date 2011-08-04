@@ -22,17 +22,19 @@
 
 #include <QDate>
 #include <QString>
+#include <QVector>
 
 class DBReports {
 public:
-	DBReports();
-	virtual ~DBReports();
-
 	static void printDailyReport(const QString & dbname, const QDate & date);
 
 	static void printDailyMealReport(const QString & date, QString * reportfile = NULL);
 
 	static void printSMReport(QString * reportsdir = NULL);
+
+private:
+	static void addVectors(QVector<float> & target, const QVector<float> & source);
+	static void subVectors(QVector<float> & target, const QVector<float> & source);
 };
 
 #endif // DBREPORTS_H
