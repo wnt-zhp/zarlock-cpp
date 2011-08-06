@@ -22,7 +22,7 @@
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0">
       <item row="0" column="1">
        <widget class="QComboBox" name="combo_products">
         <property name="insertPolicy">
@@ -55,13 +55,6 @@
        <widget class="QLabel" name="label_book">
         <property name="text">
          <string>Booking</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QtyInput" name="edit_qty">
-        <property name="placeholderText">
-         <string>quantity</string>
         </property>
        </widget>
       </item>
@@ -160,6 +153,13 @@
         </item>
        </layout>
       </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spin_qty">
+        <property name="maximum">
+         <double>999999.000000000000000</double>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -202,11 +202,6 @@
    <header>TextInput.h</header>
   </customwidget>
   <customwidget>
-   <class>QtyInput</class>
-   <extends>QLineEdit</extends>
-   <header>QtyInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>PriceInput</class>
    <extends>QLineEdit</extends>
    <header>PriceInput.h</header>
@@ -220,7 +215,7 @@
  <tabstops>
   <tabstop>combo_products</tabstop>
   <tabstop>edit_spec</tabstop>
-  <tabstop>edit_qty</tabstop>
+  <tabstop>spin_qty</tabstop>
   <tabstop>edit_unit</tabstop>
   <tabstop>edit_price</tabstop>
   <tabstop>check_uprice</tabstop>

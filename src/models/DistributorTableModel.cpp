@@ -28,7 +28,7 @@
 #include "BatchTableModel.h"
 #include "DataParser.h"
 #include "Database.h"
-
+#include <cstdio>
 /**
  * @brief Konstruktor - nic się nie dzieje.
  *
@@ -108,15 +108,16 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				}
 				bidrow = qmil.at(0).row();
 
-				float used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data().toFloat();
+				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data().toDouble() * 100;
 	
-// 				float used = ->index()
-// 				this->index(index.row(), HUsedQty).data().toFloat();
-				float total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
-				float fake = index.data().toFloat();
+// 				double used = ->index()
+// 				this->index(index.row(), HUsedQty).data().toDouble();
+				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toDouble() * 100;
+				int fake = index.data().toDouble() * 100;
 
-				float free = total - used + fake;
-				if (free < value.toFloat()) {
+				int free = total - used + fake;
+
+				if (free < (value.toDouble() * 100)) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}

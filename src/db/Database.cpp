@@ -438,9 +438,9 @@ void Database::updateBatchQty(const int bid) {
 	q.bindValue(0, bid);
 	q.exec();
 
-	float qty = 0.0;
+	double qty = 0.0;
 	if (q.next())
-        qty = q.value(0).toFloat();
+        qty = q.value(0).toDouble();
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
@@ -486,7 +486,7 @@ void Database::updateMealCosts(const QModelIndex& idx) {
 	q.exec();
 
 	QString distdate;
-	float costs = 0.0;
+	double costs = 0.0;
 	int mealpersons = 0;
 
 	while (q.next()) {
@@ -500,7 +500,7 @@ void Database::updateMealCosts(const QModelIndex& idx) {
 	while (q.next()) {
 		double netto, tax;
 		DataParser::price(q.value(0).toString(), netto, tax);
-		costs += netto*(1.0 + tax/100.0)*q.value(1).toFloat();
+		costs += netto*(1.0 + tax/100.0)*q.value(1).toDouble();
 	}
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
@@ -707,7 +707,7 @@ bool Database::removeProductsRecord(const QModelIndexList & idxl, bool askForCon
 // // 	model_batch->submitAll();
 // }
 
-bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
+bool Database::addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
 TD
 TM
@@ -741,7 +741,7 @@ TM
 	return status;
 }
 
-bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, float qty, float used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
+bool Database::updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes) {
 	bool status = true;
 
 	model_batch->autoSubmit(false);
@@ -816,7 +816,7 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 // 	model_batch->submitAll();
 // }
 
-bool Database::addDistributorRecord(int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+bool Database::addDistributorRecord(int bid, double qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
 
         int seconds = time(NULL);
@@ -861,7 +861,7 @@ db.rollback();
 	return status;
 }
 
-bool Database::updateDistributorRecord(int id, int bid, float qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+bool Database::updateDistributorRecord(int id, int bid, double qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
 	bool status = true;
 int seconds = time(NULL);
 	model_distributor->autoSubmit(false);

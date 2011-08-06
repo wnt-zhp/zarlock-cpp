@@ -33,8 +33,8 @@ public:
 	static void printSMReport(QString * reportsdir = NULL);
 
 private:
-	static void addVectors(QVector<float> & target, const QVector<float> & source);
-	static void subVectors(QVector<float> & target, const QVector<float> & source);
+	static void addVectors(QVector<double> & target, const QVector<double> & source);
+	static void subVectors(QVector<double> & target, const QVector<double> & source);
 };
 
 #endif // DBREPORTS_H

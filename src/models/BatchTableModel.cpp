@@ -58,8 +58,8 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 	switch (role) {
 		case RFreeQty:
 			if (idx.column() == HUsedQty) {
-				float used = raw(idx).toFloat();
-				float total = index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+				double used = raw(idx).toDouble();
+				double total = index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
 				return QVariant(total - used);
 			}
 			break;
@@ -67,7 +67,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 			if (idx.column() == HSpec) {
 				return QString(
 					this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " %
-					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toFloat())
+					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toDouble())
 				);
 			}
 			break;
@@ -137,9 +137,9 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 			}
 
 			if (index.column() == HStaQty) {
-				float used = this->index(index.row(), HUsedQty).data().toFloat();
-				float total = value.toFloat();
-// 				float free = total - used;
+				int used = this->index(index.row(), HUsedQty).data().toDouble() * 100;
+				int total = value.toDouble() * 100;
+// 				int free = total - used;
 				if (total < used) {
 					inputErrorMsgBox(value.toString());
 					return false;
@@ -258,17 +258,17 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			else if (idx.column() == HStaQty) {
-				float used = index(idx.row(), int(HUsedQty)).data().toFloat();
-				float total = raw(idx).toFloat();
-				float free = total - used;
+				double used = index(idx.row(), int(HUsedQty)).data().toDouble();
+				double total = raw(idx).toDouble();
+				double free = total - used;
 				QString qty;
-				return tr("%1 of %2").arg(free).arg(total);
+				return tr("%1 of %2").arg(free, 0, 'f', 2).arg(total, 0, 'f', 2);
 			}
 
 			else if (idx.column() == HENameQty) {
 				return QString(
 					this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " %
-					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toFloat())
+					QSqlTableModel::data(idx, Qt::EditRole).toString() % tr(" (quantity: %1)").arg(this->data(this->index(idx.row(), HStaQty), RFreeQty).toDouble())
 				);
 			}
 			break;

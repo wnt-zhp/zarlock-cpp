@@ -43,7 +43,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 
 // 	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_qty, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 // 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_price, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(check_uprice, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
@@ -82,7 +82,7 @@ void AddBatchRecordWidget::insert_record() {
 	double price, tax;
 	DataParser::price(edit_price->text(), price, tax);
 	QString uprice;
-	uprice.sprintf("%.2f+%d", price/edit_qty->text().toDouble(), int(tax));
+	uprice.sprintf("%.2f+%d", price/spin_qty->value(), int(tax));
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
@@ -93,7 +93,7 @@ void AddBatchRecordWidget::insert_record() {
 		expdate = edit_expiry->text();
 		
 	db.addBatchRecord(prod_id, edit_spec->text(), edit_book->text(true), QDate::currentDate().toString(Qt::ISODate),
-		expdate, edit_qty->text().toFloat(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
+		expdate, spin_qty->value(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
 
 	clear_form();
 	combo_products->setFocus();
@@ -108,7 +108,7 @@ void AddBatchRecordWidget::clear_form() {
 	edit_spec->clear();
 // 	combo_spec->clear();
 	edit_expiry->clear();
-	edit_qty->clear();
+// 	edit_qty->clear();
 	edit_unit->clear();
 // 	combo_unit->clear();
 	edit_price->clear();
@@ -142,7 +142,7 @@ void AddBatchRecordWidget::validateAdd() {
 
 	if (edit_spec->ok() and edit_unit->ok() and
 		edit_book->ok() and edit_price->ok() and
-		edit_qty->ok() and edit_invoice->ok() and
+		(spin_qty->value() > 0) and edit_invoice->ok() and
 		(edit_expiry->ok() or check_inf->isChecked())) {
 		action_addnext->setEnabled(true);
 		action_addexit->setEnabled(true);
@@ -162,7 +162,7 @@ void AddBatchRecordWidget::update_model() {
 	combo_products->setModelColumn(1);
 	
 	if (completer_spec) delete completer_spec;
-	if (completer_qty) delete completer_qty;
+// 	if (completer_qty) delete completer_qty;
 	if (completer_unit) delete completer_unit;
 	if (completer_price) delete completer_price;
 	if (completer_invoice) delete completer_invoice;
@@ -170,7 +170,7 @@ void AddBatchRecordWidget::update_model() {
 	if (completer_expiry) delete completer_expiry;
 
 	completer_spec = new QCompleter(Database::Instance().BatchWordList().at(Database::BWspec), edit_spec);
-	completer_qty = new QCompleter(Database::Instance().BatchWordList().at(Database::BWqty), edit_qty);
+// 	completer_qty = new QCompleter(Database::Instance().BatchWordList().at(Database::BWqty), edit_qty);
 	completer_unit = new QCompleter(Database::Instance().BatchWordList().at(Database::BWunit), edit_unit);
 	completer_price = new QCompleter(Database::Instance().BatchWordList().at(Database::BWprice), edit_price);
 	completer_invoice = new QCompleter(Database::Instance().BatchWordList().at(Database::BWinvoice), edit_invoice);
@@ -178,7 +178,7 @@ void AddBatchRecordWidget::update_model() {
 	completer_expiry = new QCompleter(Database::Instance().BatchWordList().at(Database::BWexpire), edit_expiry);
 
 	completer_spec->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+// 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_unit->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_price->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_invoice->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -186,7 +186,7 @@ void AddBatchRecordWidget::update_model() {
 	completer_expiry->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 
 	edit_spec->setCompleter(completer_spec);
-	edit_qty->setCompleter(completer_qty);
+// 	edit_qty->setCompleter(completer_qty);
 	edit_unit->setCompleter(completer_unit);
 	edit_price->setCompleter(completer_price);
 	edit_invoice->setCompleter(completer_invoice);

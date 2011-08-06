@@ -138,7 +138,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	Database & db = Database::Instance();
 	lock = false;
 
-	int old_bid = batch_idx.data().toInt();
+// 	int old_bid = batch_idx.data().toInt();
 
 	batch_idx = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId));
 	quantity = qty->value();

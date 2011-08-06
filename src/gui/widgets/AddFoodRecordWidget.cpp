@@ -77,13 +77,13 @@ void AddFoodRecordWidget::cancel_form() {
 }
 
 void AddFoodRecordWidget::validateAdd() {
-	float qtyused = Database::Instance().CachedBatch()->index(combo_batch->currentIndex(), BatchTableModel::HUsedQty).data().toFloat();
-	float qtytotal = Database::Instance().CachedBatch()->index(combo_batch->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+	double qtyused = Database::Instance().CachedBatch()->index(combo_batch->currentIndex(), BatchTableModel::HUsedQty).data().toDouble();
+	double qtytotal = Database::Instance().CachedBatch()->index(combo_batch->currentIndex(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
 
 	QString max;
 	label_maxvalue->setText(max.sprintf("%.2f", qtytotal-qtyused));
 
-	bool qtyvalid = edit_qty->text().toFloat() > (qtytotal-qtyused) ? false : true;
+	bool qtyvalid = edit_qty->text().toDouble() > (qtytotal-qtyused) ? false : true;
 	if (edit_qty->ok() and qtyvalid /*and edit_reason2->ok()*/) {
 		action_add->setEnabled(true);
 	} else {

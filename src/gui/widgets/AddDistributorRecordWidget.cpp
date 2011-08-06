@@ -37,7 +37,7 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_qty, SIGNAL(textEdited(QString)), this, SLOT(validateAdd()));
+	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 	connect(edit_reason, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
@@ -67,7 +67,7 @@ bool AddDistributorRecordWidget::insert_record() {
 	int idx = combo_products->currentIndex();
 	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
-	db.addDistributorRecord(batch_id, edit_qty->text().toFloat(), edit_date->text(true),
+	db.addDistributorRecord(batch_id, spin_qty->value(), edit_date->text(true),
 							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
 							edit_reason2->text(), DistributorTableModel::RGeneral);
 
@@ -77,7 +77,8 @@ bool AddDistributorRecordWidget::insert_record() {
 }
 
 void AddDistributorRecordWidget::clear_form() {
-	edit_qty->clear();
+	spin_qty->setValue(0.0);;
+	spin_qty->setSuffix("");
 	edit_date->clear();
 	edit_reason->clear();
 	edit_reason2->clear();
@@ -90,18 +91,21 @@ void AddDistributorRecordWidget::cancel_form() {
 void AddDistributorRecordWidget::validateAdd() {
 	QModelIndex idx = pproxy->mapToSource(pproxy->index(combo_products->currentIndex(), 0));
 
-	float qtyused = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toFloat();
-	float qtytotal = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toFloat();
+	double qtyused = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toDouble();
+	double qtytotal = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
 	QString qunit = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
-	label_max->setText(tr("x %1, maximal").arg(qunit));
+	label_unit->setText(tr("x %1").arg(qunit));
 
 	QString max;
-	label_maxvalue->setText(max.sprintf("%.2f", qtytotal-qtyused));
+	max.sprintf("%.2f", qtytotal-qtyused);
+	spin_qty->setSuffix(tr(" of %1").arg(max));
+	spin_qty->setMaximum(qtytotal-qtyused);
 
-	bool qtyvalid = edit_qty->text().toFloat() > (qtytotal-qtyused) ? false : true;
-	if (edit_qty->ok() and edit_date->ok() and
-		edit_reason->ok() and qtyvalid /*and edit_reason2->ok()*/) {
+// 	bool qtyvalid = spin_qty->value() > (qtytotal-qtyused) ? false : true;
+
+	if ((spin_qty->value() > 0.0) and edit_date->ok() and
+		edit_reason->ok() /*and edit_reason2->ok()*/) {
 		action_add->setEnabled(true);
 	} else {
 		action_add->setEnabled(false);
@@ -111,7 +115,7 @@ void AddDistributorRecordWidget::validateAdd() {
 void AddDistributorRecordWidget::update_model() {
 	if (pproxy) delete pproxy;
 	pproxy = new BatchTableModelProxy(hideempty);
-
+ 
 	pproxy->setSourceModel(Database::Instance().CachedBatch());
 	pproxy->setDynamicSortFilter(true);
 	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
@@ -119,22 +123,22 @@ void AddDistributorRecordWidget::update_model() {
 	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(2);
 
-	if (completer_qty) delete completer_qty;
+// 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
 	if (completer_reason) delete completer_reason;
 	if (completer_reason2) delete completer_reason2;
 
-	completer_qty = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWqty), edit_qty);
+// 	completer_qty = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWqty), edit_qty);
 	completer_date = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWdist), edit_date);
 	completer_reason = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWreason), edit_reason);
 	completer_reason2 = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWoptional), edit_reason2);
 
-	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+// 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_date->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_reason->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_reason2->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 
-	edit_qty->setCompleter(completer_qty);
+// 	edit_qty->setCompleter(completer_qty);
 	edit_date->setCompleter(completer_date);
 	edit_reason->setCompleter(completer_reason);
 	edit_reason2->setCompleter(completer_reason2);

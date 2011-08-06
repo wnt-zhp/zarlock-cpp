@@ -58,7 +58,7 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 
 
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-	float free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
+	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
 	if (cb_hide and cb_hide->isChecked() and free == 0.0)
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;

@@ -233,7 +233,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	}
 
 	while (q.next()) {
-		cont1.append("%1 - %2 x %3\n").arg(q.value(0).toString()).arg(q.value(2).toFloat()).arg(q.value(1).toString());
+		cont1.append("%1 - %2 x %3\n").arg(q.value(0).toString()).arg(q.value(2).toDouble()).arg(q.value(1).toString());
 	}
 
 	if (q.driver()->hasFeature(QSqlDriver::Transactions))
@@ -273,8 +273,15 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	doc.print(&printer);
 }
 
-void DBReports::printSMReport(QString* reportsdir) {	
+void DBReports::printSMReport(QString * reportsdir) {	
 	QDate b_min, b_max, d_min, d_max;
+
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
+	if (!dbsavepath.exists())
+		dbsavepath.mkpath(dbsavepath.absolutePath());
+
+	if (reportsdir)
+		*reportsdir = dbsavepath.absolutePath();
 
 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
 		QSqlDatabase::database().transaction();
@@ -303,7 +310,6 @@ void DBReports::printSMReport(QString* reportsdir) {
 		bnum = q.value(0).toInt()+1;
 	else
 		bnum = 0;
-
 
 	QMap<QString, int> ubatches;
 	QVector<QString> bidnames;
@@ -338,13 +344,13 @@ void DBReports::printSMReport(QString* reportsdir) {
 	bnum = bidnames.count();
 
 	QMap<QString, int> batches_in_stock;
-	QVector<float> batches_in_stock_num(bnum);
+	QVector<double> batches_in_stock_num(bnum);
 	QMap<QString, int> batches_new;
-	QVector<float> batches_new_num(bnum);
+	QVector<double> batches_new_num(bnum);
 	QMap<QString, int> batches_removed;
-	QVector<float> batches_removed_num(bnum);
+	QVector<double> batches_removed_num(bnum);
 	QMap<QString, int> batches_bilans;
-	QVector<float> batches_bilans_num(bnum);
+	QVector<double> batches_bilans_num(bnum);
 
 	// calculate number of days to proceed
 	q.exec("SELECT booking FROM batch ORDER BY booking ASC LIMIT 1;");
@@ -381,10 +387,6 @@ void DBReports::printSMReport(QString* reportsdir) {
 	for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
 		QString cdate = b_min.addDays(i).toString(Qt::ISODate);
 
-		QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
-		if (!dbsavepath.exists())
-			dbsavepath.mkpath(dbsavepath.absolutePath());
-
 		QString ofile = dbsavepath.absolutePath() % QString("/") % "SM_" % cdate % ".csv";
 
 		QFile file(ofile);
@@ -392,6 +394,8 @@ void DBReports::printSMReport(QString* reportsdir) {
 			return;
 
 		QTextStream out(&file);
+		out.setRealNumberNotation(QTextStream::FixedNotation);
+		out.setRealNumberPrecision(2);
 
 		batches_new.clear();
 		batches_removed.clear();
@@ -486,7 +490,7 @@ void DBReports::printSMReport(QString* reportsdir) {
 // 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
 		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
 			int idx = it.value();
-			if (batches_in_stock_num[idx] > 0) {
+			if (batches_in_stock_num[idx] > 0.0) {
 // 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
 				out << QString::fromUtf8(bnames[idx].toStdString().c_str()) << ";" << QString::fromUtf8(bunits[idx].toStdString().c_str()) << ";" << batches_in_stock_num[idx] << endl;
 			}
@@ -498,7 +502,7 @@ void DBReports::printSMReport(QString* reportsdir) {
 			QSqlDatabase::database().rollback();
 }
 
-void DBReports::addVectors(QVector< float >& target, const QVector< float >& source) {
+void DBReports::addVectors(QVector< double >& target, const QVector< double >& source) {
 	int st = target.size();
 	int ss = source.size();
 
@@ -509,7 +513,7 @@ void DBReports::addVectors(QVector< float >& target, const QVector< float >& sou
 		target[i] += source.at(i);
 }
 
-void DBReports::subVectors(QVector< float >& target, const QVector< float >& source) {
+void DBReports::subVectors(QVector< double >& target, const QVector< double >& source) {
 	int st = target.size();
 	int ss = source.size();
 
