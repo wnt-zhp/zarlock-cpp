@@ -38,6 +38,7 @@ public:
 
 public slots:
 	virtual void doCreateSMreports();
+	virtual void doCreateKMreports();
 
 private:
 	void activateUi(bool activate = true);
@@ -59,6 +60,7 @@ private:
 
 	QAction * syncdb;
 	QAction * createSMrep;
+	QAction * createKMrep;
 };
 
 #endif // TABBATCHWIDGET_H

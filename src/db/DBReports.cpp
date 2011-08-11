@@ -38,6 +38,17 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
+struct KMDB {
+	int id;
+	QString name;
+	QString spec;
+	QString unit;
+	QString price;
+	QVector<double> qty;
+	QVector<double> qused;
+	QVector<QString> invoice;
+};
+
 void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	QFile batch_tpl(":/resources/report_batch.tpl");
 	if (!batch_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -273,7 +284,104 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	doc.print(&printer);
 }
 
-void DBReports::printSMReport(QString * reportsdir) {	
+void DBReports::printKMReport(QString * reportsdir) {
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
+	if (!dbsavepath.exists())
+		dbsavepath.mkpath(dbsavepath.absolutePath());
+
+	if (reportsdir)
+		*reportsdir = dbsavepath.absolutePath();
+
+	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+		QSqlDatabase::database().transaction();
+
+	QSqlQuery q, q2;
+
+	QMap<QString, KMDB> kmm;
+	q2.prepare("SELECT spec, unit, price, start_qty, used_qty, invoice_no FROM batch WHERE prod_id=?");
+
+	q.exec("SELECT id, name FROM products;");
+	while (q.next()) {
+		int id = q.value(0).toInt();
+		QString name = q.value(1).toString().trimmed().toUtf8();
+// PR(id);
+		q2.bindValue(0, id);
+		q2.exec();
+		while (q2.next()) {
+			QString spec = q2.value(0).toString().trimmed().toUtf8();
+			QString unit;
+			DataParser::unit(q2.value(1).toString().trimmed(), unit);
+			QString price;
+			DataParser::price(q2.value(2).toString().trimmed(), price);
+			double qty = q2.value(3).toDouble();
+			double uqty = q2.value(4).toDouble();
+			QString invoice = q2.value(5).toString().trimmed();
+
+			QString bidname = QString().sprintf("%d", id) % "_" %
+								name % "_" % spec % "_" % unit % "_" % price % "_";
+// 			PR(bidname.toStdString());
+
+			if (kmm.contains(bidname)) {
+				KMDB & k = kmm[bidname];
+				k.invoice.push_back(invoice);
+				k.qty.push_back(qty);
+				k.qused.push_back(uqty);
+			} else {
+				KMDB & k = kmm[bidname];
+				k.id = id;
+				k.name = name;
+				k.spec = spec;
+				k.unit = unit;
+				k.price = price;
+				k.invoice.push_back(invoice);
+				k.qty.push_back(qty);
+				k.qused.push_back(uqty);
+			}
+		}
+	}
+
+	if (q.driver()->hasFeature(QSqlDriver::Transactions))
+		if (!QSqlDatabase::database().commit())
+			QSqlDatabase::database().rollback();
+
+	for (QMap<QString, KMDB>::iterator it = kmm.begin(); it != kmm.end(); ++it) {
+		QString ofile = dbsavepath.absolutePath() % QString("/") % "KM_" % QString().sprintf("%03d", it->id) % ".csv";
+
+		QFile file(ofile);
+		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			std::cerr << "Unable to create file " << ofile.toStdString() << std::endl;
+			continue;
+		}
+
+		QTextStream out(&file);
+		out.setRealNumberNotation(QTextStream::FixedNotation);
+		out.setRealNumberPrecision(2);
+
+		std::cout << "===================\n";
+		std::printf("%s;%s;%s;%s;%s\n", QObject::tr("ID").toStdString().c_str(), QObject::tr("Name").toStdString().c_str(),
+					QObject::tr("Spec").toStdString().c_str(), QObject::tr("Unit").toStdString().c_str(),
+					QObject::tr("Price").toStdString().c_str());
+		out << QObject::tr("ID").toStdString().c_str() << ";" << QObject::tr("Name").toStdString().c_str() << ";" << 
+					QObject::tr("Spec").toStdString().c_str() << ";" << QObject::tr("Unit").toStdString().c_str() << ";" << 
+					QObject::tr("Price").toStdString().c_str() << endl;
+		std::printf("%03d;%s;%s;%s;%s\n", it->id, it->name.toStdString().c_str(), it->spec.toStdString().c_str(),
+					it->unit.toStdString().c_str(), it->price.toStdString().c_str());
+		out << it->id << ";" << it->name.toStdString().c_str() << ";" << it->spec.toStdString().c_str() << ";" << 
+					it->unit.toStdString().c_str() << ";" << it->price.toStdString().c_str() << endl;
+		std::printf("%s;%s;%s;%s\n", QObject::tr("Invoice").toStdString().c_str(), QObject::tr("Quantity").toStdString().c_str(),
+					QObject::tr("Distributed").toStdString().c_str(), QObject::tr("Bilans").toStdString().c_str());
+		out << QObject::tr("Invoice").toStdString().c_str() << ";" << QObject::tr("Quantity").toStdString().c_str() << ";" << 
+					QObject::tr("Distributed").toStdString().c_str() << ";" << QObject::tr("Bilans").toStdString().c_str() << endl;
+		for (int i = 0; i < it->invoice.size(); ++i) {
+			std::printf("%s;%.2f;%.2f;%.2f\n", it->invoice.at(i).toStdString().c_str(),
+						it->qty.at(i), it->qused.at(i), it->qty.at(i) - it->qused.at(i));
+			out << it->invoice.at(i).toStdString().c_str() << ";" << it->qty.at(i) << ";" << 
+						it->qused.at(i) << ";" << it->qty.at(i) - it->qused.at(i) << endl;
+		}
+	}
+}
+
+void DBReports::printSMReport(QString * reportsdir) {
 	QDate b_min, b_max, d_min, d_max;
 
 	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());

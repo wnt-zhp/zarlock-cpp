@@ -63,6 +63,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	syncdb = new QAction(tr("Sync database"), this);
 	createSMrep = new QAction(tr("Create SM reports"), this);
+	createKMrep = new QAction(tr("Create KM reports"), this);
 // 	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
 
 	tools->setPopupMode(QToolButton::InstantPopup);
@@ -72,11 +73,11 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	tools->addAction(syncdb);
 	tools->addAction(createSMrep);
-// 	tools->addAction(browsePDF);
+	tools->addAction(createKMrep);
 
 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
 	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
-// 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
+	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -155,4 +156,9 @@ void TabBatchWidget::syncDB() {
 void TabBatchWidget::doCreateSMreports() {
 	DBReports::printSMReport();
 }
+
+void TabBatchWidget::doCreateKMreports() {
+	DBReports::printKMReport();
+}
+
 #include "TabBatchWidget.moc"

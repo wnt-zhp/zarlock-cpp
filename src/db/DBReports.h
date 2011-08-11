@@ -31,6 +31,7 @@ public:
 	static void printDailyMealReport(const QString & date, QString * reportfile = NULL);
 
 	static void printSMReport(QString * reportsdir = NULL);
+	static void printKMReport(QString * reportsdir = NULL);
 
 private:
 	static void addVectors(QVector<double> & target, const QVector<double> & source);
