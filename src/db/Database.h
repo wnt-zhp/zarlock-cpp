@@ -61,26 +61,19 @@ public:
 
 	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
-// 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
-// 	virtual bool removeProductsRecord(const QModelIndex & idx, bool askForConfirmation = true);
 	virtual bool removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
 	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
 	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
-// 	virtual bool removeBatchRecord(int recordid, bool askForConfirmation = true);
-// 	virtual bool removeBatchRecord(const QModelIndex & idx, bool askForConfirmation = true);
 	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
 	virtual bool addDistributorRecord(int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
 	virtual bool updateDistributorRecord(int, int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
 	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
-// 	virtual bool removeDistributorRecord(const QModelIndex & idx, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);
 
 	virtual bool addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
 	virtual bool updateMealRecord(int Mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
-// 	virtual bool removeProductsRecord(int recordid, bool askForConfirmation = true);
-// 	virtual bool removeProductsRecord(const QModelIndex & idx, bool askForConfirmation = true);
 	virtual bool removeMealRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
 	inline ProductsTableModel * CachedProducts() { return model_products; }

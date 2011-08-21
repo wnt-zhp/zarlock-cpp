@@ -23,6 +23,7 @@
 #include <QTime>
 #include <QColor>
 #include <QStringBuilder>
+#include <QSqlQuery>
 
 #include "DistributorTableModel.h"
 #include "BatchTableModel.h"
@@ -149,6 +150,18 @@ bool DistributorTableModel::select() {
 	while (canFetchMore())
 		fetchMore();
 
+	int maxval = 0;
+	QSqlQuery q;
+	q.exec("SELECT id FROM distributor ORDER BY id DESC LIMIT 1;");
+	if (q.next())
+		maxval = q.value(0).toInt();
+
+	idmap.resize(maxval+1);
+
+	for (int i = 0; i < rowCount(); ++i) {
+		idmap[this->index(i, HId).data().toInt()] = i;
+	}
+
 	return true;
 }
 
@@ -224,25 +237,31 @@ void DistributorTableModel::filterDB(const QString & f) {
 }
 
 void DistributorTableModel::trigDataChanged(QModelIndex topleft, QModelIndex bottomright) {
+GTD
+GTM
 	if (!autosubmit)
 		return;
-// 	if (submitAll()) {;
-// 		revertAll();
-// 		return;
-// 	}
-// 	PR(topleft.data().toString().toStdString());
+
 	this->submitAll();
-	if (topleft.column() == HQty) {
-		for (int i = topleft.row(); i <= bottomright.row(); ++i)
+GTM
+	for (int i = topleft.row(); i <= bottomright.row(); ++i)
+		if (topleft.column() == HQty) {
 			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());
 
-		Database::Instance().CachedBatch()->submitAll();
-	}
+		}
+GTM
+	Database::Instance().CachedBatch()->select();
+GTM
 	Database::Instance().updateDistributorWordList();
+GTM
 }
 
 void DistributorTableModel::autoSubmit(bool asub) {
 	autosubmit = asub;
+}
+
+int DistributorTableModel::idRow(int id) {
+	return idmap[id];
 }
 
 #include "DistributorTableModel.moc"

@@ -40,9 +40,7 @@ public:
 	virtual bool select();
 	virtual void autoSubmit(bool asub = true);
 
-	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };
-	enum Reasons {RGeneral = 0, RExpired, RMeal };
-	enum Meal {MBreakfast = 0, M2Breakfast, MLunch, MDiner, MOther1, MOther2 };
+	virtual int idRow(int id);
 
 public slots:
 	void filterDB(const QString &);
@@ -53,6 +51,15 @@ protected:
 	QVariant raw(const QModelIndex & idx) const;
 
 	bool autosubmit;
+
+private:
+	QVector<int> idmap;
+
+public:
+	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };
+	enum Reasons {RGeneral = 0, RExpired, RMeal };
+	enum Meal {MBreakfast = 0, M2Breakfast, MLunch, MDiner, MOther1, MOther2 };
+
 };
 
 #endif // DISTRIBUTORTABLEMODEL_H

@@ -158,7 +158,7 @@ add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
-target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
+target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} gmpxx)
 
 # installation
 install(FILES

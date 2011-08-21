@@ -67,13 +67,13 @@ bool AddDistributorRecordWidget::insert_record() {
 	int idx = combo_products->currentIndex();
 	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
-	db.addDistributorRecord(batch_id, spin_qty->value(), edit_date->text(true),
-							QDate::currentDate().toString(Qt::DefaultLocaleShortDate), edit_reason->text(),
+	db.addDistributorRecord(batch_id, spin_qty->value(),
+							QDate::fromString(edit_date->text(true), Qt::DefaultLocaleShortDate).toString(Qt::ISODate),
+							QDate::currentDate().toString(Qt::ISODate), edit_reason->text(),
 							edit_reason2->text(), DistributorTableModel::RGeneral);
 
-
 	combo_products->setFocus();
-	return /*status*/ true;
+	return true;
 }
 
 void AddDistributorRecordWidget::clear_form() {

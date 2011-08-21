@@ -133,18 +133,12 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 }
 
 void MealFoodListItemDataWidget::buttonAdd() {
-	int seconds = time(NULL);
-
 	Database & db = Database::Instance();
 	lock = false;
-
-// 	int old_bid = batch_idx.data().toInt();
 
 	batch_idx = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId));
 	quantity = qty->value();
 	batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
-
-        std::cout << "buttonAdd checkpoint 1 " << time(NULL) - seconds << "s" << std::endl;
 
 	if (empty) {
 		if (db.addDistributorRecord(batch_idx.data().toInt(), quantity,
@@ -156,32 +150,19 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		} else
 			return;
 	} else {
+		QString d = QDate::fromString(mfl->proxyModel()->ref(), Qt::DefaultLocaleShortDate).toString(Qt::ISODate);
 		if (db.updateDistributorRecord(dist_idx.row(), batch_idx.data().toInt(), quantity,
-				mfl->proxyModel()->ref(), mfl->proxyModel()->ref(),
-				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+				d, d, QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 		} else
 			return;
 	}
-//         std::cout << "buttonAdd checkpoint 2 " << time(NULL) - seconds << "s" << std::endl;
-//         if (old_bid != batch_idx.data().toInt() && old_bid != 0){
-// 		db.updateBatchQty(old_bid);
-//                 std::cout << "updateBatchQty("  << old_bid << ") 2 " << std::endl;
-//         }
-//         std::cout << "buttonAdd checkpoint 3 " << time(NULL) - seconds << "s" << std::endl;
-// 	db.updateBatchQty(batch_idx.data().toInt());
-// 
-//         std::cout << "updateBatchQty("  << batch_idx.data().toInt() << ") 3" << std::endl;
-// 
-        std::cout << "buttonAdd checkpoint 4 " << time(NULL) - seconds << "s" << std::endl;
 
 	batch_label->setText(batchlabel);
 	qty_label->setText(QString("%1").arg(quantity));
 
 	mfl->markDirty();
 	render(true);
-
-        std::cout << "buttonAdd took " << time(NULL) - seconds << "s" << std::endl;
 }
 
 void MealFoodListItemDataWidget::buttonUpdate() {
