@@ -40,7 +40,7 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 	connect(edit_reason, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+// 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
 	connect(&Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(update_model()));
 
@@ -67,10 +67,14 @@ bool AddDistributorRecordWidget::insert_record() {
 	int idx = combo_products->currentIndex();
 	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
-	db.addDistributorRecord(batch_id, spin_qty->value(),
-							QDate::fromString(edit_date->text(true), Qt::DefaultLocaleShortDate).toString(Qt::ISODate),
-							QDate::currentDate().toString(Qt::ISODate), edit_reason->text(),
-							edit_reason2->text(), DistributorTableModel::RGeneral);
+	QDate df;
+	if (!DataParser::date(edit_date->text(), df))
+		return false;
+
+	db.addDistributorRecord(batch_id, spin_qty->value(), df.toString(Qt::ISODate),
+							QDate::currentDate().toString(Qt::ISODate),
+							edit_reason->text(), edit_reason2->text(),
+							DistributorTableModel::RGeneral);
 
 	combo_products->setFocus();
 	return true;
@@ -102,10 +106,7 @@ void AddDistributorRecordWidget::validateAdd() {
 	spin_qty->setSuffix(tr(" of %1").arg(max));
 	spin_qty->setMaximum(qtytotal-qtyused);
 
-// 	bool qtyvalid = spin_qty->value() > (qtytotal-qtyused) ? false : true;
-
-	if ((spin_qty->value() > 0.0) and edit_date->ok() and
-		edit_reason->ok() /*and edit_reason2->ok()*/) {
+	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason->ok()) {
 		action_add->setEnabled(true);
 	} else {
 		action_add->setEnabled(false);

@@ -127,10 +127,10 @@ void AddBatchRecordWidget::validateCB(int i) {
 	QString defunit = ptm->index(i, ProductsTableModel::HUnit).data().toString();
 
 	if (edit_expiry->text(true).isEmpty()) {
-		edit_expiry->setText(defexp);
-		edit_expiry->doRefresh();
-		edit_unit->setText(defunit);
-		edit_unit->doRefresh();
+		edit_expiry->setRaw(defexp);
+// 		edit_expiry->doRefresh();
+		edit_unit->setRaw(defunit);
+// 		edit_unit->doRefresh();
 	}
 
 	validateAdd();

@@ -38,6 +38,7 @@ public:
 	
 	virtual const QString text(bool placeholdertext = false);
 	virtual void setText(const QString & t);
+	virtual void setRaw(const QString & t);
 
 protected:
 	void resizeEvent(QResizeEvent *);
@@ -46,10 +47,12 @@ protected:
 	virtual bool verifyText(const QString &, QString & ) = 0;
 
 public slots:
+	void doTextChanged(const QString& t);
 	void doReturnPressed();
 	void doRefresh();
 
 private slots:
+	bool verify();
 	bool verify(const QString &);
 	void updateClearButton(const QString &text);
 
@@ -58,7 +61,7 @@ signals:
 
 protected:
 	QString displaytext, rawtext;
-	bool edit_mode, is_ok;
+	bool edit_mode, is_ok, lock;
 	QPalette defpal;
 
 private:

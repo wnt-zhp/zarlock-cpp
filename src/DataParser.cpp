@@ -37,6 +37,7 @@ bool DataParser::text(const QString & data, QString & text_formated, bool allow_
 		text_formated = data;
 		return true;
 	}
+	text_formated.clear();
 	return allow_empty;
 }
 
