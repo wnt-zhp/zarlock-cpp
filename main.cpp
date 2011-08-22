@@ -39,6 +39,12 @@ int main(int argc, char ** argv/*, char ** env*/) {
 // 	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 // 	app.installTranslator(&qtTranslator);
 
+	QLocale::setDefault(QLocale::Polish);
+
+	PR(QLocale::system().nativeCountryName().toStdString());
+	PR(QLocale::system().dateFormat(QLocale::ShortFormat).toStdString());
+
+// 	QLocale::
 	QTranslator myappTranslator;
 	myappTranslator.load("zarlok_" % QLocale::system().name(), PREFIX SHARE "/translations/");
 	app.installTranslator(&myappTranslator);
