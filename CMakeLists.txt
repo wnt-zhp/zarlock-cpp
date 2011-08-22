@@ -6,13 +6,14 @@ set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB")
 add_definitions(-Wall)
 find_package(Qt4 REQUIRED)
 
-find_path(GMP_INCLUDE_DIR gmpxx.h)
+find_path(GMP_INCLUDE_DIR gmp.h)
+find_path(GMPXX_INCLUDE_DIR gmpxx.h)
+find_library(GMP_LIBRARY NAMES gmp)
+find_library(GMPXX_LIBRARY NAMES gmpxx)
 
-find_library(GMP_LIBRARY NAMES gmpxx)
-
-if (GMP_INCLUDE_DIR AND GMP_LIBRARY)
+if (GMP_INCLUDE_DIR AND GMP_LIBRARY AND GMPXX_INCLUDE_DIR AND GMPXX_LIBRARY)
 	set (GMP_FOUND TRUE)
-endif (GMP_INCLUDE_DIR AND GMP_LIBRARY)
+endif (GMP_INCLUDE_DIR AND GMP_LIBRARY AND GMPXX_INCLUDE_DIR AND GMPXX_LIBRARY)
 
 if (GMP_FOUND)
 	if (NOT GMP_FIND_QUIETLY)
@@ -176,7 +177,7 @@ add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
-target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${GMP_LIBRARY})
+target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${GMP_LIBRARY} ${GMPXX_LIBRARY})
 
 # installation
 install(FILES
