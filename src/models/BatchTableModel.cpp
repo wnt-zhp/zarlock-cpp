@@ -83,7 +83,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 
 	int col = idx.column();
 	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit or col == HStaQty))
-		return Qt::AlignRight;
+		return Qt::AlignRight + Qt::AlignVCenter;
 	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
 		return Qt::AlignCenter;
 
@@ -304,7 +304,7 @@ QVariant BatchTableModel::raw(const QModelIndex & idx) const {
 // 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 // 	}
 	if (idx.column() == HBook) {
-		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString("dd-MM-yyyy");
 	}
 
 	return QSqlTableModel::data(idx, Qt::DisplayRole);

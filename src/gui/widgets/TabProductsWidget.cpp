@@ -38,14 +38,12 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
 // 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
-// TODO check this
-// 	connect(&db, SIGNAL(dbSaved()), aprw, SLOT(update_model()));
-
-// 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
-	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
+	connect(table_batchbyid, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
 
 	table_products->setAlternatingRowColors(true);
+	table_distributorbyid->setAlternatingRowColors(true);
+	table_batchbyid->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 TabProductsWidget::~TabProductsWidget() {
@@ -123,6 +121,7 @@ void TabProductsWidget::doFilterDistributions(const QModelIndex& /*idx*/) {
 	model_distributor_proxyP->invalidate();
 	table_distributorbyid->setModel(model_distributor_proxyP);
 // 	table_distributorbyid->hideColumn(BatchTableModel::HProdId);
+	table_distributorbyid->setAlternatingRowColors(true);
 }
 
 #include "TabProductsWidget.moc"
