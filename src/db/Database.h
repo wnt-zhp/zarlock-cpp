@@ -67,7 +67,7 @@ public:
 	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
 	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
-	virtual bool addDistributorRecord(int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
+	virtual bool addDistributorRecord(int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons, bool autoupdate = true);
 	virtual bool updateDistributorRecord(int, int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
 	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);

@@ -758,7 +758,7 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 	return (status && model_batch->submitAll() && rebuild_models());
 }
 
-bool Database::addDistributorRecord(int bid, double qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+bool Database::addDistributorRecord(int bid, double qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3, bool autoupdate) {
 GTD
 GTM
 	QSqlQuery q;
@@ -772,8 +772,11 @@ GTM
 	q.bindValue(6, re3);
 	bool status = q.exec();
 
-	updateBatchQty(bid);
-	model_batch->select();
+	if (autoupdate) {
+		updateBatchQty(bid);
+		model_batch->select();
+		model_distributor->select();
+	}
 GTM	
 	return status;
 }
