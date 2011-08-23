@@ -177,7 +177,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 	switch (role) {
 		case Qt::EditRole:
 			if (idx.column() == HDistDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString("dd-MM-yyyy");
 			}
 			break;
 		case Qt::DisplayRole:
@@ -189,11 +189,11 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			}
 
 			if (idx.column() == HRegDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::ISODate);
 			}
-			
+
 			if (idx.column() == HDistDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::ISODate);
 			}
 			if (idx.column() == HReason2) {
 				if (index(idx.row(), DistributorTableModel::HReason3).data().toInt() == RMeal) {
