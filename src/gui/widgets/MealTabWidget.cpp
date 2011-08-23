@@ -76,7 +76,7 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 	for (int i = 0; i < meals; ++i) {
 		foodlist[i]->setIndex(index);
 		foodlist[i]->setProxyModel(proxy[i]);
-		proxy[i]->setRef(sref);
+		proxy[i]->setRef(QDate::fromString(sref, Qt::ISODate));
 		proxy[i]->setKey(i);
 		proxy[i]->invalidate();
 		foodlist[i]->populateModel();

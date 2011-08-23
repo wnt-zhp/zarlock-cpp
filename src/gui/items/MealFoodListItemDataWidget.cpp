@@ -142,7 +142,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 
 	if (empty) {
 		if (db.addDistributorRecord(batch_idx.data().toInt(), quantity,
-				mfl->proxyModel()->ref(), mfl->proxyModel()->ref(),
+				mfl->proxyModel()->ref().toString(Qt::ISODate), mfl->proxyModel()->ref().toString(Qt::ISODate),
 				QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 			mfl->insertEmptySlot();
@@ -150,7 +150,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		} else
 			return;
 	} else {
-		QString d = QDate::fromString(mfl->proxyModel()->ref(), Qt::DefaultLocaleShortDate).toString(Qt::ISODate);
+		QString d = QDate::fromString(mfl->proxyModel()->ref().toString(Qt::ISODate), Qt::DefaultLocaleShortDate).toString(Qt::ISODate);
 		if (db.updateDistributorRecord(dist_idx.row(), batch_idx.data().toInt(), quantity,
 				d, d, QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;

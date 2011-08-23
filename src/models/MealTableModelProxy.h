@@ -21,6 +21,7 @@
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QSortFilterProxyModel>
+#include <QDate>
 
 /**
  * @brief Klasa dziedziczy po QSortFilterProxyModel i odpowiada za
@@ -33,10 +34,10 @@ public:
 						 
 	virtual ~MealTableModelProxy();
 
-	virtual void setRef(const QString & ref);
+	virtual void setRef(const QDate & ref);
 	virtual void setKey(int key);
 
-	virtual const QString & ref() const;
+	virtual const QDate & ref() const;
 	virtual int key() const;
 
 private:
@@ -44,7 +45,7 @@ private:
 
 private:
 	int mealkey;
-	QString dateref;
+	QDate dateref;
 };
 
 #endif // MEALTABLEMODELPROXY_H

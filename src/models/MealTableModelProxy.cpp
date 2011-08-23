@@ -31,7 +31,7 @@
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
 MealTableModelProxy::MealTableModelProxy(QObject * parent) : QSortFilterProxyModel(parent),
-															 mealkey(0), dateref("") {
+															 mealkey(0), dateref(0,0,0) {
 }
 
 /**
@@ -48,7 +48,7 @@ bool MealTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sou
 	int mid = sourceModel()->index(sourceRow, DistributorTableModel::HReason, sourceParent).data().toInt();
 	QString mdate = sourceModel()->index(sourceRow, DistributorTableModel::HDistDate, sourceParent).data().toString();
 
-	if (rmeal == DistributorTableModel::RMeal and mid == mealkey and mdate == dateref)
+	if (rmeal == DistributorTableModel::RMeal and mid == mealkey and mdate == dateref.toString(Qt::ISODate))
 		return true;
 
 	return false;
@@ -58,15 +58,15 @@ void MealTableModelProxy::setKey(int key) {
 	mealkey = key;
 }
 
-void MealTableModelProxy::setRef(const QString & ref) {
-	dateref = QDate::fromString(ref, Qt::ISODate).toString(Qt::DefaultLocaleShortDate);
+void MealTableModelProxy::setRef(const QDate & ref) {
+	dateref = ref;
 }
 
 int MealTableModelProxy::key() const {
 	return mealkey;
 }
 
-const QString& MealTableModelProxy::ref() const {
+const QDate& MealTableModelProxy::ref() const {
 	return dateref;
 }
 

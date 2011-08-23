@@ -110,7 +110,7 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				bidrow = qmil.at(0).row();
 
 				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data().toDouble() * 100;
-	
+
 // 				double used = ->index()
 // 				this->index(index.row(), HUsedQty).data().toDouble();
 				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toDouble() * 100;

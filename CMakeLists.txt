@@ -68,8 +68,6 @@ set(zarlok_FORMS
 									src/ui/AddProductsRecordWidget.ui
 									src/ui/AddBatchRecordWidget.ui
 									src/ui/AddDistributorRecordWidget.ui
-									src/ui/AddMealRecordWidget.ui
-									src/ui/AddFoodRecordWidget.ui
 )
 set(zarlok_widget_FORMS
 									src/ui/DBItem.ui
@@ -103,8 +101,6 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/AddProductsRecordWidget.cpp
 									src/gui/widgets/AddBatchRecordWidget.cpp
 									src/gui/widgets/AddDistributorRecordWidget.cpp
-									src/gui/widgets/AddMealRecordWidget.cpp
-									src/gui/widgets/AddFoodRecordWidget.cpp
 									src/gui/widgets/DBBrowser.cpp
 									src/gui/widgets/DBItemWidget.cpp
 									src/gui/widgets/TabProductsWidget.cpp
