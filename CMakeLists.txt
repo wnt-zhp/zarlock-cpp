@@ -126,6 +126,7 @@ set(zarlok_src_models_SRCS
 									src/models/BatchTableModelProxyP.cpp
 									src/models/MealTableModel.cpp
 									src/models/MealTableModelProxy.cpp
+									src/models/DistributorTableModelProxyP.cpp
 )
 set(zarlok_src_db_SRCS
 									src/db/DBReports.cpp

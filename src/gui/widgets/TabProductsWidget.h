@@ -28,6 +28,7 @@
 
 #include <QCompleter>
 #include <BatchTableModelProxyP.h>
+#include <DistributorTableModelProxyP.h>
 
 class TabProductsWidget : public QWidget, public Ui::TabProductsWidget {
 Q_OBJECT
@@ -43,12 +44,13 @@ private slots:
 	void add_prod_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
 	void doFilterBatches(const QModelIndex & idx);
+	void doFilterDistributions(const QModelIndex & idx);
 
 private:
 	Database & db;
-	BatchTableModelProxyP * model_batch_proxyP;
 	ProductsTableModel * model_prod;
-// 	QSqlQueryModel * model_batchbyid;
+	BatchTableModelProxyP * model_batch_proxyP;
+	DistributorTableModelProxyP * model_distributor_proxyP;
 
 	AddProductsRecordWidget * aprw;
 	QVariant pid;

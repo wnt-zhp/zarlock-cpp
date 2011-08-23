@@ -4,6 +4,7 @@
 #include "config.h"
 #include "globals.h"
 #include "DBBrowser.h"
+#include <gmpxx.h>
 
 namespace globals {
 	QPalette palette_ok = QPalette();
@@ -39,6 +40,13 @@ int main(int argc, char ** argv/*, char ** env*/) {
 // 	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 // 	app.installTranslator(&qtTranslator);
 
+// 	mp_exp_t et = 3;
+// 	mpf_class dt(0.0, 1000);
+// 	dt = 4556.72623705923598256873;
+// 	std::cout << dt << std::endl;
+// 	PR(dt.get_str(et, 10, 3));
+// 	PR(et);
+// return 0;
 	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
 	QTranslator myappTranslator;
 	myappTranslator.load("zarlok_" % QLocale::system().name(), PREFIX SHARE "/translations/");

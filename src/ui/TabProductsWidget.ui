@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>880</width>
-    <height>587</height>
+    <width>736</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="QSplitter" name="splitter_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -57,10 +57,16 @@
        </item>
       </layout>
      </widget>
-     <widget class="BatchTableView" name="table_batchbyid">
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
+      <widget class="BatchTableView" name="table_batchbyid">
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+      </widget>
+      <widget class="DistributorTableView" name="table_distributorbyid"/>
      </widget>
     </widget>
    </item>
@@ -81,6 +87,11 @@
    <class>BatchTableView</class>
    <extends>QTableView</extends>
    <header>BatchTableView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DistributorTableView</class>
+   <extends>QTableView</extends>
+   <header>DistributorTableView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

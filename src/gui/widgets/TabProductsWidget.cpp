@@ -29,6 +29,8 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	widget_add_products->setVisible(false);
 	aprw = new AddProductsRecordWidget(widget_add_products);
 
+	table_batchbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 	activateUi(true);
 
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
@@ -41,7 +43,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 // 	connect(table_products, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
-// 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
+	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
 
 	table_products->setAlternatingRowColors(true);
 }
@@ -81,6 +83,12 @@ void TabProductsWidget::activateUi(bool activate) {
 		model_batch_proxyP->setDynamicSortFilter(true);
 // 		table_batchbyid->setModel(model_batch_proxyP);
 // 		table_batchbyid->hideColumn(BatchTableModel::HProdId);
+
+		model_distributor_proxyP = new DistributorTableModelProxyP(table_batchbyid);
+		model_distributor_proxyP->setSourceModel(db.CachedDistributor());
+		model_distributor_proxyP->setDynamicSortFilter(true);
+// 		model_distributor_proxyP->setModel(model_batch_proxyP);
+// 		model_distributor_proxyP->hideColumn(BatchTableModel::HProdId);
 	}
 }
 
@@ -109,6 +117,12 @@ void TabProductsWidget::doFilterBatches(const QModelIndex& idx) {
 	model_batch_proxyP->invalidate();
 	table_batchbyid->setModel(model_batch_proxyP);
 	table_batchbyid->hideColumn(BatchTableModel::HProdId);
+}
+
+void TabProductsWidget::doFilterDistributions(const QModelIndex& /*idx*/) {
+	model_distributor_proxyP->invalidate();
+	table_distributorbyid->setModel(model_distributor_proxyP);
+// 	table_distributorbyid->hideColumn(BatchTableModel::HProdId);
 }
 
 #include "TabProductsWidget.moc"
