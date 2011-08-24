@@ -68,7 +68,7 @@ MealTabWidget::~MealTabWidget() {
 }
 
 void MealTabWidget::setIndex(const QModelIndex& index) {
-	QString sref = Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toString();
+	QDate sref = Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toDate();
 
 	btmp->setDateKey(sref);
 	btmp->invalidate();
@@ -76,7 +76,7 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 	for (int i = 0; i < meals; ++i) {
 		foodlist[i]->setIndex(index);
 		foodlist[i]->setProxyModel(proxy[i]);
-		proxy[i]->setRef(QDate::fromString(sref, Qt::ISODate));
+		proxy[i]->setRef(sref);
 		proxy[i]->setKey(i);
 		proxy[i]->invalidate();
 		foodlist[i]->populateModel();

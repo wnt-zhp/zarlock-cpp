@@ -79,6 +79,9 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 		case Qt::StatusTipRole:
 			return display(idx, role);
 			break;
+		case RRaw:
+			return QSqlTableModel::data(idx, Qt::EditRole);
+			break;
 	}
 
 	int col = idx.column();

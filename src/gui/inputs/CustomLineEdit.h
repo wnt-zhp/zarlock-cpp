@@ -34,7 +34,7 @@ public:
 
 	virtual void clear();
 
-	bool ok();
+	bool ok() const;
 	
 	virtual const QString text(bool placeholdertext = false);
 	virtual void setText(const QString & t);
@@ -61,7 +61,7 @@ signals:
 
 protected:
 	QString displaytext, rawtext;
-	bool edit_mode, is_ok, lock;
+	bool edit_mode, is_ok;
 	QPalette defpal;
 
 private:

@@ -29,10 +29,13 @@ void DateInput::setDateReferenceObj(const DateInput * ref) {
 	data_ref = ref;
 }
 
-const QDate DateInput::date() const {
+const QDate & DateInput::date() const {
 	QDate d;
 // 	PR(displaytext.toStdString());
-	d = QDate::fromString(displaytext, Qt::DefaultLocaleShortDate);
+	if (is_ok) {
+		DataParser::date(rawtext, d);
+// 		d = QDate::fromString(displaytext, Qt::DefaultLocaleShortDate);
+	}
 // 	PR(d.toString(Qt::ISODate).toStdString());
 /*	if (DataParser::date(rawtext, d, data_ref->date())) {
 		return d;

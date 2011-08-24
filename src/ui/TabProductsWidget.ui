@@ -65,8 +65,18 @@
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>20</number>
+       </attribute>
       </widget>
-      <widget class="DistributorTableView" name="table_distributorbyid"/>
+      <widget class="DistributorTableView" name="table_distributorbyid">
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>20</number>
+       </attribute>
+      </widget>
      </widget>
     </widget>
    </item>

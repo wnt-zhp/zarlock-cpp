@@ -21,6 +21,7 @@
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QSortFilterProxyModel>
+#include <QDate>
 
 /**
  * @brief Klasa dziedziczy po QSortFilterProxyModel i odpowiada za
@@ -37,7 +38,7 @@ public:
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-	virtual void setDateKey(const QString & dk);
+	virtual void setDateKey(const QDate & dk);
 	virtual void setItemNum(int * item);
 
 private:
@@ -48,7 +49,7 @@ private:
 	const QCheckBox * cb_aexp;
 	const QCheckBox * cb_nexp;
 	const QCheckBox * cb_hide;
-	QString datekey;
+	QDate datekey;
 	int * itemnum;
 	QString infsymb;
 };

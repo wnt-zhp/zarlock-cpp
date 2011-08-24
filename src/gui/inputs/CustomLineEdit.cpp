@@ -23,7 +23,7 @@
 
 #include <QStyle>
 
-CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false), lock(false) {
+CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
 	defpal = this->palette();
 
 	clearButton = new QToolButton(this);
@@ -39,7 +39,7 @@ CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(
 				   qMax(msz.height(), clearButton->sizeHint().height() + frameWidth * 2 + 2));
 
 	connect(clearButton, SIGNAL(clicked()), this, SLOT(clear()));
-	connect(this, SIGNAL(textChanged(QString)), this, SLOT(doTextChanged(QString)));
+	connect(this, SIGNAL(textEdited(QString)), this, SLOT(doTextChanged(QString)));
 	connect(this, SIGNAL(returnPressed()), this, SLOT(doReturnPressed()));
 }
 
@@ -48,21 +48,21 @@ CustomLineEdit::~CustomLineEdit() {
 	FPR(__func__);
 }
 
-bool CustomLineEdit::ok() {
+bool CustomLineEdit::ok() const {
 	return is_ok;
 }
 
 void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
-	if (edit_mode) {
-		rawtext = QLineEdit::text();
-	}
+// 	if (edit_mode) {
+// 		rawtext = QLineEdit::text();
+// 	}
+// 
+// 	verify(rawtext);
 
+	verify();
 	this->setFont(globals::font_display);
-	verify(rawtext);
 
-	lock = true;
 	QLineEdit::setText(displaytext);
-	lock = false;
 
 	edit_mode = false;
 	if (ev != NULL)
@@ -72,9 +72,7 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 	if (!edit_mode) {
 		QLineEdit::setFont(globals::font_edit);
-		lock = true;
 		QLineEdit::setText(rawtext);
-		lock = false;
 	}
 
 	edit_mode = true;
@@ -85,15 +83,12 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 bool CustomLineEdit::verify() {
 	if (edit_mode)
 		rawtext = QLineEdit::text();
-	
+
 	return verify(rawtext);
 }
 
 bool CustomLineEdit::verify(const QString & t) {
 	updateClearButton(t);
-
-	if (lock)
-		return is_ok;
 
 	this->setPalette(defpal);
 
@@ -101,7 +96,7 @@ bool CustomLineEdit::verify(const QString & t) {
 		if (!t.isEmpty()) this->setPalette(globals::palette_ok);
 		is_ok = true;
 	} else {
-		if (!t.isEmpty()) this->setPalette(globals::palette_bad);
+		if (!t.isEmpty()) { this->setPalette(globals::palette_bad); displaytext = tr("ERROR: parse error"); }
 		is_ok = false;
 	}
 
@@ -118,9 +113,7 @@ void CustomLineEdit::clear() {
 
 void CustomLineEdit::setText(const QString& t) {
 	if (!edit_mode) {
-		lock = true;
 		QLineEdit::setText(t);
-		lock = false;
 	}
 }
 
@@ -132,9 +125,7 @@ void CustomLineEdit::setRaw(const QString& t) {
 	} else {
 // 		focusOutEvent(NULL);
 		verify(t);
-		lock = true;
 		QLineEdit::setText(displaytext);
-		lock = false;
 	}
 }
 
@@ -142,9 +133,7 @@ void CustomLineEdit::doTextChanged(const QString& t) {
 	if (!edit_mode) {
 		QLineEdit::setFont(globals::font_edit);
 		edit_mode = true;
-		lock = true;
 		QLineEdit::setText(rawtext);
-		lock = false;
 	} else
 		rawtext = t;
 

@@ -106,6 +106,20 @@ void AddDistributorRecordWidget::validateAdd() {
 	spin_qty->setSuffix(tr(" of %1").arg(max));
 	spin_qty->setMaximum(qtytotal-qtyused);
 
+	if (edit_date->ok()) {
+		combo_products->setEnabled(true);
+		spin_qty->setEnabled(true);
+		edit_reason->setEnabled(true);
+		edit_reason2->setEnabled(true);
+		pproxy->setDateKey(edit_date->date());
+		pproxy->invalidate();
+	} else {
+		combo_products->setEnabled(false);
+		spin_qty->setEnabled(false);
+		edit_reason->setEnabled(false);
+		edit_reason2->setEnabled(false);
+	}
+	
 	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason->ok()) {
 		action_add->setEnabled(true);
 	} else {

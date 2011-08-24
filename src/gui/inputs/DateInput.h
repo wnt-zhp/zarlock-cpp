@@ -21,13 +21,14 @@
 #define DATEINPUT_H
 
 #include "CustomLineEdit.h"
+#include <QDate>
 
 class DateInput : public CustomLineEdit {
 Q_OBJECT
 public:
 	DateInput(QWidget * parent);
 
-	const QDate date() const;
+	const QDate & date() const;
 	void setDateReferenceObj(const DateInput * ref);
 
 public slots:

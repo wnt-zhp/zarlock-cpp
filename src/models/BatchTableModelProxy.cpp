@@ -56,7 +56,6 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 	FPR(__func__);
 }
 
-
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
@@ -64,9 +63,9 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
 
 	QDate refd;
-	if (!datekey.isEmpty()) {
-		refd = QDate::fromString(datekey, Qt::ISODate);
-		QDate regd = QDate::fromString(sourceModel()->index(sourceRow, BatchTableModel::HBook).data().toString(), Qt::DefaultLocaleShortDate);
+	if (datekey.isValid()) {
+		refd = datekey;
+		QDate regd = sourceModel()->index(sourceRow, BatchTableModel::HBook).data(BatchTableModel::RRaw).toDate();
 		if (regd.daysTo(refd) < 0)
 			return false;
 	} else
@@ -94,7 +93,7 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 	return QSortFilterProxyModel::data(index, role);
 }
 
-void BatchTableModelProxy::setDateKey(const QString& dk) {
+void BatchTableModelProxy::setDateKey(const QDate& dk) {
 	datekey = dk;
 }
 
