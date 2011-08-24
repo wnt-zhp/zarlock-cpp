@@ -408,23 +408,23 @@ void DBReports::printKMReport(QString * reportsdir) {
 		bool bisempty = false;
 		bool disempty = false;
 
-		std::cout << ",KARTOTEKA MAGAZYNOWA\n,ILOŚCIOWO-WARTOŚCIOWA\n,\n";
-		out << QString::fromUtf8(",KARTOTEKA MAGAZYNOWA\n,ILOŚCIOWO-WARTOŚCIOWA\n,\n");
+		std::cout << ";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n";
+		out << QString::fromUtf8(";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n");
 
-		std::printf(",Nazwa towaru:,%s %s %s,cena:,%s,\n",
+		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n",
 					it->name.trimmed().toStdString().c_str(), it->spec.trimmed().toStdString().c_str(),
 					it->unit.trimmed().toStdString().c_str(), it->price_s.toStdString().c_str());
 
-		out << ",Nazwa towaru:," << QString::fromUtf8(it->name.trimmed().toStdString().c_str()) << " "
+		out << ";Nazwa towaru:;" << QString::fromUtf8(it->name.trimmed().toStdString().c_str()) << " "
 			<< QString::fromUtf8(it->spec.trimmed().toStdString().c_str()) << " "
 			<< QString::fromUtf8(it->unit.trimmed().toStdString().c_str())
-			<< ",cena:," << it->price_s.toStdString().c_str() << endl;
+			<< ";cena:;" << it->price_s.toStdString().c_str() << endl;
 
-		std::printf("Lp.,Data,Symbol i nr. dowodu,Przychód,,Rozchód,,Stan,\n,,,ilość,wartość,ilość,wartość,ilość,wartość\n");
-		std::cout << "1,2,3,4,5,6,7,8,9\n";
+		std::printf("Lp.,Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
+		std::cout << "1;2;3;4;5;6;7;8;9\n";
 
-		out << QString::fromUtf8("Lp.,Data,Symbol i nr. dowodu,Przychód,,Rozchód,,Stan,\n,,,ilość,wartość,ilość,wartość,ilość,wartość\n");
-		out << "1,2,3,4,5,6,7,8,9\n";
+		out << QString::fromUtf8("Lp.;Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
+		out << "1;2;3;4;5;6;7;8;9\n";
 
 		// browse over all batch and distributor entries (sorted by time)
 		while (!bisempty and !disempty) {
@@ -447,16 +447,16 @@ void DBReports::printKMReport(QString * reportsdir) {
 				tot_qty += it->batches[itidx].qty;
 				tot_price += it->batches[itidx].qty * it->price;
 
-				std::cout << "B: " << gidx << "," << it->batches[itidx].date.toStdString() << ","
-						<< it->batches[itidx].invoice.toStdString() << ","
-						<< it->batches[itidx].qty << "," << it->batches[itidx].qty * it->price << ",,,"
-						<< tot_qty.get_d() << "," << tot_price.get_d() << "\n";
+				std::cout << "B: " << gidx << ";" << it->batches[itidx].date.toStdString() << ";"
+						<< it->batches[itidx].invoice.toStdString() << ";"
+						<< it->batches[itidx].qty << ";" << it->batches[itidx].qty * it->price << ";;;"
+						<< tot_qty.get_d() << ";" << tot_price.get_d() << "\n";
 
-				out << gidx << "," << it->batches[itidx].date.toStdString().c_str() << ","
-					<< QString::fromUtf8(it->batches[itidx].invoice.toStdString().c_str()) << ","
-					<< it->batches[itidx].qty.get_d() << ","
-					<< mpf_class(it->batches[itidx].qty * it->price).get_d() << ",,,"
-					<< tot_qty.get_d() << "," << tot_price.get_d() << "\n";
+				out << gidx << ";" << it->batches[itidx].date.toStdString().c_str() << ";"
+					<< QString::fromUtf8(it->batches[itidx].invoice.toStdString().c_str()) << ";"
+					<< it->batches[itidx].qty.get_d() << ";"
+					<< mpf_class(it->batches[itidx].qty * it->price).get_d() << ";;;"
+					<< tot_qty.get_d() << ";" << tot_price.get_d() << "\n";
 
 				++itidx;
 				++gidx;
@@ -510,7 +510,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 							<< qty << "," << qty * it->price << ","
 							<< tot_qty << "," << tot_price << "\n";
 
-				out << gidx << "," << dd.toStdString().c_str() << "," << reas.toStdString().c_str() << ",,,"
+				out << gidx << "," << dd.toStdString().c_str() << "," << QString::fromUtf8(reas.toStdString().c_str()) << ",,,"
 					<< qty.get_d() << "," << mpf_class(qty * it->price).get_d() << ","
 					<< tot_qty.get_d() << "," << tot_price.get_d() << "\n";
 
