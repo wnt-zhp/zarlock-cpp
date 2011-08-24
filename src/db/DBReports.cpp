@@ -644,7 +644,8 @@ void DBReports::printSMReport(QString * reportsdir) {
 		out.setRealNumberNotation(QTextStream::FixedNotation);
 		out.setRealNumberPrecision(2);
 
-		out << "Stan magazynów na dzień " << b_min.addDays(i).toString(Qt::DefaultLocaleLongDate) << endl;
+		out << QString::fromUtf8("Stan magazynów na dzień;")
+			<< QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toStdString().c_str()) << endl;
 
 		batches_new.clear();
 		batches_removed.clear();

@@ -65,7 +65,7 @@ bool AddDistributorRecordWidget::insert_record() {
 	Database & db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
-	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
+	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data(BatchTableModel::RRaw).toInt();	//HBatchId
 
 	QDate df;
 	if (!DataParser::date(edit_date->text(), df))
@@ -75,6 +75,8 @@ bool AddDistributorRecordWidget::insert_record() {
 							QDate::currentDate().toString(Qt::ISODate),
 							edit_reason->text(), edit_reason2->text(),
 							DistributorTableModel::RGeneral);
+
+	update_model();
 
 	combo_products->setFocus();
 	return true;

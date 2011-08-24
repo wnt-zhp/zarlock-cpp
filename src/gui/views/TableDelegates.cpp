@@ -40,4 +40,20 @@ void PriceDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 	style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
 }
 
+void UnitDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+	QStyleOptionViewItemV4 opt = option;
+	initStyleOption(&opt, index);
+
+	opt.text = tr("%1 %2").arg(index.data(Qt::DisplayRole).toDouble(), 0, 'g', 10).arg("");
+
+	const QWidget * widget/* = QStyledItemDelegatePrivate::widget(option)*/;
+	if (const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option))
+		widget = v3->widget;
+	else
+		widget = NULL;
+
+	QStyle *style = widget ? widget->style() : QApplication::style();
+	style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+}
+
 #include "TableDelegates.moc"
