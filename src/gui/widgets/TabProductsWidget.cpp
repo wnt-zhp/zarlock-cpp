@@ -30,6 +30,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	aprw = new AddProductsRecordWidget(widget_add_products);
 
 	table_batchbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	table_distributorbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	activateUi(true);
 

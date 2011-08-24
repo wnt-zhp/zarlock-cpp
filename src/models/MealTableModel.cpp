@@ -146,13 +146,6 @@ QVariant MealTableModel::display(const QModelIndex & idx, const int role) const 
  * @return QVariant
  **/
 QVariant MealTableModel::raw(const QModelIndex & idx) const {
-// 	if (idx.column() == HProdId) {
-// 		PR(QSqlTableModel::data(idx, Qt::EditRole).toString().toStdString());
-// 		return QSqlTableModel::data(idx, Qt::EditRole).toString();
-// 	}
-// 	if (idx.column() == HRegDate) {
-// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
-// 	}
 	if (idx.column() == HDistDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 	}

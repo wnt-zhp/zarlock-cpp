@@ -225,7 +225,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 		qty = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HQty).data().toDouble();
 
 		q.prepare("SELECT batch.unit,batch.price FROM batch WHERE batch.id=?;");
-		q.bindValue(0, db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt());
+		q.bindValue(0, db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
 		q.exec();
 		if (q.next()) {
 			unit = q.value(0).toString();

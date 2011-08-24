@@ -55,18 +55,28 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase db): 
  * QString, QColor QIcon,itp.
  **/
 QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::StatusTipRole)
-		return raw(idx);
-
-	if (role == Qt::EditRole or role == Qt::DisplayRole)
-		return display(idx, role);
-
 	int col = idx.column();
-	if (role == Qt::TextAlignmentRole and (col == HQty))
-		return Qt::AlignRight + Qt::AlignCenter;
-	if (role == Qt::TextAlignmentRole and (col == HDistDate))
-		return Qt::AlignCenter;
 
+	switch (role) {
+		case Qt::StatusTipRole:
+			return raw(idx);
+			break;
+		case Qt::EditRole:
+		case Qt::DisplayRole:
+			return display(idx, role);
+			break;
+
+		case Qt::TextAlignmentRole:
+			if (col == HQty)
+				return Qt::AlignRight + Qt::AlignCenter;
+			if (col == HDistDate)
+				return Qt::AlignCenter;
+			break;
+		case RRaw:
+			return QSqlTableModel::data(idx, Qt::EditRole);
+			break;
+	}
+	
 	return QSqlTableModel::data(idx, role);
 }
 
@@ -103,7 +113,7 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				BatchTableModel * btm = Database::Instance().CachedBatch();
 				int bidrow = -1;
 
-				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(Qt::EditRole));
+				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(RRaw));
 				if (!qmil.count()) {
 					return false;
 				}
@@ -176,28 +186,34 @@ bool DistributorTableModel::select() {
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
 		case Qt::EditRole:
-			if (idx.column() == HDistDate) {
+			if (idx.column() == HBatchId) {
+				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
+				if (!qmil.isEmpty()) {
+					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+				}
+
+			} else if (idx.column() == HDistDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString("dd-MM-yyyy");
 			}
 			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
-				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(Qt::EditRole));
+				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
 				if (!qmil.isEmpty()) {
 					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
 				}
 			}
 
-			if (idx.column() == HRegDate) {
+			else if (idx.column() == HRegDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 
-			if (idx.column() == HDistDate) {
+			else if (idx.column() == HDistDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
-			if (idx.column() == HReason2) {
+			else if (idx.column() == HReason2) {
 				if (index(idx.row(), DistributorTableModel::HReason3).data().toInt() == RMeal) {
-					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(Qt::EditRole));
+					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(RRaw));
 					if (!qmil.isEmpty()) {
 						return Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole);
 					}
@@ -244,8 +260,7 @@ GTM
 GTM
 	for (int i = topleft.row(); i <= bottomright.row(); ++i)
 		if (topleft.column() == HQty) {
-			Database::Instance().updateBatchQty(index(i, HBatchId).data(Qt::EditRole).toInt());
-
+			Database::Instance().updateBatchQty(index(i, HBatchId).data(RRaw).toInt());
 		}
 GTM
 	Database::Instance().CachedBatch()->select();

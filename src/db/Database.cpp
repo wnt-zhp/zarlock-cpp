@@ -749,10 +749,7 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == BatchTableModel::HProdId) {
-// 			QVariant bid = model_batch->data(model_batch->index(idxl.at(i).row(), BatchTableModel::HId), Qt::EditRole);
-// 			QModelIndexList qmild = model_distributor->match(model_distributor->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bid, -1);
-// 			if (removeDistributorRecord(qmild, false, false))
-				status = model_batch->removeRow(idxl.at(i).row());
+			status = model_batch->removeRow(idxl.at(i).row());
 		}
 	}
 	return (status && model_batch->submitAll() && rebuild_models());
@@ -798,7 +795,7 @@ GTM
 	q.exec();
 
 GTM
-	updateBatchQty(model_distributor->index(row, 1).data(Qt::EditRole).toInt());
+	updateBatchQty(model_distributor->index(row, DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
 GTM
 	return status;
 }
@@ -824,7 +821,7 @@ GTM
 GTM
 	for (int i = 0; i < idxl.count(); ++i) {
 		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
-			int bid = model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
+			int bid = model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt();
 			if (model_distributor->removeRow(idxl.at(i).row()))
 				idmap[bid]=1;
 		}
@@ -844,7 +841,7 @@ GTM
 
 bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bool submitBatches) {EGTD
 	QString batch;
-	QVariant bid = model_distributor->index(recordid, DistributorTableModel::HBatchId).data(Qt::EditRole);
+	QVariant bid = model_distributor->index(recordid, DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw);
 	bool status = true;
 GTM
 	if (askForConfirmation) {

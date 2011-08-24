@@ -54,7 +54,7 @@ bool DistributorTableModelProxyP::filterAcceptsRow(int sourceRow, const QModelIn
 		int row = bv->selectionModel()->selectedRows().at(i).row();
 		int bpid = bv->model()->index(row, BatchTableModel::HId).data(Qt::EditRole).toInt();
 
-		if (bpid == bidx.data(Qt::EditRole).toInt()) {
+		if (bpid == bidx.data(DistributorTableModel::RRaw).toInt()) {
 // 			sourceModel()->setData(bidx, QColor(Qt::lightGray), Qt::DecorationRole);
 			return true;
 		}

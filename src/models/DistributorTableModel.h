@@ -42,6 +42,9 @@ public:
 
 	virtual int idRow(int id);
 
+public:
+	enum UserRoles { RRaw = Qt::UserRole + 1 };
+
 public slots:
 	void filterDB(const QString &);
 	void trigDataChanged(QModelIndex topleft , QModelIndex bottomright);

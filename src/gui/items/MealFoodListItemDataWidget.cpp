@@ -210,7 +210,7 @@ void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 	BatchTableModel * btm = Database::Instance().CachedBatch();
 	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
 
-	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(Qt::EditRole));
+	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(DistributorTableModel::RRaw));
 	if (qmil.count()) {
 		batch_idx = qmil.at(0);
 
