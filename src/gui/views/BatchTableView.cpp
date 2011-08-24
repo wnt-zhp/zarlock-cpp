@@ -20,6 +20,8 @@
 #include "BatchTableView.h"
 #include "BatchTableModelProxy.h"
 
+#include "TableDelegates.h"
+
 #include <QHeaderView>
 
 /**
@@ -45,6 +47,10 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Databa
 	//  Łączymy akcję kliknięcia w menu "Add" z funkcją (slotem), która to wykona.
 	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
 	pmenu_add.addAction(addRec);
+
+	PriceDelegate * price_delegate = new PriceDelegate;
+
+	setItemDelegateForColumn(BatchTableModel::HPrice, price_delegate);
 }
 
 /**
@@ -133,5 +139,7 @@ void BatchTableView::removeRecord() {
 // 			db.removeBatchRecord((*it).row());
 // 	}
 }
+
+
 
 #include "BatchTableView.moc"

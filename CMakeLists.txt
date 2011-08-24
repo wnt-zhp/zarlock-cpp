@@ -88,7 +88,12 @@ set(zarlok_reports_RESOURCES_RCC reports.rcc)
 set(zarlok_icons_RESOURCES src/icons.qrc)
 set(zarlok_icons_RESOURCES_RCC icons.rcc)
 
-set(zarlok_src_gui_views_SRCS src/gui/views/BatchTableView.cpp src/gui/views/ProductsTableView.cpp src/gui/views/DistributorTableView.cpp)
+set(zarlok_src_gui_views_SRCS		src/gui/views/BatchTableView.cpp
+									src/gui/views/ProductsTableView.cpp
+									src/gui/views/DistributorTableView.cpp
+									src/gui/views/TableDelegates.cpp
+)
+
 set(zarlok_src_gui_inputs_SRCS
 									src/gui/inputs/CustomLineEdit.cpp
 									src/gui/inputs/DateInput.cpp
@@ -133,7 +138,7 @@ set(zarlok_src_db_SRCS
 									src/db/Database.cpp
 									src/db/CampProperties.cpp
 )
-set(zarlok_src_misc_SRCS src/gui/widgets/DBItemWidget.cpp src/Logger.cpp src/DataParser.cpp src/zarlok.cpp main.cpp)
+set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/zarlok.cpp main.cpp)
 set(zarlok_INCS config.h)
 set(zarlok_SRCS
 									${zarlok_INCS}

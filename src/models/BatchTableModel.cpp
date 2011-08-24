@@ -32,6 +32,7 @@
 #include <qsqlresult.h>
 #include <qsqlrecord.h>
 
+
 BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
@@ -220,7 +221,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				double price, tax;
 				if (DataParser::price(data, price, tax)) {
 					QString var;
-					return var.sprintf("%.2f zl", price*(1.0+tax/100.0));
+					return var.sprintf("%.2f", price*(1.0+tax/100.0));
 				} else {
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
@@ -340,5 +341,5 @@ void BatchTableModel::trigDataChanged() {
 int BatchTableModel::idRow(int id) {
 	return idmap[id];
 }
-
+ 
 #include "BatchTableModel.moc"
