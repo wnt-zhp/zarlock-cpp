@@ -40,8 +40,6 @@ public:
 	virtual bool select();
 	virtual void autoSubmit(bool asub = true);
 
-	virtual int idRow(int id);
-
 public:
 	enum UserRoles { RRaw = Qt::UserRole + 1 };
 
@@ -54,9 +52,6 @@ protected:
 	QVariant raw(const QModelIndex & idx) const;
 
 	bool autosubmit;
-
-private:
-	QVector<int> idmap;
 
 public:
 	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };

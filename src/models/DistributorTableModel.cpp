@@ -160,18 +160,6 @@ bool DistributorTableModel::select() {
 	while (canFetchMore())
 		fetchMore();
 
-	int maxval = 0;
-	QSqlQuery q;
-	q.exec("SELECT id FROM distributor ORDER BY id DESC LIMIT 1;");
-	if (q.next())
-		maxval = q.value(0).toInt();
-
-	idmap.resize(maxval+1);
-
-	for (int i = 0; i < rowCount(); ++i) {
-		idmap[this->index(i, HId).data().toInt()] = i;
-	}
-
 	return true;
 }
 
@@ -271,10 +259,6 @@ GTM
 
 void DistributorTableModel::autoSubmit(bool asub) {
 	autosubmit = asub;
-}
-
-int DistributorTableModel::idRow(int id) {
-	return idmap[id];
 }
 
 #include "DistributorTableModel.moc"
