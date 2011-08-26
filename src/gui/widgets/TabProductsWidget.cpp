@@ -40,7 +40,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 // 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
-	connect(table_batchbyid, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
+	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
 
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);
@@ -102,8 +102,6 @@ void TabProductsWidget::add_prod_record(bool newrec) {
 }
 
 void TabProductsWidget::edit_record(const QModelIndex& idx) {
-	PR(idx.row());
-	PR(model_prod->isDirty(idx));
 	if (model_prod->isDirty(idx)) {
 		table_products->setEditTriggers(QAbstractItemView::DoubleClicked);
 	} else {

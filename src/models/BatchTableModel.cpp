@@ -179,18 +179,6 @@ bool BatchTableModel::select() {
 	while (canFetchMore())
 		fetchMore();
 
-	int maxval = 0;
-	QSqlQuery q;
-	q.exec("SELECT id FROM batch ORDER BY id DESC LIMIT 1;");
-	if (q.next())
-		maxval = q.value(0).toInt();
-
-	idmap.resize(maxval+1);
-
-	for (int i = 0; i < rowCount(); ++i) {
-		idmap[this->index(i, HId).data().toInt()] = i;
-	}
-
     return true;
 }
 
@@ -206,14 +194,19 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 	switch (role) {
 		case Qt::DisplayRole:
 			if (idx.column() == HProdId) {
-				QModelIndexList qmil = Database::Instance().CachedProducts()->match(Database::Instance().CachedProducts()->index(0, ProductsTableModel::HId), Qt::EditRole, idx.data(Qt::EditRole));
+				QModelIndexList qmil = Database::Instance().CachedProducts()->match(
+										Database::Instance().CachedProducts()->index(0, ProductsTableModel::HId),
+										Qt::EditRole, idx.data(RRaw).toInt(), 1, Qt::MatchExactly);
 				if (!qmil.isEmpty()) {
-					return Database::Instance().CachedProducts()->index(qmil.first().row(), ProductsTableModel::HName).data(Qt::DisplayRole);
+					return Database::Instance().CachedProducts()->index(qmil.at(0).row(), ProductsTableModel::HName).data(Qt::DisplayRole);
 				}
 			}
 
 			else if (idx.column() == HSpec) {
-				return QString(this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() % " " % QSqlTableModel::data(idx, Qt::EditRole).toString());
+				return QString(
+					this->data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString() %
+					" " %
+					QSqlTableModel::data(idx, Qt::EditRole).toString());
 			}
 
 			else if (idx.column() == HPrice) {
@@ -336,10 +329,6 @@ void BatchTableModel::trigDataChanged() {
 		this->submitAll();
 		Database::Instance().updateBatchWordList();
 	}
-}
-
-int BatchTableModel::idRow(int id) {
-	return idmap[id];
 }
  
 #include "BatchTableModel.moc"

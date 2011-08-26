@@ -47,7 +47,7 @@ int main(int argc, char ** argv/*, char ** env*/) {
 // 	PR(dt.get_str(et, 10, 3));
 // 	PR(et);
 // return 0;
-	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
+// 	PR(QDate::currentDate().toString(Qt::ISODate).toStdString());
 	QTranslator myappTranslator;
 	myappTranslator.load("zarlok_" % QLocale::system().name(), PREFIX SHARE "/translations/");
 	app.installTranslator(&myappTranslator);

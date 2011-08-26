@@ -43,8 +43,6 @@ public:
 	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HEntryDate, HNotes, HInvoice, HENameQty = 100 };
 	enum UserRoles { RRaw = Qt::UserRole + 1, RNameQty = Qt::UserRole + 10, RFreeQty };
 
-	virtual int idRow(int id);
-
 public slots:
 	void filterDB(const QString &);
 
@@ -54,9 +52,6 @@ private slots:
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
-
-private:
-	QVector<int> idmap;
 
 protected:
 	bool autosubmit;
