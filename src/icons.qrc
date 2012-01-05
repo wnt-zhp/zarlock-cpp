@@ -14,5 +14,6 @@
 	<file>resources/icons/user-home.png</file>
 	<file>resources/icons/tools-wizard.png</file>
 	<file>resources/icons/edit-clear-locationbar-rtl.png</file>
+	<file>resources/icons/view-resource-calendar.png</file>
 </qresource>
 </RCC>

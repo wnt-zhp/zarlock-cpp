@@ -73,19 +73,6 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 			}
 			break;
 		case Qt::EditRole:
-			if (idx.column() == HStaQty) {
-				return raw(idx).toInt();
-// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
-			}
-
-// 			else if (idx.column() == HPrice) {
-// 				double brutto = QSqlTableModel::data(idx, Qt::EditRole).toDouble();
-// 				QString var;
-// 				return var.sprintf("%.2f", brutto/100);
-// // 				return brutto/100;
-// 			}
-
-			else
 				return raw(idx);
 			break;
 		case Qt::DisplayRole:
@@ -136,23 +123,10 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 			}
 
 			if (index.column() == HRegDate) {
-// 				QDate date;
-// 				if (DataParser::date(value.toString(), date)) {
-// 					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
-// 				} else {
-// 					inputErrorMsgBox(value.toString());
-// 					return false;
-// 				}
 				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
 			if (index.column() == HExpiryDate) {
-// 				QDate date;
-// 				if (value.toString() != QString("inf"))
-// 				if (!DataParser::date(value.toString(), date, this->index(index.row(), HRegDate).data(Qt::DisplayRole).toDate())) {
-// 					inputErrorMsgBox(value.toString());
-// 					return false;
-// 				}
 				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
@@ -248,7 +222,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			else if (idx.column() == HExpiryDate) {
-				if (idx.data(Qt::EditRole).toString() == QString("inf"))
+				if (idx.data(Qt::EditRole).isNull())
 					return QString(new QChar(0x221e), 1);
 
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
@@ -302,19 +276,12 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
  * @return QVariant
  **/
 QVariant BatchTableModel::raw(const QModelIndex & idx) const {
-// 	if (idx.column() == HProdId) {
-// 		PR(QSqlTableModel::data(idx, Qt::EditRole).toString().toStdString());
-// 		return QSqlTableModel::data(idx, Qt::EditRole).toString();
-// 	}
-// 	if (idx.column() == HRegDate) {
-// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
-// 	}
 	if (idx.column() == HRegDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
-	}
+	} else
 	if (idx.column() == HExpiryDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
-	}
+	} else
 	if (idx.column() == HEntryDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
 	}

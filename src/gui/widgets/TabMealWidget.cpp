@@ -43,7 +43,10 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	spin_leadres->setMaximum(9999);
 	spin_others->setMaximum(9999);
 
-	action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
+	action_toggle->setFlat(true);
+	action_toggle->setText("");
+	action_toggle->setIcon (QIcon(":/resources/icons/view-resource-calendar.png"));
+	action_toggle->setIconSize(QSize(48, 48));
 
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
 	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
@@ -135,11 +138,11 @@ void TabMealWidget::add_mealday() {
 void TabMealWidget::toggle_calendar(bool show) {
 	calendar->setVisible(show);
 	if (show) {
-		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
+// 		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
 		hightlight_day(calendar->selectedDate());
 	}
 	else {
-		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
+// 		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
 		action_insert->setEnabled(false);
 	}
 }

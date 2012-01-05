@@ -61,25 +61,15 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
 		case Qt::StatusTipRole:
 			return raw(idx);
 			break;
-		case Qt::EditRole:
-			if (idx.column() == HQty) {
-				return raw(idx).toDouble();
-				// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
-			}
-			
-			else
-				return display(idx, role);
-			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HQty) {
 				return raw(idx).toDouble() / 100.0;
-				// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
-			}
-
-			else
+			} else
 				return display(idx, role);
 			break;
-			
+		case Qt::EditRole:
+			return raw(idx);
+			break;
 		case Qt::TextAlignmentRole:
 			if (col == HQty)
 				return Qt::AlignRight + Qt::AlignCenter;
@@ -90,7 +80,7 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
 			return QSqlTableModel::data(idx, Qt::EditRole);
 			break;
 	}
-	
+
 	return QSqlTableModel::data(idx, role);
 }
 
@@ -189,17 +179,6 @@ bool DistributorTableModel::select() {
  **/
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
-		case Qt::EditRole:
-			if (idx.column() == HBatchId) {
-				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
-				if (!qmil.isEmpty()) {
-					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
-				}
-
-			} else if (idx.column() == HDistDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString("dd-MM-yyyy");
-			}
-			break;
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
 				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
@@ -235,9 +214,18 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
  * @return QVariant
  **/
 QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
-// 	if (idx.column() == HSpec) {
-// 		return QSqlTableModel::data(this->index(idx.row(), HProdId), Qt::DisplayRole).toString();
-// 	}
+	if (idx.column() == HBatchId) {
+		QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
+		if (!qmil.isEmpty()) {
+			return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+		}
+		
+	} else
+
+	if (idx.column() == HDistDate) {
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString("dd-MM-yyyy");
+	} else
+
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 

@@ -87,16 +87,8 @@ void AddBatchRecordWidget::insertRecord() {
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
-// 	QString expdate;
-// 	if (check_inf->isChecked())
-// 		expdate = "inf";
-// 	else
-// 		expdate = edit_expiry->text();
 	QDate regdate, expdate;
-	if (check_inf->isChecked()) {
-// 		expdate = "inf";
-		expdate.setDate(-1,1,1);
-	} else {
+	if (!check_inf->isChecked()) {
 		expdate = edit_expiry->date();
 	}
 	regdate = edit_book->date();
@@ -229,7 +221,7 @@ void AddBatchRecordWidget::prepareInsert(bool visible) {
 }
 
 void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
-	unsigned int bid, pid;
+	unsigned int pid;
 	QString spec, price, unit, invoice, notes;
 	QDate reg, expiry, entry;
 	double qty, used;
@@ -237,16 +229,9 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	clearForm();
 	update_model();
 
-	BatchTableModel * m = Database::Instance().CachedBatch();
-
-// 	QModelIndex sidx = pproxy->mapFromSource(idx);
 	indexToUpdate = &idx;
 
 	Database::Instance().getBatchRecord(idx, pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
-
-// 	QModelIndexList batchl = m->match(m->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
-
-// 	abrw->prepareUpdate(idx.model()->index(idx.row(), BatchTableModel::HId).data().toUInt());
 
 	combo_products->setCurrentIndex(idx.data().toInt());
 	edit_spec->setRaw(spec);
@@ -257,6 +242,7 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	spin_qty->setMinimum(used);
 	edit_book->setRaw(reg.toString("dd/MM/yyyy"));
 	edit_expiry->setRaw(expiry.toString("dd/MM/yyyy"));
+	check_inf->setChecked(!expiry.isValid());
 	edit_invoice->setRaw(invoice);
 
 	action_addexit->setText(tr("Update record and exit"));

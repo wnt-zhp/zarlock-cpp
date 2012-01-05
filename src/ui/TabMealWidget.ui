@@ -39,7 +39,7 @@
          <item>
           <widget class="QPushButton" name="action_toggle">
            <property name="text">
-            <string>&amp;Show</string>
+            <string>Ca&amp;lendar</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
