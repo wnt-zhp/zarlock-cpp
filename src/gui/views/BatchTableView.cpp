@@ -51,6 +51,9 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Databa
 	PriceDelegate * price_delegate = new PriceDelegate;
 
 	setItemDelegateForColumn(BatchTableModel::HPrice, price_delegate);
+
+	this->setEditTriggers(NoEditTriggers);
+// 	this->setEditTriggers(DoubleClicked);
 }
 
 /**
@@ -89,7 +92,7 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 	horizontalHeader()->setResizeMode(BatchTableModel::HUnit, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HStaQty, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HEntryDate, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HExpire, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HExpiryDate, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
 

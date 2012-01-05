@@ -31,7 +31,8 @@
  **/
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
 												QSortFilterProxyModel(parent),
-												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL), cb_hide(hide), itemnum(NULL) {
+												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL),
+												cb_hide(hide), itemnum(NULL) {
 	infsymb = QString(new QChar(0x221e), 1);
 }
 
@@ -59,19 +60,19 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();
 
-	if (cb_hide and cb_hide->isChecked() and free == 0.0)
+	if (cb_hide and cb_hide->isChecked() and free == 0)
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
 
 	QDate refd;
 	if (datekey.isValid()) {
 		refd = datekey;
-		QDate regd = sourceModel()->index(sourceRow, BatchTableModel::HBook).data(BatchTableModel::RRaw).toDate();
+		QDate regd = sourceModel()->index(sourceRow, BatchTableModel::HRegDate).data(BatchTableModel::RRaw).toDate();
 		if (regd.daysTo(refd) < 0)
 			return false;
 	} else
 		refd = QDate::currentDate();
 
-	QString expds = sourceModel()->index(sourceRow, BatchTableModel::HExpire).data().toString();
+	QString expds = sourceModel()->index(sourceRow, BatchTableModel::HExpiryDate).data().toString();
 	if (expds == infsymb)
 		return true;
 
@@ -99,6 +100,10 @@ void BatchTableModelProxy::setDateKey(const QDate& dk) {
 
 void BatchTableModelProxy::setItemNum(int * item) {
 	itemnum = item;
+}
+
+void BatchTableModelProxy::allwaysAccept(const QModelIndex * idx) {
+	aaidx = idx;
 }
 
 #include "BatchTableModelProxy.moc"

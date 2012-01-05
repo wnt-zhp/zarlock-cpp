@@ -33,7 +33,10 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 // 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(&db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
-	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
+// 	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
+	table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
@@ -65,12 +68,14 @@ void TabDistributorWidget::activateUi(bool activate) {
 	}
 }
 
-void TabDistributorWidget::edit_record(const QModelIndex& idx) {
-	if (model_dist->isDirty(idx)) {
-		table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
-	} else {
-		table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	}
+void TabDistributorWidget::editRecord(const QModelIndex& idx) {
+// 	if (model_dist->isDirty(idx)) {
+// 		table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
+// 	} else {
+// 		table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+// 	}
+	adrw->prepareUpdate(idx);
+// 	widget_add_distributor->setVisible(true);
 }
 
 #include "TabDistributorWidget.moc"

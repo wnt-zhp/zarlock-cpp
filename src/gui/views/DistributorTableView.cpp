@@ -69,16 +69,18 @@ void DistributorTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 // 	hideColumn(DistributorTableModel::HId);
-	hideColumn(DistributorTableModel::HRegDate);
-// 	hideColumn(DistributorTableModel::HReason3);
+	hideColumn(DistributorTableModel::HEntryDate);
+// 	hideColumn(DistributorTableModel::HDistType);
+// 	hideColumn(DistributorTableModel::HDistTypeA);
+// 	hideColumn(DistributorTableModel::HDistTypeB);
 
 	horizontalHeader()->setResizeMode(DistributorTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HBatchId, QHeaderView::Stretch);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HQty, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(DistributorTableModel::HDistDate, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(DistributorTableModel::HReason, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(DistributorTableModel::HReason2, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(DistributorTableModel::HReason3, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HDistType, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HDistTypeA, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(DistributorTableModel::HDistTypeB, QHeaderView::ResizeToContents);
 
 	sortByColumn(DistributorTableModel::HId, Qt::AscendingOrder);
 	setSortingEnabled(true);

@@ -22,7 +22,8 @@
 #include "DataParser.h"
 
 AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::ADRWidget(),
-	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL), pproxy(NULL), hideempty(NULL) {
+	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL),
+	pproxy(NULL), hideempty(NULL), indexToUpdate(NULL) {
 	setupUi(parent);
 
 	hideempty = new QCheckBox;
@@ -31,8 +32,8 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	action_add->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogDiscardButton) );
 
-	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
-	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clear_form()));
+	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
+	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clearForm()));
 // 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
 
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
@@ -61,7 +62,7 @@ AddDistributorRecordWidget::~AddDistributorRecordWidget() {
 	delete hideempty;
 }
 
-bool AddDistributorRecordWidget::insert_record() {
+bool AddDistributorRecordWidget::insertRecord() {
 	Database & db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
@@ -71,10 +72,21 @@ bool AddDistributorRecordWidget::insert_record() {
 	if (!DataParser::date(edit_date->text(), df))
 		return false;
 
-	db.addDistributorRecord(batch_id, spin_qty->value(), df.toString(Qt::ISODate),
-							QDate::currentDate().toString(Qt::ISODate),
-							edit_reason->text(), edit_reason2->text(),
-							DistributorTableModel::RGeneral);
+	if (indexToUpdate) {
+		if (db.updateDistributorRecord(copyOfIndexToUpdate, batch_id, spin_qty->value(), df,
+			QDate::currentDate(), edit_reason->text(), edit_reason2->text(), DistributorTableModel::RGeneral)) {
+				indexToUpdate = NULL;
+				prepareInsert(true);
+				edit_date->setFocus();
+			}
+	} else {
+		if (db.addDistributorRecord(batch_id, spin_qty->value(), df.toString(Qt::ISODate),
+			QDate::currentDate().toString(Qt::ISODate), edit_reason->text(), edit_reason2->text(),
+			DistributorTableModel::RGeneral)) {
+				prepareInsert(true);
+				edit_date->setFocus();
+			}
+	}
 
 	update_model();
 
@@ -82,31 +94,40 @@ bool AddDistributorRecordWidget::insert_record() {
 	return true;
 }
 
-void AddDistributorRecordWidget::clear_form() {
-	spin_qty->setValue(0.0);;
+void AddDistributorRecordWidget::clearForm() {
+	spin_qty->setValue(0.0);
 	spin_qty->setSuffix("");
 	edit_date->clear();
 	edit_reason->clear();
 	edit_reason2->clear();
 }
 
-void AddDistributorRecordWidget::cancel_form() {
+void AddDistributorRecordWidget::cancelForm() {
+	prepareInsert(true);
 	emit canceled(false);
 }
 
 void AddDistributorRecordWidget::validateAdd() {
 	QModelIndex idx = pproxy->mapToSource(pproxy->index(combo_products->currentIndex(), 0));
 
-	double qtyused = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toDouble();
-	double qtytotal = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
+	unsigned int fake = 0;
+	unsigned int qtyused = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toUInt();
+	unsigned int qtytotal = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toUInt();
 	QString qunit = Database::Instance().CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+
+// 	if (indexToUpdate and (idx.row() == copyOfIndexToUpdate.row())) {
+	if (indexToUpdate and (idx.row() == sourceRowToUpdate)) {
+		fake = indexToUpdate->model()->index(indexToUpdate->row(), DistributorTableModel::HQty).data(DistributorTableModel::RRaw).toUInt();
+	}
+
+	unsigned int totalmax = qtytotal - qtyused + fake;
 
 	label_unit->setText(tr("x %1").arg(qunit));
 
 	QString max;
-	max.sprintf("%.2f", qtytotal-qtyused);
+	max.sprintf("%.2f", totalmax/100.0);
 	spin_qty->setSuffix(tr(" of %1").arg(max));
-	spin_qty->setMaximum(qtytotal-qtyused);
+	spin_qty->setMaximum(totalmax/100.0);
 
 	if (edit_date->ok()) {
 		combo_products->setEnabled(true);
@@ -159,6 +180,57 @@ void AddDistributorRecordWidget::update_model() {
 	edit_date->setCompleter(completer_date);
 	edit_reason->setCompleter(completer_reason);
 	edit_reason2->setCompleter(completer_reason2);
+}
+
+void AddDistributorRecordWidget::prepareInsert(bool visible) {
+	action_add->setText(tr("Insert record and exit"));
+	indexToUpdate = NULL;
+	if (visible) {
+	} else {
+		clearForm();
+	}
+}
+
+void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
+	unsigned int bid;
+	unsigned int qty;
+
+	QString spec, price, disttypea, disttypeb;
+	QDate reg, entry;
+	DistributorTableModel::Reasons disttype;
+	
+	clearForm();
+	update_model();
+
+	copyOfIndexToUpdate = idx;
+	indexToUpdate = &copyOfIndexToUpdate;	// save index to update
+
+	BatchTableModel * bm = Database::Instance().CachedBatch();
+
+	QModelIndex sidx = idx.model()->index(idx.row(), DistributorTableModel::HBatchId);	// source index for proxy fpr column HBatchID
+
+	// Find batch record index for selected distributor index
+	QModelIndexList batchl = bm->match(bm->index(0, BatchTableModel::HId), Qt::DisplayRole, sidx.data(DistributorTableModel::RRaw).toUInt());
+
+	if (batchl.size() != 1)
+		return;
+
+	Database::Instance().getDistributorRecord(sidx, bid, qty, reg, entry, disttype, disttypea, disttypeb);	// get record
+
+	edit_date->setRaw(reg.toString("dd/MM/yyyy"));
+
+	sourceRowToUpdate = batchl.at(0).row();		// source row number
+
+	pproxy->setItemNum(&sourceRowToUpdate);		// update proxy
+	validateAdd();								// revalidate proxy model
+
+	combo_products->setCurrentIndex(pproxy->mapFromSource(batchl.at(0)).row());
+	spin_qty->setValue(qty/100.0);
+// 	edit_reason->setRaw(disttype);
+	edit_reason2->setRaw(disttypea);
+	
+	action_add->setText(tr("Update record and exit"));
+	validateAdd();								// revalidate proxy model
 }
 
 #include "AddDistributorRecordWidget.moc"

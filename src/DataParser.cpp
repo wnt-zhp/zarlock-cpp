@@ -69,7 +69,7 @@ bool DataParser::quantity(const QString & data, QString & qty_formated) {
 	return status;
 }
 
-bool DataParser::price(const QString & data, double & price_formated, double & tax_formated) {
+bool DataParser::price(const QString & data, double & netto_formated, double & vat_formated) {
 	QRegExp rx("^\\s*(\\d+([.,]?\\d+)?)\\s*([p\\+]\\s*(23|8|5|0)\%?)?\\s*(zl)?\\s*$");
 
 // 	PR(rx.indexIn(data));
@@ -82,8 +82,8 @@ bool DataParser::price(const QString & data, double & price_formated, double & t
 
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
-		price_formated = rx.cap(1).toDouble();
-		tax_formated = rx.cap(4).toDouble();
+		netto_formated = rx.cap(1).toDouble();
+		vat_formated = rx.cap(4).toDouble();
 		return true;
 	}
 	return false;

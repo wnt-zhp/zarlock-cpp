@@ -36,12 +36,15 @@ signals:
 
 public slots:
 	void update_model();
+	void prepareInsert(bool visible);
+	void prepareUpdate(const QModelIndex & idx);
+// 	void prepareUpdate(unsigned int bid, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QString& reg, const QString& expiry, const QString& entry, const QString& invoice, const QString& notes);
 
 private slots:
-	void insert_record();
-	void insert_record_and_exit();
-	void clear_form();
-	void cancel_form();
+	void insertRecord();
+	void insertRecordExit();
+	void clearForm();
+	void cancelForm();
 	void validateAdd();
 	void validateCB(int i);
 
@@ -55,6 +58,8 @@ private:
 	QCompleter * completer_expiry;
 
 	QSortFilterProxyModel * pproxy;
+
+	const QModelIndex * indexToUpdate;
 };
 
 #endif // ADDBATCHRECORDWIDGET_H

@@ -150,9 +150,11 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		} else
 			return;
 	} else {
-		QString d = QDate::fromString(mfl->proxyModel()->ref().toString(Qt::ISODate), Qt::DefaultLocaleShortDate).toString(Qt::ISODate);
-		if (db.updateDistributorRecord(dist_idx.row(), batch_idx.data().toInt(), quantity,
-				d, d, QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+		QDate d = QDate::fromString(mfl->proxyModel()->ref().toString(Qt::ISODate), Qt::DefaultLocaleShortDate)/*.toString(Qt::ISODate)*/;
+// 		if (db.updateDistributorRecord(dist_idx.row(), batch_idx.data().toInt(), quantity,
+// 				d, d, QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
+		if (db.updateDistributorRecord(dist_idx, batch_idx.data().toUInt(), quantity,
+			d, d, QString("%1").arg(mfl->proxyModel()->key()), "", DistributorTableModel::RMeal)) {
 			empty = false;
 		} else
 			return;

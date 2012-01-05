@@ -37,11 +37,13 @@ signals:
 
 public slots:
 	void update_model();
+	void prepareInsert(bool visible);
+	void prepareUpdate(const QModelIndex & idx);
 
 private slots:
-	bool insert_record();
-	void clear_form();
-	void cancel_form();
+	bool insertRecord();
+	void clearForm();
+	void cancelForm();
 	void validateAdd();
 
 private:
@@ -52,6 +54,11 @@ private:
 
 	BatchTableModelProxy * pproxy;
 	QCheckBox * hideempty;
+
+	const QModelIndex * indexToUpdate;
+	QModelIndex copyOfIndexToUpdate;
+	QModelIndex sourceIndex;
+	int sourceRowToUpdate;
 };
 
 #endif // ADDDISTRIBUTERECORDWIDGET_H

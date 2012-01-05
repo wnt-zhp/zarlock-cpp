@@ -54,7 +54,7 @@ protected:
 	bool autosubmit;
 
 public:
-	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HRegDate, HReason, HReason2, HReason3 };
+	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HEntryDate, HDistType, HDistTypeA, HDistTypeB };
 	enum Reasons {RGeneral = 0, RExpired, RMeal };
 	enum Meal {MBreakfast = 0, M2Breakfast, MLunch, MDiner, MOther1, MOther2 };
 

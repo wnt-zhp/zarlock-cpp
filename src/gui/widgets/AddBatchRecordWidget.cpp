@@ -26,7 +26,8 @@
 
 AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
-	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL) {
+	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL),
+	indexToUpdate(NULL) {
 	setupUi(parent);
 
 	action_addexit->setEnabled(false);
@@ -34,9 +35,9 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 
 	connect(edit_book, SIGNAL(dataChanged()), edit_expiry, SLOT(doRefresh()));
 
-	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
-	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
-	connect(action_cancel, SIGNAL(clicked(bool)), this, SLOT(cancel_form()));
+	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordExit()));
+	connect(action_cancel, SIGNAL(clicked(bool)), this, SLOT(cancelForm()));
 
 // 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateCB(int)));
@@ -72,39 +73,60 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 	if (pproxy) delete pproxy;
 }
 
-void AddBatchRecordWidget::insert_record() {
+void AddBatchRecordWidget::insertRecord() {
 	Database & db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
 	int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
 
 	// price
-	double price, tax;
-	DataParser::price(edit_price->text(), price, tax);
+	double netto, vat;
+	DataParser::price(edit_price->text(), netto, vat);
 	QString uprice;
-	uprice.sprintf("%.2f+%d", price/spin_qty->value(), int(tax));
+	uprice.sprintf("%d", int(netto*(100+vat)));
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 
-	QString expdate;
-	if (check_inf->isChecked())
-		expdate = "inf";
-	else
-		expdate = edit_expiry->text();
-		
-	db.addBatchRecord(prod_id, edit_spec->text(), edit_book->text(true), QDate::currentDate().toString(Qt::ISODate),
-		expdate, spin_qty->value(), 0.0, edit_unit->text(), unitprice, edit_invoice->text(), ":)");
+// 	QString expdate;
+// 	if (check_inf->isChecked())
+// 		expdate = "inf";
+// 	else
+// 		expdate = edit_expiry->text();
+	QDate regdate, expdate;
+	if (check_inf->isChecked()) {
+// 		expdate = "inf";
+		expdate.setDate(-1,1,1);
+	} else {
+		expdate = edit_expiry->date();
+	}
+	regdate = edit_book->date();
 
-	clear_form();
-	combo_products->setFocus();
+	// FIXME: edit_date->book() jest potencjalnie miejscem bledow
+	if (indexToUpdate) {
+		if (db.updateBatchRecord(*indexToUpdate, prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+			spin_qty->value()/100, /*0,*/ regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+
+			indexToUpdate = NULL;
+			clearForm();
+			combo_products->setFocus();
+		}
+	} else {
+		if (db.addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+			spin_qty->value()/100, 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+
+			clearForm();
+			combo_products->setFocus();
+		}
+	}
 }
 
-void AddBatchRecordWidget::insert_record_and_exit() {
-	insert_record();
-	cancel_form();
+void AddBatchRecordWidget::insertRecordExit() {
+	insertRecord();
+// 	cancelForm();
+	this->setVisible(false);
 }
 
-void AddBatchRecordWidget::clear_form() {
+void AddBatchRecordWidget::clearForm() {
 	edit_spec->clear();
 // 	combo_spec->clear();
 	edit_expiry->clear();
@@ -117,7 +139,8 @@ void AddBatchRecordWidget::clear_form() {
 // 	edit_book->clear();
 }
 
-void AddBatchRecordWidget::cancel_form() {
+void AddBatchRecordWidget::cancelForm() {
+	prepareInsert(false);
 	emit canceled(false);
 }
 
@@ -135,7 +158,6 @@ void AddBatchRecordWidget::validateCB(int i) {
 
 	validateAdd();
 }
-
 
 void AddBatchRecordWidget::validateAdd() {
 // 	PR(combo_products->currentIndex());
@@ -196,5 +218,49 @@ void AddBatchRecordWidget::update_model() {
 	validateCB(combo_products->currentIndex());
 }
 
+void AddBatchRecordWidget::prepareInsert(bool visible) {
+	action_addexit->setText(tr("Insert record and exit"));
+	action_addnext->setText(tr("Insert record and add next"));
+	indexToUpdate = NULL;
+	if (visible) {
+	} else {
+		clearForm();
+	}
+}
+
+void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
+	unsigned int bid, pid;
+	QString spec, price, unit, invoice, notes;
+	QDate reg, expiry, entry;
+	double qty, used;
+
+	clearForm();
+	update_model();
+
+	BatchTableModel * m = Database::Instance().CachedBatch();
+
+// 	QModelIndex sidx = pproxy->mapFromSource(idx);
+	indexToUpdate = &idx;
+
+	Database::Instance().getBatchRecord(idx, pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
+
+// 	QModelIndexList batchl = m->match(m->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+
+// 	abrw->prepareUpdate(idx.model()->index(idx.row(), BatchTableModel::HId).data().toUInt());
+
+	combo_products->setCurrentIndex(idx.data().toInt());
+	edit_spec->setRaw(spec);
+	edit_price->setRaw(QString().setNum(price.toDouble()/100));
+	check_uprice->setChecked(true);
+	edit_unit->setRaw(unit);
+	spin_qty->setValue(qty);
+	spin_qty->setMinimum(used);
+	edit_book->setRaw(reg.toString("dd/MM/yyyy"));
+	edit_expiry->setRaw(expiry.toString("dd/MM/yyyy"));
+	edit_invoice->setRaw(invoice);
+
+	action_addexit->setText(tr("Update record and exit"));
+	action_addnext->setText(tr("Update record and add next"));
+}
 
 #include "AddBatchRecordWidget.moc"

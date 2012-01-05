@@ -63,14 +63,16 @@ public:
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool removeProductsRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
-	virtual bool addBatchRecord(int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
-	virtual bool updateBatchRecord(int bid, int pid, const QString& spec, const QString& book, const QString& reg, const QString& expiry, double qty, double used, const QString& unit, const QString& price, const QString& invoice, const QString& notes);
+	virtual bool addBatchRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
+	virtual bool getBatchRecord(const QModelIndex & idx, unsigned int & pid, QString& spec, QString& price, QString& unit, double & qty, double & used, QDate&reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 
 	virtual bool addDistributorRecord(int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons, bool autoupdate = true);
-	virtual bool updateDistributorRecord(int, int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons);
+	virtual bool updateDistributorRecord(const QModelIndex & idx, unsigned int bid, double qty, const QDate & ddate, const QDate & rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3);
 	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);
+	virtual bool getDistributorRecord(const QModelIndex & idx, unsigned int & bid, unsigned int & qty, QDate & distdate, QDate & entrydate, DistributorTableModel::Reasons & disttype, QString & disttypea, QString & disttypeb);
 
 	virtual bool addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
 	virtual bool updateMealRecord(int Mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);

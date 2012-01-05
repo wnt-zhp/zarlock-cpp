@@ -29,7 +29,7 @@ void DateInput::setDateReferenceObj(const DateInput * ref) {
 	data_ref = ref;
 }
 
-const QDate & DateInput::date() const {
+const QDate & DateInput::date() const { // TODO: Fix this buggy place
 	QDate d;
 // 	PR(displaytext.toStdString());
 	if (is_ok) {
@@ -64,6 +64,11 @@ bool DateInput::verifyText(const QString & raw, QString & placeholder) {
 
 void DateInput::doRefresh() {
 	CustomLineEdit::doRefresh();
+}
+
+// FIXME: zrob cos z tym
+const QString & DateInput::Formated() {
+	return QString("null");
 }
 
 #include "DateInput.moc"

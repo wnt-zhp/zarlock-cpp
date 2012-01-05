@@ -40,6 +40,7 @@ public:
 
 	virtual void setDateKey(const QDate & dk);
 	virtual void setItemNum(int * item);
+	virtual void allwaysAccept(const QModelIndex * idx);
 
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -52,6 +53,7 @@ private:
 	QDate datekey;
 	int * itemnum;
 	QString infsymb;
+	const QModelIndex * aaidx;
 };
 
 #endif // BATCHTABLEMODELPROXY_H

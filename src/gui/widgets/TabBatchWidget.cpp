@@ -47,19 +47,19 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	list_messages->setVisible(false);
 
-	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(add_batch_record(bool)));
+	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addBatchRecord(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
 
-	connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
-	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-	connect(cb_hideempty, SIGNAL(clicked()), this, SLOT(set_filter()));
+	connect(cb_expired, SIGNAL(clicked()), this, SLOT(setFilter()));
+	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
+	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
+	connect(cb_hideempty, SIGNAL(clicked()), this, SLOT(setFilter()));
 
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
-	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
+// 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
 
 	syncdb = new QAction(tr("Sync database"), this);
 	createSMrep = new QAction(tr("Create SM reports"), this);
@@ -78,6 +78,8 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
 	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
+
+	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -125,25 +127,31 @@ void TabBatchWidget::activateUi(bool activate) {
 	}
 }
 
-void TabBatchWidget::add_batch_record(bool newrec) {
-	if (newrec) {
-// 		table_products->setVisible(false);
-		widget_add_batch->setVisible(true);
-	} else {
-// 		table_products->setVisible(true);
-		widget_add_batch->setVisible(false);
-	}
+void TabBatchWidget::addBatchRecord(bool newrec) {
+	abrw->prepareInsert(newrec);
+// 	if (newrec) {
+// // 		table_products->setVisible(false);
+// 		widget_add_batch->setVisible(true);
+// 	} else {
+// // 		table_products->setVisible(true);
+// 		widget_add_batch->setVisible(false);
+// 	}
+	widget_add_batch->setVisible(newrec);
 }
 
-void TabBatchWidget::edit_record(const QModelIndex& idx) {
-	if (model_batch->isDirty(idx)) {
-		table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
-	} else {
-		table_batch->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	}
+void TabBatchWidget::editRecord(const QModelIndex& idx) {
+// 	if (model_batch->isDirty(idx)) {
+// 		table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
+// 	} else {
+// 		table_batch->setEditTriggers(QAbstractItemView::NoEditTriggers);
+// 	}
+
+// 	abrw->prepareUpdate(idx.model()->index(idx.row(), BatchTableModel::HId).data().toUInt());
+	abrw->prepareUpdate(idx);
+	widget_add_batch->setVisible(true);
 }
 
-void TabBatchWidget::set_filter() {
+void TabBatchWidget::setFilter() {
 	modelproxy_batch->invalidate();
 	table_batch->setModel(modelproxy_batch);
 }

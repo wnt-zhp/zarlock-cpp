@@ -33,6 +33,7 @@ public:
 
 public slots:
 	void doRefresh();
+	const QString & Formated();
 
 private slots:
 	bool verifyText(const QString &, QString &);

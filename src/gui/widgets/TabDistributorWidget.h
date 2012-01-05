@@ -39,7 +39,7 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void edit_record(const QModelIndex & idx);
+	void editRecord(const QModelIndex & idx);
 
 private:
 	Database & db;

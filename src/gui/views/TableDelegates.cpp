@@ -28,7 +28,8 @@
 void PriceDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QStyleOptionViewItemV4 opt = option;
 	initStyleOption(&opt, index);
-	opt.text = tr("%1 zl").arg(index.data(Qt::DisplayRole).toDouble(), 0, 'g', 10);
+// 	opt.text = tr("%1 zl").arg(index.data(Qt::DisplayRole).toDouble(), 0, 'g', 10);
+	opt.text = tr("%1 zl").arg(index.data(Qt::DisplayRole).toString());
 
 	const QWidget * widget/* = QStyledItemDelegatePrivate::widget(option)*/;
 	if (const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option))

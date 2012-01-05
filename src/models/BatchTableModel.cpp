@@ -73,7 +73,20 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 			}
 			break;
 		case Qt::EditRole:
-			return raw(idx);
+			if (idx.column() == HStaQty) {
+				return raw(idx).toInt();
+// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
+			}
+
+// 			else if (idx.column() == HPrice) {
+// 				double brutto = QSqlTableModel::data(idx, Qt::EditRole).toDouble();
+// 				QString var;
+// 				return var.sprintf("%.2f", brutto/100);
+// // 				return brutto/100;
+// 			}
+
+			else
+				return raw(idx);
 			break;
 		case Qt::DisplayRole:
 		case Qt::BackgroundRole:
@@ -88,7 +101,7 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 	int col = idx.column();
 	if (role == Qt::TextAlignmentRole and (col == HPrice or col == HUnit or col == HStaQty))
 		return Qt::AlignRight + Qt::AlignVCenter;
-	if (role == Qt::TextAlignmentRole and (col == HBook or col == HExpire))
+	if (role == Qt::TextAlignmentRole and (col == HRegDate or col == HExpiryDate))
 		return Qt::AlignCenter;
 
 	return QSqlTableModel::data(idx, role);
@@ -106,11 +119,12 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 	switch (role) {
 		case Qt::EditRole:
 			if (index.column() == HPrice) {
-				double price, tax;
-				if (!DataParser::price(value.toString(), price, tax)) {
+				double netto, vat;
+				if (!DataParser::price(value.toString(), netto, vat)) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
+				return QSqlTableModel::setData(index, int(netto*(100+vat)), role);
 			}
 
 			if (index.column() == HUnit) {
@@ -121,33 +135,37 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 				}
 			}
 
-			if (index.column() == HBook) {
-				QDate date;
-				if (DataParser::date(value.toString(), date)) {
-					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
-				} else {
-					inputErrorMsgBox(value.toString());
-					return false;
-				}
+			if (index.column() == HRegDate) {
+// 				QDate date;
+// 				if (DataParser::date(value.toString(), date)) {
+// 					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
+// 				} else {
+// 					inputErrorMsgBox(value.toString());
+// 					return false;
+// 				}
+				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
-			if (index.column() == HExpire) {
-				QDate date;
-				if (value.toString() != QString("inf"))
-				if (!DataParser::date(value.toString(), date, this->index(index.row(), HBook).data(Qt::DisplayRole).toDate())) {
-					inputErrorMsgBox(value.toString());
-					return false;
-				}
+			if (index.column() == HExpiryDate) {
+// 				QDate date;
+// 				if (value.toString() != QString("inf"))
+// 				if (!DataParser::date(value.toString(), date, this->index(index.row(), HRegDate).data(Qt::DisplayRole).toDate())) {
+// 					inputErrorMsgBox(value.toString());
+// 					return false;
+// 				}
+				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
 			if (index.column() == HStaQty) {
-				int used = this->index(index.row(), HUsedQty).data().toDouble() * 100;
-				int total = value.toDouble() * 100;
+				int used = this->index(index.row(), HUsedQty).data().toInt();
+				int total = value.toDouble()*100;
 // 				int free = total - used;
+
 				if (total < used) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
+				return QSqlTableModel::setData(index, total, role);
 			}
 			break;
 	}
@@ -167,8 +185,8 @@ bool BatchTableModel::select() {
 	setHeaderData(HPrice,		Qt::Horizontal, tr("Price"));
 	setHeaderData(HUnit,		Qt::Horizontal, tr("Unit"));
 	setHeaderData(HStaQty,		Qt::Horizontal, tr("Quantity"));
-	setHeaderData(HBook,		Qt::Horizontal, tr("Booking"));
-	setHeaderData(HExpire,		Qt::Horizontal, tr("Expiry"));
+	setHeaderData(HRegDate,		Qt::Horizontal, tr("Booking"));
+	setHeaderData(HExpiryDate,		Qt::Horizontal, tr("Expiry"));
 	setHeaderData(HUsedQty,		Qt::Horizontal, tr("Used"));
 	setHeaderData(HEntryDate,	Qt::Horizontal, tr("Entry date"));
 	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));
@@ -210,17 +228,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			else if (idx.column() == HPrice) {
-				QString data = idx.data(Qt::EditRole).toString();
-				double price, tax;
-				if (DataParser::price(data, price, tax)) {
-					QString var;
-					return var.sprintf("%.2f", price*(1.0+tax/100.0));
-				} else {
-					if (role == Qt::BackgroundRole)
-						return QColor(Qt::red);
-					else
-						return QVariant(tr("Parser error!"));
-				}
+				return idx.data(Qt::EditRole);
 			}
 
 			else if (idx.column() == HUnit) {
@@ -235,23 +243,24 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				}
 			}
 
-			else if (idx.column() == HBook) {
+			else if (idx.column() == HRegDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 
-			else if (idx.column() == HExpire) {
+			else if (idx.column() == HExpiryDate) {
 				if (idx.data(Qt::EditRole).toString() == QString("inf"))
 					return QString(new QChar(0x221e), 1);
-		
-				QDate date;
-				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(idx.row(), HBook), Qt::DisplayRole).toDate())) {
-					return date.toString(Qt::DefaultLocaleShortDate);
-				} else {
-					if (role == Qt::BackgroundRole)
-						return QColor(Qt::red);
-					else
-						return QVariant(tr("Parser error!"));
-				}
+
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+// 				QDate date;
+// 				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(idx.row(), HRegDate), Qt::DisplayRole).toDate())) {
+// 					return date.toString(Qt::DefaultLocaleShortDate);
+// 				} else {
+// 					if (role == Qt::BackgroundRole)
+// 						return QColor(Qt::red);
+// 					else
+// 						return QVariant(tr("Parser error!"));
+// 				}
 			}
 
 			else if (idx.column() == HStaQty) {
@@ -259,7 +268,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				double total = raw(idx).toDouble();
 				double free = total - used;
 				QString qty;
-				return tr("%1 of %2").arg(free, 0, 'f', 2).arg(total, 0, 'f', 2);
+				return tr("%1 of %2").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
 
 			else if (idx.column() == HENameQty) {
@@ -270,7 +279,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			break;
 		case Qt::BackgroundRole:
-			QModelIndex expidx = index(idx.row(), BatchTableModel::HExpire);
+			QModelIndex expidx = index(idx.row(), BatchTableModel::HExpiryDate);
 			QDate expd = QDate::fromString(data(expidx, Qt::DisplayRole).toString(), Qt::DefaultLocaleShortDate);
 			int daystoexp = expd.daysTo(QDate::currentDate());
 
@@ -300,8 +309,14 @@ QVariant BatchTableModel::raw(const QModelIndex & idx) const {
 // 	if (idx.column() == HRegDate) {
 // 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 // 	}
-	if (idx.column() == HBook) {
-		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString("dd-MM-yyyy");
+	if (idx.column() == HRegDate) {
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
+	}
+	if (idx.column() == HExpiryDate) {
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
+	}
+	if (idx.column() == HEntryDate) {
+		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
 	}
 
 	return QSqlTableModel::data(idx, Qt::DisplayRole);

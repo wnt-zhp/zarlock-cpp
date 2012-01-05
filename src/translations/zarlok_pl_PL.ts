@@ -992,7 +992,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="35"/>
         <source>Value &lt;b&gt;%1&lt;/b&gt; which you try store in database is not valid.</source>
-        <translation>Wartość &lt;b&gt;%1&lt;/b&gt;, którą cchesz zapisać w bazie danych nie jest prawidłowa.</translation>
+        <translation>Wartość &lt;b&gt;%1&lt;/b&gt;, którą chcesz zapisać w bazie danych nie jest prawidłowa.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="36"/>

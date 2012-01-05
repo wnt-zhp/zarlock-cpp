@@ -218,7 +218,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 
 	QModelIndexList idxl = db.CachedDistributor()->match(db.CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
 	for (int i = 0; i < idxl.count(); ++i) {
-		if (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HReason3).data().toInt() != 2)
+		if (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt() != 2)
 			continue;
 
 		spec = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data().toString();
@@ -235,7 +235,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 			}
 		}
 
-		switch (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HReason).data().toInt()) {
+		switch (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt()) {
 			case 0:
 				cont0.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
 				break;

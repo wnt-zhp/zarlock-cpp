@@ -44,9 +44,9 @@ MealTableModelProxy::~MealTableModelProxy() {
 
 
 bool MealTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-	int rmeal = sourceModel()->index(sourceRow, DistributorTableModel::HReason3, sourceParent).data().toInt();
-	int mid = sourceModel()->index(sourceRow, DistributorTableModel::HReason, sourceParent).data().toInt();
-	QString mdate = sourceModel()->index(sourceRow, DistributorTableModel::HDistDate, sourceParent).data(DistributorTableModel::RRaw).toString();
+	int rmeal = sourceModel()->index(sourceRow, DistributorTableModel::HDistType, sourceParent).data().toInt();
+	int mid = sourceModel()->index(sourceRow, DistributorTableModel::HDistTypeA, sourceParent).data().toInt();
+	QString mdate = sourceModel()->index(sourceRow, DistributorTableModel::HDistTypeB, sourceParent).data(DistributorTableModel::RRaw).toString();
 
 	if (rmeal == DistributorTableModel::RMeal and mid == mealkey and mdate == dateref.toString(Qt::ISODate))
 		return true;

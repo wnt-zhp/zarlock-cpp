@@ -62,10 +62,24 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
 			return raw(idx);
 			break;
 		case Qt::EditRole:
-		case Qt::DisplayRole:
-			return display(idx, role);
+			if (idx.column() == HQty) {
+				return raw(idx).toDouble();
+				// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
+			}
+			
+			else
+				return display(idx, role);
 			break;
+		case Qt::DisplayRole:
+			if (idx.column() == HQty) {
+				return raw(idx).toDouble() / 100.0;
+				// 				return tr("%1").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
+			}
 
+			else
+				return display(idx, role);
+			break;
+			
 		case Qt::TextAlignmentRole:
 			if (col == HQty)
 				return Qt::AlignRight + Qt::AlignCenter;
@@ -92,21 +106,23 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 	switch (role) {
 		case Qt::EditRole:
 			if (index.column() == HDistDate) {
-				QDate date;
-				if (DataParser::date(value.toString(), date)) {
-					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
-				} else {
-					inputErrorMsgBox(value.toString());
-					return false;
-				}
+// 				QDate date;
+// 				if (DataParser::date(value.toString(), date)) {
+// 					return QSqlTableModel::setData(index, date.toString(Qt::ISODate), Qt::EditRole);
+// 				} else {
+// 					inputErrorMsgBox(value.toString());
+// 					return false;
+// 				}
+				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
-			if (index.column() == HRegDate) {
-				QDate date;
-				if (!DataParser::date(value.toString(), date)) {
-					inputErrorMsgBox(value.toString());
-					return false;
-				}
+			if (index.column() == HEntryDate) {
+// 				QDate date;
+// 				if (!DataParser::date(value.toString(), date)) {
+// 					inputErrorMsgBox(value.toString());
+// 					return false;
+// 				}
+				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
 			}
 
 			if (index.column() == HQty) {
@@ -114,25 +130,25 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				int bidrow = -1;
 
 				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(RRaw));
-				if (!qmil.count()) {
+				if (qmil.count() != 1) {
 					return false;
 				}
 				bidrow = qmil.at(0).row();
 
-				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data().toDouble() * 100;
-
+				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
+PR(used);
 // 				double used = ->index()
 // 				this->index(index.row(), HUsedQty).data().toDouble();
-				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toDouble() * 100;
-				int fake = index.data().toDouble() * 100;
-
+				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
+				int fake = index.data(Qt::EditRole).toInt();
+PR(total); PR(fake);
 				int free = total - used + fake;
-
-				if (free < (value.toDouble() * 100)) {
+PR(free);PR(value.toInt());
+				if (free < (value.toInt() * 100)) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
-				return QSqlTableModel::setData(index, value, role);
+				return QSqlTableModel::setData(index, value.toDouble()*100, role);
 			}
 			break;
 	}
@@ -146,14 +162,14 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
  * @return bool stan otwarcia tabeli
  **/
 bool DistributorTableModel::select() {
-	setHeaderData(HId,		Qt::Horizontal, tr("ID"));
-	setHeaderData(HBatchId,	Qt::Horizontal, tr("Batch"));
-	setHeaderData(HQty,		Qt::Horizontal, tr("Quantity"));
-	setHeaderData(HDistDate,Qt::Horizontal, tr("Distributing date"));
-	setHeaderData(HRegDate,	Qt::Horizontal, tr("Registered"));
-	setHeaderData(HReason,	Qt::Horizontal, tr("Main reason"));
-	setHeaderData(HReason2,	Qt::Horizontal, tr("Sub reason"));
-	setHeaderData(HReason3,	Qt::Horizontal, tr("Distribution type"));
+	setHeaderData(HId,			Qt::Horizontal, tr("ID"));
+	setHeaderData(HBatchId,		Qt::Horizontal, tr("Batch"));
+	setHeaderData(HQty,			Qt::Horizontal, tr("Quantity"));
+	setHeaderData(HDistDate,	Qt::Horizontal, tr("Distributing date"));
+	setHeaderData(HEntryDate,	Qt::Horizontal, tr("Registered"));
+	setHeaderData(HDistType,	Qt::Horizontal, tr("Distribution type"));
+	setHeaderData(HDistTypeA,	Qt::Horizontal, tr("Main reason"));
+	setHeaderData(HDistTypeB,	Qt::Horizontal, tr("Sub reason"));
 
 	if (!QSqlTableModel::select())
 		return false;
@@ -181,7 +197,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 				}
 
 			} else if (idx.column() == HDistDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString("dd-MM-yyyy");
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString("dd-MM-yyyy");
 			}
 			break;
 		case Qt::DisplayRole:
@@ -192,15 +208,15 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 				}
 			}
 
-			else if (idx.column() == HRegDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+			else if (idx.column() == HEntryDate) {
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString(Qt::DefaultLocaleShortDate);
 			}
 
 			else if (idx.column() == HDistDate) {
-				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString(Qt::DefaultLocaleShortDate);
 			}
-			else if (idx.column() == HReason2) {
-				if (index(idx.row(), DistributorTableModel::HReason3).data().toInt() == RMeal) {
+			else if (idx.column() == HDistTypeB) {
+				if (index(idx.row(), DistributorTableModel::HDistType).data().toInt() == RMeal) {
 					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(RRaw));
 					if (!qmil.isEmpty()) {
 						return Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole);

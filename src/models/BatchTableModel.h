@@ -40,7 +40,7 @@ public:
 	virtual bool select();
 	virtual void autoSubmit(bool asub = true);
 
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HBook, HExpire, HUsedQty, HEntryDate, HNotes, HInvoice, HENameQty = 100 };
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HNotes, HInvoice, HENameQty = 100 };
 	enum UserRoles { RRaw = Qt::UserRole + 1, RNameQty = Qt::UserRole + 10, RFreeQty };
 
 public slots:

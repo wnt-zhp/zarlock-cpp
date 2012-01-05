@@ -44,9 +44,9 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void add_batch_record(bool newrec = true);
-	void edit_record(const QModelIndex & idx);
-	void set_filter();
+	void addBatchRecord(bool newrec = true);
+	void editRecord(const QModelIndex & idx);
+	void setFilter();
 
 	virtual void syncDB();
 

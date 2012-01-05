@@ -2,5 +2,7 @@
 <qresource>
 	<file>resources/database.sql</file>
 	<file>resources/test_data.sql</file>
+	<file>resources/database_3100.sql</file>
+	<file>resources/test_data_3100.sql</file>
 </qresource>
 </RCC>
