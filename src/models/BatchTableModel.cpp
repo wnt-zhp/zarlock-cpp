@@ -202,7 +202,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 
 			else if (idx.column() == HPrice) {
-				return idx.data(Qt::EditRole);
+				return idx.data(Qt::EditRole).toInt()/100.0;
 			}
 
 			else if (idx.column() == HUnit) {

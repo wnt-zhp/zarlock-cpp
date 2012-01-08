@@ -1002,7 +1002,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="46"/>
         <source>You try to remove %n product(s) with all associated batches and distributtions.</source>
-        <translation type="unfinished">Chcesz usunąć %n prodóktów wraz ze wszystkimi partiami i przypisanymi wydawaniami oraz posiłkami.</translation>
+        <translation>Chcesz usunąć %n produktów wraz ze wszystkimi partiami i przypisanymi wydawaniami oraz posiłkami.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="48"/>
@@ -1012,7 +1012,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="63"/>
         <source>You try to remove %n batch(es) with all distributions.</source>
-        <translation type="unfinished">Chcesz usunąć %n partii wraz ze wszystkimi przypisanymi wydawaniami oraz posiłkami.</translation>
+        <translation>Chcesz usunąć %n partii wraz ze wszystkimi przypisanymi wydawaniami oraz posiłkami.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="65"/>
@@ -1022,7 +1022,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="80"/>
         <source>You try to remove %n distribution(s).</source>
-        <translation type="unfinished">Chcesz usunąć %n wydawań partii.</translation>
+        <translation>Chcesz usunąć %n wydawań partii.</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="82"/>

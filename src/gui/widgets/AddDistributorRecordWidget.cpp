@@ -123,10 +123,7 @@ void AddDistributorRecordWidget::validateAdd() {
 	unsigned int totalmax = qtytotal - qtyused + fake;
 
 	label_unit->setText(tr("x %1").arg(qunit));
-
-	QString max;
-	max.sprintf("%.2f", totalmax/100.0);
-	spin_qty->setSuffix(tr(" of %1").arg(max));
+	spin_qty->setSuffix(tr(" of %1").arg(totalmax/100.0, 0, 'f', 2));
 	spin_qty->setMaximum(totalmax/100.0);
 
 	if (edit_date->ok()) {

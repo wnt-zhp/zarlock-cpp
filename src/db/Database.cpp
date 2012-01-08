@@ -237,7 +237,6 @@ void Database::save_database() {
 	model_products->submitAll();
 	model_distributor->submitAll();
 
-// 	updateBatchQty();
 	model_batch->submitAll();
 
 	model_meal->submitAll();
@@ -359,9 +358,6 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		if (db.driver()->hasFeature(QSqlDriver::Transactions))
 			if (!db.commit())
 				db.rollback();
-
-
-// 		updateBatchQty();
 
 		return true;
 	}
@@ -803,7 +799,7 @@ GTM
 	bool status = q.exec();
 
 	if (autoupdate) {
-		updateBatchQty(bid);
+// 		updateBatchQty(bid);
 		model_batch->select();
 		model_distributor->select();
 	}
@@ -884,13 +880,13 @@ GTM
 	}
 GTM
 	status = model_distributor->submitAll();
-	if (status && submitBatches) {
-		QMap<int, int>::iterator it = idmap.begin();
-		while(it != idmap.end()) {
-			updateBatchQty((it++).key());
-		}
-		status &= model_batch->submitAll();
-	}
+// 	if (status && submitBatches) {
+// 		QMap<int, int>::iterator it = idmap.begin();
+// 		while(it != idmap.end()) {
+// 			updateBatchQty((it++).key());
+// 		}
+// 		status &= model_batch->submitAll();
+// 	}
 GTM
 	return status;
 }

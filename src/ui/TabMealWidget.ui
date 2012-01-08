@@ -38,9 +38,6 @@
          </item>
          <item>
           <widget class="QPushButton" name="action_toggle">
-           <property name="text">
-            <string>Ca&amp;lendar</string>
-           </property>
            <property name="checkable">
             <bool>true</bool>
            </property>
@@ -107,7 +104,7 @@
          <item>
           <widget class="QLabel" name="label_data">
            <property name="text">
-            <string>@Data</string>
+            <string notr="true">@Data</string>
            </property>
           </widget>
          </item>
@@ -123,7 +120,7 @@
        <item>
         <widget class="QGroupBox" name="group_meals">
          <property name="title">
-          <string>@Day</string>
+          <string notr="true">@Day</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">

@@ -82,8 +82,7 @@ void AddBatchRecordWidget::insertRecord() {
 	// price
 	double netto, vat;
 	DataParser::price(edit_price->text(), netto, vat);
-	QString uprice;
-	uprice.sprintf("%d", int(netto*(100+vat)));
+	QString uprice = QString("%1").arg(int(netto*(100+vat)));
 	// unit price
 	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
 

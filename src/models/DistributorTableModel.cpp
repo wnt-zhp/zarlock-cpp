@@ -250,10 +250,10 @@ GTM
 
 	this->submitAll();
 GTM
-	for (int i = topleft.row(); i <= bottomright.row(); ++i)
-		if (topleft.column() == HQty) {
-			Database::Instance().updateBatchQty(index(i, HBatchId).data(RRaw).toInt());
-		}
+// 	for (int i = topleft.row(); i <= bottomright.row(); ++i)
+// 		if (topleft.column() == HQty) {
+// 			Database::Instance().updateBatchQty(index(i, HBatchId).data(RRaw).toInt());
+// 		}
 GTM
 	Database::Instance().CachedBatch()->select();
 GTM
