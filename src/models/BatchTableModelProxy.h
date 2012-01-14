@@ -52,7 +52,6 @@ private:
 	const QCheckBox * cb_hide;
 	QDate datekey;
 	int * itemnum;
-	QString infsymb;
 	const QModelIndex * aaidx;
 };
 

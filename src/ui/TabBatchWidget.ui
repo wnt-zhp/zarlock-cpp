@@ -135,6 +135,17 @@
    <header>BatchTableView.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>list_messages</tabstop>
+  <tabstop>edit_filter_batch</tabstop>
+  <tabstop>cb_expired</tabstop>
+  <tabstop>cb_aexpired</tabstop>
+  <tabstop>cb_nexpired</tabstop>
+  <tabstop>cb_hideempty</tabstop>
+  <tabstop>tools</tabstop>
+  <tabstop>button_add_batch</tabstop>
+  <tabstop>table_batch</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

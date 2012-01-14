@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MEALTABLEMODEL_H
-#define MEALTABLEMODEL_H
+#ifndef MEALDAYTABLEMODEL_H
+#define MEALDAYTABLEMODEL_H
 
 #include <QtSql/QSqlTableModel>
 #include "ModelsCommon.h"
@@ -29,11 +29,11 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class MealTableModel : public QSqlTableModel, public ModelsCommon {
+class MealDayTableModel : public QSqlTableModel, public ModelsCommon {
 Q_OBJECT
 public:
-	MealTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
-	virtual ~MealTableModel();
+	MealDayTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
+	virtual ~MealDayTableModel();
 
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
@@ -41,25 +41,16 @@ public:
 	virtual bool select();
 	virtual void autoSubmit(bool asub = true);
 
-	virtual void setDirtyIcon(const QIcon& icon);
-
-public slots:
-	void filterDB(const QString &);
-
-private slots:
-	void trigDataChanged();
-
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
 
 public:
-	enum Headers {HId = 0, HMealDay, HMealKind, HMealName, HScouts, HLeaders, HOthers, HAvgCosts, HNotes };
-	enum Meal {MBreakfast = 0, MBreakfast2, MLunch, MTea,  MDiner, MOther };
+	enum Headers {HId = 0, HMealDate, HAvgCost };
 
 protected:
 	bool autosubmit;
 	QIcon dirtyIcon;
 };
 
-#endif // MEALTABLEMODEL_H
+#endif // MEALDAYTABLEMODEL_H

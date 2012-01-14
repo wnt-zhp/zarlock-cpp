@@ -232,6 +232,7 @@
   <tabstop>period_stop</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leaders</tabstop>
+  <tabstop>spin_avgcosts</tabstop>
   <tabstop>edit_leader</tabstop>
   <tabstop>edit_qmaster</tabstop>
   <tabstop>edit_others</tabstop>

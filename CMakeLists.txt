@@ -76,6 +76,7 @@ set(zarlok_widget_FORMS
 									src/ui/TabDistributorWidget.ui
 									src/ui/TabMealWidget.ui
 									src/ui/MealFoodListItemDataWidget.ui
+									src/ui/MealTabInsertWidget.ui
 )
 set(zarlok_dialogs_FORMS
 									src/ui/CampSettingsDialog.ui
@@ -114,6 +115,7 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/TabMealWidget.cpp
 									src/gui/widgets/MealTabWidget.cpp
 									src/gui/widgets/MealFoodList.cpp
+									src/gui/widgets/MealTabInsertWidget.cpp
 )
 
 set(zarlok_src_gui_dialogs_SRCS
@@ -129,6 +131,7 @@ set(zarlok_src_models_SRCS
 									src/models/DistributorTableModel.cpp
 									src/models/BatchTableModelProxy.cpp
 									src/models/BatchTableModelProxyP.cpp
+									src/models/MealDayTableModel.cpp
 									src/models/MealTableModel.cpp
 									src/models/MealTableModelProxy.cpp
 									src/models/DistributorTableModelProxyP.cpp

@@ -40,14 +40,14 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
 	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
-	connect(edit_reason, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-// 	connect(edit_reason2, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+// 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
 	connect(&Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(update_model()));
 
 // 	connect(Database::Instance().CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
-	edit_reason2->enableEmpty();
+	edit_reason_b->enableEmpty();
 	// TODO: do it better
 	combo_products->setStyleSheet("color: black;");
 }
@@ -73,16 +73,15 @@ bool AddDistributorRecordWidget::insertRecord() {
 		return false;
 
 	if (indexToUpdate) {
-		if (db.updateDistributorRecord(copyOfIndexToUpdate, batch_id, spin_qty->value(), df,
-			QDate::currentDate(), edit_reason->text(), edit_reason2->text(), DistributorTableModel::RGeneral)) {
+		if (db.updateDistributorRecord(copyOfIndexToUpdate, batch_id, spin_qty->value(), df, QDate::currentDate(),
+			DistributorTableModel::RGeneral, edit_reason_a->text(), edit_reason_b->text())) {
 				indexToUpdate = NULL;
 				prepareInsert(true);
 				edit_date->setFocus();
 			}
 	} else {
-		if (db.addDistributorRecord(batch_id, spin_qty->value(), df.toString(Qt::ISODate),
-			QDate::currentDate().toString(Qt::ISODate), edit_reason->text(), edit_reason2->text(),
-			DistributorTableModel::RGeneral)) {
+		if (db.addDistributorRecord(batch_id, spin_qty->value(), df, QDate::currentDate(),
+			DistributorTableModel::RGeneral, edit_reason_a->text(), edit_reason_b->text())) {
 				prepareInsert(true);
 				edit_date->setFocus();
 			}
@@ -98,8 +97,8 @@ void AddDistributorRecordWidget::clearForm() {
 	spin_qty->setValue(0.0);
 	spin_qty->setSuffix("");
 	edit_date->clear();
-	edit_reason->clear();
-	edit_reason2->clear();
+	edit_reason_a->clear();
+	edit_reason_b->clear();
 }
 
 void AddDistributorRecordWidget::cancelForm() {
@@ -129,18 +128,18 @@ void AddDistributorRecordWidget::validateAdd() {
 	if (edit_date->ok()) {
 		combo_products->setEnabled(true);
 		spin_qty->setEnabled(true);
-		edit_reason->setEnabled(true);
-		edit_reason2->setEnabled(true);
+		edit_reason_a->setEnabled(true);
+		edit_reason_b->setEnabled(true);
 		pproxy->setDateKey(edit_date->date());
 		pproxy->invalidate();
 	} else {
 		combo_products->setEnabled(false);
 		spin_qty->setEnabled(false);
-		edit_reason->setEnabled(false);
-		edit_reason2->setEnabled(false);
+		edit_reason_a->setEnabled(false);
+		edit_reason_b->setEnabled(false);
 	}
 	
-	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason->ok()) {
+	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason_a->ok()) {
 		action_add->setEnabled(true);
 	} else {
 		action_add->setEnabled(false);
@@ -165,8 +164,8 @@ void AddDistributorRecordWidget::update_model() {
 
 // 	completer_qty = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWqty), edit_qty);
 	completer_date = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWdist), edit_date);
-	completer_reason = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWreason), edit_reason);
-	completer_reason2 = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWoptional), edit_reason2);
+	completer_reason = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWreason), edit_reason_a);
+	completer_reason2 = new QCompleter(Database::Instance().DistributorWordList().at(Database::DWoptional), edit_reason_b);
 
 // 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_date->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -175,8 +174,8 @@ void AddDistributorRecordWidget::update_model() {
 
 // 	edit_qty->setCompleter(completer_qty);
 	edit_date->setCompleter(completer_date);
-	edit_reason->setCompleter(completer_reason);
-	edit_reason2->setCompleter(completer_reason2);
+	edit_reason_a->setCompleter(completer_reason);
+	edit_reason_b->setCompleter(completer_reason2);
 }
 
 void AddDistributorRecordWidget::prepareInsert(bool visible) {
@@ -192,7 +191,7 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	unsigned int bid;
 	unsigned int qty;
 
-	QString spec, price, disttypea, disttypeb;
+	QString spec, price, disttype_a, disttype_b;
 	QDate reg, entry;
 	DistributorTableModel::Reasons disttype;
 	
@@ -212,7 +211,7 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	if (batchl.size() != 1)
 		return;
 
-	Database::Instance().getDistributorRecord(sidx, bid, qty, reg, entry, disttype, disttypea, disttypeb);	// get record
+	Database::Instance().getDistributorRecord(sidx, bid, qty, reg, entry, disttype, disttype_a, disttype_b);	// get record
 
 	edit_date->setRaw(reg.toString("dd/MM/yyyy"));
 
@@ -223,8 +222,8 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 
 	combo_products->setCurrentIndex(pproxy->mapFromSource(batchl.at(0)).row());
 	spin_qty->setValue(qty/100.0);
-// 	edit_reason->setRaw(disttype);
-	edit_reason2->setRaw(disttypea);
+	edit_reason_a->setRaw(disttype_a);
+	edit_reason_b->setRaw(disttype_b);
 	
 	action_add->setText(tr("Update record and exit"));
 	validateAdd();								// revalidate proxy model

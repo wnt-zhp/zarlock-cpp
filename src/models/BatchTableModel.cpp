@@ -59,9 +59,9 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 	switch (role) {
 		case RFreeQty:
 			if (idx.column() == HUsedQty) {
-				double used = raw(idx).toDouble();
-				double total = index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toDouble();
-				return QVariant(total - used);
+				int used = raw(idx).toInt();
+				int total = index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
+				return QVariant(double(total - used)/100.0);
 			}
 			break;
 		case RNameQty:
@@ -253,17 +253,19 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			break;
 		case Qt::BackgroundRole:
-			QModelIndex expidx = index(idx.row(), BatchTableModel::HExpiryDate);
-			QDate expd = QDate::fromString(data(expidx, Qt::DisplayRole).toString(), Qt::DefaultLocaleShortDate);
+			QDate expd = index(idx.row(), BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
+			if (!expd.isValid())
+				return globals::item_nexpired;
+
 			int daystoexp = expd.daysTo(QDate::currentDate());
 
 			if (daystoexp > 0) {
 				return globals::item_expired;
 			} else if (daystoexp == 0) {
 				return globals::item_aexpired;
-			} else {
-				return globals::item_nexpired;
 			}
+			return globals::item_nexpired;
+
 			break;
 	}
 	return QSqlTableModel::data(idx, Qt::DisplayRole);

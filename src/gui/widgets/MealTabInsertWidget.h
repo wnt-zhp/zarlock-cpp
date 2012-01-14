@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  Rafał Lalik <rafal.lalik@ph.tum.de>
+    Copyright (C) <year>  <name of author>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,41 +17,42 @@
 */
 
 
-#ifndef MEALTABWIDGET_H
-#define MEALTABWIDGET_H
+#ifndef MEALTABINSERTWIDGET_H
+#define MEALTABINSERTWIDGET_H
 
-#include <QTabWidget>
-#include <QToolButton>
-#include <QMessageBox>
+#include "ui_MealTabInsertWidget.h"
 
-#include "MealFoodList.h"
-#include "MealTabInsertWidget.h"
+#include "Database.h"
+#include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
+#include "AddBatchRecordWidget.h"
 
-class MealTabWidget : public QTabWidget {
+#include <QtSql>
+#include <QCompleter>
+
+class MealTabInsertWidget : public QWidget, public Ui::MealTabInsertWidget {
 Q_OBJECT
 public:
-	explicit MealTabWidget(QWidget* parent = 0);
-	virtual ~MealTabWidget();
+	MealTabInsertWidget(QWidget * parent = NULL);
+	virtual ~MealTabInsertWidget();
 
-	virtual BatchTableModelProxy * getBatchProxyModel();
+	void setKey(int mealdayid);
 
 public slots:
-	virtual void setIndex(const QModelIndex& index);
 
-	virtual void markOpenedItems(QListWidgetItem* item);
-	virtual void closeOpenedItems();
+private slots:
+	void validateAdd();
+	void pushButton();
 
-protected slots:
-	virtual void reloadMeals();
+signals:
+	void mealInserted(int);
 
 private:
-	BatchTableModelProxy * btmp;
-	QCheckBox * che;
-	QCheckBox * cexp;
-	QListWidgetItem * openeditem;
-	MealTabInsertWidget * mtiw;
-	QModelIndex index_backup;
+	void activateUi(bool activate = true);
+
+private:
+	Database & db;
+	int mdid;
 };
 
-#endif // MEALTABWIDGET_H
+#endif // MEALTABINSERTWIDGET_H

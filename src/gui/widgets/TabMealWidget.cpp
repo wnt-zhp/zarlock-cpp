@@ -21,6 +21,7 @@
 #include "Database.h"
 #include "DataParser.h"
 #include "TabMealWidget.h"
+#include "TableDelegates.h"
 #include "DBReports.h"
 
 #include <QPushButton>
@@ -93,25 +94,27 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
-		db.CachedMeal()->setDirtyIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+// 		db.CachedMeal()->setDirtyIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 // 		db.CachedMeal()->select();
 
-		list_meal->setModel(db.CachedMeal());
-		list_meal->hideColumn(MealTableModel::HId);
-		list_meal->hideColumn(MealTableModel::HDirty);
-		list_meal->hideColumn(MealTableModel::HNotes);
+		list_meal->setModel(db.CachedMealDay());
+		list_meal->hideColumn(MealDayTableModel::HId);
 
-		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HDistDate, QHeaderView::Stretch);
-		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HScouts, QHeaderView::ResizeToContents);
-		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HLeaders, QHeaderView::ResizeToContents);
-		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HOthers, QHeaderView::ResizeToContents);
-		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HAvgCosts, QHeaderView::ResizeToContents);
+		list_meal->horizontalHeader()->setResizeMode(MealDayTableModel::HMealDate, QHeaderView::Stretch);
+// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HScouts, QHeaderView::ResizeToContents);
+// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HLeaders, QHeaderView::ResizeToContents);
+// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HOthers, QHeaderView::ResizeToContents);
+// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HAvgCosts, QHeaderView::ResizeToContents);
 
 		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 // 		list_meal->setSortingEnabled(true);
 		list_meal->setSelectionBehavior(QAbstractItemView::SelectRows);
 		list_meal->setSelectionMode(QAbstractItemView::SingleSelection);
+
+		PriceDelegate * price_delegate = new PriceDelegate;
+		list_meal->setItemDelegateForColumn(MealDayTableModel::HAvgCost, price_delegate);
+		
 
 		list_meal->update();
 
@@ -120,19 +123,24 @@ void TabMealWidget::activateUi(bool activate) {
 // 		label_data->setAlignment(Qt::AlignCenter);
 
 		wmap = new QDataWidgetMapper;
-		wmap->setModel(db.CachedMeal());
-		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
-		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
-		wmap->addMapping(spin_others, MealTableModel::HOthers);
+// 		wmap->setModel(db.CachedMeal());
+// 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
+// 		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
+// 		wmap->addMapping(spin_others, MealTableModel::HOthers);
 // 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 
 		calculate->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 	}
 }
 
+/** @brief Add day of meal to database
+ **/
+// TODO: wyczysc kod z komentarza
 void TabMealWidget::add_mealday() {
-	db.addMealRecord(calendar->selectedDate().toString(Qt::ISODate), true, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->");
+	db.addMealDayRecord(calendar->selectedDate(), 0);
 	hightlight_day(calendar->selectedDate());
+// 	, true, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->"
+	db.CachedMealDay()->select();
 }
 
 void TabMealWidget::toggle_calendar(bool show) {
@@ -148,7 +156,7 @@ void TabMealWidget::toggle_calendar(bool show) {
 }
 
 void TabMealWidget::hightlight_day(const QDate & date) {
-	QModelIndexList ml = db.CachedMeal()->match(db.CachedMeal()->index(0, MealTableModel::HDistDate), Qt::EditRole, date.toString(Qt::ISODate));
+	QModelIndexList ml = db.CachedMealDay()->match(db.CachedMealDay()->index(0, MealDayTableModel::HMealDate), Qt::EditRole, date.toString(Qt::ISODate));
 
 	if (ml.count()) {
 		list_meal->setCurrentIndex(ml.at(0));
@@ -162,10 +170,26 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 }
 
 void TabMealWidget::selectDay(const QModelIndex& idx) {
+// 	lastidx = idx;
+// 	wmap->setCurrentIndex(idx.row());
+// 	tab_meals->setIndex(idx);
+// 	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+// 	seldate = sd.toString(Qt::ISODate);
+// 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
+// 	createPDF->setEnabled(true);
+	// TODO: Sprawdzic czy to co ponizej (lub powyzej) jest poprawne.
 	lastidx = idx;
-	wmap->setCurrentIndex(idx.row());
-	tab_meals->setIndex(idx);
-	QDate sd = db.CachedMeal()->index(idx.row(), MealTableModel::HDistDate).data(Qt::EditRole).toDate();
+	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
+
+	Database & db = Database::Instance();
+	MealDayTableModel * mdtm = db.CachedMealDay();
+	QModelIndexList ml = mdtm->match(mdtm->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, 1);
+	if (!ml.count())
+		return;
+
+	wmap->setCurrentIndex(ml.at(0).row());
+	tab_meals->setIndex(ml.at(0));
+	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 	seldate = sd.toString(Qt::ISODate);
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 	createPDF->setEnabled(true);
@@ -194,7 +218,7 @@ void TabMealWidget::doPrepareReports() {
 	progress.setValue(0);
 
 	for (int i = 0; i < num; ++i) {
-		QDate sd = db.CachedMeal()->index(i, MealTableModel::HDistDate).data(Qt::EditRole).toDate();
+		QDate sd = db.CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
 		progress.setValue(i);
 		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));

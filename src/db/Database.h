@@ -27,6 +27,7 @@
 #include "ProductsTableModel.h"
 #include "BatchTableModel.h"
 #include "DistributorTableModel.h"
+#include "MealDayTableModel.h"
 #include "MealTableModel.h"
 
 #include "CampProperties.h"
@@ -68,19 +69,25 @@ public:
 	virtual bool removeBatchRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 	virtual bool getBatchRecord(const QModelIndex & idx, unsigned int & pid, QString& spec, QString& price, QString& unit, double & qty, double & used, QDate&reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 
-	virtual bool addDistributorRecord(int, double, const QString&, const QString&, const QString&, const QString&, DistributorTableModel::Reasons, bool autoupdate = true);
-	virtual bool updateDistributorRecord(const QModelIndex & idx, unsigned int bid, double qty, const QDate & ddate, const QDate & rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3);
+	virtual bool addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate = true);
+	virtual bool updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
 	virtual bool removeDistributorRecord(int recordid, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool removeDistributorRecord(const QModelIndexList & idxl, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool getDistributorRecord(const QModelIndex & idx, unsigned int & bid, unsigned int & qty, QDate & distdate, QDate & entrydate, DistributorTableModel::Reasons & disttype, QString & disttypea, QString & disttypeb);
 
-	virtual bool addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
-	virtual bool updateMealRecord(int Mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes);
+	virtual bool addMealDayRecord(const QDate & mealday, int avgcost);
+	virtual bool updateMealDayRecord(const QModelIndex & idx, const QDate & mealday, int avgcost);
+	virtual bool removeMealDayRecord(const QModelIndexList & idxl, bool askForConfirmation);
+	virtual bool getMealDayRecord(const QModelIndex & idx, unsigned int & mdid, QDate & mealday, int & avgcost);
+
+	virtual bool addMealRecord(int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
+	virtual bool updateMealRecord(int mid, int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
 	virtual bool removeMealRecord(const QModelIndexList & idxl, bool askForConfirmation = true);
 
 	inline ProductsTableModel * CachedProducts() { return model_products; }
 	inline BatchTableModel * CachedBatch() { return model_batch; }
 	inline DistributorTableModel * CachedDistributor() { return model_distributor; }
+	inline MealDayTableModel * CachedMealDay() { return model_mealday; }
 	inline MealTableModel * CachedMeal() { return model_meal; }
 
 	inline const QVector<QStringList> & ProductsWordList()		{ return plist; }
@@ -123,6 +130,7 @@ private:
 	ProductsTableModel * model_products;
 	BatchTableModel * model_batch;
 	DistributorTableModel * model_distributor;
+	MealDayTableModel * model_mealday;
 	MealTableModel * model_meal;
 
 	QVector<QStringList> plist;

@@ -22,15 +22,15 @@
 #include <QStyle>
 #include <QStringBuilder>
 
-#include "MealTableModel.h"
+#include "MealDayTableModel.h"
 #include "DataParser.h"
 #include "Database.h"
 
-MealTableModel::MealTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
+MealDayTableModel::MealDayTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
+// 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
-MealTableModel::~MealTableModel() {
+MealDayTableModel::~MealDayTableModel() {
 	FPR(__func__);
 }
 
@@ -48,20 +48,19 @@ MealTableModel::~MealTableModel() {
  * @return QVariant zwraca żądanie (QVariant to taki uniwersalny pojemnik na wiele typów danych:
  * QString, QColor QIcon,itp.
  **/
-QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
+QVariant MealDayTableModel::data(const QModelIndex & idx, int role) const {
 	if (role == Qt::BackgroundRole) {
 		QDate d = QSqlTableModel::data(idx, Qt::DisplayRole).toDate();
 		if ((d > Database::Instance().cs()->campDateBegin) and (d < Database::Instance().cs()->campDateEnd))
 			return Qt::yellow;
 	}
 
-// 	if (role == Qt::DecorationRole and idx.column() == HAvgCosts) {
-// 		if (Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty).data().toBool())
-// 			return dirtyIcon;
-// 	}
+	if (role == Qt::TextAlignmentRole and idx.column() == HAvgCost)
+			return Qt::AlignRight + Qt::AlignVCenter;
 
-	if (role == Qt::DisplayRole or role == Qt::StatusTipRole)
+	if (role == Qt::DisplayRole) {
 		return display(idx, role);
+	}
 
 	return QSqlTableModel::data(idx, role);
 }
@@ -74,10 +73,10 @@ QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
  * @param role przypisana im rola
  * @return bool stan dodania/aktualizacji
  **/
-bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
+bool MealDayTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 	switch (role) {
 		case Qt::DisplayRole:
-			if (index.column() == HMealDay) {
+			if (index.column() == HMealDate) {
 				QDate date;
 				if (!DataParser::date(value.toString(), date)) {
 					inputErrorMsgBox(value.toString());
@@ -95,17 +94,10 @@ bool MealTableModel::setData(const QModelIndex & index, const QVariant & value, 
  *
  * @return bool stan otwarcia tabeli
  **/
-bool MealTableModel::select() {
+bool MealDayTableModel::select() {
 	setHeaderData(HId,			Qt::Horizontal, tr("ID"));
-	setHeaderData(HMealDay,		Qt::Horizontal, tr("Date"));
-	setHeaderData(HMealKind,	Qt::Horizontal, tr("Kind"));
-	setHeaderData(HMealName,	Qt::Horizontal, tr("Name"));
-// 	setHeaderData(HDirty,		Qt::Horizontal, tr("isDirty"));
-	setHeaderData(HScouts,		Qt::Horizontal, tr("S"));
-	setHeaderData(HLeaders,		Qt::Horizontal, tr("L"));
-	setHeaderData(HOthers,		Qt::Horizontal, tr("O"));
-	setHeaderData(HAvgCosts,	Qt::Horizontal, tr("Avg Costs"));
-	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));
+	setHeaderData(HMealDate,	Qt::Horizontal, tr("Date"));
+	setHeaderData(HAvgCost,		Qt::Horizontal, tr("Avg Costs"));
 
 	if (!QSqlTableModel::select())
 		return false;
@@ -123,17 +115,13 @@ bool MealTableModel::select() {
  * @param role przypisana rola
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
-QVariant MealTableModel::display(const QModelIndex & idx, const int role) const {
+QVariant MealDayTableModel::display(const QModelIndex & idx, const int role) const {
 	switch (role) {
 		case Qt::DisplayRole:
-			if (idx.column() == HMealDay) {
+			if (idx.column() == HMealDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::LocalDate);
 			}
-
-			if (idx.column() == HAvgCosts) {
-				return QVariant(QSqlTableModel::data(idx, role).toString() % tr(" zl"));
-			}
-			break;
+		break;
 	}
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
@@ -144,38 +132,16 @@ QVariant MealTableModel::display(const QModelIndex & idx, const int role) const 
  * @param idx indeks
  * @return QVariant
  **/
-QVariant MealTableModel::raw(const QModelIndex & idx) const {
-	if (idx.column() == HMealDay) {
+QVariant MealDayTableModel::raw(const QModelIndex & idx) const {
+	if (idx.column() == HMealDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
 	}
 
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
-/**
- * @brief Tworzy filtr na pole 'name' dla danych z tabeli products.
- * Filtr ma postać 'f*'.
- *
- * @param f filtr
- **/
-void MealTableModel::filterDB(const QString & f) {
-	QString filter = "";
-	if (!f.isEmpty())
-		filter = "spec GLOB '" % f % "*'";
-	setFilter(filter);
-}
-
-void MealTableModel::setDirtyIcon(const QIcon& icon) {
-	dirtyIcon = icon;
-}
-
-void MealTableModel::autoSubmit(bool asub) {
+void MealDayTableModel::autoSubmit(bool asub) {
 	autosubmit = asub;
 }
 
-void MealTableModel::trigDataChanged() {
-	if (autosubmit) {
-		this->submitAll();
-	}
-}
-#include "MealTableModel.moc"
+#include "MealDayTableModel.moc"

@@ -126,19 +126,16 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				bidrow = qmil.at(0).row();
 
 				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
-PR(used);
-// 				double used = ->index()
-// 				this->index(index.row(), HUsedQty).data().toDouble();
 				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 				int fake = index.data(Qt::EditRole).toInt();
-PR(total); PR(fake);
+
 				int free = total - used + fake;
-PR(free);PR(value.toInt());
-				if (free < (value.toInt() * 100)) {
+
+				if (free < value.toInt()) {
 					inputErrorMsgBox(value.toString());
 					return false;
 				}
-				return QSqlTableModel::setData(index, value.toDouble()*100, role);
+				return QSqlTableModel::setData(index, value.toInt(), role);
 			}
 			break;
 	}
@@ -198,7 +195,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 				if (index(idx.row(), DistributorTableModel::HDistType).data().toInt() == RMeal) {
 					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(RRaw));
 					if (!qmil.isEmpty()) {
-						return Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole);
+						return QString(tr("Invoice: ") % Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole).toString());
 					}
 				}
 			}

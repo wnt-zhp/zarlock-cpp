@@ -34,18 +34,18 @@ public:
 						 
 	virtual ~MealTableModelProxy();
 
-	virtual void setRef(const QDate & ref);
 	virtual void setKey(int key);
-
-	virtual const QDate & ref() const;
 	virtual int key() const;
+
+	virtual void setRefDate(const QDate & date);
+	virtual const QDate & refDate() const;
 
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
 	int mealkey;
-	QDate dateref;
+	QDate ref_date;
 };
 
 #endif // MEALTABLEMODELPROXY_H

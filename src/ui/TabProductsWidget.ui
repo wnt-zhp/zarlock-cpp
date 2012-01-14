@@ -104,6 +104,13 @@
    <header>DistributorTableView.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>edit_filter_prod</tabstop>
+  <tabstop>button_add_prod</tabstop>
+  <tabstop>table_products</tabstop>
+  <tabstop>table_batchbyid</tabstop>
+  <tabstop>table_distributorbyid</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

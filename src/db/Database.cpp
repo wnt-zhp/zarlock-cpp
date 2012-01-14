@@ -66,7 +66,8 @@ void Database::Destroy() {
 }
 
 Database::Database() : QObject(),
-	model_products(NULL), model_batch(NULL), model_distributor(NULL), model_meal(NULL),
+	model_products(NULL), model_batch(NULL), model_distributor(NULL),
+	model_mealday(NULL), model_meal(NULL),
 	plist(QVector<QStringList>(plist_size)), blist(QVector<QStringList>(blist_size)),
 	dlist(QVector<QStringList>(dlist_size)), locked(false)
 {
@@ -186,10 +187,15 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	model_distributor->setTable("distributor");
 	model_distributor->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
+	model_mealday = new MealDayTableModel;
+	model_mealday->setTable("meal_day");
+	model_mealday->setEditStrategy(QSqlTableModel::OnManualSubmit);
+	model_mealday->setSort(MealDayTableModel::HMealDate, Qt::AscendingOrder);
+
 	model_meal = new MealTableModel;
 	model_meal->setTable("meal");
 	model_meal->setEditStrategy(QSqlTableModel::OnManualSubmit);
-	model_meal->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
+// 	model_meal->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
 
 	camp = new CampProperties;
 	camp->readCampSettings();
@@ -220,6 +226,7 @@ bool Database::close_database() {
 		if (model_products) delete model_products;
 		if (model_batch) delete model_batch;
 		if (model_distributor) delete model_distributor;
+		if (model_mealday) delete model_mealday;
 		if (model_meal) delete model_meal;
 		if (camp) delete camp;
 	}
@@ -239,6 +246,7 @@ void Database::save_database() {
 
 	model_batch->submitAll();
 
+	model_mealday->submitAll();
 	model_meal->submitAll();
 
 	emit dbSaved();
@@ -269,6 +277,10 @@ bool Database::rebuild_models() {
 	}
 
 	// meal
+	if (!model_mealday->select()) {
+		QMessageBox::critical(0, QObject::tr("Database error"), model_mealday->lastError().text(), QMessageBox::Abort);
+		return false;
+	}
 	if (!model_meal->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_meal->lastError().text(), QMessageBox::Abort);
 		return false;
@@ -500,7 +512,6 @@ void Database::updateMealCosts(const QModelIndex& idx) {
 		if (!db.commit())
 			db.rollback();
 
-	model_meal->setData(model_meal->index(idx.row(), MealTableModel::HDirty), 0);
 	model_meal->setData(model_meal->index(idx.row(), MealTableModel::HAvgCosts), distdate.sprintf("%.2f", costs/mealpersons));
 }
 
@@ -784,30 +795,57 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 	return (status && model_batch->submitAll() && rebuild_models());
 }
 
-bool Database::addDistributorRecord(int bid, double qty, const QString& ddate, const QString& rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3, bool autoupdate) {
-GTD
-GTM
-	QSqlQuery q;
-	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
-	q.bindValue(0, bid);
-	q.bindValue(1, int(qty*100.0));
-	q.bindValue(2, ddate);
-	q.bindValue(3, rdate);
-	q.bindValue(4, re1);
-	q.bindValue(5, re2);
-	q.bindValue(6, re3);
-	bool status = q.exec();
+bool Database::addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate) {
+// GTD
+// GTM
+// 	QSqlQuery q;
+// 	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
+// 	q.bindValue(0, bid);
+// 	q.bindValue(1, int(qty*100.0));
+// 	q.bindValue(2, ddate);
+// 	q.bindValue(3, rdate);
+// 	q.bindValue(4, re1);
+// 	q.bindValue(5, re2);
+// 	q.bindValue(6, re3);
+// 	bool status = q.exec();
+// 
+// 	if (autoupdate) {
+// // 		updateBatchQty(bid);
+// 		model_batch->select();
+// 		model_distributor->select();
+// 	}
+// GTM	
+// 	return status;
+	bool status = true;
 
-	if (autoupdate) {
-// 		updateBatchQty(bid);
-		model_batch->select();
-		model_distributor->select();
+	int row = model_distributor->rowCount();
+
+	model_distributor->autoSubmit(false);
+	status &= model_distributor->insertRows(row, 1);
+	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
+
+	model_distributor->autoSubmit(true);
+
+	if (!status) {
+		model_distributor->revertAll();
+		return false;
 	}
-GTM	
+
+	status = model_distributor->submitAll();
+	// 	if (status)
+	// 		updateBatchWordList();
+
 	return status;
 }
 
-bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, double qty, const QDate & ddate, const QDate & rdate, const QString& re1, const QString& re2, DistributorTableModel::Reasons re3) {
+bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
 	bool status = true;
 // GTD
 // GTM
@@ -832,11 +870,11 @@ bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid
 	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), re1);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), re2);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), re3);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
+	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
 
 	model_distributor->autoSubmit(true);
 
@@ -927,22 +965,126 @@ bool Database::getDistributorRecord(const QModelIndex & idx, unsigned int & bid,
 	entrydate	= model_distributor->index(row, DistributorTableModel::HEntryDate).data(Qt::EditRole).toDate();
 	disttype	= (DistributorTableModel::Reasons)model_distributor->index(row, DistributorTableModel::HDistType).data(Qt::EditRole).toInt();
 	disttypea	= model_distributor->index(row, DistributorTableModel::HDistTypeA).data(Qt::EditRole).toString();
-	disttypeb	= model_distributor->index(row, DistributorTableModel::HDistTypeB).data().toString();
+	disttypeb	= model_distributor->index(row, DistributorTableModel::HDistTypeB).data(Qt::EditRole).toString();
 // PR(model_batch->index(row, DistributorTableModel::HDistDate).data(Qt::EditRole).toDate().toString().toStdString().c_str());
 // PR(model_batch->index(row, DistributorTableModel::HDistDate).data(Qt::DisplayRole).toDate().toString().toStdString().c_str());
 	GTM	
 	return true;
 }
 
-bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes) {
+/** @brief Insert MealDay record to database
+ * @param date meal day
+ **/
+bool Database::addMealDayRecord(const QDate & mealday, int avgcost) {
+	bool status = true;
+
+	int row = model_mealday->rowCount();
+PR(row);
+	model_mealday->autoSubmit(false);
+	status &= model_mealday->insertRows(row, 1);
+	status &= model_mealday->setData(model_mealday->index(row, MealDayTableModel::HMealDate), mealday.toString(Qt::ISODate));
+	status &= model_mealday->setData(model_mealday->index(row, MealDayTableModel::HAvgCost), avgcost);
+	model_mealday->autoSubmit(true);
+	
+	if (!status) {
+		model_mealday->revertAll();
+		return false;
+	} else
+		return model_mealday->submitAll();
+}
+
+bool Database::updateMealDayRecord(const QModelIndex & idx, const QDate & mealday, int avgcost) {
+	bool status = true;
+	unsigned int row = idx.row();
+	model_distributor->autoSubmit(false);
+	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
+	status &= model_meal->setData(model_mealday->index(row, MealDayTableModel::HMealDate), mealday.toString(Qt::ISODate));
+	status &= model_meal->setData(model_mealday->index(row, MealDayTableModel::HAvgCost), avgcost);	
+	model_distributor->autoSubmit(true);
+	
+	if (!status) {
+		model_meal->revertAll();
+		return false;
+	}
+	
+	status = model_meal->submitAll();
+	// 	if (status)
+	// 		updateBatchWordList();
+	
+	return status;
+}
+
+bool Database::removeMealDayRecord(const QModelIndexList & idxl, bool askForConfirmation) {
+	bool status = false;
+	QString details;
+	
+	int counter = 0;
+	if (askForConfirmation) {
+		for (int i = 0; i < idxl.count(); ++i) {
+			if (idxl.at(i).column() == MealDayTableModel::HId) {
+// 				QVariant mdid = model_mealday->index(idxl.at(i).row(), MealDayTableModel::HId).data();
+// 				QString mdday = model_mealday->index(idxl.at(i).row(), MealDayTableModel::HMealDate).data().toDate().toString(Qt::DefaultLocaleShortDate);
+// 				++counter;
+// 				details = details % mdday % "\n";
+// 				QModelIndexList mkinds = model_mealkind->match(model_mealkind->index(0, MealKindTableModel::HMealDate), Qt::EditRole, mdid, -1);
+// 				for (int i = 0; i < mkinds.count(); ++i) {
+// 					details = details % "  \\--  " % model_batch->data(model_batch->index(mkinds.at(i).row(), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
+// 				}
+				// 				bat.append(batches);
+			}
+		}
+		status = model_mealday->productRemoveConfirmation(counter, details);
+	}
+	
+// 	if (askForConfirmation & !status )
+// 		return false;
+// 	
+// 	// 	QSqlQuery q;
+// 		// 	q.prepare("DELETE FROM meals WHERE id=?;");
+// 		
+// 		// 	removeBatchRecord(bat, false);
+// 		// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+// 		// 		db.transaction();
+// 		
+// 		for (int i = 0; i < idxl.count(); ++i) {
+// 			if (idxl.at(i).column() == ProductsTableModel::HName) {
+// 				if (!model_mealday->removeRow(idxl.at(i).row())) {
+// 					model_mealday->revertAll();
+// 					return false;
+// 				}
+// 			}
+// 		}
+// 		
+// 		// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+// 		// 		if (!db.commit())
+// 		// 			db.rollback();
+		
+		status = model_mealday->submitAll();
+		
+		return status;
+}
+
+bool Database::getMealDayRecord(const QModelIndex & idx, unsigned int & mdid, QDate & mealday, int & avgcost) {
+	GTD
+	GTM
+	int row = idx.row();
+	mdid		= model_mealday->index(row, MealDayTableModel::HId).data().toUInt();
+	mealday		= model_mealday->index(row, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+	avgcost		= model_mealday->index(row, MealDayTableModel::HAvgCost).data(Qt::EditRole).toInt();
+	GTM	
+	return true;
+}
+
+bool Database::addMealRecord(int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes) {
 	bool status = true;
 
 	int row = model_meal->rowCount();
 
 	model_meal->autoSubmit(false);
 	status &= model_meal->insertRows(row, 1);
-	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDistDate), date);
-	status &= model_meal->setData(model_meal->index(row, MealTableModel::HDirty), (int)dirty);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealDay), mealday);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealKind), mealkind);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealName), name);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HScouts), scouts);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HLeaders), leaders);
 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HOthers), others);
@@ -957,17 +1099,19 @@ bool Database::addMealRecord(const QString& date, bool dirty, int scouts, int le
 		return model_meal->submitAll();
 }
 
-bool Database::updateMealRecord(int mid, const QString& date, bool dirty, int scouts, int leaders, int others, double avgcosts, const QString & notes) {
+bool Database::updateMealRecord(int mid, int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes) {
 	bool status = true;
 
+	int row = mid;
 	model_meal->autoSubmit(false);
-	status &= model_meal->setData(model_meal->index(mid, 1), date);
-	status &= model_meal->setData(model_meal->index(mid, 2), (int)dirty);
-	status &= model_meal->setData(model_meal->index(mid, 3), scouts);
-	status &= model_meal->setData(model_meal->index(mid, 4), leaders);
-	status &= model_meal->setData(model_meal->index(mid, 5), others);
-	status &= model_meal->setData(model_meal->index(mid, 6), avgcosts);
-	status &= model_meal->setData(model_meal->index(mid, 7), notes);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealDay), mealday);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealKind), mealkind);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HMealName), name);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HScouts), scouts);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HLeaders), leaders);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HOthers), others);
+// 	status &= model_meal->setData(model_meal->index(row, MealTableModel::HAvgCosts), avgcosts);
+	status &= model_meal->setData(model_meal->index(row, MealTableModel::HNotes), notes);
 	model_meal->autoSubmit(true);
 
 	if (!status) {

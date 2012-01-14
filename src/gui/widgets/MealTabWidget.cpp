@@ -28,8 +28,11 @@
 #include <QStyle>
 #include <QAction>
 
-MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NULL) {
+MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NULL), mtiw(NULL) {
 	this->setDocumentMode(true);
+
+	mtiw = new MealTabInsertWidget(this);
+	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadMeals()));
 
 	che = new QCheckBox;
 	che->setChecked(true);
@@ -43,21 +46,13 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NU
 	btmp->sort(2, Qt::AscendingOrder);
 	btmp->invalidate();
 
-	for (int i = 0; i < meals; ++i)
-		foodlist[i] = new MealFoodList(this);
-
-	this->addTab(foodlist[0], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Breakfast"));
-	this->addTab(foodlist[1], tr("2nd Breakfast"));
-	this->addTab(foodlist[2], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Lunch"));
-	this->addTab(foodlist[3], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Tea"));
-	this->addTab(foodlist[4], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Diner"));
-	this->addTab(foodlist[5], tr("Other 1"));
-	this->addTab(foodlist[6], tr("Other 2"));
-
-	for (int i = 0; i < meals; ++i) {
-		proxy[i] = new MealTableModelProxy();
-		proxy[i]->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
-	}
+// 	this->addTab(foodlist[0], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Breakfast"));
+// 	this->addTab(foodlist[1], tr("2nd Breakfast"));
+// 	this->addTab(foodlist[2], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Lunch"));
+// 	this->addTab(foodlist[3], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Tea"));
+// 	this->addTab(foodlist[4], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Diner"));
+// 	this->addTab(foodlist[5], tr("Other 1"));
+// 	this->addTab(foodlist[6], tr("Other 2"));
 }
 
 MealTabWidget::~MealTabWidget() {
@@ -68,19 +63,43 @@ MealTabWidget::~MealTabWidget() {
 }
 
 void MealTabWidget::setIndex(const QModelIndex& index) {
-	QDate sref = Database::Instance().CachedMeal()->index(index.row(), MealTableModel::HDistDate).data(Qt::EditRole).toDate();
+	index_backup = index;
 
-	btmp->setDateKey(sref);
+	MealDayTableModel * mdt = Database::Instance().CachedMealDay();
+	MealTableModel * mt = Database::Instance().CachedMeal();
+	
+	QDate sel_meal_date = mdt->index(index.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+	QVariant sel_meal_id = mdt->index(index.row(), MealDayTableModel::HId).data(Qt::EditRole);
+
+	btmp->setDateKey(sel_meal_date);
 	btmp->invalidate();
 
-	for (int i = 0; i < meals; ++i) {
-		foodlist[i]->setIndex(index);
-		foodlist[i]->setProxyModel(proxy[i]);
-		proxy[i]->setRef(sref);
-		proxy[i]->setKey(i);
-		proxy[i]->invalidate();
-		foodlist[i]->populateModel();
+	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
+
+	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, sel_meal_id, -1);
+
+	this->clear();
+	for (int i = 0; i < meals.size(); ++i) {
+		int mid = mt->index(meals.at(i).row(), MealTableModel::HId).data().toInt();
+		QString mn = mt->index(meals.at(i).row(), MealTableModel::HMealName).data().toString();
+
+		MealTableModelProxy * proxy = new MealTableModelProxy;
+		proxy->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
+
+		MealFoodList * foodlist = new MealFoodList(this);
+		this->addTab(foodlist, mn);
+		
+		foodlist->setIndex(index);
+		foodlist->setProxyModel(proxy);
+
+		proxy->setKey(mid);
+		proxy->setRefDate(sel_meal_date);
+		proxy->invalidate();
+		foodlist->populateModel();
+
 	}
+	mtiw->setKey(sel_meal_id.toInt());
+	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
 }
 
 BatchTableModelProxy* MealTabWidget::getBatchProxyModel() {
@@ -95,6 +114,11 @@ void MealTabWidget::closeOpenedItems() {
 	if (openeditem)
 		((MealFoodListItemDataWidget *)openeditem->listWidget()->itemWidget(openeditem))->buttonClose();
 	openeditem = NULL;
+}
+
+void MealTabWidget::reloadMeals() {
+	setIndex(index_backup);
+	this->setCurrentIndex(this->count()-1);
 }
 
 #include "MealTabWidget.moc"

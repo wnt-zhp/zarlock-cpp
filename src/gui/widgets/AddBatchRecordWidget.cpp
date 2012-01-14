@@ -214,7 +214,6 @@ void AddBatchRecordWidget::prepareInsert(bool visible) {
 	action_addnext->setText(tr("Insert record and add next"));
 	indexToUpdate = NULL;
 	if (visible) {
-	} else {
 		clearForm();
 	}
 }
@@ -232,7 +231,13 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 
 	Database::Instance().getBatchRecord(idx, pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
 
-	combo_products->setCurrentIndex(idx.data().toInt());
+	ProductsTableModel * pm = Database::Instance().CachedProducts();
+	QModelIndexList productsl = pm->match(pm->index(0, ProductsTableModel::HId), Qt::DisplayRole, idx.model()->index(idx.row(), BatchTableModel::HProdId).data(Qt::EditRole).toUInt());
+
+	if (productsl.size() != 1)
+		return;
+
+	combo_products->setCurrentIndex(pproxy->mapFromSource(productsl.at(0)).row());
 	edit_spec->setRaw(spec);
 	edit_price->setRaw(QString().setNum(price.toDouble()/100));
 	check_uprice->setChecked(true);

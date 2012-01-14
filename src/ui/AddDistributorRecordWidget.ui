@@ -63,7 +63,7 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="TextInput" name="edit_reason">
+       <widget class="TextInput" name="edit_reason_a">
         <property name="placeholderText">
          <string>reason</string>
         </property>
@@ -84,7 +84,7 @@
        </widget>
       </item>
       <item row="4" column="4">
-       <widget class="TextInput" name="edit_reason2">
+       <widget class="TextInput" name="edit_reason_b">
         <property name="placeholderText">
          <string>additional reason</string>
         </property>
@@ -143,9 +143,11 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>edit_date</tabstop>
+  <tabstop>combo_products</tabstop>
   <tabstop>spin_qty</tabstop>
-  <tabstop>edit_reason</tabstop>
-  <tabstop>edit_reason2</tabstop>
+  <tabstop>edit_reason_a</tabstop>
+  <tabstop>edit_reason_b</tabstop>
   <tabstop>action_add</tabstop>
   <tabstop>action_clear</tabstop>
  </tabstops>

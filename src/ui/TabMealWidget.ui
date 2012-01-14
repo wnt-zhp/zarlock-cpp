@@ -50,6 +50,24 @@
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+         <item>
+          <widget class="QLabel" name="label_data">
+           <property name="text">
+            <string notr="true">@Data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tools">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QLabel" name="label_scouts">
@@ -100,24 +118,6 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_data">
-           <property name="text">
-            <string notr="true">@Data</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="tools">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <widget class="QGroupBox" name="group_meals">
          <property name="title">
           <string notr="true">@Day</string>
@@ -145,10 +145,14 @@
  </customwidgets>
  <tabstops>
   <tabstop>list_meal</tabstop>
+  <tabstop>calendar</tabstop>
+  <tabstop>action_insert</tabstop>
+  <tabstop>action_toggle</tabstop>
+  <tabstop>tools</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leadres</tabstop>
+  <tabstop>spin_others</tabstop>
   <tabstop>calculate</tabstop>
-  <tabstop>tools</tabstop>
   <tabstop>tab_meals</tabstop>
  </tabstops>
  <resources/>
