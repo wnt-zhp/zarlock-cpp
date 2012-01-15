@@ -67,7 +67,6 @@ MealTabInsertWidget::~MealTabInsertWidget() {
 void MealTabInsertWidget::activateUi(bool activate) {
 // 	this->setVisible(activate);
 	if (activate) {
-		MealDayTableModel * mdm = Database::Instance().CachedMealDay();
 		MealTableModel * mm = Database::Instance().CachedMeal();
 		QModelIndexList ml  = mm ->match(mm->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1);
 

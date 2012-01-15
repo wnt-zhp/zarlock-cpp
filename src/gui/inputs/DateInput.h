@@ -28,12 +28,11 @@ Q_OBJECT
 public:
 	DateInput(QWidget * parent);
 
-	const QDate & date() const;
+	const QDate date() const;
 	void setDateReferenceObj(const DateInput * ref);
 
 public slots:
 	void doRefresh();
-	const QString & Formated();
 
 private slots:
 	bool verifyText(const QString &, QString &);

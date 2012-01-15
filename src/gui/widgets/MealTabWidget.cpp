@@ -75,8 +75,7 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 	btmp->invalidate();
 
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
-
-	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, sel_meal_id, -1);
+	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, sel_meal_id.toInt(), -1, Qt::MatchExactly);
 
 	this->clear();
 	for (int i = 0; i < meals.size(); ++i) {

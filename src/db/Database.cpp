@@ -122,7 +122,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 		dbversion = qdbv.value(0).toUInt();
 	else {
 		QMessageBox msgBox;
-		msgBox.setText(tr("Your database \"%1\" is corrupted. Unable to find version number.").arg(dbname).arg(dbversion).arg(DBVERSION));
+		msgBox.setText(tr("Your database \"%1\" is corrupted. Unable to find version number.").arg(dbname));
 		msgBox.setInformativeText(tr("This is critical error and if your database has important data, "
 									"please contact with Zarlok team in WNT GK to help you solve your problem."));
 		msgBox.setIcon(QMessageBox::Critical);
@@ -293,6 +293,43 @@ bool Database::rebuild_models() {
 	return true;
 }
 
+bool Database::execQueryFromFile(const QString& resource) {
+	QSqlQuery query;
+
+	if (!db.isOpen())
+		return false;
+
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		db.transaction();
+	
+	QFile dbresfile(resource);   // TODO: Fix it later
+	if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		return false;
+	}
+	while (!dbresfile.atEnd()) {
+		QString line = dbresfile.readLine();
+		if (line.trimmed().isEmpty())
+			continue;
+
+// 		query.exec(line.fromUtf8(line.toStdString().c_str()));
+		if (!query.exec(line.fromUtf8(line.toStdString().c_str()))) {
+			PR(query.lastError().text().toStdString());
+		} else {
+			PR(query.lastQuery().toStdString());
+		}
+	}
+	query.finish();
+
+	if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
+		if (!db.commit()) {
+			db.rollback();
+			return false;
+		}
+	}
+
+	return true;
+}
+
 /**
  * @brief Otwórz plik z bazą danych
  *
@@ -341,37 +378,10 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		if (!db.open())
 			return false;
 
-		QSqlQuery query;
-
-		if (db.driver()->hasFeature(QSqlDriver::Transactions))
-			db.transaction();
-
-		QFile dbresfile(":/resources/database_3100.sql");   // TODO: Fix it later
-		if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			return false;
-		}
-		while (!dbresfile.atEnd()) {
-			QString line = dbresfile.readLine();
-			query.exec(line.fromUtf8(line.toStdString().c_str()));
-		}
+		execQueryFromFile(":/resources/database_00000301.sql");
 // TODO: Fix it later
-		QFile dbtestfile(":/resources/test_data_3100.sql");
-		if (!dbtestfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			return false;
-		}
-		while (!dbtestfile.atEnd()) {
-			QString line = dbtestfile.readLine();
-			query.exec(line.fromUtf8(line.toStdString().c_str()));
-		}
+		execQueryFromFile(":/resources/test_data_3100.sql");
 
-		QString qdbv("INSERT INTO settings VALUES('dbversion', '%1');");
-		query.exec(qdbv.arg(DBVERSION));
-
-		if (db.driver()->hasFeature(QSqlDriver::Transactions))
-			if (!db.commit())
-				db.rollback();
-
-		return true;
 	}
 
 	return false;
@@ -417,31 +427,17 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 }
 
 void Database::updateBatchQty() {
-	int maxval = model_batch->rowCount()+1;
-
-	QProgressDialog progress(tr("Synchronizing quantity..."), tr("&Cancel"), 0, maxval);
-	progress.setMinimumDuration(0);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setCancelButton(NULL);
-
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
 
-	int i = 0;
-	QSqlQuery qBatch("SELECT id FROM batch;");
+	QSqlQuery qBatch("UPDATE batch SET used_qty=(SELECT sum(quantity) FROM distributor WHERE batch_id=batch.id);");
 	qBatch.exec();
-	while (qBatch.next()) {
-		progress.setValue(i++);
-		updateBatchQty(qBatch.value(0).toInt());
-	}
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		if (!db.commit())
 			db.rollback();
 
-	progress.setValue(i);
 	model_batch->select();
-	progress.setValue(i+1);
 }
 
 void Database::updateBatchQty(const int bid) {
@@ -461,58 +457,22 @@ void Database::updateBatchQty(const int bid) {
 }
 
 void Database::updateMealCosts() {
-	int maxval = model_meal->rowCount()+1;
+	QSqlQuery q;
+	q.exec("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
+	"FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id);");
 
-	QProgressDialog progress(tr("Synchronizing costs..."), tr("&Cancel"), 0, maxval);
-	progress.setMinimumDuration(0);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setCancelButton(NULL);
-
-	for (int i = 0; i < model_meal->rowCount(); ++i) {
-		progress.setValue(i++);
-		updateMealCosts(model_meal->index(i, MealTableModel::HId));
-	}
-
-	progress.setValue(maxval-1);
-	PR(model_meal->submitAll());
-	progress.setValue(maxval);
+	model_mealday->select();
 }
 
 void Database::updateMealCosts(const QModelIndex& idx) {
-
-	int mid = model_meal->index(idx.row(), MealTableModel::HId).data().toInt();
-
-	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-		db.transaction();
-
+	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
 	QSqlQuery q;
-	q.prepare("SELECT distdate, scouts+leaders+others FROM meal WHERE id=?;");
-	q.bindValue(0, mid);
+	q.prepare("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
+	"FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id) WHERE id=?;");
+	q.bindValue(0, mdid);
 	q.exec();
 
-	QString distdate;
-	double costs = 0.0;
-	int mealpersons = 0;
-
-	while (q.next()) {
-		mealpersons = q.value(1).toInt();
-		distdate = q.value(0).toString();
-	}
-
-	q.prepare("SELECT batch.price, distributor.quantity FROM batch,distributor WHERE distributor.distdate=? AND batch.id=distributor.batch_id;");
-	q.bindValue(0, distdate);
-	q.exec();
-	while (q.next()) {
-		double netto, tax;
-		DataParser::price(q.value(0).toString(), netto, tax);
-		costs += netto*(1.0 + tax/100.0)*q.value(1).toDouble();
-	}
-
-	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-		if (!db.commit())
-			db.rollback();
-
-	model_meal->setData(model_meal->index(idx.row(), MealTableModel::HAvgCosts), distdate.sprintf("%.2f", costs/mealpersons));
+	model_mealday->select();
 }
 
 void Database::updateProductsWordList() {
@@ -566,25 +526,81 @@ void Database::updateDistributorWordList() {
  *  @return zwraca true jeśliaktualiazcja zakończona sukcesem, w przeciwnym wypadku zmienna version zawiera
  * numer ostatniej wersji dla której aktualizacja zakończyla się sukcesem.
  */
-bool Database::doDBUpgrade(unsigned int & version) {
-	QSqlQuery qdbup;
+bool Database::doDBUpgrade(unsigned int version) {
+	QSqlQuery qdbup, q;
 	QString str;
+	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, 0);
+	int pos = 0;
 
 	switch (version) {
-		case 0:
+		case dbv_INIT:
 			PR("Upgrade from 0");
 			str = "UPDATE settings SET value='%1' WHERE key='dbversion';";
-			qdbup.exec(str.arg(DBVERSION));
-			version = DBVERSION;
-			return doDBUpgrade(version);
+			qdbup.exec(str.arg(dbv_AUG11));
+			return doDBUpgrade((unsigned int)dbv_AUG11);
 			break;
-		case DBVERSION:
-			PR("Upgrade to");
-			PR(DBVERSION);
+		case dbv_AUG11:
+			PR("Upgrade to"); PR(dbv_JAN12);
+			progress.setMinimumDuration(0);
+			progress.setWindowModality(Qt::WindowModal);
+			progress.setCancelButton(NULL);
+
+			q.exec("SELECT count(id) FROM batch;");			
+			progress.setMaximum(5+q.value(0).toInt());
+
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_a.sql");
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/database_00000301.sql");
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_b.sql");
+			progress.setValue(pos++);
+
+			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
+
+			if (db.driver()->hasFeature(QSqlDriver::Transactions))
+				db.transaction();
+			while (q.next()) {
+				progress.setValue(pos++);
+				int bid = q.value(0).toInt();
+				QString expdate = q.value(3).toString();
+				QString price = q.value(4).toString();
+				QString regdate = q.value(5).toString();
+
+				double netto, vat;
+				DataParser::price(price, netto, vat);
+
+				QDate regdate_n, expdate_n, entrydate_n;
+				regdate_n = QDate::fromString(regdate, Qt::ISODate);
+				DataParser::date(expdate, expdate_n, regdate_n);
+
+				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
+				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
+				qdbup.bindValue(1, int(netto*(vat+100)));
+				qdbup.bindValue(2, bid);
+				qdbup.exec();
+				qdbup.finish();
+			}
+			q.finish();
+			if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
+				if (!db.commit()) {
+					db.rollback();
+					return false;
+				}
+			}
+			progress.setValue(pos++);
+
+// 			while (q.isActive() or qdbup.isActive()) {}
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
+			progress.setValue(pos++);
+
 			return true;
-		default:
-			return false;
+
+		case dbv_JAN12:
+			PR("Database up-to-date!");
+			return true;
 	}
+	return false;
 }
 
 bool Database::addProductsRecord(const QString& name, const QString& unit, const QString& expiry, const QString & notes) {

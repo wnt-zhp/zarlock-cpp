@@ -137,13 +137,18 @@ private:
 	QVector<QStringList> blist;
 	QVector<QStringList> dlist;
 
-	bool doDBUpgrade(unsigned int & version);
+	bool doDBUpgrade(unsigned int version);
+	bool execQueryFromFile(const QString & resource);
 
 	bool locked;
 
 	QString opened_db;
 
-	static const unsigned int DBVERSION = 0x000030;
+	enum DBVERSIONS {	dbv_INIT	= 0x0000000,
+						dbv_AUG11	= 0x0000030,
+						dbv_JAN12	= 0x0000301
+	};
+	static const unsigned int DBVERSION = dbv_JAN12;
 };
 
 #endif // DATABASE_H

@@ -221,7 +221,7 @@ QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
 
 	if (idx.column() == HDistDate) {
 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString("dd-MM-yyyy");
-	} else
+	}
 
 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }

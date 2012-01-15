@@ -40,7 +40,7 @@ void MealFoodList::populateModel() {
 	this->clear();
 	for (int i = 0; i < num; ++i) {
 		QListWidgetItem * qlwi = new QListWidgetItem(this);
-		qlwi->setSizeHint(QSize(100, 48));
+		qlwi->setSizeHint(QSize(100, 32));
 
 		MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
 
@@ -56,7 +56,7 @@ void MealFoodList::populateModel() {
 
 void MealFoodList::insertEmptySlot() {
 	QListWidgetItem * qlwi = new QListWidgetItem(this);
-	qlwi->setSizeHint(QSize(100, 48));
+	qlwi->setSizeHint(QSize(100, 36));
 
 	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
 
