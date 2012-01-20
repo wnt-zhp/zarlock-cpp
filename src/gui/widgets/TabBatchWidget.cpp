@@ -75,7 +75,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	tools->addAction(createSMrep);
 	tools->addAction(createKMrep);
 
-	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
+// 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
 	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
 
@@ -156,10 +156,10 @@ void TabBatchWidget::setFilter() {
 	table_batch->setModel(modelproxy_batch);
 }
 
-void TabBatchWidget::syncDB() {
-	Database::Instance().updateBatchQty();
-	Database::Instance().updateMealCosts();
-}
+// void TabBatchWidget::syncDB() {
+// 	Database::Instance().updateBatchQty();
+// 	Database::Instance().updateMealCosts();
+// }
 
 void TabBatchWidget::doCreateSMreports() {
 	DBReports::printSMReport();

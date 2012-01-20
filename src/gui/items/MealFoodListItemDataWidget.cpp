@@ -166,6 +166,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 
 	mfl->markDirty();
 	render(true);
+	db.CachedMealDay()->select();
 }
 
 /** @brief Prepare widget to update data.
@@ -208,6 +209,7 @@ GTM
 	convertToEmpty();
 GTM
 	mfl->populateModel();
+	db.CachedMealDay()->select();
 GTM
 }
 

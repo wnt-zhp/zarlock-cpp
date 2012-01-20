@@ -68,7 +68,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,1,1,1,0">
          <item>
           <widget class="QLabel" name="label_scouts">
            <property name="text">
@@ -109,9 +109,9 @@
           <widget class="QSpinBox" name="spin_others"/>
          </item>
          <item>
-          <widget class="QPushButton" name="calculate">
+          <widget class="QPushButton" name="push_update">
            <property name="text">
-            <string>&amp;Calculate</string>
+            <string>&amp;Update</string>
            </property>
           </widget>
          </item>
@@ -152,7 +152,7 @@
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leadres</tabstop>
   <tabstop>spin_others</tabstop>
-  <tabstop>calculate</tabstop>
+  <tabstop>push_update</tabstop>
   <tabstop>tab_meals</tabstop>
  </tabstops>
  <resources/>

@@ -35,10 +35,6 @@ public:
 	virtual const MealTableModelProxy * proxyModel();
 
 	virtual void insertEmptySlot();
-
-	virtual void setIndex(const QModelIndex& index);
-	virtual const QModelIndex& getIndex();
-
 public slots:
 	virtual void populateModel();
 	virtual void markDirty();
@@ -50,7 +46,6 @@ private:
 	bool isdirty;
 	MealTableModelProxy * proxy;
 	int foodkey;
-	QModelIndex idx;
 };
 
 #endif // MEALFOODLIST_H

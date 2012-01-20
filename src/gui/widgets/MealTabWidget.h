@@ -52,6 +52,7 @@ private:
 	QListWidgetItem * openeditem;
 	MealTabInsertWidget * mtiw;
 	QModelIndex index_backup;
+	bool lock;
 };
 
 #endif // MEALTABWIDGET_H

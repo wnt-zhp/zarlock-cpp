@@ -30,7 +30,7 @@
 #include <QProgressDialog>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-												 wmap(NULL) {
+												 wmap(NULL), lock(false) {
 	setupUi(this);
 
 	activateUi(true);
@@ -53,7 +53,13 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
 	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
-	connect(calculate, SIGNAL(clicked(bool)), this, SLOT(doRecalculate()));
+
+	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
+	connect(spin_leadres, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
+	connect(spin_others, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
+
+	connect(push_update, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
+	connect(tab_meals, SIGNAL(currentChanged(int)), this, SLOT(mealTabChanged(int)));
 
 	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
 	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
@@ -94,17 +100,10 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
-// 		db.CachedMeal()->setDirtyIcon(style()->standardIcon(QStyle::SP_BrowserReload));
-// 		db.CachedMeal()->select();
-
 		list_meal->setModel(db.CachedMealDay());
 		list_meal->hideColumn(MealDayTableModel::HId);
 
 		list_meal->horizontalHeader()->setResizeMode(MealDayTableModel::HMealDate, QHeaderView::Stretch);
-// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HScouts, QHeaderView::ResizeToContents);
-// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HLeaders, QHeaderView::ResizeToContents);
-// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HOthers, QHeaderView::ResizeToContents);
-// 		list_meal->horizontalHeader()->setResizeMode(MealTableModel::HAvgCosts, QHeaderView::ResizeToContents);
 
 		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -114,22 +113,20 @@ void TabMealWidget::activateUi(bool activate) {
 
 		PriceDelegate * price_delegate = new PriceDelegate;
 		list_meal->setItemDelegateForColumn(MealDayTableModel::HAvgCost, price_delegate);
-		
-
 		list_meal->update();
 
 		label_data->setIndent(14);
 		label_data->setText(QObject::tr("No day selected yet"));
-// 		label_data->setAlignment(Qt::AlignCenter);
 
 		wmap = new QDataWidgetMapper;
-// 		wmap->setModel(db.CachedMeal());
-// 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
-// 		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
-// 		wmap->addMapping(spin_others, MealTableModel::HOthers);
-// 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
+		wmap->setModel(db.CachedMeal());
+		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
+		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
+		wmap->addMapping(spin_others, MealTableModel::HOthers);
+		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 
-		calculate->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+		push_update->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+		push_update->setEnabled(false);
 	}
 }
 
@@ -177,33 +174,87 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 // 	seldate = sd.toString(Qt::ISODate);
 // 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 // 	createPDF->setEnabled(true);
+
 	// TODO: Sprawdzic czy to co ponizej (lub powyzej) jest poprawne.
+
+	lock = true;
+
 	lastidx = idx;
 	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
 
 	Database & db = Database::Instance();
 	MealDayTableModel * mdtm = db.CachedMealDay();
-	QModelIndexList ml = mdtm->match(mdtm->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, 1);
-	if (!ml.count())
+	QModelIndexList mdl = mdtm->match(mdtm->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, 1);
+	if (!mdl.count())
 		return;
 
-	wmap->setCurrentIndex(ml.at(0).row());
-	tab_meals->setIndex(ml.at(0));
+	tab_meals->setIndex(mdl.at(0));
 	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-	seldate = sd.toString(Qt::ISODate);
+
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 	createPDF->setEnabled(true);
+
+	lock = false;
 }
 
-void TabMealWidget::doRecalculate() {
-	db.updateMealCosts(lastidx);
+void TabMealWidget::validateSpins() {
+	if (lock)
+		return;
+
+	if (spin_scouts->value() or spin_leadres->value() or spin_others->value()) {
+		push_update->setEnabled(true);
+	} else {
+		push_update->setEnabled(false);
+	}
+}
+
+void TabMealWidget::mealTabChanged(int tab) {
+	int tabsqty = tab_meals->count();
+
+	if (tab == (tabsqty-1)) {
+		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+		spin_scouts->setEnabled(false);
+		spin_leadres->setEnabled(false);
+		spin_others->setEnabled(false);
+		return;
+	}
+	
+	spin_scouts->setEnabled(true);
+	spin_leadres->setEnabled(true);
+	spin_others->setEnabled(true);
+	
+	int i = tab_meals->currentIndex();
+	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
+	MealTableModel * mt = Database::Instance().CachedMeal();
+	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HId), Qt::EditRole, mid, -1, Qt::MatchExactly);
+	
+	if (meals.count() != 1)
+		return;
+
+	lock = true;
+	wmap->setCurrentIndex(meals.at(0).data(Qt::EditRole).toInt());
+	lock = false;
+}
+
+void TabMealWidget::doUpdate() {
+	int mid = ((MealFoodList *)tab_meals->widget(tab_meals->currentIndex()))->proxyModel()->key();
+
+	QSqlQuery q;
+	q.prepare("UPDATE meal SET scouts=?, leaders=?, others=? WHERE id=?;");
+	q.bindValue(0, spin_scouts->value());
+	q.bindValue(1, spin_leadres->value());
+	q.bindValue(2, spin_others->value());
+	q.bindValue(3, mid);
+	q.exec();
+	Database::Instance().CachedMeal()->select();
 }
 
 void TabMealWidget::doPrepareReport() {
 	QString fn;
 	DBReports::printDailyMealReport(seldate, &fn);
 	QDesktopServices::openUrl(QUrl("file://" % fn));
-// 	PR(fn.toStdString());
 }
 
 void TabMealWidget::doPrepareReports() {
@@ -223,10 +274,7 @@ void TabMealWidget::doPrepareReports() {
 		if (progress.wasCanceled())
 			break;
 
-// 		sleep(1);
-
 		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
-// 		PR(fn.toStdString());
 	}
 	progress.setValue(num);
 }

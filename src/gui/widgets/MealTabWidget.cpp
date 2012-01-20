@@ -53,6 +53,7 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NU
 // 	this->addTab(foodlist[4], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Diner"));
 // 	this->addTab(foodlist[5], tr("Other 1"));
 // 	this->addTab(foodlist[6], tr("Other 2"));
+	lock = false;
 }
 
 MealTabWidget::~MealTabWidget() {
@@ -77,6 +78,7 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, sel_meal_id.toInt(), -1, Qt::MatchExactly);
 
+	lock = true;
 	this->clear();
 	for (int i = 0; i < meals.size(); ++i) {
 		int mid = mt->index(meals.at(i).row(), MealTableModel::HId).data().toInt();
@@ -88,17 +90,16 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 		MealFoodList * foodlist = new MealFoodList(this);
 		this->addTab(foodlist, mn);
 		
-		foodlist->setIndex(index);
 		foodlist->setProxyModel(proxy);
 
 		proxy->setKey(mid);
 		proxy->setRefDate(sel_meal_date);
 		proxy->invalidate();
 		foodlist->populateModel();
-
 	}
 	mtiw->setKey(sel_meal_id.toInt());
 	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
+	lock = false;
 }
 
 BatchTableModelProxy* MealTabWidget::getBatchProxyModel() {

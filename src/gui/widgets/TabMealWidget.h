@@ -42,7 +42,9 @@ private slots:
 	void toggle_calendar(bool show);
 	void hightlight_day(const QDate & date);
 	void selectDay(const QModelIndex& idx);
-	void doRecalculate();
+	void validateSpins();
+	void doUpdate();
+	void mealTabChanged(int tab);
 
 	void doPrepareReport();
 	void doPrepareReports();
@@ -62,6 +64,7 @@ private:
 	QAction * createPDF;
 	QAction * createPDFAll;
 	QAction * browsePDF;
+	bool lock;
 };
 
 #endif // TABMEALWIDGET_H

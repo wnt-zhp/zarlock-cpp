@@ -48,7 +48,7 @@ private slots:
 	void editRecord(const QModelIndex & idx);
 	void setFilter();
 
-	virtual void syncDB();
+// 	virtual void syncDB();
 
 private:
 	Database & db;

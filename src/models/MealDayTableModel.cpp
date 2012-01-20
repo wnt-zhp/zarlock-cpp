@@ -121,6 +121,9 @@ QVariant MealDayTableModel::display(const QModelIndex & idx, const int role) con
 			if (idx.column() == HMealDate) {
 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::LocalDate);
 			}
+			if (idx.column() == HAvgCost) {
+				return QSqlTableModel::data(idx, Qt::DisplayRole).toDouble()/10000.0;
+			}
 		break;
 	}
 	return QSqlTableModel::data(idx, Qt::DisplayRole);

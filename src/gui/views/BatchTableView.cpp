@@ -80,7 +80,7 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 
 // 	setColumnHidden(BatchTableModel::HId, true);
 // 	hideColumn(BatchTableModel::HId);
-// 	hideColumn(BatchTableModel::HProdId);
+	hideColumn(BatchTableModel::HProdId);
 	hideColumn(BatchTableModel::HEntryDate);
 	hideColumn(BatchTableModel::HNotes);
 	hideColumn(BatchTableModel::HUsedQty);

@@ -39,15 +39,13 @@
 #include <QtSql/QSqlError>
 #include <qsqlrecord.h>
 
-#include <gmpxx.h>
-
 struct KMDB_entry {
 	int bid;
 	QString invoice;
 	QString date;
-	mpf_class qty;
-	mpf_class used_qty;
-	void init(int id, const QString & inv, const QString & edate, const mpf_class & q, const mpf_class & uq) {
+	int qty;
+	int used_qty;
+	void init(int id, const QString & inv, const QString & edate, int q, int uq) {
 		bid = id;
 		invoice = inv;
 		date = edate;
@@ -62,7 +60,7 @@ struct KMDB {
 	QString spec;
 	QString unit;
 	QString price_s;
-	mpf_class price;
+	int price;
 	QVector<KMDB_entry> batches;
 };
 
@@ -332,11 +330,11 @@ void DBReports::printKMReport(QString * reportsdir) {
 			DataParser::unit(q2.value(2).toString().trimmed(), unit);
 			QString price_s;
 			DataParser::price(q2.value(3).toString().trimmed(), price_s);
-			double price2, tax2;
-			DataParser::price(q2.value(3).toString().trimmed(), price2, tax2);
-			mpf_class price(price2*((100.0+tax2)/100.0), 2);
-			mpf_class qty(q2.value(4).toDouble(), 2);
-			mpf_class uqty(q2.value(5).toDouble(), 2);
+			double netto_t, vat_t;
+			DataParser::price(q2.value(3).toString().trimmed(), netto_t, vat_t);
+			int price = netto_t*(100+vat_t);
+			int qty = q2.value(4).toInt();
+			int uqty = q2.value(5).toInt();
 			QString invoice = q2.value(6).toString().trimmed();
 			QString entrydate = q2.value(7).toString();
 
@@ -397,13 +395,13 @@ void DBReports::printKMReport(QString * reportsdir) {
 		int gidx = 1;
 
 		int bid = -1;
-		mpf_class qty(0.0, 2);
+		int qty = 0;
 		QString dd = "9999-99-99";
-		QString reason, reason2;
-		int reason3 = 0;
+		int disttype = 0;
+		QString disttype_a, disttype_b;
 
-		mpf_class tot_qty(0.0, 2);
-		mpf_class tot_price(0.0, 2);
+		int tot_qty = 0;
+		int tot_price = 0;
 
 		bool bisempty = false;
 		bool disempty = false;
@@ -431,11 +429,11 @@ void DBReports::printKMReport(QString * reportsdir) {
 			// read distributor empty
 			if (q3.next()) {
 				bid = q3.value(0).toInt();
-				qty = q3.value(1).toDouble();
+				qty = q3.value(1).toInt();
 				dd = q3.value(2).toString();
-				reason = q3.value(3).toString();
-				reason2 = q3.value(4).toString();
-				reason3 = q3.value(5).toInt();
+				disttype = q3.value(3).toInt();
+				disttype_a = q3.value(4).toString();
+				disttype_b = q3.value(5).toString();
 			} else {
 			// if no more distributions mark as empty
 				disempty = true;
@@ -450,13 +448,13 @@ void DBReports::printKMReport(QString * reportsdir) {
 				std::cout << "B: " << gidx << ";" << it->batches[itidx].date.toStdString() << ";"
 						<< it->batches[itidx].invoice.toStdString() << ";"
 						<< it->batches[itidx].qty << ";" << it->batches[itidx].qty * it->price << ";;;"
-						<< tot_qty.get_d() << ";" << tot_price.get_d() << "\n";
+						<< tot_qty/100 << ";" << tot_price/100 << "\n";
 
 				out << gidx << ";" << it->batches[itidx].date.toStdString().c_str() << ";"
 					<< QString::fromUtf8(it->batches[itidx].invoice.toStdString().c_str()) << ";"
-					<< it->batches[itidx].qty.get_d() << ";"
-					<< mpf_class(it->batches[itidx].qty * it->price).get_d() << ";;;"
-					<< tot_qty.get_d() << ";" << tot_price.get_d() << "\n";
+					<< it->batches[itidx].qty/100 << ";"
+					<< it->batches[itidx].qty * it->price/10000 << ";;;"
+					<< tot_qty/100 << ";" << tot_price/100 << "\n";
 
 				++itidx;
 				++gidx;
@@ -472,13 +470,13 @@ void DBReports::printKMReport(QString * reportsdir) {
 				}
 
 				QString reas;
-				switch (reason3) {
+				switch (disttype) {
 					case 0:
-						reas = QString(reason % " " % reason2).trimmed();
+						reas = QString(disttype_a % " " % disttype_b).trimmed();
 						break;
 					case 2:
 						reas = "Wydanie na %1";
-						switch (reason.toInt()) {
+						switch (disttype_a.toInt()) {
 							case 0:
 								reas = reas.arg("śniadanie");
 								break;
@@ -511,8 +509,8 @@ void DBReports::printKMReport(QString * reportsdir) {
 							<< tot_qty << "," << tot_price << "\n";
 
 				out << gidx << "," << dd.toStdString().c_str() << "," << QString::fromUtf8(reas.toStdString().c_str()) << ",,,"
-					<< qty.get_d() << "," << mpf_class(qty * it->price).get_d() << ","
-					<< tot_qty.get_d() << "," << tot_price.get_d() << "\n";
+					<< qty/100 << "," << qty * it->price/10000 << ","
+					<< tot_qty/100 << "," << tot_price/100 << "\n";
 
 				++gidx;
 			}

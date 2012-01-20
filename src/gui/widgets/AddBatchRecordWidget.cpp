@@ -27,7 +27,7 @@
 AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL),
-	indexToUpdate(NULL) {
+	idToUpdate(-1) {
 	setupUi(parent);
 
 	action_addexit->setEnabled(false);
@@ -93,17 +93,21 @@ void AddBatchRecordWidget::insertRecord() {
 	regdate = edit_book->date();
 
 	// FIXME: edit_date->book() jest potencjalnie miejscem bledow
-	if (indexToUpdate) {
-		if (db.updateBatchRecord(*indexToUpdate, prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value()/100, /*0,*/ regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
-
-			indexToUpdate = NULL;
+	if (idToUpdate >= 0) {
+		BatchTableModel * btm = Database::Instance().CachedBatch();
+		QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
+		if (bl.size() != 1)
+			return;
+		if (db.updateBatchRecord(bl.at(0), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+	
+			idToUpdate = -1;
 			clearForm();
 			combo_products->setFocus();
 		}
 	} else {
 		if (db.addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value()/100, 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+			spin_qty->value(), 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 
 			clearForm();
 			combo_products->setFocus();
@@ -212,7 +216,7 @@ void AddBatchRecordWidget::update_model() {
 void AddBatchRecordWidget::prepareInsert(bool visible) {
 	action_addexit->setText(tr("Insert record and exit"));
 	action_addnext->setText(tr("Insert record and add next"));
-	indexToUpdate = NULL;
+	idToUpdate = -1;
 	if (visible) {
 		clearForm();
 	}
@@ -225,25 +229,27 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	double qty, used;
 
 	clearForm();
-	update_model();
+// 	update_model();
 
-	indexToUpdate = &idx;
-
-	Database::Instance().getBatchRecord(idx, pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
+	BatchTableModel * btm = Database::Instance().CachedBatch();
+	QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idx.model()->index(idx.row(), BatchTableModel::HId).data(Qt::EditRole), -1, Qt::MatchExactly);
+	if (bl.size() != 1)
+		return;
+	idToUpdate = bl.at(0).data(Qt::EditRole).toInt();
+	Database::Instance().getBatchRecord(bl.at(0), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
 
 	ProductsTableModel * pm = Database::Instance().CachedProducts();
-	QModelIndexList productsl = pm->match(pm->index(0, ProductsTableModel::HId), Qt::DisplayRole, idx.model()->index(idx.row(), BatchTableModel::HProdId).data(Qt::EditRole).toUInt());
-
-	if (productsl.size() != 1)
+	QModelIndexList pl = pm->match(pm->index(0, ProductsTableModel::HId), Qt::DisplayRole, idx.model()->index(idx.row(), BatchTableModel::HProdId).data(Qt::EditRole).toUInt(), -1, Qt::MatchExactly);
+	if (pl.size() != 1)
 		return;
 
-	combo_products->setCurrentIndex(pproxy->mapFromSource(productsl.at(0)).row());
+	combo_products->setCurrentIndex(pproxy->mapFromSource(pl.at(0)).row());
 	edit_spec->setRaw(spec);
-	edit_price->setRaw(QString().setNum(price.toDouble()/100));
+	edit_price->setRaw(QString().setNum(price.toDouble()));
 	check_uprice->setChecked(true);
 	edit_unit->setRaw(unit);
-	spin_qty->setValue(qty);
 	spin_qty->setMinimum(used);
+	spin_qty->setValue(qty);
 	edit_book->setRaw(reg.toString("dd/MM/yyyy"));
 	edit_expiry->setRaw(expiry.toString("dd/MM/yyyy"));
 	check_inf->setChecked(!expiry.isValid());

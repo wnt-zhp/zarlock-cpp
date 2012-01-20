@@ -59,7 +59,7 @@ private:
 
 	QSortFilterProxyModel * pproxy;
 
-	const QModelIndex * indexToUpdate;
+	int idToUpdate;
 };
 
 #endif // ADDBATCHRECORDWIDGET_H

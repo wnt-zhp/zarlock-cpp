@@ -10,12 +10,12 @@
 #define PR(x) std::cout << "++DEBUG: " << #x << " = |" << x << "| (" << __FILE__ << ", " << __LINE__ << ")\n";
 #define FPR(x) //std::cout << "++DEBUG: " << #x << " = |" << x << "| (" << __FILE__ << ", " << __LINE__ << ")\n";
 
-#define TD int seconds = time(NULL);
-#define TM std::cout << "+++ TIME: " << __func__ << " " << time(NULL) - seconds << "s. in " << __FILE__ << " at line " << __LINE__ << std::endl;
+#define TD	int seconds = time(NULL);
+#define TM	std::cout << "+++ TIME: " << __func__ << " " << time(NULL) - seconds << "s. in " << __FILE__ << " at line " << __LINE__ << std::endl;
 
-#define GTD int gseconds = time(NULL);
-#define EGTD extern int gseconds;
-#define GTM std::cout << "+++ GLOBAL TIME: " << __func__ << " " << time(NULL) - gseconds << "s. in " << __FILE__ << " at line " << __LINE__ << std::endl;
+#define GTD	int gseconds = time(NULL);
+#define EGTD	extern int gseconds;
+#define GTM	std::cout << "+++ GLOBAL TIME: " << __func__ << " " << time(NULL) - gseconds << "s. in " << __FILE__ << " at line " << __LINE__ << std::endl;
 
 #include <QtGui/QPalette>
 #include <QtGui/QFont>

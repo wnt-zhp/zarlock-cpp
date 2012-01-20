@@ -301,7 +301,7 @@ bool Database::execQueryFromFile(const QString& resource) {
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
 		db.transaction();
-	
+
 	QFile dbresfile(resource);   // TODO: Fix it later
 	if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		return false;
@@ -314,8 +314,9 @@ bool Database::execQueryFromFile(const QString& resource) {
 // 		query.exec(line.fromUtf8(line.toStdString().c_str()));
 		if (!query.exec(line.fromUtf8(line.toStdString().c_str()))) {
 			PR(query.lastError().text().toStdString());
-		} else {
 			PR(query.lastQuery().toStdString());
+		} else {
+// 			PR(query.lastQuery().toStdString());
 		}
 	}
 	query.finish();
@@ -426,54 +427,57 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 	return true;
 }
 
-void Database::updateBatchQty() {
-	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-		db.transaction();
+// void Database::updateBatchQty() {
+// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+// 		db.transaction();
+// 
+// 	QSqlQuery qBatch("UPDATE batch SET used_qty=(SELECT sum(quantity) FROM distributor WHERE batch_id=batch.id);");
+// 	qBatch.exec();
+// 
+// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+// 		if (!db.commit())
+// 			db.rollback();
+// 
+// 	model_batch->select();
+// }
 
-	QSqlQuery qBatch("UPDATE batch SET used_qty=(SELECT sum(quantity) FROM distributor WHERE batch_id=batch.id);");
-	qBatch.exec();
+// void Database::updateBatchQty(const int bid) {
+// 	QSqlQuery q;
+//         q.prepare("SELECT SUM(quantity) FROM distributor WHERE batch_id=?;");
+// 	q.bindValue(0, bid);
+// 	q.exec();
+// 
+// 	int qty = 0;
+// 	if (q.next())
+//         qty = q.value(0).toInt();
+// 
+// 	q.prepare("UPDATE batch SET used_qty=? WHERE id=?;");
+// 	q.bindValue(0, qty);
+// 	q.bindValue(1, bid);
+// 	q.exec();
+// }
 
-	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-		if (!db.commit())
-			db.rollback();
+// void Database::updateMealCosts() {
+// 	QSqlQuery q;
+// // 	q.exec("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
+// // 		   "FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id);");
+// // 	q.exec("UPDATE meal_day SET avcosts=CAST(round((SELECT (sum(d.quantity*b.price)/(SELECT sum(m.scouts+m.leaders+m.others) FROM meal AS m WHERE mealday=meal_day.id)/100) "
+// // 			"FROM distributor AS d, batch as b WHERE d.disttype_a=meal_day.id AND d.batch_id=b.id)) AS INTEGER);");
+// 	q.exec("UPDATE meal_day SET avcosts=round(CAST((SELECT sum(d.quantity*b.price) FROM batch AS b, distributor AS d, meal AS m WHERE b.id=d.batch_id AND d.disttype=2 AND d.disttype_a=m.id AND m.mealday=meal_day.id) AS DOUBLE)/"
+// 			"(SELECT sum(m.scouts+m.leaders+m.others) FROM meal as m WHERE mealday=meal_day.id)) WHERE id=(SELECT md.id FROM meal_day AS md, meal AS m, distributor AS d WHERE d.disttype=2 AND m.id=d.disttype_a AND md.id=m.mealday);");
+// 	model_mealday->select();
+// }
 
-	model_batch->select();
-}
-
-void Database::updateBatchQty(const int bid) {
-	QSqlQuery q;
-        q.prepare("SELECT SUM(quantity) FROM distributor WHERE batch_id=?;");
-	q.bindValue(0, bid);
-	q.exec();
-
-	int qty = 0;
-	if (q.next())
-        qty = q.value(0).toInt();
-
-	q.prepare("UPDATE batch SET used_qty=? WHERE id=?;");
-	q.bindValue(0, qty);
-	q.bindValue(1, bid);
-	q.exec();
-}
-
-void Database::updateMealCosts() {
-	QSqlQuery q;
-	q.exec("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
-	"FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id);");
-
-	model_mealday->select();
-}
-
-void Database::updateMealCosts(const QModelIndex& idx) {
-	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
-	QSqlQuery q;
-	q.prepare("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
-	"FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id) WHERE id=?;");
-	q.bindValue(0, mdid);
-	q.exec();
-
-	model_mealday->select();
-}
+// void Database::updateMealCosts(const QModelIndex& idx) {
+// 	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
+// 	QSqlQuery q;
+// 	q.prepare("UPDATE meal_day SET avcosts=CAST(round((SELECT (sum(d.quantity*b.price)/(SELECT sum(m.scouts+m.leaders+m.others) FROM meal AS m WHERE mealday=meal_day.id)/100) "
+// 			"FROM distributor AS d, batch as b WHERE d.disttype_a=m.id AND b.id=d.batch_id)) AS INTEGER) WHERE id=?;");
+// 	q.bindValue(0, mdid);
+// 	q.exec();
+// 
+// 	model_mealday->select();
+// }
 
 void Database::updateProductsWordList() {
 	QSqlQuery qsq("SELECT name, unit, expire FROM products;");
@@ -701,8 +705,8 @@ TM
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), int(qty*100));
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), int(used*100));
+	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
+	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), used);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
@@ -764,7 +768,7 @@ bool Database::updateBatchRecord(const QModelIndex & idx, unsigned int pid, cons
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), int(qty*100));
+	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
 // 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), int(used*100));
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
@@ -963,7 +967,7 @@ GTM
 			return false;
 		}GTM
 		status = model_distributor->submitAll();GTM
-		updateBatchQty(bid.toInt());GTM
+		/*updateBatchQty(bid.toInt());*/GTM
 // 		if (submitBatches) model_batch->submitAll();
 		model_batch->select();
 		GTM

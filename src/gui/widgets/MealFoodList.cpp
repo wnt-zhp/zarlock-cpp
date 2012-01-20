@@ -86,12 +86,4 @@ void MealFoodList::markDirty() {
 //	Database::Instance().CachedMeal()->submitAll();
 }
 
-void MealFoodList::setIndex(const QModelIndex& index) {
-	idx = index;
-}
-
-const QModelIndex& MealFoodList::getIndex() {
-	return idx;
-}
-
 #include "MealFoodList.moc"

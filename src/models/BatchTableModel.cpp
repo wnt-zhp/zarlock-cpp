@@ -160,7 +160,7 @@ bool BatchTableModel::select() {
 	setHeaderData(HUnit,		Qt::Horizontal, tr("Unit"));
 	setHeaderData(HStaQty,		Qt::Horizontal, tr("Quantity"));
 	setHeaderData(HRegDate,		Qt::Horizontal, tr("Booking"));
-	setHeaderData(HExpiryDate,		Qt::Horizontal, tr("Expiry"));
+	setHeaderData(HExpiryDate,	Qt::Horizontal, tr("Expiry"));
 	setHeaderData(HUsedQty,		Qt::Horizontal, tr("Used"));
 	setHeaderData(HEntryDate,	Qt::Horizontal, tr("Entry date"));
 	setHeaderData(HNotes,		Qt::Horizontal, tr("Notes"));

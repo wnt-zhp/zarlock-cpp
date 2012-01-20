@@ -50,11 +50,11 @@ public:
 	bool close_database();
 	void save_database();
 
-	void updateBatchQty();
-	void updateBatchQty(const int);
+// 	void updateBatchQty();
+// 	void updateBatchQty(const int);
 
-	void updateMealCosts();
-	void updateMealCosts(const QModelIndex& idx);
+// 	void updateMealCosts();
+// 	void updateMealCosts(const QModelIndex& idx);
 
 	void updateProductsWordList();
 	void updateBatchWordList();
