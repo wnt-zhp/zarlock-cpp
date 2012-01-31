@@ -37,7 +37,6 @@ public:
 	virtual void insertEmptySlot();
 public slots:
 	virtual void populateModel();
-	virtual void markDirty();
 
 private slots:
 	virtual void doItemEdit(QListWidgetItem * item);

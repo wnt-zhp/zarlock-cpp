@@ -58,7 +58,6 @@ private:
 	Database & db;
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
-	QModelIndex lastidx;
 	QString seldate;
 
 	QAction * createPDF;

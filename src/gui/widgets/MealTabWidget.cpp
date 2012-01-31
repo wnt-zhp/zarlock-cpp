@@ -39,44 +39,42 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NU
 	cexp = new QCheckBox;
 	cexp->setChecked(false);
 
-	btmp = new BatchTableModelProxy(cexp, NULL, NULL, che);
-	btmp->setSourceModel(Database::Instance().CachedBatch());
-	btmp->setDynamicSortFilter(true);
-	btmp->setSortCaseSensitivity(Qt::CaseInsensitive);
-	btmp->sort(2, Qt::AscendingOrder);
-	btmp->invalidate();
+	batch_proxy = new BatchTableModelProxy(cexp, NULL, NULL, che);
+	batch_proxy->setSourceModel(Database::Instance().CachedBatch());
+	batch_proxy->setDynamicSortFilter(true);
+	batch_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+	batch_proxy->sort(2, Qt::AscendingOrder);
+	batch_proxy->invalidate();
 
-// 	this->addTab(foodlist[0], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Breakfast"));
-// 	this->addTab(foodlist[1], tr("2nd Breakfast"));
-// 	this->addTab(foodlist[2], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Lunch"));
-// 	this->addTab(foodlist[3], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Tea"));
-// 	this->addTab(foodlist[4], style()->standardIcon(QStyle::SP_FileDialogDetailedView), tr("Diner"));
-// 	this->addTab(foodlist[5], tr("Other 1"));
-// 	this->addTab(foodlist[6], tr("Other 2"));
 	lock = false;
+	connect(this, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 }
 
 MealTabWidget::~MealTabWidget() {
-	delete btmp;
+	delete batch_proxy;
 	delete che;
 	delete cexp;
 	FPR(__func__);
 }
 
-void MealTabWidget::setIndex(const QModelIndex& index) {
-	index_backup = index;
-
+void MealTabWidget::setMealDayId(int mdid) {
 	MealDayTableModel * mdt = Database::Instance().CachedMealDay();
 	MealTableModel * mt = Database::Instance().CachedMeal();
-	
-	QDate sel_meal_date = mdt->index(index.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-	QVariant sel_meal_id = mdt->index(index.row(), MealDayTableModel::HId).data(Qt::EditRole);
 
-	btmp->setDateKey(sel_meal_date);
-	btmp->invalidate();
+	QModelIndexList mdl = mdt->match(mdt->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, -1);
+	// if there is no days then return
+	if (mdl.count() != 1)
+		return;
+
+	QDate sel_meal_date = mdt->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+
+	meal_day_id = mdid;
+	
+	batch_proxy->setDateKey(sel_meal_date);
+	batch_proxy->invalidate();
 
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
-	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, sel_meal_id.toInt(), -1, Qt::MatchExactly);
+	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1, Qt::MatchExactly);
 
 	lock = true;
 	this->clear();
@@ -97,13 +95,16 @@ void MealTabWidget::setIndex(const QModelIndex& index) {
 		proxy->invalidate();
 		foodlist->populateModel();
 	}
-	mtiw->setKey(sel_meal_id.toInt());
+	mtiw->setKey(mdid);
 	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
 	lock = false;
+	// by default it is tab 0 so no setCurrentIndex(0) required
+// 	this->setCurrentIndex(0);
+	this->tabChanged(0);
 }
 
-BatchTableModelProxy* MealTabWidget::getBatchProxyModel() {
-	return btmp;
+BatchTableModelProxy* MealTabWidget::getBatchProxyModel() const {
+	return batch_proxy;
 }
 
 void MealTabWidget::markOpenedItems(QListWidgetItem* item) {
@@ -117,8 +118,17 @@ void MealTabWidget::closeOpenedItems() {
 }
 
 void MealTabWidget::reloadMeals() {
-	setIndex(index_backup);
 	this->setCurrentIndex(this->count()-1);
 }
+
+int MealTabWidget::getMealDayId() const {
+	return meal_day_id;
+}
+
+void MealTabWidget::tabChanged(int tab) const {
+	if (!lock)
+		emit currentTabChanged(tab);
+}
+
 
 #include "MealTabWidget.moc"

@@ -34,24 +34,29 @@ public:
 	explicit MealTabWidget(QWidget* parent = 0);
 	virtual ~MealTabWidget();
 
-	virtual BatchTableModelProxy * getBatchProxyModel();
+	virtual BatchTableModelProxy * getBatchProxyModel() const;
 
 public slots:
-	virtual void setIndex(const QModelIndex& index);
+	virtual void setMealDayId(int mdid);
+	virtual int getMealDayId() const;
 
 	virtual void markOpenedItems(QListWidgetItem* item);
 	virtual void closeOpenedItems();
 
 protected slots:
 	virtual void reloadMeals();
+	virtual void tabChanged(int tab) const;
+
+signals:
+	void currentTabChanged(int tab) const;
 
 private:
-	BatchTableModelProxy * btmp;
+	BatchTableModelProxy * batch_proxy;
 	QCheckBox * che;
 	QCheckBox * cexp;
 	QListWidgetItem * openeditem;
 	MealTabInsertWidget * mtiw;
-	QModelIndex index_backup;
+	int meal_day_id;
 	bool lock;
 };
 

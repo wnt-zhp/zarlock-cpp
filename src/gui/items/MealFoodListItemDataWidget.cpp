@@ -164,7 +164,6 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	batch_label->setText(batchlabel);
 	qty_label->setText(QString("%1").arg(quantity));
 
-	mfl->markDirty();
 	render(true);
 	db.CachedMealDay()->select();
 }
@@ -203,8 +202,6 @@ void MealFoodListItemDataWidget::buttonRemove() { EGTD
 	Database & db = Database::Instance();
 GTM
 	db.removeDistributorRecord(dist_idx.row());
-GTM
-	mfl->markDirty();
 GTM
 	convertToEmpty();
 GTM

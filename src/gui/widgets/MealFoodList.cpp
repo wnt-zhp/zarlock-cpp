@@ -78,12 +78,4 @@ void MealFoodList::doItemEdit(QListWidgetItem* item) {
 	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
 }
 
-void MealFoodList::markDirty() {
-	// this is for autoupdate
-        //Database::Instance().updateMealCosts(idx);
-	//this is for delayed update
-//	Database::Instance().CachedMeal()->setData(Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty), 1, Qt::EditRole);
-//	Database::Instance().CachedMeal()->submitAll();
-}
-
 #include "MealFoodList.moc"

@@ -4,7 +4,6 @@
 #include "config.h"
 #include "globals.h"
 #include "DBBrowser.h"
-#include <gmpxx.h>
 
 namespace globals {
 	QPalette palette_ok = QPalette();

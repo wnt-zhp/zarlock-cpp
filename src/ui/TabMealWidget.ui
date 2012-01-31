@@ -20,28 +20,49 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="verticalLayoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
        <item>
         <widget class="QTableView" name="list_meal"/>
        </item>
        <item>
-        <widget class="QCalendarWidget" name="calendar"/>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
          <item>
-          <widget class="QPushButton" name="action_insert">
-           <property name="text">
-            <string>&amp;Insert</string>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="layout_calendar">
+           <item>
+            <widget class="QCalendarWidget" name="calendar"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="action_insert">
+             <property name="text">
+              <string>&amp;Insert</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QPushButton" name="action_toggle">
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="layout_cal_toggle">
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="action_toggle">
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -145,9 +166,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>list_meal</tabstop>
-  <tabstop>calendar</tabstop>
-  <tabstop>action_insert</tabstop>
-  <tabstop>action_toggle</tabstop>
   <tabstop>tools</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leadres</tabstop>

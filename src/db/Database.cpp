@@ -816,53 +816,75 @@ bool Database::removeBatchRecord(const QModelIndexList & idxl, bool askForConfir
 }
 
 bool Database::addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate) {
-// GTD
-// GTM
-// 	QSqlQuery q;
-// 	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
-// 	q.bindValue(0, bid);
-// 	q.bindValue(1, int(qty*100.0));
-// 	q.bindValue(2, ddate);
-// 	q.bindValue(3, rdate);
-// 	q.bindValue(4, re1);
-// 	q.bindValue(5, re2);
-// 	q.bindValue(6, re3);
-// 	bool status = q.exec();
-// 
-// 	if (autoupdate) {
-// // 		updateBatchQty(bid);
-// 		model_batch->select();
-// 		model_distributor->select();
-// 	}
-// GTM	
-// 	return status;
-	bool status = true;
-
-	int row = model_distributor->rowCount();
-
-	model_distributor->autoSubmit(false);
-	status &= model_distributor->insertRows(row, 1);
-	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
-
-	model_distributor->autoSubmit(true);
-
-	if (!status) {
-		model_distributor->revertAll();
+GTD
+GTM
+	QModelIndexList qmil = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+	if (qmil.count() != 1) {
 		return false;
 	}
+	int bidrow = qmil.at(0).row();
 
-	status = model_distributor->submitAll();
-	// 	if (status)
-	// 		updateBatchWordList();
+	int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
+	int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
+	int fake = 0;
 
+	int free = total - used + fake;
+
+	if (free < qty) {
+// 			inputErrorMsgBox(value.toString());
+		return false;
+	}
+GTM
+	QSqlQuery q;
+	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
+	q.bindValue(0, bid);
+	q.bindValue(1, qty);
+	q.bindValue(2, ddate.toString(Qt::ISODate));
+	q.bindValue(3, rdate.toString(Qt::ISODate));
+	q.bindValue(4, disttype);
+	q.bindValue(5, dt_a);
+	q.bindValue(6, dt_b);
+	bool status = q.exec();
+GTM
+	if (autoupdate) {
+// 		updateBatchQty(bid);
+		model_batch->select();
+GTM
+		model_distributor->select();
+GTM
+		updateDistributorWordList();
+	}
+GTM	
 	return status;
+
+// 	bool status = true;
+// GTD
+// GTM
+// 	int row = model_distributor->rowCount();
+// 
+// 	model_distributor->autoSubmit(false);
+// 	status &= model_distributor->insertRows(row, 1);
+// 	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
+// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
+// 
+// 	model_distributor->autoSubmit(true);
+// GTM
+// 	if (!status) {
+// 		model_distributor->revertAll();
+// 		return false;
+// 	}
+// GTM
+// 	status = model_distributor->submitAll();
+// 	// 	if (status)
+// 	// 		updateBatchWordList();
+// GTM
+// 	return status;
 }
 
 bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {

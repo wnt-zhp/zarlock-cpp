@@ -59,7 +59,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(spin_others, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
 
 	connect(push_update, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
-	connect(tab_meals, SIGNAL(currentChanged(int)), this, SLOT(mealTabChanged(int)));
+	connect(tab_meals, SIGNAL(currentTabChanged(int)), this, SLOT(mealTabChanged(int)));
 
 	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
 	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
@@ -135,6 +135,7 @@ void TabMealWidget::activateUi(bool activate) {
 // TODO: wyczysc kod z komentarza
 void TabMealWidget::add_mealday() {
 	db.addMealDayRecord(calendar->selectedDate(), 0);
+	
 	hightlight_day(calendar->selectedDate());
 // 	, true, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->"
 	db.CachedMealDay()->select();
@@ -142,14 +143,7 @@ void TabMealWidget::add_mealday() {
 
 void TabMealWidget::toggle_calendar(bool show) {
 	calendar->setVisible(show);
-	if (show) {
-// 		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
-		hightlight_day(calendar->selectedDate());
-	}
-	else {
-// 		action_toggle->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
-		action_insert->setEnabled(false);
-	}
+	action_insert->setVisible(show);
 }
 
 void TabMealWidget::hightlight_day(const QDate & date) {
@@ -157,6 +151,8 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 
 	if (ml.count()) {
 		list_meal->setCurrentIndex(ml.at(0));
+		int mdid = db.CachedMealDay()->data(db.CachedMealDay()->index(ml.at(0).row(), MealDayTableModel::HId)).toInt();
+		PR(mdid);
 		action_insert->setEnabled(false);
 		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogNoButton));
 		selectDay(ml.at(0));
@@ -167,7 +163,6 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 }
 
 void TabMealWidget::selectDay(const QModelIndex& idx) {
-// 	lastidx = idx;
 // 	wmap->setCurrentIndex(idx.row());
 // 	tab_meals->setIndex(idx);
 // 	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
@@ -177,18 +172,15 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 
 	// TODO: Sprawdzic czy to co ponizej (lub powyzej) jest poprawne.
 
+	// do not reload meal tabs while filling tab
 	lock = true;
 
-	lastidx = idx;
+	// get meal day id
 	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
 
-	Database & db = Database::Instance();
-	MealDayTableModel * mdtm = db.CachedMealDay();
-	QModelIndexList mdl = mdtm->match(mdtm->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, 1);
-	if (!mdl.count())
-		return;
+	// query meal tab for meals from this day
+	tab_meals->setMealDayId(mdid);
 
-	tab_meals->setIndex(mdl.at(0));
 	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
@@ -198,10 +190,10 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 }
 
 void TabMealWidget::validateSpins() {
-	if (lock)
-		return;
+// 	if (lock)
+// 		return;
 
-	if (spin_scouts->value() or spin_leadres->value() or spin_others->value()) {
+	if (!lock and ( spin_scouts->value() or spin_leadres->value() or spin_others->value() )) {
 		push_update->setEnabled(true);
 	} else {
 		push_update->setEnabled(false);
@@ -212,21 +204,22 @@ void TabMealWidget::mealTabChanged(int tab) {
 	int tabsqty = tab_meals->count();
 
 	if (tab == (tabsqty-1)) {
-		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
-		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
-		// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
+// 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
 		spin_scouts->setEnabled(false);
 		spin_leadres->setEnabled(false);
 		spin_others->setEnabled(false);
 		return;
 	}
-	
+
 	spin_scouts->setEnabled(true);
 	spin_leadres->setEnabled(true);
 	spin_others->setEnabled(true);
-	
+
 	int i = tab_meals->currentIndex();
 	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
+
 	MealTableModel * mt = Database::Instance().CachedMeal();
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HId), Qt::EditRole, mid, -1, Qt::MatchExactly);
 	
@@ -234,7 +227,7 @@ void TabMealWidget::mealTabChanged(int tab) {
 		return;
 
 	lock = true;
-	wmap->setCurrentIndex(meals.at(0).data(Qt::EditRole).toInt());
+	wmap->setCurrentIndex(meals.at(0).row());
 	lock = false;
 }
 
