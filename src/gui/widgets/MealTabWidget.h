@@ -40,24 +40,19 @@ public slots:
 	virtual void setMealDayId(int mdid);
 	virtual int getMealDayId() const;
 
-	virtual void markOpenedItems(QListWidgetItem* item);
-	virtual void closeOpenedItems();
+	virtual void markOpenItem(QListWidgetItem* item);
+	virtual void closeOpenItems();
 
 protected slots:
-	virtual void reloadMeals();
-	virtual void tabChanged(int tab) const;
-
-signals:
-	void currentTabChanged(int tab) const;
+	virtual void reloadTabs(int mealDayId);
 
 private:
 	BatchTableModelProxy * batch_proxy;
 	QCheckBox * che;
 	QCheckBox * cexp;
-	QListWidgetItem * openeditem;
+	QListWidgetItem * open_item;
 	MealTabInsertWidget * mtiw;
 	int meal_day_id;
-	bool lock;
 };
 
 #endif // MEALTABWIDGET_H

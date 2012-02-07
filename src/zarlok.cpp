@@ -25,7 +25,7 @@ GTD
  * @param parent QMainWindow
  **/
 zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
-					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
+					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {GTD
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
@@ -69,11 +69,11 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar->addWidget(dbiw);
 	dbtoolbar->addAction(actionConfigDB);
 	dbtoolbar->addAction(actionSwitchDB);
-
-	tpw = new TabProductsWidget();
-	tbw = new TabBatchWidget();
-	tdw = new TabDistributorWidget();
-	tmw = new TabMealWidget();
+	GTM;
+	tpw = new TabProductsWidget();GTM;
+	tbw = new TabBatchWidget();GTM;
+	tdw = new TabDistributorWidget();GTM;
+	tmw = new TabMealWidget();GTM;
 
 	MainTab->addTab(tpw, QIcon(":/resources/icons/folder-green.png"), tr("Products"));
 	MainTab->addTab(tbw, QIcon(":/resources/icons/folder-orange.png"), tr("Stock"));
@@ -105,7 +105,6 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 }
 
 zarlok::~zarlok() {
-	FPR(__func__);
 	while (MainTab->count())
 		MainTab->removeTab(0);
 	/*if (tmw)*/ delete tmw;/* tmw = NULL;*/

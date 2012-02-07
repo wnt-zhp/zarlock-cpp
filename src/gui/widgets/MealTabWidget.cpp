@@ -28,11 +28,10 @@
 #include <QStyle>
 #include <QAction>
 
-MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NULL), mtiw(NULL) {
+MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NULL), mtiw(NULL) {
 	this->setDocumentMode(true);
 
 	mtiw = new MealTabInsertWidget(this);
-	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadMeals()));
 
 	che = new QCheckBox;
 	che->setChecked(true);
@@ -46,8 +45,7 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), openeditem(NU
 	batch_proxy->sort(2, Qt::AscendingOrder);
 	batch_proxy->invalidate();
 
-	lock = false;
-	connect(this, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
+	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
 }
 
 MealTabWidget::~MealTabWidget() {
@@ -58,6 +56,8 @@ MealTabWidget::~MealTabWidget() {
 }
 
 void MealTabWidget::setMealDayId(int mdid) {
+	meal_day_id = mdid;
+
 	MealDayTableModel * mdt = Database::Instance().CachedMealDay();
 	MealTableModel * mt = Database::Instance().CachedMeal();
 
@@ -67,8 +67,6 @@ void MealTabWidget::setMealDayId(int mdid) {
 		return;
 
 	QDate sel_meal_date = mdt->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-
-	meal_day_id = mdid;
 	
 	batch_proxy->setDateKey(sel_meal_date);
 	batch_proxy->invalidate();
@@ -76,9 +74,12 @@ void MealTabWidget::setMealDayId(int mdid) {
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1, Qt::MatchExactly);
 
-	lock = true;
 	this->clear();
-	for (int i = 0; i < meals.size(); ++i) {
+
+	mtiw->setKey(mdid);
+	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
+
+	for (int i = meals.size()-1; i >=0; --i) {
 		int mid = mt->index(meals.at(i).row(), MealTableModel::HId).data().toInt();
 		QString mn = mt->index(meals.at(i).row(), MealTableModel::HMealName).data().toString();
 
@@ -86,7 +87,7 @@ void MealTabWidget::setMealDayId(int mdid) {
 		proxy->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
 
 		MealFoodList * foodlist = new MealFoodList(this);
-		this->addTab(foodlist, mn);
+		this->insertTab(0, foodlist, mn);
 		
 		foodlist->setProxyModel(proxy);
 
@@ -95,40 +96,29 @@ void MealTabWidget::setMealDayId(int mdid) {
 		proxy->invalidate();
 		foodlist->populateModel();
 	}
-	mtiw->setKey(mdid);
-	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
-	lock = false;
-	// by default it is tab 0 so no setCurrentIndex(0) required
-// 	this->setCurrentIndex(0);
-	this->tabChanged(0);
 }
 
 BatchTableModelProxy* MealTabWidget::getBatchProxyModel() const {
 	return batch_proxy;
 }
 
-void MealTabWidget::markOpenedItems(QListWidgetItem* item) {
-	openeditem = item;
+void MealTabWidget::markOpenItem(QListWidgetItem* item) {
+	open_item = item;
 }
 
-void MealTabWidget::closeOpenedItems() {
-	if (openeditem)
-		((MealFoodListItemDataWidget *)openeditem->listWidget()->itemWidget(openeditem))->buttonClose();
-	openeditem = NULL;
+void MealTabWidget::closeOpenItems() {
+	if (open_item)
+		((MealFoodListItemDataWidget *)open_item->listWidget()->itemWidget(open_item))->buttonClose();
+	open_item = NULL;
 }
 
-void MealTabWidget::reloadMeals() {
+void MealTabWidget::reloadTabs(int mealDayId) {
+	setMealDayId(mealDayId);
 	this->setCurrentIndex(this->count()-1);
 }
 
 int MealTabWidget::getMealDayId() const {
 	return meal_day_id;
 }
-
-void MealTabWidget::tabChanged(int tab) const {
-	if (!lock)
-		emit currentTabChanged(tab);
-}
-
 
 #include "MealTabWidget.moc"

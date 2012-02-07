@@ -139,7 +139,9 @@ void MealTabInsertWidget::pushButton() {
 		mealkind = MealTableModel::MOther;
 	}
 
-	emit mealInserted(mealkind);
+	db.CachedMeal()->select();
+
+	emit mealInserted(mdid);
 }
 
 void MealTabInsertWidget::setKey(int mealdayid) {

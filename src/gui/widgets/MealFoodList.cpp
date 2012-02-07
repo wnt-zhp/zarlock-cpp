@@ -73,8 +73,8 @@ const MealTableModelProxy* MealFoodList::proxyModel() {
 }
 
 void MealFoodList::doItemEdit(QListWidgetItem* item) {
-	((MealTabWidget *)parent())->closeOpenedItems();
-	((MealTabWidget *)parent())->markOpenedItems(item);
+	((MealTabWidget *)parent())->closeOpenItems();
+	((MealTabWidget *)parent())->markOpenItem(item);
 	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
 }
 

@@ -123,13 +123,6 @@ void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
 	db.removeDistributorRecord(l);
-
-// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-// 		if ((*it).column() == DistributorTableModel::HBatchId) {
-// 			
-// 			db.removeDistributorRecord((*it).row());
-// 		}
-// 	}
 }
 
 #include "DistributorTableView.moc"

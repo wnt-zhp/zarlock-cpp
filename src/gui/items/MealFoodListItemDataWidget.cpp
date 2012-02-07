@@ -68,7 +68,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
-	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenedItems()));
+	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenItems()));
 
 	convertToEmpty();
 	validateBatchAdd();
@@ -174,8 +174,8 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	if (lock)
 		return;
 
-	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenedItems();
-	((MealTabWidget *)(mfl->parent()->parent()))->markOpenedItems(owner);
+	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenItems();
+	((MealTabWidget *)(mfl->parent()->parent()))->markOpenItem(owner);
 	lock = true;
 // 	proxyindex = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId)).row();
 	proxyindex = batch_idx.row();
@@ -201,7 +201,8 @@ void MealFoodListItemDataWidget::buttonClose() {
 void MealFoodListItemDataWidget::buttonRemove() { EGTD
 	Database & db = Database::Instance();
 GTM
-	db.removeDistributorRecord(dist_idx.row());
+// 	QModelIndexList mil()
+	db.removeDistributorRecord(QModelIndexList({dist_idx}));
 GTM
 	convertToEmpty();
 GTM

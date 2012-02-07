@@ -59,7 +59,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(spin_others, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
 
 	connect(push_update, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
-	connect(tab_meals, SIGNAL(currentTabChanged(int)), this, SLOT(mealTabChanged(int)));
+	connect(tab_meals, SIGNAL(currentChanged(int)), this, SLOT(mealTabChanged(int)));
 
 	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
 	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
@@ -152,7 +152,6 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 	if (ml.count()) {
 		list_meal->setCurrentIndex(ml.at(0));
 		int mdid = db.CachedMealDay()->data(db.CachedMealDay()->index(ml.at(0).row(), MealDayTableModel::HId)).toInt();
-		PR(mdid);
 		action_insert->setEnabled(false);
 		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogNoButton));
 		selectDay(ml.at(0));

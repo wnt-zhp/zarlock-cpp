@@ -185,7 +185,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 
 	model_distributor = new DistributorTableModel;
 	model_distributor->setTable("distributor");
-	model_distributor->setEditStrategy(QSqlTableModel::OnManualSubmit);
+// 	model_distributor->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
 	model_mealday = new MealDayTableModel;
 	model_mealday->setTable("meal_day");
@@ -241,15 +241,13 @@ bool Database::close_database() {
 }
 
 void Database::save_database() {
-	model_products->submitAll();
-	model_distributor->submitAll();
+// PR(1);	model_products->submitAll();
+// PR(1);	model_batch->submitAll();
+// PR(1);	model_distributor->submitAll();
+// PR(1);	model_mealday->submitAll();
+// PR(1);	model_meal->submitAll();
 
-	model_batch->submitAll();
-
-	model_mealday->submitAll();
-	model_meal->submitAll();
-
-	emit dbSaved();
+PR(1);	emit dbSaved();
 }
 
 /**
@@ -272,7 +270,7 @@ bool Database::rebuild_models() {
 
 	// distributor
 	if (!model_distributor->select()) {
-		QMessageBox::critical(0, QObject::tr("Database error"), model_distributor->lastError().text(), QMessageBox::Abort);
+// 		QMessageBox::critical(0, QObject::tr("Database error"), model_distributor->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
@@ -835,8 +833,41 @@ GTM
 		return false;
 	}
 GTM
+	if (model_distributor->addRecord(bid, qty, ddate, rdate, disttype, dt_a, dt_b)) {
+		model_batch->select();
+GTM
+// 		model_distributor->select();
+GTM
+		updateDistributorWordList();
+		return true;
+	}
+GTM	
+	return false;
+}
+
+bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
+	GTD
+	GTM
+	QModelIndexList qmil = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
+	if (qmil.count() != 1) {
+		return false;
+	}
+	int bidrow = qmil.at(0).row();
+	
+	int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
+	int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
+	int fake = Database::Instance().CachedDistributor()->index(idx.row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
+	
+	int free = total - used + fake;
+	
+	if (free < qty) {
+		// 			inputErrorMsgBox(value.toString());
+		return false;
+	}
+	GTM
+
 	QSqlQuery q;
-	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
+	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b=? WHERE id=?;");
 	q.bindValue(0, bid);
 	q.bindValue(1, qty);
 	q.bindValue(2, ddate.toString(Qt::ISODate));
@@ -844,91 +875,19 @@ GTM
 	q.bindValue(4, disttype);
 	q.bindValue(5, dt_a);
 	q.bindValue(6, dt_b);
+	q.bindValue(7, Database::Instance().CachedDistributor()->index(idx.row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
+
 	bool status = q.exec();
-GTM
-	if (autoupdate) {
-// 		updateBatchQty(bid);
+	GTM
+// 	if (autoupdate) {
+		// 		updateBatchQty(bid);
 		model_batch->select();
-GTM
+		GTM
 		model_distributor->select();
-GTM
+		GTM
 		updateDistributorWordList();
-	}
-GTM	
-	return status;
-
-// 	bool status = true;
-// GTD
-// GTM
-// 	int row = model_distributor->rowCount();
-// 
-// 	model_distributor->autoSubmit(false);
-// 	status &= model_distributor->insertRows(row, 1);
-// 	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
-// 
-// 	model_distributor->autoSubmit(true);
-// GTM
-// 	if (!status) {
-// 		model_distributor->revertAll();
-// 		return false;
 // 	}
-// GTM
-// 	status = model_distributor->submitAll();
-// 	// 	if (status)
-// 	// 		updateBatchWordList();
-// GTM
-// 	return status;
-}
-
-bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
-	bool status = true;
-// GTD
-// GTM
-// 	QSqlQuery q;
-// 	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, registered=?, reason=?, reason2=?, reason3=? WHERE id=?;");
-// 	q.bindValue(0, bid);
-// 	q.bindValue(1, int(qty*100));
-// 	q.bindValue(2, ddate.toString(Qt::ISODate));
-// 	q.bindValue(3, rdate.toString(Qt::ISODate));
-// 	q.bindValue(4, re1);
-// 	q.bindValue(5, re2);
-// 	q.bindValue(6, re3);
-// 	q.bindValue(7, model_distributor->index(idx.row(), DistributorTableModel::HId).data().toInt());
-// 	q.exec();
-// 
-// GTM
-// updateBatchQty(model_distributor->index(idx.row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
-// GTM
-// 	return status;
-	unsigned int row = idx.row();
-	model_distributor->autoSubmit(false);
-	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HBatchId), bid);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HQty), int(qty));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistDate), ddate.toString(Qt::ISODate));
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HEntryDate), rdate.toString(Qt::ISODate));
-// 	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistType), disttype);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeA), dt_a);
-	status &= model_distributor->setData(model_distributor->index(row, DistributorTableModel::HDistTypeB), dt_b);
-
-	model_distributor->autoSubmit(true);
-
-	if (!status) {
-		model_distributor->revertAll();
-		return false;
-	}
-
-	status = model_distributor->submitAll();
-// 	if (status)
-// 		updateBatchWordList();
-
+	GTM	
 	return status;
 }
 
@@ -936,11 +895,13 @@ bool Database::removeDistributorRecord(const QModelIndexList & idxl, bool askFor
 	bool status = true;
 	int counter = 0;
 	QString details;
-	QMap<int, int> idmap;
 GTM
+	int currow = -1;
+
 	if (askForConfirmation) {
 		for (int i = 0; i < idxl.count(); ++i) {
-			if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
+			if (currow < idxl.at(i).row()) {
+				currow = idxl.at(i).row();
 				++counter;
 				details = details % model_distributor->data(model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId), Qt::DisplayRole).toString() % "\n";
 			}
@@ -948,52 +909,15 @@ GTM
 		status = model_batch->distributeRemoveConfirmation(counter, details);
 	}
 
+	PR(counter);
 	if (!status)
 		return false;
 GTM
-	for (int i = 0; i < idxl.count(); ++i) {
-		if (idxl.at(i).column() == DistributorTableModel::HBatchId) {
-			int bid = model_distributor->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt();
-			if (model_distributor->removeRow(idxl.at(i).row()))
-				idmap[bid]=1;
-		}
+	for (int i = counter-1; i >= 0; --i) {
+		PR(i);PR(idxl.at(i).row());
+		model_distributor->removeRecord(idxl.at(i).row());
 	}
 GTM
-	status = model_distributor->submitAll();
-// 	if (status && submitBatches) {
-// 		QMap<int, int>::iterator it = idmap.begin();
-// 		while(it != idmap.end()) {
-// 			updateBatchQty((it++).key());
-// 		}
-// 		status &= model_batch->submitAll();
-// 	}
-GTM
-	return status;
-}
-
-bool Database::removeDistributorRecord(int recordid, bool askForConfirmation, bool submitBatches) {EGTD
-	QString batch;
-	QVariant bid = model_distributor->index(recordid, DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw);
-	bool status = true;
-GTM
-	if (askForConfirmation) {
-		QModelIndexList batchl = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
-		if (batchl.count())
-			batch = model_batch->data(model_batch->index(batchl.at(0).row(), BatchTableModel::HSpec)).toString();
-		status = model_distributor->distributeRemoveConfirmation(1, batch);
-	}
-GTM
-	if (status) {GTM
-		if (!model_distributor->removeRow(recordid)) {
-			model_distributor->revertAll();
-			return false;
-		}GTM
-		status = model_distributor->submitAll();GTM
-		/*updateBatchQty(bid.toInt());*/GTM
-// 		if (submitBatches) model_batch->submitAll();
-		model_batch->select();
-		GTM
-	}GTM
 	return status;
 }
 
@@ -1038,11 +962,10 @@ PR(row);
 bool Database::updateMealDayRecord(const QModelIndex & idx, const QDate & mealday, int avgcost) {
 	bool status = true;
 	unsigned int row = idx.row();
-	model_distributor->autoSubmit(false);
+
 	// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
 	status &= model_meal->setData(model_mealday->index(row, MealDayTableModel::HMealDate), mealday.toString(Qt::ISODate));
 	status &= model_meal->setData(model_mealday->index(row, MealDayTableModel::HAvgCost), avgcost);	
-	model_distributor->autoSubmit(true);
 	
 	if (!status) {
 		model_meal->revertAll();

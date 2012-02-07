@@ -1,6 +1,6 @@
 project(zarlok)
 cmake_minimum_required(VERSION 2.8)
-set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB")
+set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB -std=c++0x")
 # set (CMAKE_CXX_FLAGS "-march=core2 -O2 -pipe -Wall -W -DQT_GUI_LIB")
 # set (CMAKE_EXE_LINKER_FLAGS "-Wl,-O1 -Wl,-rpath,/usr/lib64/qt4")
 add_definitions(-Wall)
