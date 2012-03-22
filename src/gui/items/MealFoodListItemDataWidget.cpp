@@ -133,28 +133,25 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 }
 
 void MealFoodListItemDataWidget::buttonAdd() {
-	Database & db = Database::Instance();
+	Database * db = Database::Instance();
 	lock = false;
 
 	batch_idx = btmp->mapToSource(btmp->index(batch->currentIndex(), BatchTableModel::HId));
 	quantity = qty->value();
-	batchlabel = db.CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
-
-// 	QModelIndexList mdl =  db.CachedMealDay()->match(db.CachedMealDay()->index(0, MealDayTableModel::HId), Qt::EditRole, mfl->proxyModel()->key(), 1);
-// 	QDate d = db.CachedMealDay()->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+	batchlabel = db->CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
 	QDate d = mfl->proxyModel()->refDate();
 
 	if (empty) {
-		if (db.addDistributorRecord(batch_idx.data().toInt(), quantity*100, d, d,
+		if (db->addDistributorRecord(batch_idx.data().toInt(), quantity*100, d, d,
 			DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			empty = false;
 			mfl->insertEmptySlot();
-			dist_idx = db.CachedDistributor()->index(db.CachedDistributor()->rowCount()-1, DistributorTableModel::HId);
+			dist_idx = db->CachedDistributor()->index(db->CachedDistributor()->rowCount()-1, DistributorTableModel::HId);
 		} else
 			return;
 	} else {
-		if (db.updateDistributorRecord(dist_idx, batch_idx.data().toUInt(), quantity*100, d, d,
+		if (db->updateDistributorRecord(dist_idx, batch_idx.data().toUInt(), quantity*100, d, d,
 			DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			empty = false;
 		} else
@@ -165,7 +162,8 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	qty_label->setText(QString("%1").arg(quantity));
 
 	render(true);
-	db.CachedMealDay()->select();
+
+	db->CachedMealDay()->select();
 }
 
 /** @brief Prepare widget to update data.
@@ -189,6 +187,7 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	qty->setValue(quantity);
 
 	render(false);
+	Database::Instance()->CachedMealDay()->select();
 }
 
 /** @brief Close widget and display data
@@ -199,15 +198,17 @@ void MealFoodListItemDataWidget::buttonClose() {
 }
 
 void MealFoodListItemDataWidget::buttonRemove() { EGTD
-	Database & db = Database::Instance();
+	Database * db = Database::Instance();
 GTM
 // 	QModelIndexList mil()
-	db.removeDistributorRecord(QModelIndexList({dist_idx}));
+	QVector<int> v({dist_idx.row()});
+	db->removeDistributorRecord(v);
 GTM
-	convertToEmpty();
+// 	convertToEmpty();
 GTM
 	mfl->populateModel();
-	db.CachedMealDay()->select();
+	db->CachedBatch()->select();
+	db->CachedMealDay()->select();
 GTM
 }
 
@@ -217,15 +218,15 @@ GTM
 void MealFoodListItemDataWidget::setBatchData(const QModelIndex & idx) {
 	dist_idx = idx;
 
-	BatchTableModel * btm = Database::Instance().CachedBatch();
-	DistributorTableModel * dtm = Database::Instance().CachedDistributor();
+	BatchTableModel * btm = Database::Instance()->CachedBatch();
+	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
 
 	QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, idx.data(DistributorTableModel::RRaw));
 	if (qmil.count()) {
 		batch_idx = qmil.at(0);
 
 		quantity = dtm->data(dtm->index(dist_idx.row(), DistributorTableModel::HQty), Qt::DisplayRole).toDouble();
-		batchlabel = Database::Instance().CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+		batchlabel = Database::Instance()->CachedBatch()->index(batch_idx.row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
 		batch_label->setText(batchlabel);
 		qty_label->setText(QString("%1").arg(quantity));

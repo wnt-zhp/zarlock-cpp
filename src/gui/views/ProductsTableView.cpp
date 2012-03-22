@@ -18,6 +18,8 @@
 
 #include "globals.h"
 #include "ProductsTableView.h"
+#include "ProductsTableModel.h"
+#include "Database.h"
 
 #include <QHeaderView>
 
@@ -28,7 +30,7 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent), db(Database::Instance()) {
+ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent) {
 	removeRec = new QAction(tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
 	removeRec->setToolTip(tr("Remove record from database"));
@@ -106,11 +108,12 @@ void ProductsTableView::contextMenuEvent(QContextMenuEvent * event) {
 void ProductsTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
-	db.removeProductsRecord(l);
-// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-// 		if ((*it).column() == ProductsTableModel::HName)
-// 				db.removeProductsRecord((*it).row());
-// 	}
+	QVector<int> v;
+	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+		if ((*it).column() == ProductsTableModel::HName)
+			v.push_back((*it).row());
+	}
+	Database::Instance()->removeProductsRecord(v);
 }
 
 #include "ProductsTableView.moc"

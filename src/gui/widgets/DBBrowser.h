@@ -27,7 +27,7 @@
 class DBBrowser : public QWidget, public Ui::DatabaseBrowser {
 Q_OBJECT
 public:
-    DBBrowser(bool firstrun);
+    DBBrowser(QWidget * parent = NULL);
     virtual ~DBBrowser();
 
 public slots:
@@ -50,7 +50,6 @@ private:
 	enum orderflags { o_asc = 0, o_dsc };
 
 // 	QString dbname, dbfile;
-	QString recentDB;
 // 	Database & db;
 	zarlok * z;
 };

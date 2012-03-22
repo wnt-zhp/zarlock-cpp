@@ -67,7 +67,7 @@ MealTabInsertWidget::~MealTabInsertWidget() {
 void MealTabInsertWidget::activateUi(bool activate) {
 // 	this->setVisible(activate);
 	if (activate) {
-		MealTableModel * mm = Database::Instance().CachedMeal();
+		MealTableModel * mm = Database::Instance()->CachedMeal();
 		QModelIndexList ml  = mm ->match(mm->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1);
 
 		for (int i = 0; i < ml.size(); ++i) {
@@ -106,40 +106,40 @@ void MealTabInsertWidget::activateUi(bool activate) {
 }
 
 void MealTabInsertWidget::pushButton() {
-	Database & db = Database::Instance();
+	Database * db = Database::Instance();
 
 	int mealkind = -1;
 	if (sender() == push_br) {
-		db.addMealRecord(mdid, MealTableModel::MBreakfast, tr("Breakfast"), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MBreakfast, tr("Breakfast"), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MBreakfast;
 	}
 	else
 	if (sender() == push_br2) {
-		db.addMealRecord(mdid, MealTableModel::MBreakfast2, tr("2nd breakfast"), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MBreakfast2, tr("2nd breakfast"), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MBreakfast2;
 	}
 	else
 	if (sender() == push_lunch) {
-		db.addMealRecord(mdid, MealTableModel::MLunch, tr("Lunch"), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MLunch, tr("Lunch"), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MLunch;
 	}
 	else
 	if (sender() == push_tea) {
-		db.addMealRecord(mdid, MealTableModel::MTea, tr("Tea"), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MTea, tr("Tea"), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MTea;
 	}
 	else
 	if (sender() == push_dinner) {
-		db.addMealRecord(mdid, MealTableModel::MDiner, tr("Diner"), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MDiner, tr("Diner"), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MDiner;
 	}
 	else
 	if (sender() == push_other) {
-		db.addMealRecord(mdid, MealTableModel::MOther, line_other->text(), 0, 0, 0, 0, "");
+		db->addMealRecord(mdid, MealTableModel::MOther, line_other->text(), 0, 0, 0, 0, "");
 		mealkind = MealTableModel::MOther;
 	}
 
-	db.CachedMeal()->select();
+	db->CachedMeal()->select();
 
 	emit mealInserted(mdid);
 }

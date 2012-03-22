@@ -32,7 +32,6 @@ public:
 private slots:
 	void changeEvent(QEvent &);
 private:
-
 };
 
 #endif // MAINTABWIDGET_H

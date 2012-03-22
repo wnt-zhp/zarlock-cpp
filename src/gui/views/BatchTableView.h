@@ -51,7 +51,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent* );
 
 private:
-	Database & db;
 	QMenu pmenu_del, pmenu_add;
 	QAction * removeRec, * addRec;
 };

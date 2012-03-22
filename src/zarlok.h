@@ -42,7 +42,7 @@ private slots:
 	void db2update();
 
 private:
-	Database & db;
+	Database * db;
 
 	TabProductsWidget * tpw;
 	TabBatchWidget * tbw;

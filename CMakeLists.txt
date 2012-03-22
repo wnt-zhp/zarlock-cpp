@@ -69,6 +69,8 @@ set(zarlok_reports_RESOURCES src/reports.qrc)
 set(zarlok_reports_RESOURCES_RCC reports.rcc)
 set(zarlok_icons_RESOURCES src/icons.qrc)
 set(zarlok_icons_RESOURCES_RCC icons.rcc)
+set(zarlok_splash_RESOURCES src/splash.qrc)
+set(zarlok_splash_RESOURCES_RCC splash.rcc)
 
 set(zarlok_src_gui_views_SRCS		src/gui/views/BatchTableView.cpp
 									src/gui/views/ProductsTableView.cpp
@@ -156,10 +158,12 @@ qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS} ${zarlok
 qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
 qt4_add_binresources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES} OPTIONS -binary)
 qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTIONS -binary)
+qt4_add_binresources(zarlok_splash_RESOURCES_RCC ${zarlok_splash_RESOURCES} OPTIONS -binary)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
 add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
 	${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
+	${zarlok_splash_RESOURCES_RCC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
 add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
@@ -170,6 +174,7 @@ install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/icons.rcc
+				${CMAKE_CURRENT_BINARY_DIR}/splash.rcc
 				DESTINATION share/${CMAKE_PROJECT_NAME}/resources
 )
 

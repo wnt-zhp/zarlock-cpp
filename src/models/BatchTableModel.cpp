@@ -183,14 +183,15 @@ bool BatchTableModel::select() {
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
 QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const {
+	Database * db = Database::Instance();
 	switch (role) {
 		case Qt::DisplayRole:
 			if (idx.column() == HProdId) {
-				QModelIndexList qmil = Database::Instance().CachedProducts()->match(
-										Database::Instance().CachedProducts()->index(0, ProductsTableModel::HId),
+				QModelIndexList qmil = db->CachedProducts()->match(
+										db->CachedProducts()->index(0, ProductsTableModel::HId),
 										Qt::EditRole, idx.data(RRaw).toInt(), 1, Qt::MatchExactly);
 				if (!qmil.isEmpty()) {
-					return Database::Instance().CachedProducts()->index(qmil.at(0).row(), ProductsTableModel::HName).data(Qt::DisplayRole);
+					return db->CachedProducts()->index(qmil.at(0).row(), ProductsTableModel::HName).data(Qt::DisplayRole);
 				}
 			}
 
@@ -311,7 +312,8 @@ void BatchTableModel::autoSubmit(bool asub) {
 void BatchTableModel::trigDataChanged() {
 	if (autosubmit) {
 		this->submitAll();
-		Database::Instance().updateBatchWordList();
+		Database * db = Database::Instance();
+		db->updateBatchWordList();
 	}
 }
  

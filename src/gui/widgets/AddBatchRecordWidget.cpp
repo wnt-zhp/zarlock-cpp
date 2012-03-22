@@ -55,7 +55,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	connect(check_inf, SIGNAL(toggled(bool)), edit_expiry, SLOT(setDisabled(bool)));
 	connect(check_inf, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
 
-	connect(&Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
+	connect(Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
 
 	edit_spec->enableEmpty(true);
 	edit_expiry->setDateReferenceObj(edit_book);
@@ -74,7 +74,7 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 }
 
 void AddBatchRecordWidget::insertRecord() {
-	Database & db = Database::Instance();
+	Database * db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
 	int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
@@ -94,11 +94,11 @@ void AddBatchRecordWidget::insertRecord() {
 
 	// FIXME: edit_date->book() jest potencjalnie miejscem bledow
 	if (idToUpdate >= 0) {
-		BatchTableModel * btm = Database::Instance().CachedBatch();
+		BatchTableModel * btm = db->CachedBatch();
 		QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (bl.size() != 1)
 			return;
-		if (db.updateBatchRecord(bl.at(0), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+		if (db->updateBatchRecord(bl.at(0), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 	
 			idToUpdate = -1;
@@ -106,7 +106,7 @@ void AddBatchRecordWidget::insertRecord() {
 			combo_products->setFocus();
 		}
 	} else {
-		if (db.addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+		if (db->addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value(), 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 
 			clearForm();
@@ -140,7 +140,9 @@ void AddBatchRecordWidget::cancelForm() {
 }
 
 void AddBatchRecordWidget::validateCB(int i) {
-	ProductsTableModel * ptm = Database::Instance().CachedProducts();
+	Database * db = Database::Instance();
+
+	ProductsTableModel * ptm = db->CachedProducts();
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
 	QString defunit = ptm->index(i, ProductsTableModel::HUnit).data().toString();
 
@@ -170,9 +172,11 @@ void AddBatchRecordWidget::validateAdd() {
 }
 
 void AddBatchRecordWidget::update_model() {
+	Database * db = Database::Instance();
+
 	if (pproxy) delete pproxy;
 	pproxy = new QSortFilterProxyModel();
-	pproxy->setSourceModel(Database::Instance().CachedProducts());
+	pproxy->setSourceModel(db->CachedProducts());
 	pproxy->sort(1, Qt::AscendingOrder);
 	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	combo_products->setModel(pproxy);
@@ -186,13 +190,13 @@ void AddBatchRecordWidget::update_model() {
 	if (completer_book) delete completer_book;
 	if (completer_expiry) delete completer_expiry;
 
-	completer_spec = new QCompleter(Database::Instance().BatchWordList().at(Database::BWspec), edit_spec);
-// 	completer_qty = new QCompleter(Database::Instance().BatchWordList().at(Database::BWqty), edit_qty);
-	completer_unit = new QCompleter(Database::Instance().BatchWordList().at(Database::BWunit), edit_unit);
-	completer_price = new QCompleter(Database::Instance().BatchWordList().at(Database::BWprice), edit_price);
-	completer_invoice = new QCompleter(Database::Instance().BatchWordList().at(Database::BWinvoice), edit_invoice);
-	completer_book = new QCompleter(Database::Instance().BatchWordList().at(Database::BWbooking), edit_book);
-	completer_expiry = new QCompleter(Database::Instance().BatchWordList().at(Database::BWexpire), edit_expiry);
+	completer_spec = new QCompleter(db->BatchWordList().at(Database::BWspec), edit_spec);
+// 	completer_qty = new QCompleter(db->BatchWordList().at(Database::BWqty), edit_qty);
+	completer_unit = new QCompleter(db->BatchWordList().at(Database::BWunit), edit_unit);
+	completer_price = new QCompleter(db->BatchWordList().at(Database::BWprice), edit_price);
+	completer_invoice = new QCompleter(db->BatchWordList().at(Database::BWinvoice), edit_invoice);
+	completer_book = new QCompleter(db->BatchWordList().at(Database::BWbooking), edit_book);
+	completer_expiry = new QCompleter(db->BatchWordList().at(Database::BWexpire), edit_expiry);
 
 	completer_spec->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 // 	completer_qty->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
@@ -231,14 +235,16 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	clearForm();
 // 	update_model();
 
-	BatchTableModel * btm = Database::Instance().CachedBatch();
+	Database * db = Database::Instance();
+
+	BatchTableModel * btm = db->CachedBatch();
 	QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idx.model()->index(idx.row(), BatchTableModel::HId).data(Qt::EditRole), -1, Qt::MatchExactly);
 	if (bl.size() != 1)
 		return;
 	idToUpdate = bl.at(0).data(Qt::EditRole).toInt();
-	Database::Instance().getBatchRecord(bl.at(0), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
+	db->getBatchRecord(bl.at(0), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
 
-	ProductsTableModel * pm = Database::Instance().CachedProducts();
+	ProductsTableModel * pm = db->CachedProducts();
 	QModelIndexList pl = pm->match(pm->index(0, ProductsTableModel::HId), Qt::DisplayRole, idx.model()->index(idx.row(), BatchTableModel::HProdId).data(Qt::EditRole).toUInt(), -1, Qt::MatchExactly);
 	if (pl.size() != 1)
 		return;

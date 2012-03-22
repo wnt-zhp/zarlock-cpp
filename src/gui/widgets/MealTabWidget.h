@@ -38,13 +38,13 @@ public:
 
 public slots:
 	virtual void setMealDayId(int mdid);
-	virtual int getMealDayId() const;
 
 	virtual void markOpenItem(QListWidgetItem* item);
 	virtual void closeOpenItems();
 
 protected slots:
 	virtual void reloadTabs(int mealDayId);
+	virtual void closeTab(int index);
 
 private:
 	BatchTableModelProxy * batch_proxy;

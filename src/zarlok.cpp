@@ -100,7 +100,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	readSettings();
 
-	activateUi(db.cs()->isCorrect);
+	activateUi(db->cs()->isCorrect);
 // 	updateAppTitle();
 }
 
@@ -134,7 +134,7 @@ void zarlok::activateUi(bool activate) {
 	MainTab->setEnabled(activate);
 
 	if (activate) {
-		dbiw->update(db.cs());
+		dbiw->update(db->cs());
 	} else {
 		doCampSettings();
 	}
@@ -170,12 +170,12 @@ void zarlok::printDailyReport() {
 }
 
 void zarlok::doCampSettings() {
-	CampSettingsDialog csd(db.cs());
+	CampSettingsDialog csd(db->cs());
 	if (csd.exec()) {
-		db.cs()->writeCampSettings();
-		dbiw->update(db.cs());
+		db->cs()->writeCampSettings();
+		dbiw->update(db->cs());
 	}
-	activateUi(db.cs()->isCorrect);
+	activateUi(db->cs()->isCorrect);
 }
 
 void zarlok::updateAppTitle() {

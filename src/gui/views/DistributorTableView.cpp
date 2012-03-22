@@ -18,6 +18,9 @@
 
 #include "globals.h"
 #include "DistributorTableView.h"
+#include "DistributorTableModel.h"
+
+#include "Database.h"
 
 #include <QHeaderView>
 
@@ -28,7 +31,7 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent), db(Database::Instance()) {
+DistributorTableView::DistributorTableView(QWidget * parent) : QTableView(parent) {
 	// Popup menu dla akcji usuwania rekordu z bazy.
 	removeRec = new QAction(tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
@@ -122,7 +125,12 @@ void DistributorTableView::contextMenuEvent(QContextMenuEvent * event) {
 void DistributorTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
-	db.removeDistributorRecord(l);
+	QVector<int> v;
+	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+		if ((*it).column() == DistributorTableModel::HBatchId)
+			v.push_back((*it).row());
+	}
+	Database::Instance()->removeDistributorRecord(v);
 }
 
 #include "DistributorTableView.moc"

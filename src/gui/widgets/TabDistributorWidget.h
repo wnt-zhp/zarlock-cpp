@@ -22,12 +22,9 @@
 
 #include "ui_TabDistributorWidget.h"
 
-#include "Database.h"
-#include "ProductsTableModel.h"
-#include "AddDistributorRecordWidget.h"
-
-#include <QtSql>
-#include <QCompleter>
+class DistributorTableModel;
+class AddDistributorRecordWidget;
+class QSqlRelationalDelegate;
 
 class TabDistributorWidget : public QWidget, public Ui::TabDistributorWidget {
 Q_OBJECT
@@ -42,7 +39,7 @@ private slots:
 	void editRecord(const QModelIndex & idx);
 
 private:
-	Database & db;
+	Database * db;
 	DistributorTableModel * model_dist;
 	QSqlRelationalDelegate * model_dist_delegate;
 

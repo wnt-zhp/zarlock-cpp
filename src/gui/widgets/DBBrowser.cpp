@@ -18,9 +18,6 @@
 
 // if LINUX
 
-#include <dirent.h> 
-#include <stdio.h> 
-
 // endif
 
 #include "globals.h"
@@ -33,7 +30,7 @@
 
 #include "Database.h"
 
-DBBrowser::DBBrowser(bool firstrun) {
+DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL) {
 	this->setVisible(false);
 	setupUi(this);
 	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
@@ -47,25 +44,14 @@ DBBrowser::DBBrowser(bool firstrun) {
 	dbb_quit->setIcon( dbb_quit->style()->standardIcon(QStyle::SP_DialogCloseButton) );
 	dbb_load->setIcon( dbb_load->style()->standardIcon(QStyle::SP_DialogOpenButton) );
 
-	if (!firstrun) {
-	}
-
-	globals::appSettings->beginGroup("Database");
-	recentDB = globals::appSettings->value("RecentDatabase").toString();
-	globals::appSettings->endGroup();
-	if (!recentDB.isEmpty()) {
-		openZarlock(recentDB);
-	} else {
-		PR("First run! Welcome to żarłok.");
-		newDatabaseCreator();
-	}
-
 	refreshList();
+
+// 	dbb_list->setViewMode(QListView::IconMode);
 }
 
 DBBrowser::~DBBrowser() {
-	FPR(__func__);
-	delete z;
+	PR(__func__);
+
 	while (dbb_list->count()) {
 		QListWidgetItem * item = dbb_list->item(0);
 		dbb_list->removeItemWidget(item);
@@ -74,7 +60,7 @@ DBBrowser::~DBBrowser() {
 }
 
 void DBBrowser::openZarlock(const QString & dbname) {
-	if (Database::Instance().open_database(dbname)) {
+	if (Database::Instance()->open_database(dbname)) {
 		this->setVisible(false);
 
 		globals::appSettings->beginGroup("Database");
@@ -136,10 +122,12 @@ void DBBrowser::refreshList(int sort, int order) {
 	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 	dir.setSorting(QDir::SortFlag(sflag));
 
+// 	QFileInfoList list = dir.entryInfoList(QStringList({".db"}), QDir::Files);
 	QFileInfoList list = dir.entryInfoList();
 	for (int i = 0; i < list.size(); ++i) {
 		QFileInfo fileInfo = list.at(i);
 		QString fname = fileInfo.fileName();
+		PR(fname.toStdString());
 		int pos = fname.lastIndexOf(".db", -3);
 		if (pos < 0)
 			continue;

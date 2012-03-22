@@ -179,12 +179,13 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
  * @return QVariant dana po parsowaniu i standaryzacji
  **/
 QVariant DistributorTableModel::display(const QModelIndex & idx, const int role) const {
+	Database * db = Database::Instance();
 	switch (role) {
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
-				QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
+				QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
 				if (!qmil.isEmpty()) {
-					return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+					return db->CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
 				}
 			}
 
@@ -199,9 +200,9 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			}
 			else if (idx.column() == HDistTypeB) {
 				if (index(idx.row(), DistributorTableModel::HDistType).data().toInt() == RMeal) {
-					QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(RRaw));
+					QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, index(idx.row(), HBatchId).data(RRaw));
 					if (!qmil.isEmpty()) {
-						return QString(tr("Invoice: ") % Database::Instance().CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole).toString());
+						return QString(tr("Invoice: ") % db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HInvoice).data(Qt::DisplayRole).toString());
 					}
 				}
 			}
@@ -218,10 +219,11 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
  * @return QVariant
  **/
 QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
+	Database * db = Database::Instance();
 	if (idx.column() == HBatchId) {
-		QModelIndexList qmil = Database::Instance().CachedBatch()->match(Database::Instance().CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
+		QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, idx.data(DistributorTableModel::RRaw));
 		if (!qmil.isEmpty()) {
-			return Database::Instance().CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+			return db->CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
 		}
 		
 	} else
@@ -266,7 +268,8 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 			}
 
 			if (index.column() == HQty) {
-				BatchTableModel * btm = Database::Instance().CachedBatch();
+				Database * db = Database::Instance();
+				BatchTableModel * btm = db->CachedBatch();
 				int bidrow = -1;
 
 				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(RRaw));
@@ -275,8 +278,8 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 				}
 				bidrow = qmil.at(0).row();
 
-				int used = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
-				int total = Database::Instance().CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
+				int used = db->CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
+				int total = db->CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 				int fake = index.data(Qt::EditRole).toInt();
 
 				int free = total - used + fake;
@@ -290,6 +293,8 @@ bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & 
 			break;
 	}
 //     return QSqlTableModel::setData(index, value, role);
+
+	return true;
 }
 
 
@@ -306,17 +311,15 @@ void DistributorTableModel::setTable(const QString& table) {
 }
 
 QVariant DistributorTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
-	switch (orientation) {
-		case Qt::Horizontal:
-			switch (role) {
-				case Qt::DisplayRole:
-					return headers_h[section];
-					break;
-				default:
-					return QVariant();
+	if (orientation == Qt::Horizontal) {
+		switch (role) {
+			case Qt::DisplayRole:
+				return headers_h[section];
 				break;
-			}
+			default:
+				return QVariant();
 			break;
+		}
 	}
 	return QAbstractItemModel::headerData(section, orientation, role);
 }
@@ -356,6 +359,8 @@ bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& dd
 	beginInsertRows(QModelIndex(), n, n);
 	records.push_back(d_record{{ id, bid, qty, ddate, rdate, disttype, dt_a, dt_b }});
 	endInsertRows();
+
+	return true;
 }
 
 bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, const QDate& ddate, const QDate& rdate, int disttype, const QString& dt_a, const QString& dt_b) {
@@ -377,6 +382,8 @@ bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, con
 		return false;
 
 	records.push_back(d_record{{ id, bid, qty, ddate, rdate, disttype, dt_a, dt_b }});
+
+	return true;
 }
 
 bool DistributorTableModel::removeRecord(int row) {
@@ -391,6 +398,8 @@ bool DistributorTableModel::removeRecord(int row) {
 		records.remove(row);
 		endRemoveRows();
 	}
+
+	return status;
 }
 
 bool DistributorTableModel::setIndexData(const QModelIndex& idx, const QVariant& data) {

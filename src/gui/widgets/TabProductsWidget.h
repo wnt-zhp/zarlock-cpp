@@ -47,7 +47,7 @@ private slots:
 	void doFilterDistributions(const QModelIndex & idx);
 
 private:
-	Database & db;
+	Database * db;
 	ProductsTableModel * model_prod;
 	BatchTableModelProxyP * model_batch_proxyP;
 	DistributorTableModelProxyP * model_distributor_proxyP;

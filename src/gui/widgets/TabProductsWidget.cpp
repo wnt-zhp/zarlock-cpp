@@ -69,7 +69,7 @@ void TabProductsWidget::activateUi(bool activate) {
 
 	if (activate) {
 // 		// products
-		if ((model_prod = db.CachedProducts())) {
+		if ((model_prod = db->CachedProducts())) {
 			table_products->setModel(model_prod);
 			table_products->show();
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
@@ -78,13 +78,13 @@ void TabProductsWidget::activateUi(bool activate) {
 
 		// batch proxy
 		model_batch_proxyP = new BatchTableModelProxyP(&pid);
-		model_batch_proxyP->setSourceModel(db.CachedBatch());
+		model_batch_proxyP->setSourceModel(db->CachedBatch());
 		model_batch_proxyP->setDynamicSortFilter(true);
 // 		table_batchbyid->setModel(model_batch_proxyP);
 // 		table_batchbyid->hideColumn(BatchTableModel::HProdId);
 
 		model_distributor_proxyP = new DistributorTableModelProxyP(table_batchbyid);
-		model_distributor_proxyP->setSourceModel(db.CachedDistributor());
+		model_distributor_proxyP->setSourceModel(db->CachedDistributor());
 		model_distributor_proxyP->setDynamicSortFilter(true);
 // 		model_distributor_proxyP->setModel(model_batch_proxyP);
 // 		model_distributor_proxyP->hideColumn(BatchTableModel::HProdId);

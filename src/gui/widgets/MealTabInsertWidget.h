@@ -22,13 +22,14 @@
 
 #include "ui_MealTabInsertWidget.h"
 
-#include "Database.h"
 #include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
 #include "AddBatchRecordWidget.h"
 
 #include <QtSql>
 #include <QCompleter>
+
+class Database;
 
 class MealTabInsertWidget : public QWidget, public Ui::MealTabInsertWidget {
 Q_OBJECT
@@ -51,7 +52,7 @@ private:
 	void activateUi(bool activate = true);
 
 private:
-	Database & db;
+	Database * db;
 	int mdid;
 };
 

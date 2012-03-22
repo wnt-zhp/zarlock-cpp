@@ -21,6 +21,11 @@
 #include "Database.h"
 #include "DataParser.h"
 
+#include "AddDistributorRecordWidget.h"
+
+#include <QtSql>
+
+
 TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 	model_dist_delegate(NULL) {
 
@@ -32,7 +37,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 	activateUi(true);
 
 // 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
-	connect(&db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
+	connect(db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
 // 	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
 	table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -57,7 +62,7 @@ void TabDistributorWidget::activateUi(bool activate) {
 
 	if (activate) {
 		// dist
-		if ((model_dist = db.CachedDistributor())){
+		if ((model_dist = db->CachedDistributor())){
 			table_dist->setModel(model_dist);
 			if (model_dist_delegate) delete model_dist_delegate;
 			model_dist_delegate = new QSqlRelationalDelegate(table_dist);

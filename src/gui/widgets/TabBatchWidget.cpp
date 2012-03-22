@@ -112,7 +112,7 @@ void TabBatchWidget::activateUi(bool activate) {
 // 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
 		}
 		// batch
-		if ((model_batch = db.CachedBatch())){
+		if ((model_batch = db->CachedBatch())){
 			modelproxy_batch->setSourceModel(model_batch);
 			table_batch->setModel(modelproxy_batch);
 

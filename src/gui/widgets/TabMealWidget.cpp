@@ -30,7 +30,7 @@
 #include <QProgressDialog>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-												 wmap(NULL), lock(false) {
+												 wmap(NULL), lock(false), current_meal_row(-1) {
 	setupUi(this);
 
 	activateUi(true);
@@ -100,7 +100,7 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
-		list_meal->setModel(db.CachedMealDay());
+		list_meal->setModel(db->CachedMealDay());
 		list_meal->hideColumn(MealDayTableModel::HId);
 
 		list_meal->horizontalHeader()->setResizeMode(MealDayTableModel::HMealDate, QHeaderView::Stretch);
@@ -119,7 +119,7 @@ void TabMealWidget::activateUi(bool activate) {
 		label_data->setText(QObject::tr("No day selected yet"));
 
 		wmap = new QDataWidgetMapper;
-		wmap->setModel(db.CachedMeal());
+		wmap->setModel(db->CachedMeal());
 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
 		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
 		wmap->addMapping(spin_others, MealTableModel::HOthers);
@@ -134,11 +134,11 @@ void TabMealWidget::activateUi(bool activate) {
  **/
 // TODO: wyczysc kod z komentarza
 void TabMealWidget::add_mealday() {
-	db.addMealDayRecord(calendar->selectedDate(), 0);
+	db->addMealDayRecord(calendar->selectedDate(), 0);
 	
 	hightlight_day(calendar->selectedDate());
-// 	, true, db.cs()->scoutsNo, db.cs()->leadersNo, 0, 0.0, "]:->"
-	db.CachedMealDay()->select();
+// 	, true, db->cs()->scoutsNo, db->cs()->leadersNo, 0, 0.0, "]:->"
+	db->CachedMealDay()->select();
 }
 
 void TabMealWidget::toggle_calendar(bool show) {
@@ -147,11 +147,11 @@ void TabMealWidget::toggle_calendar(bool show) {
 }
 
 void TabMealWidget::hightlight_day(const QDate & date) {
-	QModelIndexList ml = db.CachedMealDay()->match(db.CachedMealDay()->index(0, MealDayTableModel::HMealDate), Qt::EditRole, date.toString(Qt::ISODate));
+	QModelIndexList ml = db->CachedMealDay()->match(db->CachedMealDay()->index(0, MealDayTableModel::HMealDate), Qt::EditRole, date.toString(Qt::ISODate));
 
 	if (ml.count()) {
 		list_meal->setCurrentIndex(ml.at(0));
-		int mdid = db.CachedMealDay()->data(db.CachedMealDay()->index(ml.at(0).row(), MealDayTableModel::HId)).toInt();
+// 		int mdid = db->CachedMealDay()->data(db->CachedMealDay()->index(ml.at(0).row(), MealDayTableModel::HId)).toInt();
 		action_insert->setEnabled(false);
 		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogNoButton));
 		selectDay(ml.at(0));
@@ -164,7 +164,7 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 void TabMealWidget::selectDay(const QModelIndex& idx) {
 // 	wmap->setCurrentIndex(idx.row());
 // 	tab_meals->setIndex(idx);
-// 	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+// 	QDate sd = db->CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 // 	seldate = sd.toString(Qt::ISODate);
 // 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 // 	createPDF->setEnabled(true);
@@ -172,7 +172,6 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	// TODO: Sprawdzic czy to co ponizej (lub powyzej) jest poprawne.
 
 	// do not reload meal tabs while filling tab
-	lock = true;
 
 	// get meal day id
 	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
@@ -180,19 +179,24 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	// query meal tab for meals from this day
 	tab_meals->setMealDayId(mdid);
 
-	QDate sd = db.CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+	QDate sd = db->CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
 	createPDF->setEnabled(true);
-
-	lock = false;
 }
 
 void TabMealWidget::validateSpins() {
-// 	if (lock)
-// 		return;
+// 	((QSpinBox *)sender())->setValue(((QSpinBox *)sender())->value());
+// 	PR(((QSpinBox *)sender())->value());
+// 	((QSpinBox *)sender())->setValue(((QSpinBox *)sender())->value());
 
-	if (!lock and ( spin_scouts->value() or spin_leadres->value() or spin_others->value() )) {
+// 	((QSpinBox *)sender())->setFocus();
+
+#warning	FIMXE
+//	FIXME: Aktualizacja nie działa poprawnie, zrób to porządnie.
+	wmap->setCurrentIndex(current_meal_row);
+
+	if ( spin_scouts->value() or spin_leadres->value() or spin_others->value() ) {
 		push_update->setEnabled(true);
 	} else {
 		push_update->setEnabled(false);
@@ -201,6 +205,8 @@ void TabMealWidget::validateSpins() {
 
 void TabMealWidget::mealTabChanged(int tab) {
 	int tabsqty = tab_meals->count();
+
+	checkForDirty();
 
 	if (tab == (tabsqty-1)) {
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
@@ -219,20 +225,19 @@ void TabMealWidget::mealTabChanged(int tab) {
 	int i = tab_meals->currentIndex();
 	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
 
-	MealTableModel * mt = Database::Instance().CachedMeal();
+	MealTableModel * mt = db->CachedMeal();
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HId), Qt::EditRole, mid, -1, Qt::MatchExactly);
 	
 	if (meals.count() != 1)
 		return;
 
-	lock = true;
 	wmap->setCurrentIndex(meals.at(0).row());
-	lock = false;
+	push_update->setEnabled(false);
 }
 
 void TabMealWidget::doUpdate() {
 	int mid = ((MealFoodList *)tab_meals->widget(tab_meals->currentIndex()))->proxyModel()->key();
-
+PR(mid);
 	QSqlQuery q;
 	q.prepare("UPDATE meal SET scouts=?, leaders=?, others=? WHERE id=?;");
 	q.bindValue(0, spin_scouts->value());
@@ -240,7 +245,7 @@ void TabMealWidget::doUpdate() {
 	q.bindValue(2, spin_others->value());
 	q.bindValue(3, mid);
 	q.exec();
-	Database::Instance().CachedMeal()->select();
+	db->CachedMeal()->select();
 }
 
 void TabMealWidget::doPrepareReport() {
@@ -251,7 +256,7 @@ void TabMealWidget::doPrepareReport() {
 
 void TabMealWidget::doPrepareReports() {
 	QString fn;
-	int num = db.CachedMeal()->rowCount();
+	int num = db->CachedMeal()->rowCount();
 
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
 	progress.setMinimumDuration(0);
@@ -259,7 +264,7 @@ void TabMealWidget::doPrepareReports() {
 	progress.setValue(0);
 
 	for (int i = 0; i < num; ++i) {
-		QDate sd = db.CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
 		progress.setValue(i);
 		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
@@ -272,10 +277,24 @@ void TabMealWidget::doPrepareReports() {
 }
 
 void TabMealWidget::doBrowseReports() {
-	Database & db = Database::Instance();
 
 // 	QDesktopServices::openUrl(QUrl("file:///home"));
-	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabase()));
+	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase()));
+}
+
+void TabMealWidget::checkForDirty() {
+	if (push_update->isEnabled()) {
+		QMessageBox mbox(QMessageBox::Question, tr("Data has been changed"),
+			tr("Number of scouts for this meal has changed, do you want to save your changes?"),
+			QMessageBox::Save | QMessageBox::Discard
+		);
+		int ret = mbox.exec();
+		if (ret == QMessageBox::Save) {
+			PR(222);
+		}
+	}
+
+	push_update->setEnabled(false);
 }
 
 #include "TabMealWidget.moc"

@@ -39,12 +39,15 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 	cexp->setChecked(false);
 
 	batch_proxy = new BatchTableModelProxy(cexp, NULL, NULL, che);
-	batch_proxy->setSourceModel(Database::Instance().CachedBatch());
+	batch_proxy->setSourceModel(Database::Instance()->CachedBatch());
 	batch_proxy->setDynamicSortFilter(true);
 	batch_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	batch_proxy->sort(2, Qt::AscendingOrder);
 	batch_proxy->invalidate();
 
+	this->setTabsClosable(true);
+
+	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
 }
 
@@ -58,8 +61,8 @@ MealTabWidget::~MealTabWidget() {
 void MealTabWidget::setMealDayId(int mdid) {
 	meal_day_id = mdid;
 
-	MealDayTableModel * mdt = Database::Instance().CachedMealDay();
-	MealTableModel * mt = Database::Instance().CachedMeal();
+	MealDayTableModel * mdt = Database::Instance()->CachedMealDay();
+	MealTableModel * mt = Database::Instance()->CachedMeal();
 
 	QModelIndexList mdl = mdt->match(mdt->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, -1);
 	// if there is no days then return
@@ -84,7 +87,7 @@ void MealTabWidget::setMealDayId(int mdid) {
 		QString mn = mt->index(meals.at(i).row(), MealTableModel::HMealName).data().toString();
 
 		MealTableModelProxy * proxy = new MealTableModelProxy;
-		proxy->setSourceModel((QAbstractItemModel *)Database::Instance().CachedDistributor());
+		proxy->setSourceModel((QAbstractItemModel *)Database::Instance()->CachedDistributor());
 
 		MealFoodList * foodlist = new MealFoodList(this);
 		this->insertTab(0, foodlist, mn);
@@ -117,8 +120,33 @@ void MealTabWidget::reloadTabs(int mealDayId) {
 	this->setCurrentIndex(this->count()-1);
 }
 
-int MealTabWidget::getMealDayId() const {
-	return meal_day_id;
+void MealTabWidget::closeTab(int index) {
+	// Nie usuwamy zakłaki z dodawaniem posiłków
+	if (index == this->count()-1) {
+		return;
+	}
+
+	const MealTableModelProxy * p = ((MealFoodList * )this->widget(index))->proxyModel();
+
+	int entries = p->rowCount();
+	if (entries) {
+		QMessageBox mbox(QMessageBox::Information, tr("Remove meal"),
+						 tr("This meal contain %1 distributed parties. Remove them all first before you delete meal.").arg(entries),
+						 QMessageBox::Ok);
+		mbox.exec();
+	} else {
+		QMessageBox mbox(QMessageBox::Question, tr("Remove meal"),
+						 tr("Are you sure to remove this meal?"),
+						 QMessageBox::Yes | QMessageBox::No);
+		if (mbox.exec() == QMessageBox::Yes) {
+			int mid = ((MealFoodList * )this->widget(index))->proxyModel()->key();
+
+			QVector<int> v;
+			v.push_back(mid);
+			if (Database::Instance()->removeMealRecord(v))
+				this->removeTab(index);
+		}
+	}
 }
 
 #include "MealTabWidget.moc"

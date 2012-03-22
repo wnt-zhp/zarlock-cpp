@@ -36,7 +36,7 @@ AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidg
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
-	connect(&Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
+	connect(Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
 }
 
 AddProductsRecordWidget::~AddProductsRecordWidget() {
@@ -52,7 +52,7 @@ void AddProductsRecordWidget::setVisible(bool visible) {
 }
 
 void AddProductsRecordWidget::insert_record() {
-	Database::Instance().addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)");
+	Database::Instance()->addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)");
 	clear_form();
 }
 
@@ -86,9 +86,9 @@ void AddProductsRecordWidget::update_model() {
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;
 
-	completer_name = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWname), edit_name);
-	completer_unit = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWunit), edit_unit);
-	completer_expiry = new QCompleter(Database::Instance().ProductsWordList().at(Database::PWexpire), edit_expiry);
+	completer_name = new QCompleter(Database::Instance()->ProductsWordList().at(Database::PWname), edit_name);
+	completer_unit = new QCompleter(Database::Instance()->ProductsWordList().at(Database::PWunit), edit_unit);
+	completer_expiry = new QCompleter(Database::Instance()->ProductsWordList().at(Database::PWexpire), edit_expiry);
 
 	completer_name->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
 	completer_unit->setModelSorting(QCompleter::CaseInsensitivelySortedModel);

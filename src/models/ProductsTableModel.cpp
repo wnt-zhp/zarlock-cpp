@@ -176,7 +176,8 @@ void ProductsTableModel::autoSubmit(bool asub) {
 void ProductsTableModel::trigDataChanged() {
 	if (autosubmit) {
 		this->submitAll();
-		Database::Instance().ProductsWordList();
+		Database * db = Database::Instance();
+		db->ProductsWordList();
 	}
 }
 

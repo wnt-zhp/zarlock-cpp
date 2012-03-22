@@ -50,12 +50,15 @@ private slots:
 	void doPrepareReports();
 	void doBrowseReports();
 
+private:
+	void checkForDirty();
+
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
 	QString mealcode[4];
 
 private:
-	Database & db;
+	Database * db;
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
 	QString seldate;
@@ -64,6 +67,7 @@ private:
 	QAction * createPDFAll;
 	QAction * browsePDF;
 	bool lock;
+	int current_meal_row;
 };
 
 #endif // TABMEALWIDGET_H

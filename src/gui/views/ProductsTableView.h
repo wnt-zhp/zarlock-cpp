@@ -24,7 +24,7 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
-#include "Database.h"
+class Database;
 
 /**
  * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
@@ -51,7 +51,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent*);
 
 private:
-	Database & db;
 	QMenu pmenu_del, pmenu_add;
 	QAction * removeRec, * addRec;
 };

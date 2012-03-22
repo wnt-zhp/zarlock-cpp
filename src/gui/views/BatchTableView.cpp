@@ -31,7 +31,7 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent), db(Database::Instance()) {
+BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent) {
 	// Popup menu dla akcji usuwania rekordu z bazy.
 	removeRec = new QAction(tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
@@ -136,11 +136,12 @@ void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
 void BatchTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
-	db.removeBatchRecord(l, true);
-// 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-// 		if ((*it).column() == BatchTableModel::HSpec)
-// 			db.removeBatchRecord((*it).row());
-// 	}
+	QVector<int> v;
+	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+		if ((*it).column() == BatchTableModel::HSpec)
+			v.push_back((*it).row());
+	}
+	Database::Instance()->removeBatchRecord(v, true);
 }
 
 

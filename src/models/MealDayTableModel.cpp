@@ -51,7 +51,8 @@ MealDayTableModel::~MealDayTableModel() {
 QVariant MealDayTableModel::data(const QModelIndex & idx, int role) const {
 	if (role == Qt::BackgroundRole) {
 		QDate d = QSqlTableModel::data(idx, Qt::DisplayRole).toDate();
-		if ((d > Database::Instance().cs()->campDateBegin) and (d < Database::Instance().cs()->campDateEnd))
+		Database * db = Database::Instance();
+		if ((d > db->cs()->campDateBegin) and (d < db->cs()->campDateEnd))
 			return Qt::yellow;
 	}
 

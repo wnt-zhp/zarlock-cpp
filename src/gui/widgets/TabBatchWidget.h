@@ -22,7 +22,6 @@
 
 #include "ui_TabBatchWidget.h"
 
-#include "Database.h"
 #include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
 #include "AddBatchRecordWidget.h"
@@ -51,7 +50,7 @@ private slots:
 // 	virtual void syncDB();
 
 private:
-	Database & db;
+	Database * db;
 	BatchTableModel * model_batch;
 	BatchTableModelProxy * modelproxy_batch;
 	QSqlRelationalDelegate * model_batch_delegate;

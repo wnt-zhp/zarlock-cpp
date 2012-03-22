@@ -109,8 +109,8 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 
 	// Products table preparation
 
-	Database & db = Database::Instance();
-	int p_rows = db.CachedBatch()->rowCount();
+	Database * db = Database::Instance();
+	int p_rows = db->CachedBatch()->rowCount();
 	int p_cols = 4;//model_batch->columnCount();
 	int batch_map[4] = { 0, 2, 4, 3 };
 	QString tcont;
@@ -120,7 +120,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 		for (int j = 0; j < p_cols; j++) {
 // 			QTextCursor cur = products_table->cellAt(i, j).firstCursorPosition();
 // 			cur.insertText(model_prod->index(i, j).data().toString());
-			tcont += "<td>" + db.CachedBatch()->index(i, batch_map[j]).data().toString() + "</td>";
+			tcont += "<td>" + db->CachedBatch()->index(i, batch_map[j]).data().toString() + "</td>";
 		}
 		tcont += "</tr>";
 	}
@@ -167,9 +167,9 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	printer.setOrientation(QPrinter::Landscape);
 	printer.setPageMargins(10, 10, 10, 10, QPrinter::Millimeter);
 
-	Database & db = Database::Instance();
+	Database * db = Database::Instance();
 
-	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db.openedDatabase());
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase());
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
@@ -214,16 +214,16 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	QString contadd, spec, unit;
 	double qty, costs = 0;
 
-	QModelIndexList idxl = db.CachedDistributor()->match(db.CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
+	QModelIndexList idxl = db->CachedDistributor()->match(db->CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
 	for (int i = 0; i < idxl.count(); ++i) {
-		if (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt() != 2)
+		if (db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt() != 2)
 			continue;
 
-		spec = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data().toString();
-		qty = db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HQty).data().toDouble();
+		spec = db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data().toString();
+		qty = db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HQty).data().toDouble();
 
 		q.prepare("SELECT batch.unit,batch.price FROM batch WHERE batch.id=?;");
-		q.bindValue(0, db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
+		q.bindValue(0, db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
 		q.exec();
 		if (q.next()) {
 			unit = q.value(0).toString();
@@ -233,7 +233,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 			}
 		}
 
-		switch (db.CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt()) {
+		switch (db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt()) {
 			case 0:
 				cont0.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
 				break;
@@ -277,16 +277,16 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 
 	QString tpl = dailymeal_tstream.readAll();
 	tpl.replace("@DATE@", date);
-	tpl.replace("@PLACE@", db.cs()->campPlace);
-	tpl.replace("@ORG@", db.cs()->campOrg);
-	tpl.replace("@QUATER@", db.cs()->campQuarter);
-	tpl.replace("@OTHER@", db.cs()->campOthers);
-	tpl.replace("@LEADER@", db.cs()->campLeader);
+	tpl.replace("@PLACE@", db->cs()->campPlace);
+	tpl.replace("@ORG@", db->cs()->campOrg);
+	tpl.replace("@QUATER@", db->cs()->campQuarter);
+	tpl.replace("@OTHER@", db->cs()->campOthers);
+	tpl.replace("@LEADER@", db->cs()->campLeader);
 	tpl.replace("@SCOUTSNO@", QString().sprintf("%d", sco));
 	tpl.replace("@LEADERSNO@", QString().sprintf("%d", lea));
 	tpl.replace("@OTHERSNO@", QString().sprintf("%d", oth));
 	tpl.replace("@ALL@", QString().sprintf("%d", all));
-	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db.cs()->avgCosts));
+	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db->cs()->avgCosts));
 	tpl.replace("@AVG@", QString().sprintf("%.2f", costs/all));
 
 	tpl.replace("@TABLE_CONTENT_1@", cont0);
@@ -300,7 +300,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 }
 
 void DBReports::printKMReport(QString * reportsdir) {
-	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance()->openedDatabase());
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
@@ -521,7 +521,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 void DBReports::printSMReport(QString * reportsdir) {
 	QDate b_min, b_max, d_min, d_max;
 
-	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance().openedDatabase());
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance()->openedDatabase());
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
@@ -772,4 +772,4 @@ void DBReports::subVectors(QVector< double >& target, const QVector< double >& s
 		target[i] -= source.at(i);
 }
 
-#include "DBReports.moc"
+// #include "DBReports.moc"
