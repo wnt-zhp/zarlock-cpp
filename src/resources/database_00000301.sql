@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS batch;
 CREATE TABLE IF NOT EXISTS batch ( id INTEGER PRIMARY KEY AUTOINCREMENT, prod_id INTEGER, spec VARCHAR(50), price INTEGER, unit VARCHAR(10), start_qty INTEGER, used_qty INTEGER, regdate VARCHAR(20), expirydate VARCHAR(20), entrydate VARCHAR(20), notes TEXT, invoice VARCHAR(50) );
 -- Distributor table
 DROP TABLE IF EXISTS distributor;
-CREATE TABLE IF NOT EXISTS distributor ( id INTEGER PRIMARY KEY AUTOINCREMENT, batch_id INTEGER, quantity INTEGER, distdate VARCHAR(20), entrydate VARCHAR(20), disttype INTEGER, disttype_a VARCHAR(100), disttype_b VARCHAR(100) );
+CREATE TABLE IF NOT EXISTS distributor ( id INTEGER PRIMARY KEY AUTOINCREMENT, batch_id INTEGER, quantity INTEGER, distdate VARCHAR(20), entrydate VARCHAR(20), disttype INTEGER, disttype_a VARCHAR(100), disttype_b VARCHAR(100) DEFAULT NULL );
 -- MealDay table
 DROP TABLE IF EXISTS meal_day;
 CREATE TABLE IF NOT EXISTS meal_day ( id INTEGER PRIMARY KEY AUTOINCREMENT, mealdate VARCHAR(20) UNIQUE, avcosts INTEGER );

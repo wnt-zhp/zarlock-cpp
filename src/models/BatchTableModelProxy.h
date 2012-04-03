@@ -42,6 +42,8 @@ public:
 	virtual void setItemNum(int * item);
 	virtual void allwaysAccept(const QModelIndex * idx);
 
+	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 

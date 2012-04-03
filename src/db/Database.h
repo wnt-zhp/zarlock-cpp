@@ -62,7 +62,6 @@ public:
 
 	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
-	virtual bool removeProductsRecord(QVector<int> & rows, bool askForConfirmation = true);
 
 	virtual bool addBatchRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
@@ -70,13 +69,12 @@ public:
 	virtual bool getBatchRecord(const QModelIndex & idx, unsigned int & pid, QString& spec, QString& price, QString& unit, double & qty, double & used, QDate&reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 
 	virtual bool addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate = true);
-	virtual bool updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
+	virtual bool updateDistributorRecord(unsigned int row, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
 	virtual bool removeDistributorRecord(QVector<int> & rows, bool askForConfirmation = true, bool submitBatches = true);
 	virtual bool getDistributorRecord(const QModelIndex & idx, unsigned int & bid, unsigned int & qty, QDate & distdate, QDate & entrydate, DistributorTableModel::Reasons & disttype, QString & disttypea, QString & disttypeb);
 
 	virtual bool addMealDayRecord(const QDate & mealday, int avgcost);
 	virtual bool updateMealDayRecord(const int row, const QDate & mealday, int avgcost);
-	virtual bool removeMealDayRecord(QVector<int> & rows, bool askForConfirmation);
 	virtual bool getMealDayRecord(const int row, unsigned int & mdid, QDate & mealday, int & avgcost);
 
 	virtual bool addMealRecord(int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
@@ -100,14 +98,16 @@ private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
 	bool createDBFile(const QString& dbname, const QString& dbfilenoext);
 
-signals:
-	void databaseDirty();
-	void dbSaved();
+public slots:
+	virtual bool removeProductsRecord(QVector<int> & rows, bool askForConfirmation = true);
+	virtual bool removeMealDayRecord(QVector<int> & rows, bool askForConfirmation = true);
 
 private slots:
 	bool rebuild_models();
 
 signals:
+	void databaseDirty();
+	void dbSaved();
 	void productsWordListUpdated();
 	void batchWordListUpdated();
 	void distributorWordListUpdated();

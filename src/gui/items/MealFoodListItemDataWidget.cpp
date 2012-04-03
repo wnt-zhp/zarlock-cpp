@@ -151,7 +151,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		} else
 			return;
 	} else {
-		if (db->updateDistributorRecord(dist_idx, batch_idx.data().toUInt(), quantity*100, d, d,
+		if (db->updateDistributorRecord(dist_idx.row(), batch_idx.data().toUInt(), quantity*100, d, d,
 			DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			empty = false;
 		} else

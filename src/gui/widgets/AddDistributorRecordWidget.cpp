@@ -29,8 +29,8 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	hideempty = new QCheckBox;
 	hideempty->setChecked(true);
 
-	action_add->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogSaveButton) );
-	action_clear->setIcon( action_add->style()->standardIcon(QStyle::SP_DialogDiscardButton) );
+	action_add->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
 
 	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clearForm()));
@@ -73,7 +73,7 @@ bool AddDistributorRecordWidget::insertRecord() {
 		return false;
 
 	if (indexToUpdate) {
-		if (db->updateDistributorRecord(copyOfIndexToUpdate, batch_id, spin_qty->value(), df, QDate::currentDate(),
+		if (db->updateDistributorRecord(copyOfIndexToUpdate.row(), batch_id, spin_qty->value(), df, QDate::currentDate(),
 			DistributorTableModel::RGeneral, edit_reason_a->text(), edit_reason_b->text())) {
 				indexToUpdate = NULL;
 				prepareInsert(true);

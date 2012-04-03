@@ -22,7 +22,7 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
        <item>
-        <widget class="QTableView" name="list_meal"/>
+        <widget class="MealDaysTableView" name="list_days"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,0">
@@ -163,9 +163,14 @@
    <header>MealTabWidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>MealDaysTableView</class>
+   <extends>QTableView</extends>
+   <header>MealDaysTableView.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>list_meal</tabstop>
+  <tabstop>list_days</tabstop>
   <tabstop>tools</tabstop>
   <tabstop>spin_scouts</tabstop>
   <tabstop>spin_leadres</tabstop>

@@ -39,10 +39,10 @@ DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL) {
 
 	dbb_delete->setEnabled(false);
 
-	dbb_new->setIcon( dbb_new->style()->standardIcon(QStyle::SP_FileIcon) );
-	dbb_delete->setIcon( dbb_delete->style()->standardIcon(QStyle::SP_TrashIcon) );
-	dbb_quit->setIcon( dbb_quit->style()->standardIcon(QStyle::SP_DialogCloseButton) );
-	dbb_load->setIcon( dbb_load->style()->standardIcon(QStyle::SP_DialogOpenButton) );
+	dbb_new->setIcon( QApplication::style()->standardIcon(QStyle::SP_FileIcon) );
+	dbb_delete->setIcon( QApplication::style()->standardIcon(QStyle::SP_TrashIcon) );
+	dbb_quit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
+	dbb_load->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton) );
 
 	refreshList();
 
@@ -127,7 +127,7 @@ void DBBrowser::refreshList(int sort, int order) {
 	for (int i = 0; i < list.size(); ++i) {
 		QFileInfo fileInfo = list.at(i);
 		QString fname = fileInfo.fileName();
-		PR(fname.toStdString());
+
 		int pos = fname.lastIndexOf(".db", -3);
 		if (pos < 0)
 			continue;

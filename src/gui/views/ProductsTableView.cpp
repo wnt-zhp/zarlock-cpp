@@ -19,7 +19,6 @@
 #include "globals.h"
 #include "ProductsTableView.h"
 #include "ProductsTableModel.h"
-#include "Database.h"
 
 #include <QHeaderView>
 
@@ -113,7 +112,8 @@ void ProductsTableView::removeRecord() {
 		if ((*it).column() == ProductsTableModel::HName)
 			v.push_back((*it).row());
 	}
-	Database::Instance()->removeProductsRecord(v);
+
+	emit removeRecordRequested(v);
 }
 
 #include "ProductsTableView.moc"

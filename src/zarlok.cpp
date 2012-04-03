@@ -193,26 +193,6 @@ void zarlok::about() {
 		tr("The <b>Menu</b> example shows how to create "
 		"menu-bar menus and context menus."));
 }
-/*
-void zarlok::tabChanged(int index) {
-	PR(index);
-	if (actionSaveDB->isEnabled()) {
-		QMessageBox msgBox;
-		msgBox.setText(tr("Your haven't save your changes in database. Your new data will be lost."));
-		msgBox.setInformativeText("Do you really want to change tab?");
-		msgBox.setIcon(QMessageBox::Warning);
-		msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		msgBox.setDefaultButton(QMessageBox::No);
-		int ret = msgBox.exec();
-		if (ret == QMessageBox::No) {
-			return;
-		} else {
-// 			MainTab->setCurrentIndex(index);
-		}
-	} else {
-// 		MainTab->setCurrentIndex(index);
-	}
-}*/
 
 void zarlok::db2update() {
 	statusbar->showMessage(tr("You need to save your database!"));

@@ -52,7 +52,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(calendar, SIGNAL(clicked(QDate)), this, SLOT(hightlight_day(QDate)));
 	connect(action_insert, SIGNAL(clicked(bool)), this, SLOT(add_mealday()));
 	connect(action_toggle, SIGNAL(toggled(bool)), this, SLOT(toggle_calendar(bool)));
-	connect(list_meal, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
+	connect(list_days, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
 	connect(spin_leadres, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
@@ -80,6 +80,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
+	connect(list_days, SIGNAL(removeRecordRequested(QVector<int>&,bool)), Database::Instance(), SLOT(removeMealDayRecord(QVector<int>&,bool)));
+
 	seldate = QDate::currentDate().toString(Qt::ISODate);
 
 	action_toggle->setChecked(true);
@@ -100,20 +102,7 @@ TabMealWidget::~TabMealWidget() {
  **/
 void TabMealWidget::activateUi(bool activate) {
 	if (activate) {
-		list_meal->setModel(db->CachedMealDay());
-		list_meal->hideColumn(MealDayTableModel::HId);
-
-		list_meal->horizontalHeader()->setResizeMode(MealDayTableModel::HMealDate, QHeaderView::Stretch);
-
-		list_meal->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-// 		list_meal->setSortingEnabled(true);
-		list_meal->setSelectionBehavior(QAbstractItemView::SelectRows);
-		list_meal->setSelectionMode(QAbstractItemView::SingleSelection);
-
-		PriceDelegate * price_delegate = new PriceDelegate;
-		list_meal->setItemDelegateForColumn(MealDayTableModel::HAvgCost, price_delegate);
-		list_meal->update();
+		list_days->setModel(db->CachedMealDay());
 
 		label_data->setIndent(14);
 		label_data->setText(QObject::tr("No day selected yet"));
@@ -150,7 +139,7 @@ void TabMealWidget::hightlight_day(const QDate & date) {
 	QModelIndexList ml = db->CachedMealDay()->match(db->CachedMealDay()->index(0, MealDayTableModel::HMealDate), Qt::EditRole, date.toString(Qt::ISODate));
 
 	if (ml.count()) {
-		list_meal->setCurrentIndex(ml.at(0));
+		list_days->setCurrentIndex(ml.at(0));
 // 		int mdid = db->CachedMealDay()->data(db->CachedMealDay()->index(ml.at(0).row(), MealDayTableModel::HId)).toInt();
 		action_insert->setEnabled(false);
 		action_insert->setIcon(style()->standardIcon(QStyle::SP_DialogNoButton));

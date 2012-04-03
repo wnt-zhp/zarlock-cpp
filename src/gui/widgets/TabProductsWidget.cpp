@@ -42,6 +42,8 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
 	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
 
+	connect(table_products, SIGNAL(removeRecordRequested(QVector<int> &)), Database::Instance(), SLOT(removeProductsRecord(QVector<int> &)));
+
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);
 	table_batchbyid->setSelectionMode(QAbstractItemView::ExtendedSelection);

@@ -182,7 +182,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	// batch
 	model_batch = new BatchTableModel;
 	model_batch->setTable("batch");
-	model_batch->setEditStrategy(QSqlTableModel::OnManualSubmit);
+// 	model_batch->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
 	model_distributor = new DistributorTableModel;
 	model_distributor->setTable("distributor");
@@ -265,7 +265,7 @@ bool Database::rebuild_models() {
 
 	// batch
 	if (!model_batch->select()) {
-		QMessageBox::critical(0, QObject::tr("Database error"), model_batch->lastError().text(), QMessageBox::Abort);
+// 		QMessageBox::critical(0, QObject::tr("Database error"), model_batch->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
 
@@ -658,34 +658,31 @@ bool Database::removeProductsRecord(QVector<int> & rows, bool askForConfirmation
 
 	qSort(rows);
 
-	int counter = rows.count();
+	int rowsnum = rows.count();
+	int counter = 0;
 
-	if (askForConfirmation) {
-		for (int i = 0; i < counter; ++i) {
-			QVariant pid = model_products->index(rows.at(i), ProductsTableModel::HId).data();
-			QString prod = model_products->index(rows.at(i), ProductsTableModel::HName).data().toString();
-			++counter;
-			details = details % prod % "\n";
-			QModelIndexList batches = model_batch->match(model_batch->index(0, BatchTableModel::HProdId), Qt::EditRole, pid, -1);
-			for (int i = 0; i < batches.count(); ++i) {
-				details = details % "  \\--  " % model_batch->data(model_batch->index(batches.at(i).row(), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
+	for (int i = 0; i < rowsnum; ++i) {
+		QVariant pid = model_products->index(rows.at(i), ProductsTableModel::HId).data();
+		QString prod = model_products->index(rows.at(i), ProductsTableModel::HName).data().toString();
+		++counter;
+		details = details % prod % "\n";
+		QModelIndexList batches = model_batch->match(model_batch->index(0, BatchTableModel::HProdId), Qt::EditRole, pid, -1);
+		for (int i = 0; i < batches.count(); ++i) {
+			details = details % "  \\--  " % model_batch->data(model_batch->index(batches.at(i).row(), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
+		}
+	}
+	status = model_products->productRemoveConfirmation(counter, details);
+
+	if (status ) {
+		for (int i = rowsnum-1; i >= 0; --i) {
+			if (!model_products->removeRow(rows.at(i))) {
+				model_products->revertAll();
+				return false;
 			}
 		}
-		status = model_products->productRemoveConfirmation(counter, details);
+
+		status = model_products->submitAll();
 	}
-
-	if (askForConfirmation & !status )
-		return false;
-
-// 	removeBatchRecord(bat, false);
-
-	for (int i = counter-1; i >= 0; --i) {
-		if (!model_products->removeRow(rows.at(i))) {
-			model_products->revertAll();
-			return false;
-		}
-	}
-	status = model_products->submitAll();
 
 	return status;
 }
@@ -694,32 +691,32 @@ bool Database::addBatchRecord(unsigned int pid, const QString& spec, const QStri
 	bool status = true;
 TD
 TM
-	int row = model_batch->rowCount();
-
-	model_batch->autoSubmit(false);
-	status &= model_batch->insertRows(row, 1);
-// 	model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), used);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
-	model_batch->autoSubmit(true);
-
-	if (!status) {
-		model_batch->revertAll();
-		return false;
-	}
-
-	status = model_batch->submitAll();
-	if (status)
-		updateBatchWordList();
+// 	int row = model_batch->rowCount();
+// 
+// 	model_batch->autoSubmit(false);
+// 	status &= model_batch->insertRows(row, 1);
+// // 	model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), used);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
+// 	model_batch->autoSubmit(true);
+// 
+// 	if (!status) {
+// 		model_batch->revertAll();
+// 		return false;
+// 	}
+// 
+// 	status = model_batch->submitAll();
+// 	if (status)
+// 		updateBatchWordList();
 TM
 	return status;
 }
@@ -758,57 +755,58 @@ bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QStrin
 bool Database::updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
 	bool status = true;
 
-	int row = idx.row();
-
-	model_batch->autoSubmit(false);
-// 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), int(used*100));
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
-	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
-	model_batch->autoSubmit(true);
-
-	if (!status) {
-		model_batch->revertAll();
-		return false;
-	}
-	
-	status = model_batch->submitAll();
-	if (status)
-		updateBatchWordList();
+// 	int row = idx.row();
+// 
+// 	model_batch->autoSubmit(false);
+// // 	status &= model_batch->setData(model_batch->index(bid, BatchTableModel::HId), row);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
+// // 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), int(used*100));
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
+// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
+// 	model_batch->autoSubmit(true);
+// 
+// 	if (!status) {
+// 		model_batch->revertAll();
+// 		return false;
+// 	}
+// 	
+// 	status = model_batch->submitAll();
+// 	if (status)
+// 		updateBatchWordList();
 
 	return status;
 }
 
 bool Database::removeBatchRecord(QVector<int> & rows, bool askForConfirmation) {
 	bool status = false;
-	QString details;
-
-	int counter = rows.count();
-
-	qSort(rows);
-
-	if (askForConfirmation) {
-		for (int i = 0; i < counter; ++i) {
-			details = details % model_batch->data(model_batch->index(rows.at(i), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
-		}
-		status = model_batch->batchRemoveConfirmation(counter, details);
-	}
-
-	if (askForConfirmation & !status )
-		return false;
-
-	for (int i = counter-1; i >= 0; --i) {
-		status = model_batch->removeRow(rows.at(i));
-	}
-	return (status && model_batch->submitAll() && rebuild_models());
+// 	QString details;
+// 
+// 	int counter = rows.count();
+// 
+// 	qSort(rows);
+// 
+// 	if (askForConfirmation) {
+// 		for (int i = 0; i < counter; ++i) {
+// 			details = details % model_batch->data(model_batch->index(rows.at(i), BatchTableModel::HSpec), Qt::DisplayRole).toString() % "\n";
+// 		}
+// 		status = model_batch->batchRemoveConfirmation(counter, details);
+// 	}
+// 
+// 	if (askForConfirmation & !status )
+// 		return false;
+// 
+// 	for (int i = counter-1; i >= 0; --i) {
+// 		status = model_batch->removeRow(rows.at(i));
+// 	}
+// 	return (status && model_batch->submitAll() && rebuild_models());
+	return false;
 }
 
 bool Database::addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate) {
@@ -832,7 +830,9 @@ GTM
 	}
 GTM
 	if (model_distributor->addRecord(bid, qty, ddate, rdate, disttype, dt_a, dt_b)) {
+		PR(2);
 		model_batch->select();
+		PR(3);
 GTM
 // 		model_distributor->select();
 GTM
@@ -843,7 +843,7 @@ GTM
 	return false;
 }
 
-bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
+bool Database::updateDistributorRecord(unsigned int row, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
 	GTD
 	GTM
 	QModelIndexList qmil = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
@@ -854,10 +854,11 @@ bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid
 
 	int used = this->CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
 	int total = this->CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
-	int fake = this->CachedDistributor()->index(idx.row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
-	
+	int fake = this->CachedDistributor()->index(row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
+PR(used); PR(total); PR(fake);
 	int free = total - used + fake;
-	
+PR(free);
+return false;
 	if (free < qty) {
 		// 			inputErrorMsgBox(value.toString());
 		return false;
@@ -867,13 +868,13 @@ bool Database::updateDistributorRecord(const QModelIndex & idx, unsigned int bid
 	QSqlQuery q;
 	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b=? WHERE id=?;");
 	q.bindValue(0, bid);
-	q.bindValue(1, qty);
+	q.bindValue(1, qty*100);
 	q.bindValue(2, ddate.toString(Qt::ISODate));
 	q.bindValue(3, rdate.toString(Qt::ISODate));
 	q.bindValue(4, disttype);
 	q.bindValue(5, dt_a);
 	q.bindValue(6, dt_b);
-	q.bindValue(7, this->CachedDistributor()->index(idx.row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
+	q.bindValue(7, this->CachedDistributor()->index(row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 
 	bool status = q.exec();
 	GTM
@@ -973,14 +974,16 @@ bool Database::updateMealDayRecord(const int row, const QDate & mealday, int avg
 	return status;
 }
 
-bool Database::removeMealDayRecord(QVector<int> & rows, bool askForConfirmation) {
+bool Database::removeMealDayRecord(QVector<int> & ids, bool askForConfirmation) {
 	bool status = false;
 	QString details;
-	
-	int counter = rows.count();
+
+	qSort(ids);
+
+	int rowcount = ids.count();
 
 	if (askForConfirmation) {
-		for (int i = 0; i < counter; ++i) {
+		for (int i = 0; i < rowcount; ++i) {
 // 			QVariant mdid = model_mealday->index(idxl.at(i).row(), MealDayTableModel::HId).data();
 // 			QString mdday = model_mealday->index(idxl.at(i).row(), MealDayTableModel::HMealDate).data().toDate().toString(Qt::DefaultLocaleShortDate);
 // 			++counter;
@@ -991,12 +994,29 @@ bool Database::removeMealDayRecord(QVector<int> & rows, bool askForConfirmation)
 // 			}
 			// 				bat.append(batches);
 		}
-		status = model_mealday->productRemoveConfirmation(counter, details);
+		status = model_mealday->mealdayRemoveConfirmation(rowcount, details);
+	}
+
+	if (askForConfirmation & !status )
+		return false;
+
+	// rows must be sorted!
+	for (int i = rowcount-1; i >= 0; --i) {
+		Database * db = Database::Instance();
+		int midr = db->CachedMealDay()->match(db->CachedMealDay()->index(0, MealDayTableModel::HId), Qt::EditRole, ids.at(i)).at(0).row();
+		
+		if (!model_meal->removeRow(midr)) {
+			model_meal->revertAll();
+			return false;
+		}
 	}
 	
-// 	if (askForConfirmation & !status )
-// 		return false;
-// 	
+	// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+	// 		if (!db.commit())
+	// 			db.rollback();
+	
+	status = model_meal->submitAll();
+	
 // 	// 	QSqlQuery q;
 // 		// 	q.prepare("DELETE FROM meals WHERE id=?;");
 // 		

@@ -22,9 +22,12 @@
 #include <QtSql/QSqlDatabase>
 #include <QSqlTableModel>
 #include <QAbstractTableModel>
-#include "ModelsCommon.h"
 #include <QDate>
-#include <QVector>
+
+#include "ModelsCommon.h"
+#include "AbstractTableModel.h"
+
+class Database;
 
 /**
  * @brief Klasa dziedziczy po QSqlTableModel i odpowiada za
@@ -32,7 +35,7 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class DistributorTableModel : public QAbstractTableModel, public ModelsCommon {
+class DistributorTableModel : public AbstractTableModel {
 Q_OBJECT
 public:
 	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
@@ -40,14 +43,8 @@ public:
 
 	virtual bool select();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
-	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-	
-	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-	virtual void setTable(const QString & table);
 
-	virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 	virtual bool addRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate = true);
 	virtual bool updateRecord(int id, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
@@ -68,19 +65,15 @@ public:
 	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HEntryDate, HDistType, HDistTypeA, HDistTypeB, DummyHeadersSize };
 	enum Reasons {RGeneral = 0, RExpired, RMeal };
 
+	static int sort_column;
+	static bool sort_order_asc;
+
 protected:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
-	
-	QString table;
-	QSqlDatabase database;
 
-// 	struct d_record { int id; int bid; int qty; QDate distdate; QDate entrydate; int dt; QString dt_a; QString dt_b; };
-	struct d_record { QVariant arr[DummyHeadersSize]; };
-
-	QVector<d_record> records;
-	QString columns[DummyHeadersSize];
-	QString headers_h[DummyHeadersSize];
+	QVariant prepareBatch(const QVariant & v);
+	QVariant prepareDistTypeB(const QVariant & v);
 };
 
 #endif // DISTRIBUTORTABLEMODEL_H

@@ -90,4 +90,22 @@ bool ModelsCommon::distributeRemoveConfirmation(int count, const QString & detai
 
 	return false;
 }
+
+bool ModelsCommon::mealdayRemoveConfirmation(int count, const QString & details) {
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Question);
+	msgBox.setText(QObject::tr("You try to remove %n day(s) from your meals list.", NULL, count));
+	
+	msgBox.setInformativeText(QObject::tr("All meals assigned to this day will be removed. Are you sure?"));
+	msgBox.setDetailedText(details);
+	
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::No);
+	
+	if (msgBox.exec() == QMessageBox::Yes)
+		return true;
+	
+	return false;
+}
+
 #include "ModelsCommon.moc"

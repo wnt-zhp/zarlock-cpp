@@ -119,7 +119,6 @@ TM
 		dbb.show();
 	}
 TM
-	sleep(1);
 	splash->finish(&dbb);
 
 	return app.exec();

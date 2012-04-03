@@ -53,6 +53,8 @@ private slots:
 private:
 	void checkForDirty();
 
+private slots:
+
 public:
 	enum MealColumns { MId = 0, MDate, MType, MName, MPersons, MCosts };
 	QString mealcode[4];

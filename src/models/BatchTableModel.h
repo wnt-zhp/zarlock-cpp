@@ -20,6 +20,7 @@
 #define BATCHTABLEMODEL_H
 
 #include <QtSql/QSqlTableModel>
+#include "AbstractTableModel.h"
 #include "ModelsCommon.h"
 
 /**
@@ -28,19 +29,31 @@
  * w standardowym modelu  danych tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class BatchTableModel : public QSqlTableModel, public ModelsCommon {
+class BatchTableModel : public AbstractTableModel {
 Q_OBJECT
 public:
 	BatchTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
 	virtual ~BatchTableModel();
 
+	virtual bool select();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
+
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-	virtual bool select();
+	virtual bool addRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool updateRecord(int row, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool removeRecord(int row);
+	
+	virtual bool setIndexData(const QModelIndex & idx, const QVariant & data);
+	virtual bool setIndexData(int row, int column, const QVariant & data);
+	
+	virtual bool selectRow(int row);
+	virtual bool selectColumn(int column);
+
 	virtual void autoSubmit(bool asub = true);
 
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HNotes, HInvoice, HENameQty = 100 };
+public:
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HNotes, HInvoice, DummyHeadersSize }; // HENameQty
 	enum UserRoles { RRaw = Qt::UserRole + 1, RNameQty = Qt::UserRole + 10, RFreeQty };
 
 public slots:
@@ -54,6 +67,8 @@ private:
 	QVariant raw(const QModelIndex & idx) const;
 
 protected:
+	QVariant prepareProduct(const QVariant & v);
+
 	bool autosubmit;
 };
 

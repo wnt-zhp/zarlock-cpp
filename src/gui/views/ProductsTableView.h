@@ -24,8 +24,6 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
-class Database;
-
 /**
  * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
  * naszych danych z tabeli 'products'. Ta klasa jest przykładem, jak można
@@ -42,6 +40,7 @@ public:
 
 signals:
 	void addRecordRequested(bool);
+	bool removeRecordRequested(QVector<int> & rows);
 
 private slots:
 	void removeRecord();

@@ -25,10 +25,9 @@
 class ModelsCommon {
 public:
 	bool productRemoveConfirmation(int count, const QString & details);
-
 	bool batchRemoveConfirmation(int count, const QString & details);
-
 	bool distributeRemoveConfirmation(int count, const QString & details);
+	bool mealdayRemoveConfirmation(int count, const QString & details);
 
 protected:
 	void inputErrorMsgBox(const QString & val);
