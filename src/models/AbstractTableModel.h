@@ -40,9 +40,9 @@ class AbstractTableModel : public QAbstractTableModel, public ModelsCommon {
 Q_OBJECT
 public:
 	AbstractTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
-// 	virtual ~AbstractTableModel();
+	virtual ~AbstractTableModel();
 
-	virtual bool select() = 0;
+	virtual bool select();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -50,6 +50,8 @@ public:
 	
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) = 0;
 	virtual void setTable(const QString & table);
+
+	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 	virtual QVector<int> find(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
@@ -64,9 +66,29 @@ public:
 	virtual bool selectRow(int row) = 0;
 	virtual bool selectColumn(int column) = 0;
 
+	virtual bool pushRow(const QSqlQuery & rec, bool emit_signal = true);
+	virtual bool fillRow(const QSqlQuery & rec, int row, bool emit_signal = true) = 0;
+	virtual bool fillRowById(const QSqlQuery & rec, int id, bool emit_signal = true);
+
+private:
+	void clearRecords();
+
 public:
 	enum Headers {HId = 0, DummyHeadersSize };
 	enum UserRoles { RRaw = Qt::UserRole + 1 };
+
+	struct d_record {
+		d_record(AbstractTableModel * m = NULL);
+		bool operator<(const d_record * rhs) const;
+		bool operator<(const d_record & rhs) const;
+		bool operator==(const QVariant & rhs) const;
+		// 		QVector<QVariant> * operator->()       { return arr; }  // #1
+		// 		QVector<QVariant> const * operator->() const { return arr; }
+// 		QVariant & operator *() const;
+		
+		QVector<QVariant> arr[2];
+		AbstractTableModel * model;
+	};
 
 public slots:
 // 	void filterDB(const QString &);
@@ -86,16 +108,7 @@ protected:
 	enum AbsDataType { DTInt, DTDate, DTString };
 	QVector<AbsDataType> dtypes;
 
-	struct d_record {
-		d_record(AbstractTableModel * m = NULL);
-		bool operator<(const d_record & rhs) const;
-		bool operator==(const QVariant & rhs) const;
-
-		QVector<QVariant> arr[2];
-		AbstractTableModel * model;
-	};
-
-	QVector<d_record> records;
+	QVector<d_record *> records;
 
 	int sort_column;
 	bool sort_order_asc;

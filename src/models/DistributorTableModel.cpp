@@ -92,45 +92,6 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase sqldb
 	dtypes.push_back(DTInt);
 }
 
-/**
- * @brief Ta funkcja odpowiada za pobranie danych z tabeli i synchronizację.
- * Tutaj możemy ustawić nagłówki dla kolumn
- *
- * @return bool stan otwarcia tabeli
- **/
-bool DistributorTableModel::select() {
-	records.clear();
-
-	QString query("SELECT * FROM :table:");
-	query.replace(":table:", table);
-	QSqlQuery q;//(database);
-	q.prepare(query);
-	q.exec();
-
-// 	PR(q.size());
-	while (q.next()) {
-		d_record rec(this);
-		rec.arr[0].resize(DummyHeadersSize);
-		rec.arr[1].resize(DummyHeadersSize);
-
-		for (int r = 0; r < DummyHeadersSize; ++r) {
-			rec.arr[0][r]			= q.value(r);
-			rec.arr[1][r]			= q.value(r);
-		}
-
-		rec.arr[1][HBatchId]	= prepareBatch(q.value(HBatchId));
-		rec.arr[1][HQty]		= prepareQty(q.value(HQty));
-		rec.arr[1][HDistDate]	= prepareDate(q.value(HDistDate));
-		rec.arr[1][HEntryDate]	= prepareDate(q.value(HEntryDate));
-		rec.arr[1][HDistTypeB]	= prepareDistTypeB(q.value(HId));
-
-		records.push_back(rec);
-	}
-
-	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder);
-	return true;
-}
-
 QVariant DistributorTableModel::prepareBatch(const QVariant & v) {
 	QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, v.toInt());
 	if (!qmil.isEmpty()) {
@@ -186,17 +147,17 @@ QVariant DistributorTableModel::data(const QModelIndex & idx, int role) const {
 			return QVariant();
 			break;
 		case RRaw:
-			return records.at(row).arr[0][col];
+			return records.at(row)->arr[0][col];
 // 			return QSqlTableModel::data(idx, Qt::EditRole);
 			break;
 // 		default:
-// 			return records[idx.row()].arr[idx.column()];
+// 			return records[idx.row()]->arr[idx.column()];
 // 			return QVariant();
 // 			break;
 	}
 
 // 	return QVariant();
-	return records.at(row).arr[0][col];
+	return records.at(row)->arr[0][col];
 
 // 	return QSqlTableModel::data(idx, role);
 }
@@ -213,22 +174,22 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 	int row = idx.row();
 	int col = idx.column();
 
-	return records.at(row).arr[1][col];
+	return records.at(row)->arr[1][col];
 /*
 	switch (role) {
 		case Qt::DisplayRole:
 			if (idx.column() == HBatchId) {
-				return records[idx.row()].arr[DummyHeadersSize + idx.column()];
+				return records[idx.row()]->arr[DummyHeadersSize + idx.column()];
 			}
 
 			else if (idx.column() == HEntryDate) {
 // 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString(Qt::DefaultLocaleShortDate);
-				return records[idx.row()].arr[idx.column()].toDate();
+				return records[idx.row()]->arr[idx.column()].toDate();
 			}
 
 			else if (idx.column() == HDistDate) {
 // 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString(Qt::DefaultLocaleShortDate);
-				return records[idx.row()].arr[idx.column()].toDate();
+				return records[idx.row()]->arr[idx.column()].toDate();
 			}
 			else if (idx.column() == HDistTypeB) {
 				if (index(idx.row(), DistributorTableModel::HDistType).data().toInt() == RMeal) {
@@ -240,7 +201,7 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 			}
 			break;
 	}
-	return records[idx.row()].arr[idx.column()];
+	return records[idx.row()]->arr[idx.column()];
 // 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 */
 }
@@ -265,10 +226,10 @@ QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
 
 	if (idx.column() == HDistDate) {
 // 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate();//.toString("dd-MM-yyyy");
-		return records.at(row).arr[0][col].toDate();
+		return records.at(row)->arr[0][col].toDate();
 	}
 
-	return records.at(row).arr[0][col];
+	return records.at(row)->arr[0][col];
 }
 
 /**
@@ -280,62 +241,18 @@ QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
  * @return bool stan dodania/aktualizacji
  **/
 bool DistributorTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
-	switch (role) {
-		case Qt::EditRole:
-			if (index.column() == HDistDate) {
-// 				qdate date;
-// 				if (dataparser::date(value.tostring(), date)) {
-// 					return qsqltablemodel::setdata(index, date.tostring(qt::isodate), qt::editrole);
-// 				} else {
-// 					inputerrormsgbox(value.tostring());
-// 					return false;
-// 				}
-// 				return qsqltablemodel::setdata(index, value.todate().tostring(qt::isodate), qt::editrole);
-			}
-
-			if (index.column() == HEntryDate) {
-// 				QDate date;
-// 				if (!DataParser::date(value.toString(), date)) {
-// 					inputErrorMsgBox(value.toString());
-// 					return false;
-// 				}
-// 				return QSqlTableModel::setData(index, value.toDate().toString(Qt::ISODate), Qt::EditRole);
-			}
-
-			if (index.column() == HQty) {
-				BatchTableModel * btm = db->CachedBatch();
-				int bidrow = -1;
-
-				QModelIndexList qmil = btm->match(btm->index(0, BatchTableModel::HId), Qt::DisplayRole, this->index(index.row(), HBatchId).data(RRaw));
-				if (qmil.count() != 1) {
-					return false;
-				}
-				bidrow = qmil.at(0).row();
-
-				int used = db->CachedBatch()->index(bidrow, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
-				int total = db->CachedBatch()->index(bidrow, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
-				int fake = index.data(Qt::EditRole).toInt();
-
-				int free = total - used + fake;
-
-				if (free < value.toInt()) {
-					inputErrorMsgBox(value.toString());
-					return false;
-				}
-// 				return QSqlTableModel::setData(index, value.toInt(), role);
-			}
-			break;
-	}
-//     return QSqlTableModel::setData(index, value, role);
-
-	return true;
+	return false;
 }
 
 bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& ddate, const QDate& rdate, int disttype, const QString& dt_a, const QString& dt_b, bool autoupdate) {
+	QString query("INSERT INTO :table: VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
+	query.replace(":table:", table);
+	
 	QSqlQuery q;
-	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
+	q.prepare(query);
+
 	q.bindValue(0, bid);
-	q.bindValue(1, qty);
+	q.bindValue(1, qty*100);
 	q.bindValue(2, ddate.toString(Qt::ISODate));
 	q.bindValue(3, rdate.toString(Qt::ISODate));
 	q.bindValue(4, disttype);
@@ -346,51 +263,32 @@ bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& dd
 	if (!status)
 		return false;
 
-	q.prepare("SELECT id FROM distributor ORDER BY id DESC LIMIT 1");
+	query = "SELECT * FROM :table: ORDER BY id DESC LIMIT 1";
+	query.replace(":table:", table);
+
+	q.prepare(query);
 	q.exec();
 
-	int id = -1;
-
-	if (q.next())
-		id = q.value(0).toInt();
-	else
+	int n = records.count();
+	if (!q.next())
 		return false;
 
-	int n = records.count();
-
-	d_record rec(this);
-
-	rec.arr[0][HId]			= id;
-	rec.arr[0][HBatchId]	= bid;
-	rec.arr[0][HQty]		= qty;
-	rec.arr[0][HDistDate]	= ddate;
-	rec.arr[0][HEntryDate]	= rdate;
-	rec.arr[0][HDistType]	= disttype;
-	rec.arr[0][HDistTypeA]	= dt_a;
-	rec.arr[0][HDistTypeB]	= dt_b;
-	
-	rec.arr[1][HId]			= id;
-	rec.arr[1][HBatchId]	= prepareBatch(bid);
-	rec.arr[1][HQty]		= prepareQty(qty);
-	rec.arr[1][HDistDate]	= prepareDate(ddate);
-	rec.arr[1][HEntryDate]	= prepareDate(rdate);
-	rec.arr[1][HDistType]	= disttype;
-	rec.arr[1][HDistTypeA]	= dt_a;
-	rec.arr[1][HDistTypeB]	= prepareDistTypeB(id);
-
 	beginInsertRows(QModelIndex(), n, n);
-	records.push_back(rec);
-	emit dataChanged(this->index(rowCount(), HId), this->index(rowCount(), HDistTypeB));
+	pushRow(q);
 	endInsertRows();
 
 	return true;
 }
 
 bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, const QDate& ddate, const QDate& rdate, int disttype, const QString& dt_a, const QString& dt_b) {
-	int id = records.at(row).arr[0][HId].toInt();
+	int id = records.at(row)->arr[0][HId].toInt();
 
+	QString query("UPDATE :table: SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b? WHERE id=?;");
+	query.replace(":table:", table);
+	
 	QSqlQuery q;
-	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b? WHERE id=?;");
+	q.prepare(query);
+
 	q.bindValue(0, bid);
 	q.bindValue(1, qty);
 	q.bindValue(2, ddate.toString(Qt::ISODate));
@@ -400,50 +298,22 @@ bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, con
 	q.bindValue(6, dt_b);
 	q.bindValue(7, id);
 	bool status = q.exec();
-	
+
 	if (!status)
 		return false;
 
-	d_record rec(this);
+	query = "SELECT * FROM :table: WHERE id = ?";
+	query.replace(":table:", table);
 	
-	rec.arr[0][HId]			= id;
-	rec.arr[0][HBatchId]	= bid;
-	rec.arr[0][HQty]		= qty;
-	rec.arr[0][HDistDate]	= ddate;
-	rec.arr[0][HEntryDate]	= rdate;
-	rec.arr[0][HDistType]	= disttype;
-	rec.arr[0][HDistTypeA]	= dt_a;
-	rec.arr[0][HDistTypeB]	= dt_b;
-	
-	rec.arr[1][HId]			= id;
-	rec.arr[1][HBatchId]	= prepareBatch(bid);
-	rec.arr[1][HQty]		= prepareQty(qty);
-	rec.arr[1][HDistDate]	= prepareDate(ddate);
-	rec.arr[1][HEntryDate]	= prepareDate(rdate);
-	rec.arr[1][HDistType]	= disttype;
-	rec.arr[1][HDistTypeA]	= dt_a;
-	rec.arr[1][HDistTypeB]	= prepareDistTypeB(id);
+	q.prepare(query);
+	q.bindValue(0, id);
+	q.exec();
+	if (!q.next())
+		return false;
 
-	records[row] = rec;
-// 	records.push_back(d_record{{ id, bid, qty, ddate, rdate, disttype, dt_a, dt_b }});
+	fillRow(q, row);
 
 	return true;
-}
-
-bool DistributorTableModel::removeRecord(int row) {
-	int id = records.at(row).arr[0][HId].toInt();
-
-	QSqlQuery q;
-	q.prepare("DELETE FROM distributor WHERE id=?;");
-	q.bindValue(0, id);
-	bool status = q.exec();
-	if (status) {
-		beginRemoveRows(QModelIndex(), row, row);
-		records.remove(row);
-		endRemoveRows();
-	}
-
-	return status;
 }
 
 bool DistributorTableModel::setIndexData(const QModelIndex& idx, const QVariant& data) {
@@ -459,18 +329,18 @@ bool DistributorTableModel::setIndexData(int row, int column, const QVariant& da
 		case HEntryDate:
 			q.bindValue(0, columns[column]);
 			q.bindValue(1, data.toDate().toString(Qt::ISODate));
-			q.bindValue(2, records.at(row).arr[0][HId]);
+			q.bindValue(2, records.at(row)->arr[0][HId]);
 			status = q.exec();
 			break;
 		default:
 			q.bindValue(0, columns[column]);
 			q.bindValue(1, data.toInt());
-			q.bindValue(2, records.at(row).arr[0][HId]);
+			q.bindValue(2, records.at(row)->arr[0][HId]);
 			status = q.exec();
 			break;
 	}
 	if (status) {
-		records[row].arr[0][column] = data;
+		records[row]->arr[0][column] = data;
 	}PR(status);
 	return status;
 }
@@ -482,11 +352,10 @@ bool DistributorTableModel::selectColumn(int column) {
 	QSqlQuery q;
 	q.prepare(query);
 	q.exec();
-	
-	PR(q.size());
+
 	int i = -1;
 	while (q.next()) {
-		records[++i].arr[0][column] = q.value(0);
+		records[++i]->arr[0][column] = q.value(0);
 	}
 	
 	return true;
@@ -502,29 +371,51 @@ bool DistributorTableModel::selectRow(int row) {
 	q.exec();
 	
 	while (q.next()) {
-		d_record rec(this);
-		
-		rec.arr[0][HId]			= q.value(HId);
-		rec.arr[0][HBatchId]	= q.value(HBatchId);
-		rec.arr[0][HQty]		= q.value(HQty);
-		rec.arr[0][HDistDate]	= q.value(HDistDate);
-		rec.arr[0][HEntryDate]	= q.value(HEntryDate);
-		rec.arr[0][HDistType]	= q.value(HDistType);
-		rec.arr[0][HDistTypeA]	= q.value(HDistTypeA);
-		rec.arr[0][HDistTypeB]	= q.value(HDistTypeB);
-		
-		rec.arr[1][HId]			= q.value(HId);
-		rec.arr[1][HBatchId]	= prepareBatch(q.value(HBatchId));
-		rec.arr[1][HQty]		= prepareQty(q.value(HQty));
-		rec.arr[1][HDistDate]	= prepareDate(q.value(HDistDate));
-		rec.arr[1][HEntryDate]	= prepareDate(q.value(HEntryDate));
-		rec.arr[1][HDistType]	= q.value(HDistType);
-		rec.arr[1][HDistTypeA]	= q.value(HDistTypeA);
-		rec.arr[1][HDistTypeB]	= prepareDistTypeB(q.value(HId));
-
-		records[row] = rec;
+		fillRow(q, row);
+// 			d_record rec(this);
+// 
+// 			rec->arr[0][HId]			= q.value(HId);
+// 			rec->arr[0][HBatchId]	= q.value(HBatchId);
+// 			rec->arr[0][HQty]		= q.value(HQty);
+// 			rec->arr[0][HDistDate]	= q.value(HDistDate);
+// 			rec->arr[0][HEntryDate]	= q.value(HEntryDate);
+// 			rec->arr[0][HDistType]	= q.value(HDistType);
+// 			rec->arr[0][HDistTypeA]	= q.value(HDistTypeA);
+// 			rec->arr[0][HDistTypeB]	= q.value(HDistTypeB);
+// 			
+// 			rec->arr[1][HId]			= q.value(HId);
+// 			rec->arr[1][HBatchId]	= prepareBatch(q.value(HBatchId));
+// 			rec->arr[1][HQty]		= prepareQty(q.value(HQty));
+// 			rec->arr[1][HDistDate]	= prepareDate(q.value(HDistDate));
+// 			rec->arr[1][HEntryDate]	= prepareDate(q.value(HEntryDate));
+// 			rec->arr[1][HDistType]	= q.value(HDistType);
+// 			rec->arr[1][HDistTypeA]	= q.value(HDistTypeA);
+// 			rec->arr[1][HDistTypeB]	= prepareDistTypeB(q.value(HId));
+// 
+// 			records[row] = rec;
 	}
 	return true;
+}
+
+bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
+	d_record * rec = records[row];
+	
+	rec->arr[0].resize(DummyHeadersSize);
+	rec->arr[1].resize(DummyHeadersSize);
+
+	for (int r = 0; r < DummyHeadersSize; ++r) {
+		rec->arr[0][r]				= q.value(r);
+		rec->arr[1][r]				= q.value(r);
+	}
+	
+	rec->arr[1][HBatchId]			= prepareBatch(q.value(HBatchId));
+	rec->arr[1][HQty]				= prepareQty(q.value(HQty));
+	rec->arr[1][HDistDate]			= prepareDate(q.value(HDistDate));
+	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
+	rec->arr[1][HDistTypeB]			= prepareDistTypeB(q.value(HId));
+
+	if (emit_signal)
+		emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()-1));
 }
 
 #include "DistributorTableModel.moc"

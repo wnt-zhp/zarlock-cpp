@@ -87,6 +87,10 @@ Database::~Database() {
 // 	QSqlDatabase::removeDatabase("QSQLITE");
 }
 
+QSqlDriver* Database::driver() const {
+	return db.driver();
+}
+
 /**
  * @brief Otwórz bazę danych z pliku
  *
@@ -687,54 +691,24 @@ bool Database::removeProductsRecord(QVector<int> & rows, bool askForConfirmation
 	return status;
 }
 
-bool Database::addBatchRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
-	bool status = true;
-TD
-TM
-// 	int row = model_batch->rowCount();
-// 
-// 	model_batch->autoSubmit(false);
-// 	status &= model_batch->insertRows(row, 1);
-// // 	model_batch->setData(model_batch->index(row, BatchTableModel::HId), row);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HProdId), pid);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HSpec), spec);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HPrice), price);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUnit), unit);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HStaQty), qty);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HUsedQty), used);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HRegDate), reg);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HExpiryDate), expiry);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HEntryDate), entry);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HInvoice), invoice);
-// 	status &= model_batch->setData(model_batch->index(row, BatchTableModel::HNotes), notes);
-// 	model_batch->autoSubmit(true);
-// 
-// 	if (!status) {
-// 		model_batch->revertAll();
-// 		return false;
-// 	}
-// 
-// 	status = model_batch->submitAll();
-// 	if (status)
-// 		updateBatchWordList();
-TM
-	return status;
+bool Database::addBatchRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+GTD
+GTM
+	if (model_batch->addRecord(pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes)) {
+		GTM
+		updateBatchWordList();
+		return true;
+	}
+	GTM	
+	return false;
 }
 
-bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QString& spec, QString& price, QString& unit, double& qty, double& used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes) {
-	int row = idx.row();
-	pid			= model_batch->index(row, BatchTableModel::HProdId).data().toUInt();
-	spec		= model_batch->index(row, BatchTableModel::HSpec).data(Qt::EditRole).toString();
-	price		= model_batch->index(row, BatchTableModel::HPrice).data().toString();
-	unit		= model_batch->index(row, BatchTableModel::HUnit).data().toString();
-	qty			= model_batch->index(row, BatchTableModel::HStaQty).data(Qt::EditRole).toDouble()/100.0;
-	used		= model_batch->index(row, BatchTableModel::HUsedQty).data().toDouble()/100.0;
-	reg			= model_batch->index(row, BatchTableModel::HRegDate).data(Qt::EditRole).toDate();
-	expiry		= model_batch->index(row, BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
-	entry		= model_batch->index(row, BatchTableModel::HEntryDate).data(Qt::EditRole).toDate();
-	invoice		= model_batch->index(row, BatchTableModel::HInvoice).data().toString();
-	notes		= model_batch->index(row, BatchTableModel::HNotes).data().toString();
-	return true;
+bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes) {
+	if (model_batch->getRecord(idx.row(), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes)) {
+		updateBatchWordList();
+		return true;
+	}
+	return false;
 }
 
 /** Updates Batch record in database. Change on read-only member used_qty is not allowed
@@ -752,7 +726,7 @@ bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QStrin
  * @return result of record update
  **/
 
-bool Database::updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+bool Database::updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
 	bool status = true;
 
 // 	int row = idx.row();
@@ -1144,3 +1118,18 @@ bool Database::removeMealRecord(const QVector<int> & ids) {
 }
 
 #include "Database.moc"
+
+// |1| QSqlDriver::Transactions	0	Whether the driver supports SQL transactions.
+// |0| QSqlDriver::QuerySize	1	Whether the database is capable of reporting the size of a query. Note that some databases do not support returning the size (i.e. number of rows returned) of a query, in which case QSqlQuery::size() will return -1.
+// |1| QSqlDriver::BLOB	2	Whether the driver supports Binary Large Object fields.
+// |1| QSqlDriver::Unicode	3	Whether the driver supports Unicode strings if the database server does.
+// |1| QSqlDriver::PreparedQueries	4	Whether the driver supports prepared query execution.
+// |0| QSqlDriver::NamedPlaceholders	5	Whether the driver supports the use of named placeholders.
+// |1| QSqlDriver::PositionalPlaceholders	6	Whether the driver supports the use of positional placeholders.
+// |1| QSqlDriver::LastInsertId	7	Whether the driver supports returning the Id of the last touched row.
+// |0| QSqlDriver::BatchOperations	8	Whether the driver supports batched operations, see QSqlQuery::execBatch()
+// |1| QSqlDriver::SimpleLocking	9	Whether the driver disallows a write lock on a table while other queries have a read lock on it.
+// |1| QSqlDriver::LowPrecisionNumbers	10	Whether the driver allows fetching numerical values with low precision.
+// |0| QSqlDriver::EventNotifications	11	Whether the driver supports database event notifications.
+// |1| QSqlDriver::FinishQuery	12	Whether the driver can do any low-level resource cleanup when QSqlQuery::finish() is called.
+// |0| QSqlDriver::MultipleResultSets	13	Whether the driver can access multiple result sets returned from batched statements or stored procedures.

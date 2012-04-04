@@ -41,20 +41,21 @@ public:
 	DistributorTableModel(QObject * parent = 0, QSqlDatabase db = QSqlDatabase());
 // 	virtual ~DistributorTableModel();
 
-	virtual bool select();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 	virtual bool addRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate = true);
 	virtual bool updateRecord(int id, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
-	virtual bool removeRecord(int row);
 
 	virtual bool setIndexData(const QModelIndex & idx, const QVariant & data);
 	virtual bool setIndexData(int row, int column, const QVariant & data);
 
 	virtual bool selectRow(int row);
 	virtual bool selectColumn(int column);
+
+	virtual bool fillRow(const QSqlQuery& q, int row, bool emit_signal = true);
+
 public:
 	enum UserRoles { RRaw = Qt::UserRole + 1 };
 

@@ -21,9 +21,8 @@ namespace globals {
 
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
-TM
 	QApplication app(argc, argv, QApplication::GuiClient);
-TM
+
 	const QString resWarnMsgTitle = QObject::tr("Cannot find resources");
 	const QString resWarnMsg = QObject::tr(
 		"Unable to find resources in %1\n"
@@ -102,12 +101,10 @@ TM
 	splash->showMessage(QObject::tr("Starting database browser"));
 TM
 	DBBrowser dbb;
-
+TM
 	splash->showMessage(QObject::tr("Running application"));
 
-TM
 	if (argc == 1) {
-TM
 		if (!recentDB.isEmpty()) {
 			dbb.openZarlock(recentDB);
 		} else {

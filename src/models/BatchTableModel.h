@@ -35,14 +35,13 @@ public:
 	BatchTableModel(QObject * parent = NULL, QSqlDatabase db = QSqlDatabase());
 	virtual ~BatchTableModel();
 
-	virtual bool select();
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-	virtual bool addRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
-	virtual bool updateRecord(int row, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
-	virtual bool removeRecord(int row);
+	virtual bool addRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool updateRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool getRecord(int row, unsigned int & pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 	
 	virtual bool setIndexData(const QModelIndex & idx, const QVariant & data);
 	virtual bool setIndexData(int row, int column, const QVariant & data);
@@ -50,17 +49,13 @@ public:
 	virtual bool selectRow(int row);
 	virtual bool selectColumn(int column);
 
+	virtual bool fillRow(const QSqlQuery& q, int row, bool emit_signal = true);
+
 	virtual void autoSubmit(bool asub = true);
 
 public:
 	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HNotes, HInvoice, DummyHeadersSize }; // HENameQty
 	enum UserRoles { RRaw = Qt::UserRole + 1, RNameQty = Qt::UserRole + 10, RFreeQty };
-
-public slots:
-	void filterDB(const QString &);
-
-private slots:
-	void trigDataChanged();
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;

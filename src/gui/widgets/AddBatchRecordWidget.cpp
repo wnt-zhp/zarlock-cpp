@@ -82,9 +82,9 @@ void AddBatchRecordWidget::insertRecord() {
 	// price
 	double netto, vat;
 	DataParser::price(edit_price->text(), netto, vat);
-	QString uprice = QString("%1").arg(int(netto*(100+vat)));
+	int uprice = int(netto*(/*100*/+vat));
 	// unit price
-	QString unitprice = check_uprice->isChecked() ? edit_price->text() : uprice;
+	int unitprice = check_uprice->isChecked() ? uprice : (uprice / spin_qty->value());
 
 	QDate regdate, expdate;
 	if (!check_inf->isChecked()) {
@@ -99,7 +99,7 @@ void AddBatchRecordWidget::insertRecord() {
 		if (bl.size() != 1)
 			return;
 		if (db->updateBatchRecord(bl.at(0), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 	
 			idToUpdate = -1;
 			clearForm();
@@ -228,9 +228,9 @@ void AddBatchRecordWidget::prepareInsert(bool visible) {
 
 void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	unsigned int pid;
-	QString spec, price, unit, invoice, notes;
+	QString spec, unit, invoice, notes;
 	QDate reg, expiry, entry;
-	double qty, used;
+	int price, qty, used;
 
 	clearForm();
 // 	update_model();
@@ -251,11 +251,11 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 
 	combo_products->setCurrentIndex(pproxy->mapFromSource(pl.at(0)).row());
 	edit_spec->setRaw(spec);
-	edit_price->setRaw(QString().setNum(price.toDouble()));
+	edit_price->setRaw(QString("%1").arg(0.01*price));
 	check_uprice->setChecked(true);
 	edit_unit->setRaw(unit);
-	spin_qty->setMinimum(used);
-	spin_qty->setValue(qty);
+	spin_qty->setMinimum(0.01*used);
+	spin_qty->setValue(0.01*qty);
 	edit_book->setRaw(reg.toString("dd/MM/yyyy"));
 	edit_expiry->setRaw(expiry.toString("dd/MM/yyyy"));
 	check_inf->setChecked(!expiry.isValid());

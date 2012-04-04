@@ -72,52 +72,10 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractT
 	dtypes.push_back(DTDate);
 	dtypes.push_back(DTString);
 	dtypes.push_back(DTString);
-
-	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
 BatchTableModel::~BatchTableModel() {
 	FPR(__func__);
-}
-
-/**
- * @brief Ta funkcja odpowiada za pobranie danych z tabeli i synchronizację.
- * Tutaj możemy ustawić nagłówki dla kolumn
- *
- * @return bool stan otwarcia tabeli
- **/
-bool BatchTableModel::select() {
-	records.clear();
-
-	QString query("SELECT * FROM :table:");
-	query.replace(":table:", table);
-	QSqlQuery q;//(database);
-	q.prepare(query);
-	q.exec();
-	
-	// 	PR(q.size());
-	while (q.next()) {
-		d_record rec(this);
-		rec.arr[0].resize(DummyHeadersSize);
-		rec.arr[1].resize(DummyHeadersSize);
-
-		for (int r = 0; r < DummyHeadersSize; ++r) {
-			rec.arr[0][r]			= q.value(r);
-			rec.arr[1][r]			= q.value(r);
-		}
-
-		rec.arr[1][HProdId]			= prepareProduct(q.value(HProdId));
-		rec.arr[1][HStaQty]			= prepareQty(q.value(HStaQty));
-		rec.arr[1][HUsedQty]		= prepareQty(q.value(HUsedQty));
-		rec.arr[1][HRegDate]		= prepareDate(q.value(HRegDate));
-		rec.arr[1][HExpiryDate]		= prepareDate(q.value(HExpiryDate));
-		rec.arr[1][HEntryDate]		= prepareDate(q.value(HEntryDate));
-
-		records.push_back(rec);
-	}
-
-	this->sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder);
-	return true;
 }
 
 QVariant BatchTableModel::prepareProduct(const QVariant& v) {
@@ -166,28 +124,27 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 			return QVariant();
 			break;
 		case RRaw:
-			return records[row].arr[0][col];
+			return records[row]->arr[0][col];
 			break;
 		case RFreeQty:
 			if (col == HUsedQty) {
-				int used = records[row].arr[0][col].toInt();
-				int total = records[row].arr[0][HStaQty].toInt();
+				int used = records[row]->arr[0][col].toInt();
+				int total = records[row]->arr[0][HStaQty].toInt();
 				return QVariant(double(total - used)/100.0);
 			}
 			break;
 		case RNameQty:
 			if (col == HSpec) {
 				return QString(
-					records[row].arr[1][HProdId].toString() % " " %
-					records[row].arr[0][col].toString() %
+					records[row]->arr[1][HProdId].toString() % " " %
+					records[row]->arr[0][col].toString() %
 					tr(" (quantity: %1)").arg(this->data(this->index(row, HStaQty), RFreeQty).toDouble())
 				);
 			}
 			break;
 	}
 
-// 	return QSqlTableModel::data(idx, role);
-// 	return records[row].arr[0][col];
+// 	return records[row]->arr[0][col];
 	return QVariant();
 }
 
@@ -217,7 +174,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 
 			else if (col == HSpec) {
 				return QString(
-					records[row].arr[1][HProdId].toString() % " " % records[row].arr[0][col].toString());
+					records[row]->arr[1][HProdId].toString() % " " % records[row]->arr[0][col].toString());
 			}
 			
 			else if (col == HPrice) {
@@ -226,7 +183,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			
 			else if (col == HUnit) {
 				QString unitf;
-				if (DataParser::unit(records[row].arr[0][HUnit].toString(), unitf)) {
+				if (DataParser::unit(records[row]->arr[0][HUnit].toString(), unitf)) {
 					return unitf;
 				} else {
 					if (role == Qt::BackgroundRole)
@@ -237,7 +194,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			
 			else if (col == HRegDate) {
-				return records[row].arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
+				return records[row]->arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
 			}
 			
 			else if (col == HExpiryDate) {
@@ -245,7 +202,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 					return QString(new QChar(0x221e), 1);
 				
 // 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
-				return records[row].arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
+				return records[row]->arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
 				// 				QDate date;
 				// 				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(row, HRegDate), Qt::DisplayRole).toDate())) {
 					// 					return date.toString(Qt::DefaultLocaleShortDate);
@@ -267,14 +224,14 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			
 // 			else if (col == HENameQty) {
 // 				return QString(
-// 					records[row].arr[1][HProdId].toString() % " " %
-// 					records[row].arr[1][col].toString() %
+// 					records[row]->arr[1][HProdId].toString() % " " %
+// 					records[row]->arr[1][col].toString() %
 // 					tr(" (quantity: %1)").arg(this->data(this->index(row, HStaQty), RFreeQty).toDouble())
 // 					);
 // 			}
 			break;
 		case Qt::BackgroundRole:
-			QDate expd = records[row].arr[1][HExpiryDate].toDate();
+			QDate expd = records[row]->arr[1][HExpiryDate].toDate();
 
 			if (!expd.isValid())
 				return globals::item_nexpired;
@@ -291,7 +248,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			break;
 	}
 
-	return records[row].arr[1][col];
+	return records[row]->arr[1][col];
 // 	return QSqlTableModel::data(idx, Qt::DisplayRole);
 }
 
@@ -306,20 +263,16 @@ QVariant BatchTableModel::raw(const QModelIndex & idx) const {
 	int col = idx.column();
 
 	if (col == HRegDate) {
-		return records[row].arr[0][col].toDate();
-// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
+		return records[row]->arr[0][col].toDate();
 	} else
 	if (col == HExpiryDate) {
-		return records[row].arr[0][col].toDate();
-// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
+		return records[row]->arr[0][col].toDate();
 	} else
 	if (col == HEntryDate) {
-		return records[row].arr[0][col].toDate();
-// 		return QSqlTableModel::data(idx, Qt::DisplayRole).toDate()/*.toString("dd-MM-yyyy")*/;
+		return records[row]->arr[0][col].toDate();
 	}
 
-	return records[row].arr[0][col];
-// 	return QSqlTableModel::data(idx, Qt::DisplayRole);
+	return records[row]->arr[0][col];
 }
 
 /**
@@ -381,120 +334,105 @@ bool BatchTableModel::setData(const QModelIndex & index, const QVariant & value,
 	return false;
 }
 
-bool BatchTableModel::addRecord(unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
-// 	QSqlQuery q;
-// 	q.prepare("INSERT INTO distributor VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
-// 	q.bindValue(0, bid);
-// 	q.bindValue(1, qty);
-// 	q.bindValue(2, ddate.toString(Qt::ISODate));
-// 	q.bindValue(3, rdate.toString(Qt::ISODate));
-// 	q.bindValue(4, disttype);
-// 	q.bindValue(5, dt_a);
-// 	q.bindValue(6, dt_b);
-// 	bool status = q.exec();
-// 	
-// 	if (!status)
-// 		return false;
-// 	
-// 	q.prepare("SELECT id FROM distributor ORDER BY id DESC LIMIT 1");
-// 	q.exec();
-// 	
-// 	int id = -1;
-// 	
-// 	if (q.next())
-// 		id = q.value(0).toInt();
-// 	else
-// 		return false;
-// 	
-// 	int n = records.count();
-// 	
-// 	d_record rec(this);
-// 	
-// 	rec.arr[0][HId]			= id;
-// 	rec.arr[0][HBatchId]	= bid;
-// 	rec.arr[0][HQty]		= qty;
-// 	rec.arr[0][HDistDate]	= ddate;
-// 	rec.arr[0][HEntryDate]	= rdate;
-// 	rec.arr[0][HDistType]	= disttype;
-// 	rec.arr[0][HDistTypeA]	= dt_a;
-// 	rec.arr[0][HDistTypeB]	= dt_b;
-// 	
-// 	rec.arr[1][HId]			= id;
-// 	rec.arr[1][HBatchId]	= prepareBatch(bid);
-// 	rec.arr[1][HQty]		= prepareQty(qty);
-// 	rec.arr[1][HDistDate]	= prepareDate(ddate);
-// 	rec.arr[1][HEntryDate]	= prepareDate(rdate);
-// 	rec.arr[1][HDistType]	= disttype;
-// 	rec.arr[1][HDistTypeA]	= dt_a;
-// 	rec.arr[1][HDistTypeB]	= prepareDistTypeB(id);
-// 	
-// 	beginInsertRows(QModelIndex(), n, n);
-// 	records.push_back(rec);
-// 	emit dataChanged(this->index(rowCount(), HId), this->index(rowCount(), HDistTypeB));
-// 	endInsertRows();
-
-	return true;
-}
-
-bool BatchTableModel::updateRecord(int row, unsigned int pid, const QString& spec, const QString& price, const QString& unit, double qty, double used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
-// 	int id = records[row].arr[0][HId].toInt();
-// 	
-// 	QSqlQuery q;
-// 	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b? WHERE id=?;");
-// 	q.bindValue(0, bid);
-// 	q.bindValue(1, qty);
-// 	q.bindValue(2, ddate.toString(Qt::ISODate));
-// 	q.bindValue(3, rdate.toString(Qt::ISODate));
-// 	q.bindValue(4, disttype);
-// 	q.bindValue(5, dt_a);
-// 	q.bindValue(6, dt_b);
-// 	q.bindValue(7, id);
-// 	bool status = q.exec();
-// 	
-// 	if (!status)
-// 		return false;
-// 	
-// 	d_record rec(this);
-// 	
-// 	rec.arr[0][HId]			= id;
-// 	rec.arr[0][HBatchId]	= bid;
-// 	rec.arr[0][HQty]		= qty;
-// 	rec.arr[0][HDistDate]	= ddate;
-// 	rec.arr[0][HEntryDate]	= rdate;
-// 	rec.arr[0][HDistType]	= disttype;
-// 	rec.arr[0][HDistTypeA]	= dt_a;
-// 	rec.arr[0][HDistTypeB]	= dt_b;
-// 	
-// 	rec.arr[1][HId]			= id;
-// 	rec.arr[1][HBatchId]	= prepareBatch(bid);
-// 	rec.arr[1][HQty]		= prepareQty(qty);
-// 	rec.arr[1][HDistDate]	= prepareDate(ddate);
-// 	rec.arr[1][HEntryDate]	= prepareDate(rdate);
-// 	rec.arr[1][HDistType]	= disttype;
-// 	rec.arr[1][HDistTypeA]	= dt_a;
-// 	rec.arr[1][HDistTypeB]	= prepareDistTypeB(id);
-// 	
-// 	records[row] = rec;
-// 	// 	records.push_back(d_record{{ id, bid, qty, ddate, rdate, disttype, dt_a, dt_b }});
-
-	return true;
-}
-
-bool BatchTableModel::removeRecord(int row) {
-	int id = records[row].arr[0][HId].toInt();
+bool BatchTableModel::addRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+	QString query("INSERT INTO :table: VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+	query.replace(":table:", table);
 	
 	QSqlQuery q;
-	q.prepare("DELETE FROM distributor WHERE id=?;");
-	q.bindValue(0, id);
+	q.prepare(query);
+
+	q.bindValue(0, pid);
+	q.bindValue(1, spec);
+	q.bindValue(2, price);
+	q.bindValue(3, unit);
+	q.bindValue(4, qty);
+	q.bindValue(5, used);
+	q.bindValue(6, reg.toString(Qt::ISODate));
+	q.bindValue(7, expiry.toString(Qt::ISODate));
+	q.bindValue(8, entry.toString(Qt::ISODate));
+	q.bindValue(9, invoice);
+	q.bindValue(10, notes);
 	bool status = q.exec();
-	if (status) {
-		beginRemoveRows(QModelIndex(), row, row);
-		records.remove(row);
-		endRemoveRows();
-	}
-	
-	return status;
+
+	if (!status)
+		return false;
+
+	query = "SELECT * FROM :table: ORDER BY id DESC LIMIT 1";
+	query.replace(":table:", table);
+
+	q.prepare(query);
+	q.exec();
+
+	int n = records.count();
+	if (!q.next())
+		return false;
+
+	beginInsertRows(QModelIndex(), n, n);
+	pushRow(q);
+	endInsertRows();
+
+	return true;
 }
+
+bool BatchTableModel::updateRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+	int id = records[row]->arr[0][HId].toInt();
+
+	QString query("UPDATE :table: SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b? WHERE id=?;");
+	query.replace(":table:", table);
+
+ 	QSqlQuery q;
+	q.prepare(query);
+
+	q.bindValue(0, pid);
+	q.bindValue(1, spec);
+	q.bindValue(2, price);
+	q.bindValue(3, unit);
+	q.bindValue(4, qty);
+	q.bindValue(5, used);
+	q.bindValue(6, reg.toString(Qt::ISODate));
+	q.bindValue(7, expiry.toString(Qt::ISODate));
+	q.bindValue(8, entry.toString(Qt::ISODate));
+	q.bindValue(9, invoice);
+	q.bindValue(10, notes);
+	bool status = q.exec();
+
+	if (!status)
+		return false;
+
+	query = "SELECT * FROM :table: WHERE id = ?";
+	query.replace(":table:", table);
+
+	q.prepare(query);
+	q.bindValue(0, id);
+	q.exec();
+	if (!q.next())
+		return false;
+
+	fillRow(q, row);
+
+	return true;
+}
+
+bool BatchTableModel::getRecord(int row, unsigned int& pid, QString& spec, int& price, QString& unit, int& qty, int& used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes) {
+	if (row < records.count()) {
+		pid			= records[row]->arr[0][HId].toUInt();
+		spec		= records[row]->arr[1][HSpec].toString();
+		price		= records[row]->arr[0][HPrice].toInt();
+		unit		= records[row]->arr[0][HUnit].toString();
+		qty			= records[row]->arr[1][HStaQty].toInt();
+		used		= records[row]->arr[0][HUsedQty].toInt();
+		reg			= records[row]->arr[0][HRegDate].toDate();
+		expiry		= records[row]->arr[0][HExpiryDate].toDate();
+		entry		= records[row]->arr[0][HEntryDate].toDate();
+		invoice		= records[row]->arr[0][HInvoice].toInt();
+		notes		= records[row]->arr[0][HNotes].toInt();
+
+		return true;
+	}
+
+	return false;
+}
+
 
 bool BatchTableModel::setIndexData(const QModelIndex& idx, const QVariant& data) {
 	return setIndexData(idx.row(), idx.column(), data);
@@ -509,18 +447,18 @@ bool BatchTableModel::setIndexData(int row, int column, const QVariant& data) {
 // 		case HEntryDate:
 // 			q.bindValue(0, columns[column]);
 // 			q.bindValue(1, data.toDate().toString(Qt::ISODate));
-// 			q.bindValue(2, records[row].arr[0][HId]);
+// 			q.bindValue(2, records[row]->arr[0][HId]);
 // 			status = q.exec();
 // 			break;
 // 		default:
 // 			q.bindValue(0, columns[column]);
 // 			q.bindValue(1, data.toInt());
-// 			q.bindValue(2, records[row].arr[0][HId]);
+// 			q.bindValue(2, records[row]->arr[0][HId]);
 // 			status = q.exec();
 // 			break;
 // 	}
 // 	if (status) {
-// 		records[row].arr[0][column] = data;
+// 		records[row]->arr[0][column] = data;
 // 	}PR(status);
 	return status;
 }
@@ -536,70 +474,75 @@ bool BatchTableModel::selectColumn(int column) {
 	PR(q.size());
 	int i = -1;
 	while (q.next()) {
-		records[++i].arr[0][column] = q.value(0);
+		records[++i]->arr[0][column] = q.value(0);
 	}
 	
 	return true;
 }
 
 bool BatchTableModel::selectRow(int row) {
-// 	QString query("SELECT * FROM :table: LIMIT 1 OFFSET :offset:");
-// 	query.replace(":table:", table);
-// 	query.replace(":offset:", QString("%d").arg(row));
-// 	
-// 	QSqlQuery q;
-// 	q.prepare(query);
-// 	q.exec();
-// 	
-// 	while (q.next()) {
+	QString query("SELECT * FROM :table: LIMIT 1 OFFSET :offset:");
+	query.replace(":table:", table);
+	query.replace(":offset:", QString("%d").arg(row));
+	
+	QSqlQuery q;
+	q.prepare(query);
+	q.exec();
+	
+	while (q.next()) {
+		fillRow(q, row);
 // 		d_record rec(this);
 // 		
-// 		rec.arr[0][HId]			= q.value(HId);
-// 		rec.arr[0][HBatchId]	= q.value(HBatchId);
-// 		rec.arr[0][HQty]		= q.value(HQty);
-// 		rec.arr[0][HDistDate]	= q.value(HDistDate);
-// 		rec.arr[0][HEntryDate]	= q.value(HEntryDate);
-// 		rec.arr[0][HDistType]	= q.value(HDistType);
-// 		rec.arr[0][HDistTypeA]	= q.value(HDistTypeA);
-// 		rec.arr[0][HDistTypeB]	= q.value(HDistTypeB);
+// 		rec->arr[0][HId]			= q.value(HId);
+// 		rec->arr[0][HBatchId]	= q.value(HBatchId);
+// 		rec->arr[0][HQty]		= q.value(HQty);
+// 		rec->arr[0][HDistDate]	= q.value(HDistDate);
+// 		rec->arr[0][HEntryDate]	= q.value(HEntryDate);
+// 		rec->arr[0][HDistType]	= q.value(HDistType);
+// 		rec->arr[0][HDistTypeA]	= q.value(HDistTypeA);
+// 		rec->arr[0][HDistTypeB]	= q.value(HDistTypeB);
 // 		
-// 		rec.arr[1][HId]			= q.value(HId);
-// 		rec.arr[1][HBatchId]	= prepareBatch(q.value(HBatchId));
-// 		rec.arr[1][HQty]		= prepareQty(q.value(HQty));
-// 		rec.arr[1][HDistDate]	= prepareDate(q.value(HDistDate));
-// 		rec.arr[1][HEntryDate]	= prepareDate(q.value(HEntryDate));
-// 		rec.arr[1][HDistType]	= q.value(HDistType);
-// 		rec.arr[1][HDistTypeA]	= q.value(HDistTypeA);
-// 		rec.arr[1][HDistTypeB]	= prepareDistTypeB(q.value(HId));
+// 		rec->arr[1][HId]			= q.value(HId);
+// 		rec->arr[1][HBatchId]	= prepareBatch(q.value(HBatchId));
+// 		rec->arr[1][HQty]		= prepareQty(q.value(HQty));
+// 		rec->arr[1][HDistDate]	= prepareDate(q.value(HDistDate));
+// 		rec->arr[1][HEntryDate]	= prepareDate(q.value(HEntryDate));
+// 		rec->arr[1][HDistType]	= q.value(HDistType);
+// 		rec->arr[1][HDistTypeA]	= q.value(HDistTypeA);
+// 		rec->arr[1][HDistTypeB]	= prepareDistTypeB(q.value(HId));
 // 		
 // 		records[row] = rec;
-// 	}
+	}
 	return true;
 }
 
-/**
- * @brief Tworzy filtr na pole 'name' dla danych z tabeli products.
- * Filtr ma postać 'f*'.
- *
- * @param f filtr
- **/
-void BatchTableModel::filterDB(const QString & f) {
-	QString filter = "";
-	if (!f.isEmpty())
-		filter = "spec GLOB '" % f % "*'";
-// 	setFilter(filter);
+bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
+	d_record * rec = records[row];
+
+	rec->arr[0].resize(DummyHeadersSize);
+	rec->arr[1].resize(DummyHeadersSize);
+	
+	for (int r = 0; r < DummyHeadersSize; ++r) {
+		rec->arr[0][r]				= q.value(r);
+		rec->arr[1][r]				= q.value(r);
+	}
+	
+	rec->arr[1][HProdId]			= prepareProduct(q.value(HProdId));
+	rec->arr[1][HSpec]				= QVariant(rec->arr[1][HProdId].toString() % " " % rec->arr[0][HSpec].toString());
+	rec->arr[1][HStaQty]			= prepareQty(q.value(HStaQty));
+	rec->arr[1][HUsedQty]			= prepareQty(q.value(HUsedQty));
+	rec->arr[1][HRegDate]			= prepareDate(q.value(HRegDate));
+	rec->arr[1][HExpiryDate]		= prepareDate(q.value(HExpiryDate));
+	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
+
+	if (emit_signal)
+		emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()-1));
+
+	return true;
 }
 
 void BatchTableModel::autoSubmit(bool asub) {
 	autosubmit = asub;
 }
 
-void BatchTableModel::trigDataChanged() {
-// 	if (autosubmit) {
-// 		this->submitAll();
-// 		Database * db = Database::Instance();
-// 		db->updateBatchWordList();
-// 	}
-}
- 
 #include "BatchTableModel.moc"
