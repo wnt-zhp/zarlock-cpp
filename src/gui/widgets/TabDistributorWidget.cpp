@@ -42,6 +42,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 	table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+	connect(model_dist, SIGNAL(rowInserted(int)), table_dist, SLOT(selectRow(int)));
 }
 
 TabDistributorWidget::~TabDistributorWidget() {

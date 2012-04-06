@@ -408,7 +408,7 @@ bool BatchTableModel::updateRecord(int row, unsigned int pid, const QString& spe
 	if (!q.next())
 		return false;
 
-	fillRow(q, row);
+	fillRow(q, row, true, true);
 
 	return true;
 }
@@ -490,7 +490,7 @@ bool BatchTableModel::selectRow(int row) {
 	q.exec();
 	
 	while (q.next()) {
-		fillRow(q, row);
+		fillRow(q, row, true, true);
 // 		d_record rec(this);
 // 		
 // 		rec->arr[0][HId]			= q.value(HId);
@@ -516,7 +516,7 @@ bool BatchTableModel::selectRow(int row) {
 	return true;
 }
 
-bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
+bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, bool emit_signal) {
 	d_record * rec = records[row];
 
 	rec->arr[0].resize(DummyHeadersSize);
@@ -535,8 +535,10 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
 	rec->arr[1][HExpiryDate]		= prepareDate(q.value(HExpiryDate));
 	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
 
-	if (emit_signal)
-		emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()-1));
+	if (do_sort)
+		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
+
+	emit rowInserted(getRowById(rec->arr[1][HId].toInt()));
 
 	return true;
 }

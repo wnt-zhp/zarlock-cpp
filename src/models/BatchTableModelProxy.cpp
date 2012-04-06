@@ -59,6 +59,11 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();	// quantity of free batches
 
+	QString str = sourceModel()->index(sourceRow, BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+
+	if (!str.contains(filter, Qt::CaseInsensitive))
+		return false;
+
 	if (cb_hide and cb_hide->isChecked() and free == 0)		// hide empty
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
 
@@ -108,7 +113,11 @@ void BatchTableModelProxy::sort(int column, Qt::SortOrder order) {
 // 	QSortFilterProxyModel::sort(column, order);
 	sourceModel()->sort(column, order);
 
-	emit dataChanged(this->index(0, 0), this->index(this->rowCount(), this->columnCount()));
+	emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
+}
+
+void BatchTableModelProxy::setFilter(const QString& filter) {
+	this->filter = filter;
 }
 
 #include "BatchTableModelProxy.moc"

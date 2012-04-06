@@ -41,6 +41,7 @@ public:
 	virtual void setDateKey(const QDate & dk);
 	virtual void setItemNum(int * item);
 	virtual void allwaysAccept(const QModelIndex * idx);
+	virtual void setFilter(const QString & filter);
 
 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
@@ -55,6 +56,8 @@ private:
 	QDate datekey;
 	int * itemnum;
 	const QModelIndex * aaidx;
+
+	QString filter;
 };
 
 #endif // BATCHTABLEMODELPROXY_H

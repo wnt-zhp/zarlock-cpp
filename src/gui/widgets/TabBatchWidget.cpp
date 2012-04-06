@@ -56,7 +56,8 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_hideempty, SIGNAL(clicked()), this, SLOT(setFilter()));
 
-	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+// 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 // 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -80,6 +81,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
 
 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+	connect(model_batch, SIGNAL(rowInserted(int)), table_batch, SLOT(selectRow(int)));
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -121,7 +123,7 @@ void TabBatchWidget::activateUi(bool activate) {
 			table_batch->setItemDelegate(model_batch_delegate);*/
 			table_batch->show();
 			// TODO: Co z tym zrobić?
-			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
+// 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 			abrw->update_model();
 		}
 	}
@@ -154,6 +156,11 @@ void TabBatchWidget::editRecord(const QModelIndex& idx) {
 void TabBatchWidget::setFilter() {
 	modelproxy_batch->invalidate();
 	table_batch->setModel(modelproxy_batch);
+}
+
+void TabBatchWidget::setFilterString(const QString& string) {
+	modelproxy_batch->setFilter(string);
+	setFilter();
 }
 
 // void TabBatchWidget::syncDB() {

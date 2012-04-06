@@ -76,15 +76,16 @@ bool AbstractTableModel::select() {
 
 	records.reserve(2*n);
 	insertRows(0, n);
-PR(n);
+
 	int r = -1;
 
 	q.first();
 	do {
-	fillRow(q, ++r, false);
+	fillRow(q, ++r, false, false);
 	} while (q.next());
 
-	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder);
+	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, true);
+
 	return true;
 }
 
@@ -162,53 +163,84 @@ bool AbstractTableModel::insertRows(int row, int count, const QModelIndex& paren
 	}
 	endInsertRows();
 
+	emit rowInserted(row);
+
 	return true;
 }
 
 bool recordLessThan(const AbstractTableModel::d_record * s1, const AbstractTableModel::d_record * s2) {
-// 	PR(s1); PR(s2);
 	return ((*s1) < (*s2));
 }
 
 void AbstractTableModel::sort(int column, Qt::SortOrder order) {
+	sort(column, order, true);
+}
+
+void AbstractTableModel::sort(int column, Qt::SortOrder order, bool emit_signal) {
 	sort_column = column;
 	sort_order_asc = ( order == Qt::AscendingOrder ? true : false );
 
 	qStableSort(records.begin(), records.end(), recordLessThan);
 
-	emit dataChanged(this->index(0, 0), this->index(this->rowCount(), this->columnCount()));
+	if (emit_signal)
+		emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
 }
 
 QVector< int > AbstractTableModel::find(int column, const QVariant& value, int role, int hits, Qt::MatchFlags flags) {
 	find_role = role;
 	find_column = column;
-	find_value = value;
 
 	QVector<int> result;
 	int hits_found = 0;
 
-	QVector<AbstractTableModel::d_record *>::const_iterator it = records.begin();
-	QVector<AbstractTableModel::d_record *>::const_iterator itb = records.begin();
-	QVector<AbstractTableModel::d_record *>::const_iterator ite = records.end();
-
-	PR(*it);
-
-	bool st = (*it == 0);
-	PR(st);
+	viter it = records.begin();
+	viter itb = records.begin();
+	viter ite = records.end();
 
 	while (true) {
-// 		it = qFind(it, ite, 0);
-// 		if (it != ite) {
-// 			int d = it - itb;
-// 			PR(d);
-// 			result.push_back(d);
-// 			if (++hits_found == hits)
-// 				break;
-// 		} else {
-// 			break;
-// 		}
+		it = find(it, ite, value);
+		if (it != ite) {
+			int row = it - records.begin();
+			result.push_back(row);
+			if (++hits_found == hits)
+				break;
+		} else {
+			break;
+		}
 	}
 
+	return result;
+}
+
+QVector< int > AbstractTableModel::search(int column, const QVariant& value, int role, int hits, Qt::MatchFlags flags) {
+	find_role = role;
+	find_column = column;
+	
+	QVector<int> result;
+	int hits_found = 0;
+	
+	viter it = records.begin();
+	viter itb = records.begin();
+	viter ite = records.end();
+
+	while (true) {
+		while (it != ite) {
+			if ((*it)->arr[role][column].toString().contains(value.toString(), Qt::CaseInsensitive))
+				break;
+			else
+				++it;
+		}
+
+		if (it != ite) {
+			int row = it - records.begin();
+			result.push_back(row);
+			if (++hits_found == hits)
+				break;
+		} else {
+			break;
+		}
+	}
+	
 	return result;
 }
 
@@ -276,8 +308,20 @@ bool AbstractTableModel::pushRow(const QSqlQuery& q, bool emit_signal) {
 	return fillRow(q, records.count()-1, emit_signal);
 }
 
-bool AbstractTableModel::fillRowById(const QSqlQuery& q, int id, bool emit_signal) {
-	return false;
+int AbstractTableModel::getRowById(int id) throw (int) {
+	find_column = HId;
+
+	viter f = find(records.begin(), records.end(), id);
+
+	if (f == records.end()) throw id;
+
+	return (f - records.begin());
+}
+
+AbstractTableModel::viter AbstractTableModel::find(AbstractTableModel::viter begin, AbstractTableModel::viter end, const QVariant & val) const {
+	while (begin != end && !(**begin == val))
+		++begin;
+	return begin;
 }
 
 AbstractTableModel::d_record::d_record(AbstractTableModel * m) : model(m) {
@@ -364,22 +408,23 @@ bool AbstractTableModel::d_record::operator==(const QVariant & rhs) const {
 // 	return res;
 // }
 
-// QVariant & AbstractTableModel::d_record::operator*() const {
+QVariant & AbstractTableModel::d_record::operator*() {
+	return this->arr[model->find_role][model->find_column];
 // 	QVariant v1 = this->arr[model->find_role][model->find_column];
 // 	QVariant res;
-// 	
-// 	switch (this->model->dtypes[model->find_column]) {
-// 		case AbstractTableModel::DTInt:
-// 			res = v1.toInt();
-// 			break;
-// 		case AbstractTableModel::DTDate:
-// 			res = v1.toString();
-// 			break;
-// 		case AbstractTableModel::DTString:
-// 			res = v1.toString();
-// 			break;
-// 	}
-// 	return res;
-// }
+/*	
+	switch (this->model->dtypes[model->find_column]) {
+		case AbstractTableModel::DTInt:
+			res = v1.toInt();
+			break;
+		case AbstractTableModel::DTDate:
+			res = v1.toString();
+			break;
+		case AbstractTableModel::DTString:
+			res = v1.toString();
+			break;
+	}
+	return res;*/
+}
 
 #include "AbstractTableModel.moc"

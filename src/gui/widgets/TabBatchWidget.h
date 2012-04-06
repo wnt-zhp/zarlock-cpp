@@ -46,8 +46,7 @@ private slots:
 	void addBatchRecord(bool newrec = true);
 	void editRecord(const QModelIndex & idx);
 	void setFilter();
-
-// 	virtual void syncDB();
+	void setFilterString(const QString & string);
 
 private:
 	Database * db;

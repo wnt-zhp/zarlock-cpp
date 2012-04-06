@@ -49,7 +49,7 @@ public:
 	virtual bool selectRow(int row);
 	virtual bool selectColumn(int column);
 
-	virtual bool fillRow(const QSqlQuery& q, int row, bool emit_signal = true);
+	virtual bool fillRow(const QSqlQuery& q, int row, bool do_sort = true, bool emit_signal = true);
 
 	virtual void autoSubmit(bool asub = true);
 

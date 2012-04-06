@@ -397,7 +397,7 @@ bool DistributorTableModel::selectRow(int row) {
 	return true;
 }
 
-bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
+bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, bool emit_signal) {
 	d_record * rec = records[row];
 	
 	rec->arr[0].resize(DummyHeadersSize);
@@ -414,8 +414,10 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signa
 	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
 	rec->arr[1][HDistTypeB]			= prepareDistTypeB(q.value(HId));
 
-	if (emit_signal)
-		emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()-1));
+	if (do_sort)
+		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
+	
+	emit rowInserted(getRowById(rec->arr[1][HId].toInt()));
 }
 
 #include "DistributorTableModel.moc"

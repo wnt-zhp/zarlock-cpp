@@ -54,7 +54,10 @@ public:
 	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+	virtual void sort(int column, Qt::SortOrder order, bool emit_signal);
+
 	virtual QVector<int> find(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
+	virtual QVector<int> search(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
 
 	virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
@@ -67,11 +70,8 @@ public:
 	virtual bool selectColumn(int column) = 0;
 
 	virtual bool pushRow(const QSqlQuery & rec, bool emit_signal = true);
-	virtual bool fillRow(const QSqlQuery & rec, int row, bool emit_signal = true) = 0;
-	virtual bool fillRowById(const QSqlQuery & rec, int id, bool emit_signal = true);
-
-private:
-	void clearRecords();
+	virtual bool fillRow(const QSqlQuery & rec, int row, bool do_sort = true, bool emit_signal = true) = 0;
+	virtual int getRowById(int id) throw (int);
 
 public:
 	enum Headers {HId = 0, DummyHeadersSize };
@@ -84,14 +84,24 @@ public:
 		bool operator==(const QVariant & rhs) const;
 		// 		QVector<QVariant> * operator->()       { return arr; }  // #1
 		// 		QVector<QVariant> const * operator->() const { return arr; }
-// 		QVariant & operator *() const;
+		QVariant & operator *();
 		
 		QVector<QVariant> arr[2];
 		AbstractTableModel * model;
 	};
 
+// 	typedef QVector<AbstractTableModel::d_record *>::const_iterator viter;
+	typedef d_record * const * viter;
+
 public slots:
 // 	void filterDB(const QString &);
+
+signals:
+	void rowInserted(int row);
+
+private:
+	void clearRecords();
+	viter find(viter begin, viter end, const QVariant & val) const;
 
 private:
 	QSqlDatabase database;
@@ -114,7 +124,6 @@ protected:
 	bool sort_order_asc;
 	int find_column;
 	int find_role;
-	QVariant find_value;
 
 	Database * db;
 };

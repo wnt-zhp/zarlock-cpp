@@ -53,7 +53,7 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent) {
 	setItemDelegateForColumn(BatchTableModel::HPrice, price_delegate);
 
 	this->setEditTriggers(NoEditTriggers);
-// 	this->setEditTriggers(DoubleClicked);
+
 }
 
 /**
@@ -143,7 +143,5 @@ void BatchTableView::removeRecord() {
 	}
 	Database::Instance()->removeBatchRecord(v, true);
 }
-
-
 
 #include "BatchTableView.moc"
