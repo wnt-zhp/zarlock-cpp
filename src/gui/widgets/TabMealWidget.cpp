@@ -86,10 +86,18 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	action_toggle->setChecked(true);
 	hightlight_day(QDate::currentDate());
+
+	globals::appSettings->beginGroup("TabMeal");
+	splitter->restoreState(globals::appSettings->value("splitter", QByteArray()).toByteArray());
+	globals::appSettings->endGroup();
 }
 
 TabMealWidget::~TabMealWidget() {
 	FPR(__func__);
+	globals::appSettings->beginGroup("TabMeal");
+	globals::appSettings->setValue("splitter", splitter->saveState());
+	globals::appSettings->endGroup();
+
 	activateUi(false);
 }
 

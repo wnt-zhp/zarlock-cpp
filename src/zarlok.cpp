@@ -102,9 +102,12 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	activateUi(db->cs()->isCorrect);
 // 	updateAppTitle();
+
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 
 zarlok::~zarlok() {
+	PR(__func__);
 	while (MainTab->count())
 		MainTab->removeTab(0);
 	/*if (tmw)*/ delete tmw;/* tmw = NULL;*/

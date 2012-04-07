@@ -30,6 +30,9 @@ public:
     DBBrowser(QWidget * parent = NULL);
     virtual ~DBBrowser();
 
+	virtual void goBrowser();
+	virtual void configure(int argc, char * argv[]);
+
 public slots:
 	void dbb_list_selected(QListWidgetItem * item);
 	void newDatabaseCreator(bool autoopen = true);
@@ -52,6 +55,9 @@ private:
 // 	QString dbname, dbfile;
 // 	Database & db;
 	zarlok * z;
+
+	bool show_browser;
+	int verbose_flag;
 };
 
 #endif // DBBROWSER_H

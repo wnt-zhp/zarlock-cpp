@@ -94,28 +94,17 @@ TD
 	QFile fsettings(QDir::homePath() + QString(ZARLOK_HOME) + QString("zarlok.cfg"));
 	globals::appSettings = new QSettings(fsettings.fileName(), QSettings::IniFormat);
 
-	globals::appSettings->beginGroup("Database");
-	QString recentDB = globals::appSettings->value("RecentDatabase", "").toString();
-	globals::appSettings->endGroup();
-
 	splash->showMessage(QObject::tr("Starting database browser"));
 TM
 	DBBrowser dbb;
 TM
 	splash->showMessage(QObject::tr("Running application"));
 
-	if (argc == 1) {
-		if (!recentDB.isEmpty()) {
-			dbb.openZarlock(recentDB);
-		} else {
-			PR("First run! Welcome to żarłok.");
-			dbb.newDatabaseCreator();
-		}
-	} else {
-TM
-		dbb.show();
-	}
-TM
+	dbb.configure(argc, argv);
+
+// 	dbb.show();
+	dbb.goBrowser();
+
 	splash->finish(&dbb);
 
 	return app.exec();
