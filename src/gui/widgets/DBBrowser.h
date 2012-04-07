@@ -57,7 +57,6 @@ private:
 	zarlok * z;
 
 	bool show_browser;
-	int verbose_flag;
 };
 
 #endif // DBBROWSER_H

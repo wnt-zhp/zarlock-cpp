@@ -39,8 +39,8 @@ public:
 
 	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-	virtual bool addRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
-	virtual bool updateRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool addRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool updateRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool getRecord(int row, unsigned int & pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 	
 	virtual bool setIndexData(const QModelIndex & idx, const QVariant & data);

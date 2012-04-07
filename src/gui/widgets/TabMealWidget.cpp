@@ -31,6 +31,7 @@
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 wmap(NULL), lock(false), current_meal_row(-1) {
+	CI();
 	setupUi(this);
 
 	activateUi(true);
@@ -93,7 +94,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 }
 
 TabMealWidget::~TabMealWidget() {
-	FPR(__func__);
+	DI();
+
 	globals::appSettings->beginGroup("TabMeal");
 	globals::appSettings->setValue("splitter", splitter->saveState());
 	globals::appSettings->endGroup();

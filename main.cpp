@@ -17,10 +17,45 @@ namespace globals {
 	QFont font_display = QFont();
 
 	QSettings * appSettings = NULL;
+
+	bool verbose_flag = false;
+}
+
+// enum QtMsgType { QtInfoMsg, QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtSystemMsg };
+
+void qInfo(const char *msg, ...) {
+	if (!globals::verbose_flag)
+		return;
+
+	char buffer[1024];
+	va_list args;
+	va_start (args, msg);
+	vsprintf (buffer, msg, args);
+	va_end (args);
+	std::cout <<  "++INFO: " << buffer << std::endl;
+}
+
+void myMessageOutput(QtMsgType type, const char *msg)
+{
+	switch (type) {
+		case QtDebugMsg:
+			fprintf(stderr, "++DEBUG: %s\n", msg);
+			break;
+		case QtWarningMsg:
+			fprintf(stderr, "++WARNING: %s\n", msg);
+			break;
+		case QtCriticalMsg:
+			fprintf(stderr, "++CRITICAL: %s\n", msg);
+			break;
+		case QtFatalMsg:
+			fprintf(stderr, "++FATAL: %s\n", msg);
+			abort();
+	}
 }
 
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
+	qInstallMsgHandler(myMessageOutput);
 	QApplication app(argc, argv, QApplication::GuiClient);
 
 	const QString resWarnMsgTitle = QObject::tr("Cannot find resources");
@@ -95,12 +130,14 @@ TD
 	globals::appSettings = new QSettings(fsettings.fileName(), QSettings::IniFormat);
 
 	splash->showMessage(QObject::tr("Starting database browser"));
-TM
+
 	DBBrowser dbb;
-TM
+
 	splash->showMessage(QObject::tr("Running application"));
 
 	dbb.configure(argc, argv);
+
+	qInfo("Zarlok is started at %s", qPrintable(QDateTime::currentDateTime().toString(Qt::TextDate)));
 
 // 	dbb.show();
 	dbb.goBrowser();

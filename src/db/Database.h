@@ -67,9 +67,9 @@ public:
 	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
 
 	virtual bool addBatchRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
-	virtual bool updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
+	virtual bool updateBatchRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool removeBatchRecord(QVector<int> & rows, bool askForConfirmation = true);
-	virtual bool getBatchRecord(const QModelIndex & idx, unsigned int & pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate&reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
+	virtual bool getBatchRecord(int row, unsigned int & pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate&reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
 
 	virtual bool addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate = true);
 	virtual bool updateDistributorRecord(unsigned int row, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);

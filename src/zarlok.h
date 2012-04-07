@@ -29,8 +29,10 @@ private:
 	void closeEvent(QCloseEvent *event);
 signals:
 	void exitZarlok();
+	void switchDB();
 
 private slots:
+	void doSwitchDB();
 	void doExitZarlok();
 	void doCampSettings();
 

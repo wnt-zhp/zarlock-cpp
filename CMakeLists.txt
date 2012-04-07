@@ -4,6 +4,11 @@ set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB -std=c++0x")
 # set (CMAKE_CXX_FLAGS "-march=core2 -O2 -pipe -Wall -W -DQT_GUI_LIB")
 # set (CMAKE_EXE_LINKER_FLAGS "-Wl,-O1 -Wl,-rpath,/usr/lib64/qt4")
 add_definitions(-Wall)
+
+SET( QT_USE_QTCORE TRUE )
+SET( QT_USE_QTGUI TRUE )
+SET( QT_USE_QTSQL TRUE )
+
 find_package(Qt4 REQUIRED)
 
 # QT4_ADD_BINRESOURCES(outfiles inputfile ... )
@@ -37,6 +42,36 @@ macro (QT4_ADD_BINRESOURCES outfiles )
     SET(${outfiles} ${${outfiles}} ${outfile})
   ENDFOREACH (it)
 endmacro (QT4_ADD_BINRESOURCES)
+
+if( UNIX AND NOT APPLE )
+	if( NOT DESKTOP_ENTRY )
+		set( DESKTOP_ENTRY ${CMAKE_PROJECT_NAME}.desktop )
+	endif( NOT DESKTOP_ENTRY )
+
+	add_custom_command( OUTPUT ${DESKTOP_ENTRY}
+		COMMAND touch ${DESKTOP_ENTRY}
+		COMMAND sh ../${CMAKE_PROJECT_NAME}-desktop.sh ${CMAKE_INSTALL_PREFIX} > ${DESKTOP_ENTRY}
+		DEPENDS ${CMAKE_PROJECT_NAME}-desktop.sh
+		COMMENT "Generating desktop entry file"
+	)
+	add_custom_target( DESKTOP_ENTRY_FILE ALL
+		DEPENDS ${DESKTOP_ENTRY}
+	)
+  
+	set( APP_ICON ${CMAKE_PROJECT_NAME}.png )
+endif( UNIX AND NOT APPLE )
+
+IF( MINGW )
+	set( APP_ICON ${CMAKE_PROJECT_NAME}ico.o )
+	set( APP_ICON_RC ${CMAKE_PROJECT_NAME}ico.rc )
+	# resource compilation for MinGW
+	ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON}
+						COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
+							-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
+	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
+ELSE( MINGW )
+	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} crunchico.rc)
+ENDIF( MINGW )
 
 configure_file(config.h.in config.h @ONLY)
 # set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
@@ -168,10 +203,18 @@ add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
 	${zarlok_splash_RESOURCES_RCC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
-add_executable(zarlok ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
-target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY})
+add_executable(zarlok WIN32 ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
+target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
 
 # installation
+install(FILES
+				${APP_ICON}
+				DESTINATION share/icons
+)
+install(FILES
+				${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_ENTRY}
+				DESTINATION share/applications
+)
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
@@ -184,6 +227,11 @@ install(FILES
 				${QM_FILES}
 				DESTINATION share/${CMAKE_PROJECT_NAME}/translations
 )
+
+# if(UNIX AND NOT APPLE)
+# 	install( FILES ${APP_ICON} DESTINATION share/icons )
+# 	install( FILES qtm.1.gz DESTINATION ${MANPAGE_DIRECTORY} )
+# endif(UNIX AND NOT APPLE)
 
 install(TARGETS zarlok DESTINATION bin)
 

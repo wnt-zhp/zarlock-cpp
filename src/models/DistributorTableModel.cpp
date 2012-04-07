@@ -44,6 +44,7 @@ bool DistributorTableModel::sort_order_asc = true;
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
 DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase sqldb) : AbstractTableModel(parent, sqldb) {
+	CI();
 // 	headers.resize(DummyHeadersSize);
 // 	headers[HId] = tr("ID");
 // 	headers[HBatchId] = tr("Batch");

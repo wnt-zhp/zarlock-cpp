@@ -72,12 +72,13 @@ Database::Database() : QObject(),
 	plist(QVector<QStringList>(plist_size)), blist(QVector<QStringList>(blist_size)),
 	dlist(QVector<QStringList>(dlist_size)), locked(false)
 {
+	CI();
 	db = QSqlDatabase::addDatabase("QSQLITE");
 // 	PR(db.driver()->hasFeature(QSqlDriver::Transactions));
 }
 
 Database::Database(const Database & /*db*/) : QObject() {
-	FPR(__FUNC__);
+	DI();
 }
 
 Database::~Database() {
@@ -252,7 +253,7 @@ void Database::save_database() {
 // PR(1);	model_mealday->submitAll();
 // PR(1);	model_meal->submitAll();
 
-PR(1);	emit dbSaved();
+	emit dbSaved();
 }
 
 /**
@@ -691,20 +692,16 @@ bool Database::removeProductsRecord(QVector<int> & rows, bool askForConfirmation
 	return status;
 }
 
-bool Database::addBatchRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int used, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
-GTD
-GTM
-	if (model_batch->addRecord(pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes)) {
-		GTM
+bool Database::addBatchRecord(unsigned int pid, const QString& spec, int price, const QString& unit, int qty, int /*used*/, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+	if (model_batch->addRecord(pid, spec, price, unit, qty, reg, expiry, entry, invoice, notes)) {
 		updateBatchWordList();
 		return true;
 	}
-	GTM	
 	return false;
 }
 
-bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes) {
-	if (model_batch->getRecord(idx.row(), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes)) {
+bool Database::getBatchRecord(int row, unsigned int& pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes) {
+	if (model_batch->getRecord(row, pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes)) {
 		updateBatchWordList();
 		return true;
 	}
@@ -726,8 +723,13 @@ bool Database::getBatchRecord(const QModelIndex & idx, unsigned int& pid, QStrin
  * @return result of record update
  **/
 
-bool Database::updateBatchRecord(const QModelIndex & idx, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
+bool Database::updateBatchRecord(int row, unsigned int pid, const QString& spec, int price, const QString& unit, int qty, /*double used,*/ const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
 	bool status = true;
+
+	if (model_batch->updateRecord(row, pid, spec, price, unit, qty, reg, expiry, entry, invoice, notes)) {
+		updateBatchWordList();
+		return true;
+	}
 
 // 	int row = idx.row();
 // 
@@ -784,8 +786,6 @@ bool Database::removeBatchRecord(QVector<int> & rows, bool askForConfirmation) {
 }
 
 bool Database::addDistributorRecord(unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b, bool autoupdate) {
-GTD
-GTM
 	QModelIndexList qmil = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
 	if (qmil.count() != 1) {
 		return false;
@@ -802,24 +802,22 @@ GTM
 // 			inputErrorMsgBox(value.toString());
 		return false;
 	}
-GTM
+
 	if (model_distributor->addRecord(bid, qty, ddate, rdate, disttype, dt_a, dt_b)) {
 		PR(2);
 		model_batch->select();
 		PR(3);
-GTM
+
 // 		model_distributor->select();
-GTM
+
 		updateDistributorWordList();
 		return true;
 	}
-GTM	
+
 	return false;
 }
 
 bool Database::updateDistributorRecord(unsigned int row, unsigned int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b) {
-	GTD
-	GTM
 	QModelIndexList qmil = model_batch->match(model_batch->index(0, BatchTableModel::HId), Qt::DisplayRole, bid);
 	if (qmil.count() != 1) {
 		return false;
@@ -837,7 +835,6 @@ return false;
 		// 			inputErrorMsgBox(value.toString());
 		return false;
 	}
-	GTM
 
 	QSqlQuery q;
 	q.prepare("UPDATE distributor SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b=? WHERE id=?;");
@@ -851,23 +848,20 @@ return false;
 	q.bindValue(7, this->CachedDistributor()->index(row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 
 	bool status = q.exec();
-	GTM
 // 	if (autoupdate) {
 		// 		updateBatchQty(bid);
 		model_batch->select();
-		GTM
 		model_distributor->select();
-		GTM
 		updateDistributorWordList();
 // 	}
-	GTM	
+
 	return status;
 }
 
-bool Database::removeDistributorRecord(QVector<int> & rows, bool askForConfirmation, bool submitBatches) {EGTD
+bool Database::removeDistributorRecord(QVector<int> & rows, bool askForConfirmation, bool submitBatches) {
 	bool status = true;
 	QString details;
-GTM
+
 	int counter = rows.count();
 
 	qSort(rows);
@@ -882,18 +876,16 @@ GTM
 // 	PR(counter);
 	if (!status)
 		return false;
-GTM
+
 	for (int i = counter-1; i >= 0; --i) {
 // 		PR(i);PR(idxl.at(i).row());
 		model_distributor->removeRecord(rows.at(i));
 	}
-GTM
+
 	return status;
 }
 
 bool Database::getDistributorRecord(const QModelIndex & idx, unsigned int & bid, unsigned int & qty, QDate & distdate, QDate & entrydate, DistributorTableModel::Reasons & disttype, QString & disttypea, QString & disttypeb) {
-	GTD
-	GTM
 	int row = idx.row();
 	bid			= model_distributor->index(row, DistributorTableModel::HBatchId).data().toUInt();
 	qty			= model_distributor->index(row, DistributorTableModel::HQty).data(Qt::EditRole).toUInt();
@@ -904,7 +896,7 @@ bool Database::getDistributorRecord(const QModelIndex & idx, unsigned int & bid,
 	disttypeb	= model_distributor->index(row, DistributorTableModel::HDistTypeB).data(Qt::EditRole).toString();
 // PR(model_batch->index(row, DistributorTableModel::HDistDate).data(Qt::EditRole).toDate().toString().toStdString().c_str());
 // PR(model_batch->index(row, DistributorTableModel::HDistDate).data(Qt::DisplayRole).toDate().toString().toStdString().c_str());
-	GTM	
+
 	return true;
 }
 
@@ -1016,12 +1008,10 @@ bool Database::removeMealDayRecord(QVector<int> & ids, bool askForConfirmation) 
 }
 
 bool Database::getMealDayRecord(const int row, unsigned int & mdid, QDate & mealday, int & avgcost) {
-	GTD
-	GTM
 	mdid		= model_mealday->index(row, MealDayTableModel::HId).data().toUInt();
 	mealday		= model_mealday->index(row, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 	avgcost		= model_mealday->index(row, MealDayTableModel::HAvgCost).data(Qt::EditRole).toInt();
-	GTM	
+
 	return true;
 }
 

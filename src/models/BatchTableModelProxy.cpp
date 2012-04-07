@@ -33,6 +33,7 @@ BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * par
 												QSortFilterProxyModel(parent),
 												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL),
 												cb_hide(hide), itemnum(NULL) {
+	CI();
 }
 
 /**
@@ -46,6 +47,7 @@ BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBo
 										   QObject * parent) :
 												QSortFilterProxyModel(parent),
 												cb_exp(exp), cb_aexp(aexp), cb_nexp(nexp), cb_hide(hide), itemnum(NULL) {
+	CI();
 }
 
 /**
@@ -53,7 +55,7 @@ BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBo
  *
  **/
 BatchTableModelProxy::~BatchTableModelProxy() {
-	FPR(__func__);
+	DI();
 }
 
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {

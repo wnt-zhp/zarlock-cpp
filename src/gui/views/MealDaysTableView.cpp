@@ -32,6 +32,7 @@
  * Poczytać o signal/slot w Qt
  **/
 MealDaysTableView::MealDaysTableView(QWidget * parent) : QTableView(parent) {
+	CI();
 	// Popup menu dla akcji usuwania rekordu z bazy.
 	removeRec = new QAction(tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
@@ -61,7 +62,7 @@ MealDaysTableView::MealDaysTableView(QWidget * parent) : QTableView(parent) {
  *
  **/
 MealDaysTableView::~MealDaysTableView() {
-	FPR(__func__);
+	DI();
 	delete removeRec;
 	delete addRec;
 }

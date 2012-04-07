@@ -197,19 +197,17 @@ void MealFoodListItemDataWidget::buttonClose() {
 	render(true);
 }
 
-void MealFoodListItemDataWidget::buttonRemove() { EGTD
+void MealFoodListItemDataWidget::buttonRemove() {
 	Database * db = Database::Instance();
-GTM
-// 	QModelIndexList mil()
+
 	QVector<int> v({dist_idx.row()});
 	db->removeDistributorRecord(v);
-GTM
+
 // 	convertToEmpty();
-GTM
+
 	mfl->populateModel();
 	db->CachedBatch()->select();
 	db->CachedMealDay()->select();
-GTM
 }
 
 /** @brief Prepare data for widget

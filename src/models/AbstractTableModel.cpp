@@ -44,10 +44,12 @@ AbstractTableModel::AbstractTableModel(QObject* parent, QSqlDatabase sqldb) :
 	QAbstractTableModel(parent), database(sqldb),
 	sort_column(0), sort_order_asc(true),
 	find_column(0), find_role(0) {
+	CI();
 	db = Database::Instance();
 }
 
 AbstractTableModel::~AbstractTableModel() {
+	DI();
 	clearRecords();
 }
 

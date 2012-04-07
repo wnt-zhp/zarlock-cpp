@@ -27,11 +27,12 @@
 #include "Database.h"
 
 MealDayTableModel::MealDayTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
+	CI();	
 // 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 
 MealDayTableModel::~MealDayTableModel() {
-	FPR(__func__);
+	DI();
 }
 
 /**

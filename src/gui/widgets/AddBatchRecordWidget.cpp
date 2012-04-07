@@ -28,6 +28,7 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL),
 	idToUpdate(-1) {
+	CI();
 	setupUi(parent);
 
 	action_addexit->setEnabled(false);
@@ -62,7 +63,8 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 }
 
 AddBatchRecordWidget::~AddBatchRecordWidget() {
-	FPR(__func__);
+	DI();
+
 	if (completer_spec) delete completer_spec;
 	if (completer_qty) delete completer_qty;
 	if (completer_unit) delete completer_unit;
@@ -98,7 +100,7 @@ void AddBatchRecordWidget::insertRecord() {
 		QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (bl.size() != 1)
 			return;
-		if (db->updateBatchRecord(bl.at(0), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
+		if (db->updateBatchRecord(bl.at(0).row(), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 	
 			idToUpdate = -1;
@@ -242,7 +244,7 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	if (bl.size() != 1)
 		return;
 	idToUpdate = bl.at(0).data(Qt::EditRole).toInt();
-	db->getBatchRecord(bl.at(0), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
+	db->getBatchRecord(bl.at(0).row(), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
 
 	ProductsTableModel * pm = db->CachedProducts();
 	QModelIndexList pl = pm->match(pm->index(0, ProductsTableModel::HId), Qt::DisplayRole, idx.model()->index(idx.row(), BatchTableModel::HProdId).data(Qt::EditRole).toUInt(), -1, Qt::MatchExactly);

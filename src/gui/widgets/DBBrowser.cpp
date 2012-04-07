@@ -31,6 +31,8 @@
 #include "DBBrowser.h"
 
 DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL), show_browser(false) {
+	CI();
+
 	this->setVisible(false);
 	setupUi(this);
 	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
@@ -50,7 +52,7 @@ DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL), show_browser(f
 }
 
 DBBrowser::~DBBrowser() {
-	PR(__func__);
+	DI();
 
 	while (dbb_list->count()) {
 		QListWidgetItem * item = dbb_list->item(0);
@@ -67,8 +69,8 @@ void DBBrowser::configure(int argc, char* argv[]) {
 		static struct option long_options[] =
 		{
 			/* These options set a flag. */
-			{"verbose", no_argument,       &verbose_flag, 1},
-			{"brief",   no_argument,       &verbose_flag, 0},
+			{"verbose", no_argument,       0, 'v'},
+			{"quiet",   no_argument,       0, 'q'},
 			/* These options don't set a flag.
 			 *        We distinguish them by their indices. */
 			{"browser",  no_argument,       0, 'b'},
@@ -77,7 +79,7 @@ void DBBrowser::configure(int argc, char* argv[]) {
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 		
-		c = getopt_long (argc, argv, "b", 
+		c = getopt_long (argc, argv, "bvq", 
 						 long_options, &option_index);
 		
 		/* Detect the end of the options. */
@@ -95,9 +97,15 @@ void DBBrowser::configure(int argc, char* argv[]) {
 					printf (" with arg %s", optarg);
 				printf ("\n");
 				break;
-			case 'b':
+			case 'b':PR(c);
 				show_browser = true;
 // 				puts ("option -b\n");
+				break;
+			case 'v':
+				globals::verbose_flag = true;
+				break;
+			case 'q':
+				globals::verbose_flag = false;
 				break;
 			case '?':
 				/* getopt_long already printed an error message. */
@@ -106,7 +114,7 @@ void DBBrowser::configure(int argc, char* argv[]) {
 				abort ();
 		}
 	}
-	
+
 	/* Instead of reporting ‘--verbose’
 	 * and ‘--brief’ as they are encountered,
 	 * we report the final status resulting from them. */
@@ -155,13 +163,13 @@ void DBBrowser::openZarlock(const QString & dbname) {
 		z->show();
 
 // 		connect(z, SIGNAL(destroyed()), this, SLOT(closeZarlock()));
-		connect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
+		connect(z, SIGNAL(switchDB()), this, SLOT(closeZarlock()));
 	}
 }
 
 void DBBrowser::closeZarlock() {
-	FPR(__func__);
-	PR(z);
+	FI();
+
 	if (z) {
 // 		Database::Instance().close_database();
 		disconnect(z, SIGNAL(exitZarlok()), this, SLOT(closeZarlock()));
