@@ -120,6 +120,8 @@ void TabBatchWidget::activateUi(bool activate) {
 
 			table_batch->show();
 			abrw->update_model();
+
+			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), modelproxy_batch, SLOT(invalidate()));
 		}
 	}
 }

@@ -419,8 +419,8 @@ bool BatchTableModel::getRecord(int row, unsigned int& pid, QString& spec, int& 
 		reg			= records[row]->arr[0][HRegDate].toDate();
 		expiry		= records[row]->arr[0][HExpiryDate].toDate();
 		entry		= records[row]->arr[0][HEntryDate].toDate();
-		invoice		= records[row]->arr[0][HInvoice].toInt();
-		notes		= records[row]->arr[0][HNotes].toInt();
+		invoice		= records[row]->arr[0][HInvoice].toString();
+		notes		= records[row]->arr[0][HNotes].toString();
 
 		return true;
 	}
@@ -513,6 +513,8 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, bool em
 
 // 	if (do_sort)
 // 		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
+
+	emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()));
 
 	return true;
 }

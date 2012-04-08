@@ -101,15 +101,13 @@ void AddBatchRecordWidget::insertRecord() {
 			return;
 		if (db->updateBatchRecord(bl.at(0).row(), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
-	
 			idToUpdate = -1;
 			clearForm();
 			combo_products->setFocus();
 		}
 	} else {
 		if (db->addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value(), 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
-
+			spin_qty->value()*100, 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 			clearForm();
 			combo_products->setFocus();
 		}
