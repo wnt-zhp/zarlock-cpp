@@ -216,9 +216,11 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 			}
 			
 			else if (col == HStaQty) {
-				double used = index(row, int(HUsedQty)).data().toDouble();
-				double total = raw(idx).toDouble();
-				double free = total - used;
+// 				int used = index(row, int(HUsedQty)).data().toInt();
+// 				int total = raw(idx).toInt();
+				int used = records[row]->arr[0][HUsedQty].toInt();// index(row, int(HUsedQty)).data().toInt();
+				int total = records[row]->arr[0][HStaQty].toInt();// raw(idx).toInt();
+				int free = total - used;
 				QString qty;
 				return tr("%1 of %2").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}

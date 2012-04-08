@@ -53,6 +53,8 @@ private:
 	QListWidgetItem * open_item;
 	MealTabInsertWidget * mtiw;
 	int meal_day_id;
+
+	QVector<MealFoodList *> tab_handler;
 };
 
 #endif // MEALTABWIDGET_H

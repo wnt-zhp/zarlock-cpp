@@ -78,13 +78,12 @@ Database::Database() : QObject(),
 }
 
 Database::Database(const Database & /*db*/) : QObject() {
-	DI();
+	CI();
 }
 
 Database::~Database() {
-	FPR(__func__);
+	DI();
 	close_database();
-
 // 	QSqlDatabase::removeDatabase("QSQLITE");
 }
 

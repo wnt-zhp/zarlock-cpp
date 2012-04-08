@@ -47,10 +47,21 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);
 	table_batchbyid->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+	globals::appSettings->beginGroup("TabProducts");
+	splitter_H->restoreState(globals::appSettings->value("splitterHoriz", QByteArray()).toByteArray());
+	splitter_V->restoreState(globals::appSettings->value("splitterVert", QByteArray()).toByteArray());
+	globals::appSettings->endGroup();
 }
 
 TabProductsWidget::~TabProductsWidget() {
-	FPR(__func__);
+	DI();
+	
+	globals::appSettings->beginGroup("TabProducts");
+	globals::appSettings->setValue("splitterHoriz", splitter_H->saveState());
+	globals::appSettings->setValue("splitterVert", splitter_V->saveState());
+	globals::appSettings->endGroup();
+
 	activateUi(false);
 	if (aprw) delete aprw;
 }

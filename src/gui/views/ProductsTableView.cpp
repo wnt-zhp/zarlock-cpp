@@ -69,6 +69,7 @@ void ProductsTableView::setModel(QAbstractItemModel * model) {
     QTableView::setModel(model);
 
 // 	hideColumn(ProductsTableModel::HId);
+	hideColumn(ProductsTableModel::HNotes);
 
 	horizontalHeader()->setResizeMode(ProductsTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(ProductsTableModel::HName, QHeaderView::Stretch);

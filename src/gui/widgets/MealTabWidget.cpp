@@ -49,6 +49,8 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
+
+	tab_handler.reserve(20);
 }
 
 MealTabWidget::~MealTabWidget() {
@@ -79,6 +81,9 @@ void MealTabWidget::setMealDayId(int mdid) {
 
 	this->clear();
 
+	qDeleteAll(tab_handler);
+	tab_handler.clear();
+
 	mtiw->setKey(mdid);
 	this->addTab(mtiw, style()->standardIcon(QStyle::SP_FileDialogStart), tr("Actions"));
 
@@ -91,6 +96,7 @@ void MealTabWidget::setMealDayId(int mdid) {
 
 		MealFoodList * foodlist = new MealFoodList(this);
 		this->insertTab(0, foodlist, mn);
+		tab_handler.push_back(foodlist);
 		
 		foodlist->setProxyModel(proxy);
 

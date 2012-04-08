@@ -18,13 +18,15 @@ namespace globals {
 
 	QSettings * appSettings = NULL;
 
-	bool verbose_flag = false;
+	bool verbose_flag[VerboseLevel::VDummy] = { false, false };
+// 	verbose_flag[0] = false;
+// 	verbose_flag[1] = false;
 }
 
 // enum QtMsgType { QtInfoMsg, QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtSystemMsg };
 
-void qInfo(const char *msg, ...) {
-	if (!globals::verbose_flag)
+void qInfo(globals::VerboseLevel lvl, const char *msg, ...) {
+	if (!globals::verbose_flag[lvl])
 		return;
 
 	char buffer[1024];
@@ -32,7 +34,16 @@ void qInfo(const char *msg, ...) {
 	va_start (args, msg);
 	vsprintf (buffer, msg, args);
 	va_end (args);
-	std::cout <<  "++INFO: " << buffer << std::endl;
+	switch (lvl) {
+		case globals::VLevel1:
+			std::cout <<  "++INFO: " << buffer << std::endl;
+			break;
+		case globals::VLevel2:
+			std::cout <<  " ++INFO: " << buffer << std::endl;
+			break;
+		default:
+			break;
+	}
 }
 
 void myMessageOutput(QtMsgType type, const char *msg)
@@ -137,7 +148,7 @@ TD
 
 	dbb.configure(argc, argv);
 
-	qInfo("Zarlok is started at %s", qPrintable(QDateTime::currentDateTime().toString(Qt::TextDate)));
+	qInfo(globals::VLevel1, "Zarlok is started at %s", qPrintable(QDateTime::currentDateTime().toString(Qt::TextDate)));
 
 // 	dbb.show();
 	dbb.goBrowser();

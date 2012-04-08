@@ -38,13 +38,18 @@ namespace globals {
 
 	extern QSettings * appSettings;
 
-	extern bool verbose_flag;
+	enum VerboseLevel { VLevel1, VLevel2, VDummy };
+	extern bool verbose_flag[VDummy];
 }
 
-void qInfo(const char *msg, ...);
+void qInfo(globals::VerboseLevel lvl, const char *msg, ...);
 
-#define FI() qInfo("Calling function: %s", __func__)
-#define CI() qInfo("Constructor: %s", __func__)
-#define DI() qInfo("Destructor: %s", __func__)
+#define FI() qInfo(globals::VLevel1, "Calling function: %s", __func__)
+#define CI() qInfo(globals::VLevel1, "Constructor: %s", __func__)
+#define DI() qInfo(globals::VLevel1, "Destructor: %s", __func__)
+
+#define FII() qInfo(globals::VLevel2, "Calling function: %s", __func__)
+#define CII() qInfo(globals::VLevel2, "Constructor: %s", __func__)
+#define DII() qInfo(globals::VLevel2, "Destructor: %s", __func__)
 
 #endif /*__GLOBALS_H__*/

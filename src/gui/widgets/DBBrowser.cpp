@@ -70,6 +70,7 @@ void DBBrowser::configure(int argc, char* argv[]) {
 		{
 			/* These options set a flag. */
 			{"verbose", no_argument,       0, 'v'},
+			{"vverbose", no_argument,       0, 'w'},
 			{"quiet",   no_argument,       0, 'q'},
 			/* These options don't set a flag.
 			 *        We distinguish them by their indices. */
@@ -79,7 +80,7 @@ void DBBrowser::configure(int argc, char* argv[]) {
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 		
-		c = getopt_long (argc, argv, "bvq", 
+		c = getopt_long (argc, argv, "bvwq", 
 						 long_options, &option_index);
 		
 		/* Detect the end of the options. */
@@ -102,10 +103,13 @@ void DBBrowser::configure(int argc, char* argv[]) {
 // 				puts ("option -b\n");
 				break;
 			case 'v':
-				globals::verbose_flag = true;
+				globals::verbose_flag[0] = true;
+				break;
+			case 'w':
+				globals::verbose_flag[1] = true;
 				break;
 			case 'q':
-				globals::verbose_flag = false;
+				globals::verbose_flag[0] = false;
 				break;
 			case '?':
 				/* getopt_long already printed an error message. */

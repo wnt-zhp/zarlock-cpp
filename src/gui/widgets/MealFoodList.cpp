@@ -28,12 +28,12 @@
 #include "MealTabWidget.h"
 
 MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1) {
-	CI();
+	CII();
 	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(doItemEdit(QListWidgetItem*)));
 }
 
 MealFoodList::~MealFoodList() {
-	DI();
+	DII();
 }
 
 void MealFoodList::populateModel() {
