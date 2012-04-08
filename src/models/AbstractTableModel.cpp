@@ -86,7 +86,7 @@ bool AbstractTableModel::select() {
 	fillRow(q, ++r, false, false);
 	} while (q.next());
 
-	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, true);
+// 	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, true);
 
 	return true;
 }
@@ -170,23 +170,27 @@ bool AbstractTableModel::insertRows(int row, int count, const QModelIndex& paren
 	return true;
 }
 
-bool recordLessThan(const AbstractTableModel::d_record * s1, const AbstractTableModel::d_record * s2) {
-	return ((*s1) < (*s2));
-}
+// bool recordLessThan(const AbstractTableModel::d_record * s1, const AbstractTableModel::d_record * s2) {
+// 	return ((*s1) < (*s2));
+// }
 
-void AbstractTableModel::sort(int column, Qt::SortOrder order) {
-	sort(column, order, true);
-}
+// bool AbstractTableModel::lessThan(const QModelIndex& left, const QModelIndex& right) const {
 
-void AbstractTableModel::sort(int column, Qt::SortOrder order, bool emit_signal) {
-	sort_column = column;
-	sort_order_asc = ( order == Qt::AscendingOrder ? true : false );
+// }
 
-	qStableSort(records.begin(), records.end(), recordLessThan);
+// void AbstractTableModel::sort(int column, Qt::SortOrder order) {FI();
+// 	sort(column, order, true);
+// }
 
-	if (emit_signal)
-		emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
-}
+// void AbstractTableModel::sort(int column, Qt::SortOrder order, bool emit_signal) {FI();
+// 	sort_column = column;
+// 	sort_order_asc = ( order == Qt::AscendingOrder ? true : false );
+
+// 	qStableSort(records.begin(), records.end(), recordLessThan);
+
+// 	if (emit_signal)
+// 		emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
+// }
 
 QVector< int > AbstractTableModel::find(int column, const QVariant& value, int role, int hits, Qt::MatchFlags flags) {
 	find_role = role;
@@ -283,8 +287,8 @@ bool AbstractTableModel::setIndexData(int row, int column, const QVariant& data)
 	q.prepare(query);
 
 	bool status = false;
-	switch (dtypes[column]) {
-		case DTDate:
+	switch (dtypes[0][column]) {
+		case QVariant::Date:
 			q.bindValue(0, columns[column]);
 			q.bindValue(1, data.toDate().toString(Qt::ISODate));
 			q.bindValue(2, records.at(row)->arr[0][HId]);
@@ -332,20 +336,23 @@ AbstractTableModel::d_record::d_record(AbstractTableModel * m) : model(m) {
 }
 
 bool AbstractTableModel::d_record::operator<(const d_record * rhs) const {
-	QVariant v1 = this->arr[0][model->sort_column];
-	QVariant v2 = rhs->arr[0][rhs->model->sort_column];
+	QVariant v1 = this->arr[1][model->sort_column];
+	QVariant v2 = rhs->arr[1][rhs->model->sort_column];
 	bool res = false;
-
-	switch (this->model->dtypes[model->sort_column]) {
-		case AbstractTableModel::DTInt:
+PR(1);
+	switch (v1.type()) {
+		case QVariant::LongLong:
+			res = !( ( v1.toLongLong() < v2.toLongLong() ) xor model->sort_order_asc);
+			break;
+		case QVariant::Int:
 			res = !( ( v1.toInt() < v2.toInt() ) xor model->sort_order_asc);
 			break;
-		case AbstractTableModel::DTDate:
+		case QVariant::Date:
 			res = !( ( v1.toDate() < v2.toDate() ) xor model->sort_order_asc);
 			break;
-		case AbstractTableModel::DTString:
-			v1 = this->arr[1][model->sort_column];
-			v2 = rhs->arr[1][rhs->model->sort_column];
+		case QVariant::String:
+// 			v1 = this->arr[1][model->sort_column];
+// 			v2 = rhs->arr[1][rhs->model->sort_column];
 			res = !( ( v1.toString() < v2.toString() ) xor model->sort_order_asc);
 			break;
 	}
@@ -353,20 +360,23 @@ bool AbstractTableModel::d_record::operator<(const d_record * rhs) const {
 }
 
 bool AbstractTableModel::d_record::operator<(const d_record & rhs) const {
-	QVariant v1 = this->arr[0][model->sort_column];
-	QVariant v2 = rhs.arr[0][rhs.model->sort_column];
+	QVariant v1 = this->arr[1][model->sort_column];
+	QVariant v2 = rhs.arr[1][rhs.model->sort_column];
 	bool res = false;
 
-	switch (this->model->dtypes[model->sort_column]) {
-		case AbstractTableModel::DTInt:
+	switch (v1.type()) {
+		case QVariant::LongLong:
+			res = !( ( v1.toLongLong() < v2.toLongLong() ) xor model->sort_order_asc);
+			break;
+		case QVariant::Int:
 			res = !( ( v1.toInt() < v2.toInt() ) xor model->sort_order_asc);
 			break;
-		case AbstractTableModel::DTDate:
+		case QVariant::Date:
 			res = !( ( v1.toDate() < v2.toDate() ) xor model->sort_order_asc);
 			break;
-		case AbstractTableModel::DTString:
-			v1 = this->arr[1][model->sort_column];
-			v2 = rhs.arr[1][rhs.model->sort_column];
+		case QVariant::String:
+// 			v1 = this->arr[1][model->sort_column];
+// 			v2 = rhs.arr[1][rhs.model->sort_column];
 			res = !( ( v1.toString() < v2.toString() ) xor model->sort_order_asc);
 			break;
 	}
@@ -375,20 +385,8 @@ bool AbstractTableModel::d_record::operator<(const d_record & rhs) const {
 
 bool AbstractTableModel::d_record::operator==(const QVariant & rhs) const {
 	QVariant v1 = this->arr[model->find_role][model->find_column];
-	bool res = false;
-	
-	switch (this->model->dtypes[model->find_column]) {
-		case AbstractTableModel::DTInt:
-			res = ( v1.toInt() == rhs.toInt() );
-			break;
-		case AbstractTableModel::DTDate:
-			res = ( v1.toString() == rhs.toString() );
-			break;
-		case AbstractTableModel::DTString:
-			res = ( v1.toString() == rhs.toString() );
-			break;
-	}
-	return res;
+
+	return ( v1 == rhs );
 }
 
 // bool AbstractTableModel::d_record::operator==(const d_record & rhs) const {
@@ -412,21 +410,6 @@ bool AbstractTableModel::d_record::operator==(const QVariant & rhs) const {
 
 QVariant & AbstractTableModel::d_record::operator*() {
 	return this->arr[model->find_role][model->find_column];
-// 	QVariant v1 = this->arr[model->find_role][model->find_column];
-// 	QVariant res;
-/*	
-	switch (this->model->dtypes[model->find_column]) {
-		case AbstractTableModel::DTInt:
-			res = v1.toInt();
-			break;
-		case AbstractTableModel::DTDate:
-			res = v1.toString();
-			break;
-		case AbstractTableModel::DTString:
-			res = v1.toString();
-			break;
-	}
-	return res;*/
 }
 
 #include "AbstractTableModel.moc"

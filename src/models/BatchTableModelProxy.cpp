@@ -111,13 +111,6 @@ void BatchTableModelProxy::allwaysAccept(const QModelIndex * idx) {
 	aaidx = idx;
 }
 
-void BatchTableModelProxy::sort(int column, Qt::SortOrder order) {
-// 	QSortFilterProxyModel::sort(column, order);
-	sourceModel()->sort(column, order);
-
-	emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
-}
-
 void BatchTableModelProxy::setFilter(const QString& filter) {
 	this->filter = filter;
 }

@@ -43,8 +43,6 @@ public:
 	virtual void allwaysAccept(const QModelIndex * idx);
 	virtual void setFilter(const QString & filter);
 
-	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 

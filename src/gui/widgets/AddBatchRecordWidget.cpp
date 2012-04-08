@@ -84,10 +84,9 @@ void AddBatchRecordWidget::insertRecord() {
 	// price
 	double netto, vat;
 	DataParser::price(edit_price->text(), netto, vat);
-	int uprice = int(netto*(/*100*/+vat));
+	int uprice = int(netto*(100+vat));
 	// unit price
 	int unitprice = check_uprice->isChecked() ? uprice : (uprice / spin_qty->value());
-
 	QDate regdate, expdate;
 	if (!check_inf->isChecked()) {
 		expdate = edit_expiry->date();

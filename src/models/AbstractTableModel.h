@@ -53,8 +53,10 @@ public:
 
 	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
-	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-	virtual void sort(int column, Qt::SortOrder order, bool emit_signal);
+// 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+// 	virtual void sort(int column, Qt::SortOrder order, bool emit_signal);
+
+// 	virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 
 	virtual QVector<int> find(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
 	virtual QVector<int> search(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
@@ -115,8 +117,7 @@ protected:
 	QVector<QString> columns;
 	QVector<QString> headers;
 
-	enum AbsDataType { DTInt, DTDate, DTString };
-	QVector<AbsDataType> dtypes;
+	QVector<QVariant::Type> dtypes[2];
 
 	QVector<d_record *> records;
 

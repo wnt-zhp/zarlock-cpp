@@ -27,7 +27,7 @@
 
 
 TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-	model_dist_delegate(NULL) {
+	model_dist_delegate(NULL), model_proxy(NULL) {
 
 	setupUi(this);
 
@@ -63,8 +63,15 @@ void TabDistributorWidget::activateUi(bool activate) {
 
 	if (activate) {
 		// dist
+		if (!model_proxy) {
+			model_proxy = new QSortFilterProxyModel;
+			model_proxy->setDynamicSortFilter(true);
+			model_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+		}
+
 		if ((model_dist = db->CachedDistributor())){
-			table_dist->setModel(model_dist);
+			model_proxy->setSourceModel(model_dist);
+			table_dist->setModel(model_proxy);
 			if (model_dist_delegate) delete model_dist_delegate;
 			model_dist_delegate = new QSqlRelationalDelegate(table_dist);
 			table_dist->setItemDelegate(model_dist_delegate);

@@ -61,18 +61,31 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractT
 	columns.push_back("notes");
 	columns.push_back("invoice");
 
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTString);
-	dtypes.push_back(DTString);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTString);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTDate);
-	dtypes.push_back(DTDate);
-	dtypes.push_back(DTDate);
-	dtypes.push_back(DTString);
-	dtypes.push_back(DTString);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::String);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::String);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Date);
+	dtypes[0].push_back(QVariant::Date);
+	dtypes[0].push_back(QVariant::Date);
+	dtypes[0].push_back(QVariant::String);
+	dtypes[0].push_back(QVariant::String);
+
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::Date);
+	dtypes[1].push_back(QVariant::Date);
+	dtypes[1].push_back(QVariant::Date);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::String);
 }
 
 BatchTableModel::~BatchTableModel() {
@@ -177,11 +190,11 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				return QString(
 					records[row]->arr[1][HProdId].toString() % " " % records[row]->arr[0][col].toString());
 			}
-			
+
 			else if (col == HPrice) {
 				return idx.data(Qt::EditRole).toInt()/100.0;
 			}
-			
+
 			else if (col == HUnit) {
 				QString unitf;
 				if (DataParser::unit(records[row]->arr[0][HUnit].toString(), unitf)) {
@@ -193,45 +206,20 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 						return QVariant(tr("Parser error!"));
 				}
 			}
-			
-			else if (col == HRegDate) {
-				return records[row]->arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
-			}
-			
+
 			else if (col == HExpiryDate) {
 				if (idx.data(Qt::EditRole).isNull())
 					return QString(new QChar(0x221e), 1);
-				
-// 				return QSqlTableModel::data(idx, Qt::DisplayRole).toDate().toString(Qt::DefaultLocaleShortDate);
-				return records[row]->arr[1][col].toDate().toString(Qt::DefaultLocaleShortDate);
-				// 				QDate date;
-				// 				if (DataParser::date(idx.data(Qt::EditRole).toString(), date, QSqlTableModel::data(index(row, HRegDate), Qt::DisplayRole).toDate())) {
-					// 					return date.toString(Qt::DefaultLocaleShortDate);
-				// 				} else {
-					// 					if (role == Qt::BackgroundRole)
-				// 						return QColor(Qt::red);
-				// 					else
-				// 						return QVariant(tr("Parser error!"));
-				// 				}
 			}
-			
+
 			else if (col == HStaQty) {
-// 				int used = index(row, int(HUsedQty)).data().toInt();
-// 				int total = raw(idx).toInt();
-				int used = records[row]->arr[0][HUsedQty].toInt();// index(row, int(HUsedQty)).data().toInt();
-				int total = records[row]->arr[0][HStaQty].toInt();// raw(idx).toInt();
+				int used = records[row]->arr[0][HUsedQty].toInt();
+				int total = records[row]->arr[0][HStaQty].toInt();
 				int free = total - used;
 				QString qty;
 				return tr("%1 of %2").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
-			
-// 			else if (col == HENameQty) {
-// 				return QString(
-// 					records[row]->arr[1][HProdId].toString() % " " %
-// 					records[row]->arr[1][col].toString() %
-// 					tr(" (quantity: %1)").arg(this->data(this->index(row, HStaQty), RFreeQty).toDouble())
-// 					);
-// 			}
+
 			break;
 		case Qt::BackgroundRole:
 			QDate expd = records[row]->arr[1][HExpiryDate].toDate();
@@ -400,6 +388,8 @@ bool BatchTableModel::updateRecord(int row, unsigned int pid, const QString& spe
 
 	bool status = q.exec();
 
+	qInfo(globals::VLevel1, db->getLastExecutedQuery(q).toUtf8());
+
 	if (!status)
 		return false;
 
@@ -424,7 +414,7 @@ bool BatchTableModel::getRecord(int row, unsigned int& pid, QString& spec, int& 
 		spec		= records[row]->arr[0][HSpec].toString();
 		price		= records[row]->arr[0][HPrice].toInt();
 		unit		= records[row]->arr[0][HUnit].toString();
-		qty			= records[row]->arr[1][HStaQty].toInt();
+		qty			= records[row]->arr[0][HStaQty].toInt();
 		used		= records[row]->arr[0][HUsedQty].toInt();
 		reg			= records[row]->arr[0][HRegDate].toDate();
 		expiry		= records[row]->arr[0][HExpiryDate].toDate();
@@ -509,8 +499,10 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, bool em
 	for (int r = 0; r < DummyHeadersSize; ++r) {
 		rec->arr[0][r]				= q.value(r);
 		rec->arr[1][r]				= q.value(r);
+		rec->arr[0][r].convert(dtypes[0][r]);
+		rec->arr[1][r].convert(dtypes[1][r]);
 	}
-	
+
 	rec->arr[1][HProdId]			= prepareProduct(q.value(HProdId));
 	rec->arr[1][HSpec]				= QVariant(rec->arr[1][HProdId].toString() % " " % rec->arr[0][HSpec].toString());
 	rec->arr[1][HStaQty]			= prepareQty(q.value(HStaQty));
@@ -519,10 +511,8 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, bool em
 	rec->arr[1][HExpiryDate]		= prepareDate(q.value(HExpiryDate));
 	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
 
-	if (do_sort)
-		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
-
-	emit rowInserted(getRowById(rec->arr[1][HId].toInt()));
+// 	if (do_sort)
+// 		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
 
 	return true;
 }

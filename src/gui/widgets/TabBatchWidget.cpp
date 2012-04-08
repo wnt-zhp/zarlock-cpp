@@ -118,12 +118,7 @@ void TabBatchWidget::activateUi(bool activate) {
 			modelproxy_batch->setSourceModel(model_batch);
 			table_batch->setModel(modelproxy_batch);
 
-/*			if (model_batch_delegate) delete model_batch_delegate;
-			model_batch_delegate = new QSqlRelationalDelegate(table_batch);
-			table_batch->setItemDelegate(model_batch_delegate);*/
 			table_batch->show();
-			// TODO: Co z tym zrobić?
-// 			connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 			abrw->update_model();
 		}
 	}

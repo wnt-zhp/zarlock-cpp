@@ -49,6 +49,8 @@ private:
 public:
 	QSqlDriver * driver() const;
 
+	QString getLastExecutedQuery(const QSqlQuery& query);
+
 	bool open_database(const QString& dbname, bool autoupgrade = true);
 	bool close_database();
 	void save_database();

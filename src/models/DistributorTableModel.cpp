@@ -83,14 +83,23 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase sqldb
 	columns.push_back("disttype_a");
 	columns.push_back("disttype_b");
 
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTString);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTDate);
-	dtypes.push_back(DTDate);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTInt);
-	dtypes.push_back(DTInt);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Date);
+	dtypes[0].push_back(QVariant::Date);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::Int);
+	dtypes[0].push_back(QVariant::String);
+	
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::String);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::Int);
+	dtypes[1].push_back(QVariant::String);
 }
 
 QVariant DistributorTableModel::prepareBatch(const QVariant & v) {
@@ -407,6 +416,8 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, b
 	for (int r = 0; r < DummyHeadersSize; ++r) {
 		rec->arr[0][r]				= q.value(r);
 		rec->arr[1][r]				= q.value(r);
+		rec->arr[0][r].convert(dtypes[0][r]);
+		rec->arr[1][r].convert(dtypes[1][r]);
 	}
 	
 	rec->arr[1][HBatchId]			= prepareBatch(q.value(HBatchId));
@@ -415,8 +426,8 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool do_sort, b
 	rec->arr[1][HEntryDate]			= prepareDate(q.value(HEntryDate));
 	rec->arr[1][HDistTypeB]			= prepareDistTypeB(q.value(HId));
 
-	if (do_sort)
-		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
+// 	if (do_sort)
+// 		sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, emit_signal);
 	
 	emit rowInserted(getRowById(rec->arr[1][HId].toInt()));
 }

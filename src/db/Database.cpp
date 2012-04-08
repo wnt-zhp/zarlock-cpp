@@ -1106,19 +1106,34 @@ bool Database::removeMealRecord(const QVector<int> & ids) {
 	return status;
 }
 
+QString Database::getLastExecutedQuery(const QSqlQuery& query) {
+	QString str = query.lastQuery();
+	QMapIterator<QString, QVariant> it(query.boundValues());
+
+	str.replace("?", "\"?\"");
+	while (it.hasNext()) {
+		it.next();
+		int idx = str.indexOf('?');
+		if (idx != -1) {
+			str.replace(idx, 1, it.value().toString());
+		}
+	}
+	return str;
+}
+
 #include "Database.moc"
 
-// |1| QSqlDriver::Transactions	0	Whether the driver supports SQL transactions.
-// |0| QSqlDriver::QuerySize	1	Whether the database is capable of reporting the size of a query. Note that some databases do not support returning the size (i.e. number of rows returned) of a query, in which case QSqlQuery::size() will return -1.
-// |1| QSqlDriver::BLOB	2	Whether the driver supports Binary Large Object fields.
-// |1| QSqlDriver::Unicode	3	Whether the driver supports Unicode strings if the database server does.
-// |1| QSqlDriver::PreparedQueries	4	Whether the driver supports prepared query execution.
-// |0| QSqlDriver::NamedPlaceholders	5	Whether the driver supports the use of named placeholders.
-// |1| QSqlDriver::PositionalPlaceholders	6	Whether the driver supports the use of positional placeholders.
-// |1| QSqlDriver::LastInsertId	7	Whether the driver supports returning the Id of the last touched row.
-// |0| QSqlDriver::BatchOperations	8	Whether the driver supports batched operations, see QSqlQuery::execBatch()
-// |1| QSqlDriver::SimpleLocking	9	Whether the driver disallows a write lock on a table while other queries have a read lock on it.
-// |1| QSqlDriver::LowPrecisionNumbers	10	Whether the driver allows fetching numerical values with low precision.
-// |0| QSqlDriver::EventNotifications	11	Whether the driver supports database event notifications.
-// |1| QSqlDriver::FinishQuery	12	Whether the driver can do any low-level resource cleanup when QSqlQuery::finish() is called.
-// |0| QSqlDriver::MultipleResultSets	13	Whether the driver can access multiple result sets returned from batched statements or stored procedures.
+// |1| QSqlDriver::Transactions					0	Whether the driver supports SQL transactions.
+// |0| QSqlDriver::QuerySize					1	Whether the database is capable of reporting the size of a query. Note that some databases do not support returning the size (i.e. number of rows returned) of a query, in which case QSqlQuery::size() will return -1.
+// |1| QSqlDriver::BLOB							2	Whether the driver supports Binary Large Object fields.
+// |1| QSqlDriver::Unicode						3	Whether the driver supports Unicode strings if the database server does.
+// |1| QSqlDriver::PreparedQueries				4	Whether the driver supports prepared query execution.
+// |0| QSqlDriver::NamedPlaceholders			5	Whether the driver supports the use of named placeholders.
+// |1| QSqlDriver::PositionalPlaceholders		6	Whether the driver supports the use of positional placeholders.
+// |1| QSqlDriver::LastInsertId					7	Whether the driver supports returning the Id of the last touched row.
+// |0| QSqlDriver::BatchOperations				8	Whether the driver supports batched operations, see QSqlQuery::execBatch()
+// |1| QSqlDriver::SimpleLocking				9	Whether the driver disallows a write lock on a table while other queries have a read lock on it.
+// |1| QSqlDriver::LowPrecisionNumbers			10	Whether the driver allows fetching numerical values with low precision.
+// |0| QSqlDriver::EventNotifications			11	Whether the driver supports database event notifications.
+// |1| QSqlDriver::FinishQuery					12	Whether the driver can do any low-level resource cleanup when QSqlQuery::finish() is called.
+// |0| QSqlDriver::MultipleResultSets			13	Whether the driver can access multiple result sets returned from batched statements or stored procedures.

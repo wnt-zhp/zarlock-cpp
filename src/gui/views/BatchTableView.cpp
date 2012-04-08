@@ -53,7 +53,6 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent) {
 	setItemDelegateForColumn(BatchTableModel::HPrice, price_delegate);
 
 	this->setEditTriggers(NoEditTriggers);
-
 }
 
 /**
@@ -72,7 +71,7 @@ BatchTableView::~BatchTableView() {
  * Robimy je tutaja nie w konstruktorze, gdyż konstruktor nie posiada jeszcze żadnych informacji o modelu,
  * więc np.nie możemy ukryć kolumn
  *
- * @param model model z danycmi do wyświetlania
+ * @param model model z danymi do wyświetlania
  * @return void
  **/
 void BatchTableView::setModel(QAbstractItemModel * model) {
