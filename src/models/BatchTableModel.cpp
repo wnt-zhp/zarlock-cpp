@@ -233,8 +233,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				return tr("%1 of %2").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
 			
-			else
-				return records[row]->arr[Qt::DisplayRole][col];
+			return records[row]->arr[Qt::DisplayRole][col];
 
 			break;
 	}
