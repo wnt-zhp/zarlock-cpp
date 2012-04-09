@@ -23,18 +23,18 @@
 #include "DBReports.h"
 
 TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(Database::Instance()),
-	model_batch(NULL), modelproxy_batch(NULL)/*, model_batch_delegate(NULL)*/ {
+	model_batch(NULL), proxy_model(NULL)/*, model_batch_delegate(NULL)*/ {
 
 	setupUi(this);
 
 	QPixmap pxme(QSize(20, 20));
-	pxme.fill(globals::item_expired);
+	pxme.fill(globals::item_expired_altbase);
 	cb_expired->setIcon(pxme);
 	cb_expired->setChecked(true);
-	pxme.fill(globals::item_aexpired);
+	pxme.fill(globals::item_aexpired_altbase);
 	cb_aexpired->setIcon(pxme);
 	cb_aexpired->setChecked(true);
-	pxme.fill(globals::item_nexpired);
+	pxme.fill(globals::item_nexpired_altbase);
 	cb_nexpired->setIcon(pxme);
 	cb_nexpired->setChecked(true);
 
@@ -56,7 +56,6 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_hideempty, SIGNAL(clicked()), this, SLOT(setFilter()));
 
-// 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), model_batch, SLOT(filterDB(QString)));
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
@@ -80,15 +79,17 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
 
-	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
 	connect(model_batch, SIGNAL(rowInserted(int)), table_batch, SLOT(selectRow(int)));
+
+	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+	connect(table_batch, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(QVector<int>&, bool)));
 }
 
 TabBatchWidget::~TabBatchWidget() {
 	FPR(__func__);
 	activateUi(false);
 // 	if (model_batch_delegate) delete model_batch_delegate;
-	if (modelproxy_batch) delete modelproxy_batch;
+	if (proxy_model) delete proxy_model;
 	if (abrw) delete abrw;
 }
 
@@ -100,28 +101,21 @@ TabBatchWidget::~TabBatchWidget() {
  * @return void
  **/
 void TabBatchWidget::activateUi(bool activate) {
-// 	this->setVisible(activate);
-
 	if (activate) {
-		if (!modelproxy_batch) {
-			modelproxy_batch = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired, cb_hideempty);
-			modelproxy_batch->setDynamicSortFilter(true);
-			modelproxy_batch->setSortCaseSensitivity(Qt::CaseInsensitive);
-
-			// TODO: Co z tym zrobić?
-// 			connect(cb_expired, SIGNAL(clicked()), this, SLOT(set_filter()));
-// 			connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
-// 			connect(cb_nexpired, SIGNAL(clicked()), this, SLOT(set_filter()));
+		if (!proxy_model) {
+			proxy_model = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired, cb_hideempty);
+			proxy_model->setDynamicSortFilter(true);
+			proxy_model->setSortCaseSensitivity(Qt::CaseInsensitive);
 		}
 		// batch
 		if ((model_batch = db->CachedBatch())){
-			modelproxy_batch->setSourceModel(model_batch);
-			table_batch->setModel(modelproxy_batch);
+			proxy_model->setSourceModel(model_batch);
+			table_batch->setModel(proxy_model);
 
 			table_batch->show();
 			abrw->update_model();
 
-			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), modelproxy_batch, SLOT(invalidate()));
+			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), proxy_model, SLOT(invalidate()));
 		}
 	}
 }
@@ -151,13 +145,13 @@ void TabBatchWidget::editRecord(const QModelIndex& idx) {
 }
 
 void TabBatchWidget::setFilter() {
-	modelproxy_batch->invalidate();
-	table_batch->setModel(modelproxy_batch);
+	proxy_model->invalidate();
+	table_batch->setModel(proxy_model);
 }
 
 void TabBatchWidget::setFilterString(const QString& string) {
-	modelproxy_batch->setFilter(string);
-	setFilter();
+	proxy_model->setFilterRegExp(QRegExp(string, Qt::CaseInsensitive, QRegExp::FixedString));
+	proxy_model->setFilterKeyColumn(BatchTableModel::HSpec);
 }
 
 // void TabBatchWidget::syncDB() {

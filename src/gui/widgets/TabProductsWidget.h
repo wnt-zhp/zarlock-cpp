@@ -49,8 +49,8 @@ private slots:
 private:
 	Database * db;
 	ProductsTableModel * model_prod;
-	BatchTableModelProxyP * model_batch_proxyP;
-	DistributorTableModelProxyP * model_distributor_proxyP;
+	QSortFilterProxyModel * proxy_model_batch;
+	QSortFilterProxyModel * proxy_model_distributor;
 
 	AddProductsRecordWidget * aprw;
 	QVariant pid;

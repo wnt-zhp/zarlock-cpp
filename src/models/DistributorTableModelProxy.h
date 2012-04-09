@@ -16,29 +16,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef DISTRIBUTORTABLEMODELPROXY_H
+#define DISTRIBUTORTABLEMODELPROXY_H
 
-#ifndef DISTRIBUTORTABLEVIEW_H
-#define DISTRIBUTORTABLEVIEW_H
-
-#include <QtGui/QTableView>
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
-
-#include "AbstractTableView.h"
+#include <QtGui/QCheckBox>
+#include <QtGui/QSortFilterProxyModel>
+#include <QDate>
 
 /**
- * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
- * naszych danych z tabeli 'batch'. Ta klasa jest przykładem, jak można
- * w standardowym widoku tabeli dostosować kilka rzeczy do naszych potrzeb.
- * Wyjaśnienie znajduje się przy opisach funkcji.
+ * @brief Klasa dziedziczy po QSortFilterProxyModel i odpowiada za
+ * sortowanie danych.
  **/
-class DistributorTableView : public AbstractTableView {
+class DistributorTableModelProxy : public QSortFilterProxyModel {
 Q_OBJECT
 public:
-	DistributorTableView(QWidget * parent = NULL);
-	virtual ~DistributorTableView();
+	DistributorTableModelProxy(const QCheckBox * meal, QObject * parent = 0);
+	virtual ~DistributorTableModelProxy();
 
-	virtual void setModel(QAbstractItemModel* model);
+private:
+	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
+private:
+	const QCheckBox * cb_meal;
 };
 
-#endif // DISTRIBUTORTABLEVIEW_H
+#endif // DISTRIBUTORTABLEMODELPROXY_H

@@ -29,20 +29,9 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent) {
-	removeRec = new QAction(tr("&Remove record"), this);
-	removeRec->setShortcut(QKeySequence::Delete);
-	removeRec->setToolTip(tr("Remove record from database"));
-	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
-	pmenu_del.addAction(removeRec);
-
-	addRec = new QAction(tr("&Add record"), this);
-	addRec->setShortcut(QKeySequence::New);
-	addRec->setToolTip(tr("Add record to database"));
-	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
-	pmenu_add.addAction(addRec);
-
-// 	this->setEditTriggers(0);
+ProductsTableView::ProductsTableView(QWidget * parent) : AbstractTableView(parent) {
+	CI();
+	reloadPalette();
 }
 
 /**
@@ -50,10 +39,7 @@ ProductsTableView::ProductsTableView(QWidget * parent) : QTableView(parent) {
  *
  **/
 ProductsTableView::~ProductsTableView() {
-	FPR(__func__);
-	delete removeRec;
-	delete addRec;
-// 	db.CachedProducts()->submitAll();
+	DI();
 }
 
 /**
@@ -79,42 +65,8 @@ void ProductsTableView::setModel(QAbstractItemModel * model) {
 
 	sortByColumn(ProductsTableModel::HId, Qt::AscendingOrder);
 	setSortingEnabled(true);
-}
 
-/**
- * @brief Ta funkcja jest wywoływana kiedy wciśniemy RMB na naszym widoku.
- *
- * @param event typ zdarzenia
- * @return void
- **/
-void ProductsTableView::contextMenuEvent(QContextMenuEvent * event) {
-	if (selectedIndexes().size())
-		pmenu_del.exec(event->globalPos());
-	else
-		pmenu_add.exec(event->globalPos());
-	QAbstractScrollArea::contextMenuEvent(event);
-}
-
-/**
- * @brief Usuwanie rekordów z bazy. Jako, że ze względu na politykę wybierania itemów
- * (wiersze a nie pojedyncze), żeby nie usuwać tych samych wierszy, filtrujemy wszystko
- * przez jedną wybraną kolumnę, np BatchTableModel::HSpec.
- * Ze względu na politykę zaywierdzania danych QSqlTableModel::onManualSubmit, dane nie
- * znikają od razu z modelu (więc nie mamy problemu z indeksami) ale dopiero kiedy
- * wywołane zostanie submitAll()
- *
- * @return void
- **/
-void ProductsTableView::removeRecord() {
-	QModelIndexList l = selectedIndexes();
-
-	QVector<int> v;
-	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-		if ((*it).column() == ProductsTableModel::HName)
-			v.push_back((*it).row());
-	}
-
-	emit removeRecordRequested(v);
+	reloadPalette();
 }
 
 #include "ProductsTableView.moc"

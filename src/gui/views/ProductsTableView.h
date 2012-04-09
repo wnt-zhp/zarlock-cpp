@@ -24,34 +24,21 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
+#include "AbstractTableView.h"
+
 /**
  * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
  * naszych danych z tabeli 'products'. Ta klasa jest przykładem, jak można
  * w standardowym widoku tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class ProductsTableView : public QTableView {
+class ProductsTableView : public AbstractTableView {
 Q_OBJECT
 public:
-    ProductsTableView(QWidget * parent = NULL);
-    virtual ~ProductsTableView();
+	ProductsTableView(QWidget * parent = NULL);
+	virtual ~ProductsTableView();
 
-    virtual void setModel(QAbstractItemModel* model);
-
-signals:
-	void addRecordRequested(bool);
-	bool removeRecordRequested(QVector<int> & rows);
-
-private slots:
-	void removeRecord();
-	void addRecord() { emit addRecordRequested(true); }
-
-protected:
-    void contextMenuEvent(QContextMenuEvent*);
-
-private:
-	QMenu pmenu_del, pmenu_add;
-	QAction * removeRec, * addRec;
+	virtual void setModel(QAbstractItemModel* model);
 };
 
 #endif // PRODUCTSTABLEVIEW_H

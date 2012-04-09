@@ -59,6 +59,7 @@ private:
 	QModelIndex copyOfIndexToUpdate;
 	QModelIndex sourceIndex;
 	int sourceRowToUpdate;
+	int disttype;
 };
 
 #endif // ADDDISTRIBUTERECORDWIDGET_H

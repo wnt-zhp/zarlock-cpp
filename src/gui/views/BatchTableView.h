@@ -24,7 +24,7 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
-#include "Database.h"
+#include "AbstractTableView.h"
 
 /**
  * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
@@ -32,27 +32,17 @@
  * w standardowym widoku tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class BatchTableView : public QTableView {
+class BatchTableView : public AbstractTableView {
 Q_OBJECT
 public:
-    BatchTableView(QWidget * parent = NULL);
-    virtual ~BatchTableView();
+	BatchTableView(QWidget * parent = NULL);
+	virtual ~BatchTableView();
 
-    virtual void setModel(QAbstractItemModel* model);
-
-signals:
-	void addRecordRequested(bool);
+	virtual void setModel(QAbstractItemModel* model);
 
 private slots:
 	void removeRecord();
-	void addRecord() { emit addRecordRequested(true); }
 
-protected:
-    void contextMenuEvent(QContextMenuEvent* );
-
-private:
-	QMenu pmenu_del, pmenu_add;
-	QAction * removeRec, * addRec;
 };
 
 #endif // BATCHTABLEVIEW_H

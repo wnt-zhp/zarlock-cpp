@@ -48,15 +48,10 @@ public:
 	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 	
-	virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) = 0;
 	virtual void setTable(const QString & table);
 
 	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
-
-// 	virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-// 	virtual void sort(int column, Qt::SortOrder order, bool emit_signal);
-
-// 	virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+	virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
 	virtual QVector<int> find(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
 	virtual QVector<int> search(int column, const QVariant& value, int role, int hits = 1, Qt::MatchFlags flags = Qt::MatchStartsWith | Qt::MatchWrap);
@@ -65,14 +60,11 @@ public:
 
 	virtual bool removeRecord(int row);
 
-	virtual bool setIndexData(const QModelIndex & idx, const QVariant & data);
-	virtual bool setIndexData(int row, int column, const QVariant & data);
-
-	virtual bool selectRow(int row) = 0;
-	virtual bool selectColumn(int column) = 0;
+	virtual bool selectRow(int row);
+	virtual bool selectColumn(int column);
 
 	virtual bool pushRow(const QSqlQuery & rec, bool emit_signal = true);
-	virtual bool fillRow(const QSqlQuery & rec, int row, bool do_sort = true, bool emit_signal = true) = 0;
+	virtual bool fillRow(const QSqlQuery & rec, int row, bool emit_signal = true) = 0;
 	virtual int getRowById(int id) throw (int);
 
 public:
@@ -88,7 +80,7 @@ public:
 		// 		QVector<QVariant> const * operator->() const { return arr; }
 		QVariant & operator *();
 		
-		QVector<QVariant> arr[2];
+		QVector<QVariant> arr[Qt::EditRole+1];
 		AbstractTableModel * model;
 	};
 
@@ -117,7 +109,7 @@ protected:
 	QVector<QString> columns;
 	QVector<QString> headers;
 
-	QVector<QVariant::Type> dtypes[2];
+	QVector<QVariant::Type> dtypes[Qt::EditRole+1];
 
 	QVector<d_record *> records;
 

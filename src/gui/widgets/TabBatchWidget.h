@@ -51,7 +51,7 @@ private slots:
 private:
 	Database * db;
 	BatchTableModel * model_batch;
-	BatchTableModelProxy * modelproxy_batch;
+	BatchTableModelProxy * proxy_model;
 	QSqlRelationalDelegate * model_batch_delegate;
 
 	AddBatchRecordWidget * abrw;

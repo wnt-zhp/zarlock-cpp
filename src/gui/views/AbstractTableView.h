@@ -17,14 +17,14 @@
 */
 
 
-#ifndef DISTRIBUTORTABLEVIEW_H
-#define DISTRIBUTORTABLEVIEW_H
+#ifndef ABSTRACTTABLEVIEW_H
+#define ABSTRACTTABLEVIEW_H
 
 #include <QtGui/QTableView>
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QMenu>
 
-#include "AbstractTableView.h"
+#include "Database.h"
 
 /**
  * @brief Klasa dziedziczy po QTableView i odpowiada za wyświetlanie
@@ -32,13 +32,30 @@
  * w standardowym widoku tabeli dostosować kilka rzeczy do naszych potrzeb.
  * Wyjaśnienie znajduje się przy opisach funkcji.
  **/
-class DistributorTableView : public AbstractTableView {
+class AbstractTableView : public QTableView {
 Q_OBJECT
 public:
-	DistributorTableView(QWidget * parent = NULL);
-	virtual ~DistributorTableView();
+	AbstractTableView(QWidget * parent = NULL);
+	virtual ~AbstractTableView();
 
 	virtual void setModel(QAbstractItemModel* model);
+
+	virtual void reloadPalette();
+
+signals:
+	void addRecordRequested(bool);
+	bool removeRecordRequested(QVector<int> & rows, bool ask);
+
+private slots:
+	virtual void removeRecord();
+	virtual void addRecord();
+
+protected:
+	virtual void contextMenuEvent(QContextMenuEvent* );
+
+private:
+	QMenu pmenu_del, pmenu_add;
+	QAction * removeRec, * addRec;
 };
 
-#endif // DISTRIBUTORTABLEVIEW_H
+#endif // ABSTRACTTABLEVIEW_H

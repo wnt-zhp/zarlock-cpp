@@ -61,10 +61,13 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();	// quantity of free batches
 
-	QString str = sourceModel()->index(sourceRow, BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
-
-	if (!str.contains(filter, Qt::CaseInsensitive))
+	bool qres = QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+	if (!qres)
 		return false;
+// 	QString str = sourceModel()->index(sourceRow, BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+
+// 	if (!str.contains(filter, Qt::CaseInsensitive))
+// 		return false;
 
 	if (cb_hide and cb_hide->isChecked() and free == 0)		// hide empty
 		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
@@ -96,6 +99,31 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 }
 
 QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
+	if (role == Qt::BackgroundRole) {
+			int row = index.row();
+			QDate expd = this->index(row, BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
+
+			if (!expd.isValid())
+				return globals::item_nexpired_base;
+			
+			int daystoexp = expd.daysTo(QDate::currentDate());
+			
+			if (daystoexp > 0) {
+				if (row % 2)
+					return globals::item_expired_base;
+				else
+					return globals::item_expired_altbase;
+			} else if (daystoexp == 0) {
+				if (row % 2)
+					return globals::item_aexpired_base;
+				else
+					return globals::item_aexpired_altbase;
+			}
+			if (row % 2)
+				return globals::item_nexpired_base;
+			else
+				return globals::item_nexpired_altbase;
+	}
 	return QSortFilterProxyModel::data(index, role);
 }
 

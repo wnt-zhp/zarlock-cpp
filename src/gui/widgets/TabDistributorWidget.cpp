@@ -27,7 +27,8 @@
 
 
 TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-	model_dist_delegate(NULL), model_proxy(NULL) {
+	model_dist_delegate(NULL), proxy_model(NULL) {
+	CI();
 
 	setupUi(this);
 
@@ -38,15 +39,21 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 // 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
-// 	table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
-	table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
+	connect(cb_hidemeals, SIGNAL(stateChanged(int)), this, SLOT(setFilter()));
+
+	connect(model_dist, SIGNAL(rowInserted(int)), table_dist, SLOT(selectRow(int)));
 
 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
-	connect(model_dist, SIGNAL(rowInserted(int)), table_dist, SLOT(selectRow(int)));
+	connect(table_dist, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(QVector<int>&, bool)));
+
+	cb_hidemeals->setChecked(true);
+
+// 	table_dist->setPalette(globals::item_palette);
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
-	FPR(__func__);
+	DI();
 	activateUi(false);
 	if (adrw) delete adrw;
 }
@@ -63,15 +70,15 @@ void TabDistributorWidget::activateUi(bool activate) {
 
 	if (activate) {
 		// dist
-		if (!model_proxy) {
-			model_proxy = new QSortFilterProxyModel;
-			model_proxy->setDynamicSortFilter(true);
-			model_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+		if (!proxy_model) {
+			proxy_model = new DistributorTableModelProxy(cb_hidemeals);
+			proxy_model->setDynamicSortFilter(true);
+			proxy_model->setSortCaseSensitivity(Qt::CaseInsensitive);
 		}
 
 		if ((model_dist = db->CachedDistributor())){
-			model_proxy->setSourceModel(model_dist);
-			table_dist->setModel(model_proxy);
+			proxy_model->setSourceModel(model_dist);
+			table_dist->setModel(proxy_model);
 			if (model_dist_delegate) delete model_dist_delegate;
 			model_dist_delegate = new QSqlRelationalDelegate(table_dist);
 			table_dist->setItemDelegate(model_dist_delegate);
@@ -81,14 +88,20 @@ void TabDistributorWidget::activateUi(bool activate) {
 	}
 }
 
+void TabDistributorWidget::setFilter() {
+	proxy_model->invalidate();
+// 	table_dist->setModel(proxy_model);
+}
+
+void TabDistributorWidget::setFilterString(const QString& string) {
+	proxy_model->setFilterRegExp(QRegExp(string, Qt::CaseInsensitive, QRegExp::FixedString));
+	proxy_model->setFilterKeyColumn(DistributorTableModel::HBatchId);
+
+	setFilter();
+}
+
 void TabDistributorWidget::editRecord(const QModelIndex& idx) {
-// 	if (model_dist->isDirty(idx)) {
-// 		table_dist->setEditTriggers(QAbstractItemView::DoubleClicked);
-// 	} else {
-// 		table_dist->setEditTriggers(QAbstractItemView::NoEditTriggers);
-// 	}
-	adrw->prepareUpdate(idx);
-// 	widget_add_distributor->setVisible(true);
+	adrw->prepareUpdate(proxy_model->mapToSource(idx));
 }
 
 #include "TabDistributorWidget.moc"

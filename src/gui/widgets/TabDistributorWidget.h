@@ -21,7 +21,7 @@
 #define TABDISTRIBUTORWIDGET_H
 
 #include "ui_TabDistributorWidget.h"
-#include <QSortFilterProxyModel>
+#include "DistributorTableModelProxy.h"
 
 class DistributorTableModel;
 class AddDistributorRecordWidget;
@@ -39,12 +39,15 @@ private:
 private slots:
 	void editRecord(const QModelIndex & idx);
 
+	void setFilter();
+	void setFilterString(const QString & string);
+
 private:
 	Database * db;
 	DistributorTableModel * model_dist;
 	QSqlRelationalDelegate * model_dist_delegate;
 
-	QSortFilterProxyModel * model_proxy;
+	DistributorTableModelProxy * proxy_model;
 
 	AddDistributorRecordWidget * adrw;
 };

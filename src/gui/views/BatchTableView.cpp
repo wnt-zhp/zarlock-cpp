@@ -23,6 +23,7 @@
 #include "TableDelegates.h"
 
 #include <QHeaderView>
+#include <QMessageBox>
 
 /**
  * @brief Standardowy konstruktor, żaden szał.
@@ -31,28 +32,13 @@
  * Obiecuję się doszkolić.
  * Poczytać o signal/slot w Qt
  **/
-BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent) {
-	// Popup menu dla akcji usuwania rekordu z bazy.
-	removeRec = new QAction(tr("&Remove record"), this);
-	removeRec->setShortcut(QKeySequence::Delete);
-	removeRec->setToolTip(tr("Remove record from database"));
-	//  Łączymy akcję kliknięcia w menu "Remove" z funkcją (slotem), która to wykona.
-	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
-	pmenu_del.addAction(removeRec);
-
-	// Popup menu dla akcji dodawania rekordu do bazy.
-	addRec = new QAction(tr("&Add record"), this);
-	addRec->setShortcut(QKeySequence::New);
-	addRec->setToolTip(tr("Add record to database"));
-	//  Łączymy akcję kliknięcia w menu "Add" z funkcją (slotem), która to wykona.
-	connect(addRec, SIGNAL(triggered()), this, SLOT(addRecord()));
-	pmenu_add.addAction(addRec);
+BatchTableView::BatchTableView(QWidget * parent) : AbstractTableView(parent) {
+	CI();
 
 	PriceDelegate * price_delegate = new PriceDelegate;
-
 	setItemDelegateForColumn(BatchTableModel::HPrice, price_delegate);
 
-	this->setEditTriggers(NoEditTriggers);
+	reloadPalette();
 }
 
 /**
@@ -60,9 +46,7 @@ BatchTableView::BatchTableView(QWidget * parent) : QTableView(parent) {
  *
  **/
 BatchTableView::~BatchTableView() {
-	FPR(__func__);
-	delete removeRec;
-	delete addRec;
+	DI();
 }
 
 /**
@@ -77,7 +61,6 @@ BatchTableView::~BatchTableView() {
 void BatchTableView::setModel(QAbstractItemModel * model) {
 	QTableView::setModel(model);
 
-// 	setColumnHidden(BatchTableModel::HId, true);
 // 	hideColumn(BatchTableModel::HId);
 	hideColumn(BatchTableModel::HProdId);
 	hideColumn(BatchTableModel::HEntryDate);
@@ -100,29 +83,6 @@ void BatchTableView::setModel(QAbstractItemModel * model) {
 }
 
 /**
- * @brief Ta funkcja jest wywoływana kiedy wciśniemy RMB na naszym widoku.
- *
- * @param event typ zdarzenia
- * @return void
- **/
-void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
-	// Liczba zaznaczonych itemów. Ze względu na politykę znaznaczania - całe wiersze,
-	// liczba itemów jest wielokrotnością liczby wyświetlanych kolumn.
-
-	// Jeśli mamy itemy (akcja RBM na jakimś itemie lub zaznaczyliśmy itemy  ręcznie),
-	// to znaczy, żę coś chcemy to np usunąć
-	if (selectedIndexes().size())
-		pmenu_del.exec(event->globalPos());
-	// A jeśli nie mamy żadnych itemów to znaczy, że kliknęliśmy w wolnym polu tabeli
-	// i chcemy coś dodać.
-	else
-		pmenu_add.exec(event->globalPos());
-
-	// Przesyłamy event do dalszego przetwarzania
-	QAbstractScrollArea::contextMenuEvent(event);
-}
-
-/**
  * @brief Usuwanie rekordów z bazy. Jako, że ze względu na politykę wybierania itemów
  * (wiersze a nie pojedyncze), żeby nie usuwać tych samych wierszy, filtrujemy wszystko
  * przez jedną wybraną kolumnę, np BatchTableModel::HSpec.
@@ -135,12 +95,44 @@ void BatchTableView::contextMenuEvent(QContextMenuEvent * event) {
 void BatchTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
 
+	int yestoall = false;
+
+	QMessageBox mbox;
+	mbox.setIcon(QMessageBox::Question);
+	mbox.setWindowTitle(tr("Batch remove"));
+	mbox.setInformativeText(tr("This batch contains distributed parties. You must first remove distributions."));
+	mbox.setStandardButtons(QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No);
+	mbox.setDetailedText(tr("This batch will not be attached to removal list. Do you want continue?"));
+
 	QVector<int> v;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
-		if ((*it).column() == BatchTableModel::HSpec)
-			v.push_back((*it).row());
+		if ( (*it).column() == BatchTableModel::HId ) {
+			QVariant bid = (*it).data(Qt::EditRole);
+			int dist = Database::Instance()->CachedDistributor()->find(DistributorTableModel::HBatchId, bid, Qt::EditRole, 0).size();
+			if (dist > 0) {
+				if (!yestoall) {
+					mbox.setText(tr("Batch: %1, Distributions: %2").arg(model()->index((*it).row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString()).arg(dist));
+					int res = mbox.exec();
+
+					switch (res) {
+						case QMessageBox::YesToAll:
+							yestoall = true;
+							break;
+						case QMessageBox::Yes:
+							continue;
+							break;
+						case QMessageBox::No:
+						default:
+							return;
+					}
+				}
+			} else {
+				v.push_back(Database::Instance()->CachedBatch()->getRowById((*it).data(Qt::EditRole).toInt()));
+			}
+		}
 	}
-	Database::Instance()->removeBatchRecord(v, true);
+
+	emit removeRecordRequested(v, true);
 }
 
 #include "BatchTableView.moc"

@@ -23,7 +23,7 @@
 
 AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::ADRWidget(),
 	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL),
-	pproxy(NULL), hideempty(NULL), indexToUpdate(NULL) {
+	pproxy(NULL), hideempty(NULL), indexToUpdate(NULL), disttype(0) {
 	setupUi(parent);
 
 	hideempty = new QCheckBox;
@@ -50,6 +50,9 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	edit_reason_b->enableEmpty();
 	// TODO: do it better
 	combo_products->setStyleSheet("color: black;");
+
+	pproxy = new BatchTableModelProxy(hideempty);
+	update_model();
 }
 
 AddDistributorRecordWidget::~AddDistributorRecordWidget() {
@@ -73,21 +76,21 @@ bool AddDistributorRecordWidget::insertRecord() {
 		return false;
 
 	if (indexToUpdate) {
-		if (db->updateDistributorRecord(copyOfIndexToUpdate.row(), batch_id, spin_qty->value(), df, QDate::currentDate(),
-			DistributorTableModel::RGeneral, edit_reason_a->text(), edit_reason_b->text())) {
+		if (db->updateDistributorRecord(copyOfIndexToUpdate.row(), batch_id, spin_qty->value()*100, df, QDate::currentDate(),
+			disttype, edit_reason_a->text(), edit_reason_b->text())) {
 				indexToUpdate = NULL;
 				prepareInsert(true);
 				edit_date->setFocus();
 			}
 	} else {
-		if (db->addDistributorRecord(batch_id, spin_qty->value(), df, QDate::currentDate(),
-			DistributorTableModel::RGeneral, edit_reason_a->text(), edit_reason_b->text())) {
+		if (db->addDistributorRecord(batch_id, spin_qty->value()*100, df, QDate::currentDate(),
+			disttype, edit_reason_a->text(), edit_reason_b->text())) {
 				prepareInsert(true);
 				edit_date->setFocus();
 			}
 	}
 
-	update_model();
+// 	update_model();
 
 	combo_products->setFocus();
 	return true;
@@ -112,7 +115,7 @@ void AddDistributorRecordWidget::validateAdd() {
 	Database * db = Database::Instance();
 
 	unsigned int fake = 0;
-	unsigned int qtyused = db->CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data().toUInt();
+	unsigned int qtyused = db->CachedBatch()->index(idx.row(), BatchTableModel::HUsedQty).data(Qt::EditRole).toUInt();
 	unsigned int qtytotal = db->CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toUInt();
 	QString qunit = db->CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
@@ -148,13 +151,11 @@ void AddDistributorRecordWidget::validateAdd() {
 void AddDistributorRecordWidget::update_model() {
 	Database * db = Database::Instance();
 
-	if (pproxy) delete pproxy;
-	pproxy = new BatchTableModelProxy(hideempty);
- 
 	pproxy->setSourceModel(db->CachedBatch());
 	pproxy->setDynamicSortFilter(true);
 	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	pproxy->sort(2, Qt::AscendingOrder);
+
 	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(2);
 
@@ -189,12 +190,12 @@ void AddDistributorRecordWidget::prepareInsert(bool visible) {
 }
 
 void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
-	unsigned int bid;
-	unsigned int qty;
+	int bid;
+	int qty;
 
 	QString spec, price, disttype_a, disttype_b;
 	QDate reg, entry;
-	DistributorTableModel::Reasons disttype;
+	int disttype;
 	
 	clearForm();
 	update_model();
@@ -214,7 +215,7 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	if (batchl.size() != 1)
 		return;
 
-	db->getDistributorRecord(sidx, bid, qty, reg, entry, disttype, disttype_a, disttype_b);	// get record
+	db->getDistributorRecord(sidx.row(), bid, qty, reg, entry, disttype, disttype_a, disttype_b);	// get record
 
 	edit_date->setRaw(reg.toString("dd/MM/yyyy"));
 
@@ -225,6 +226,7 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 
 	combo_products->setCurrentIndex(pproxy->mapFromSource(batchl.at(0)).row());
 	spin_qty->setValue(qty/100.0);
+	this->disttype = disttype;
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);
 	

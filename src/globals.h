@@ -29,10 +29,23 @@
 namespace globals {
 	extern QPalette palette_ok;
 	extern QPalette palette_bad;
-	extern QColor item_expired;
-	extern QColor item_aexpired;
-	extern QColor item_nexpired;
-// 	extern QPalette palette_neutral;
+
+	extern QPalette item_palette;
+	extern QColor item_base;
+	extern QColor item_altbase;
+
+	extern QPalette item_expired_palette;
+	extern QColor item_expired_base;
+	extern QColor item_expired_altbase;
+
+	extern QPalette item_aexpired_palette;
+	extern QColor item_aexpired_base;
+	extern QColor item_aexpired_altbase;
+
+	extern QPalette item_nexpired_palette;
+	extern QColor item_nexpired_base;
+	extern QColor item_nexpired_altbase;
+
 	extern QFont font_edit;
 	extern QFont font_display;
 
@@ -43,6 +56,7 @@ namespace globals {
 }
 
 void qInfo(globals::VerboseLevel lvl, const char *msg, ...);
+void preparePalette();
 
 #define FI() qInfo(globals::VLevel1, "Calling function: %s", __func__)
 #define CI() qInfo(globals::VLevel1, "Constructor: %s", __func__)

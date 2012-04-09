@@ -43,7 +43,7 @@
 AbstractTableModel::AbstractTableModel(QObject* parent, QSqlDatabase sqldb) :
 	QAbstractTableModel(parent), database(sqldb),
 	sort_column(0), sort_order_asc(true),
-	find_column(0), find_role(0) {
+	find_column(0), find_role(Qt::EditRole) {
 	CI();
 	db = Database::Instance();
 }
@@ -83,7 +83,7 @@ bool AbstractTableModel::select() {
 
 	q.first();
 	do {
-	fillRow(q, ++r, false, false);
+	fillRow(q, ++r, false);
 	} while (q.next());
 
 // 	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, true);
@@ -91,8 +91,42 @@ bool AbstractTableModel::select() {
 	return true;
 }
 
+bool AbstractTableModel::selectColumn(int column) {
+	QString query("SELECT :column: FROM :table:");
+	query.replace(":column:", columns[column]);
+	query.replace(":table:", table);
+	QSqlQuery q;
+	q.prepare(query);
+	q.exec();
+	
+	PR(q.size());
+	int i = -1;
+	while (q.next()) {
+		records[++i]->arr[Qt::EditRole][column] = q.value(0);
+	}
+	
+	return true;
+}
+
+bool AbstractTableModel::selectRow(int row) {
+	QString query("SELECT * FROM :table: WHERE id=?");
+	query.replace(":table:", table);
+	
+	QSqlQuery q;
+	q.prepare(query);
+	q.bindValue(0, records[row]->arr[Qt::EditRole][HId].toInt());
+
+	q.exec();
+	
+	while (q.next()) {
+		fillRow(q, row, true);
+	}
+	return true;
+}
+
 void AbstractTableModel::clearRecords() {
 	qDeleteAll(records.begin(), records.end());
+	records.clear();
 }
 
 QVariant AbstractTableModel::prepareDate(const QVariant & v) {
@@ -123,20 +157,19 @@ QVariant AbstractTableModel::data(const QModelIndex & idx, int role) const {
 
 	switch (role) {
 		case Qt::DisplayRole:
-			return records.at(row)->arr[1][col];
-			break;
+		case Qt::DecorationRole:
 		case Qt::EditRole:
-			return records.at(row)->arr[0][col];
+			return records.at(row)->arr[Qt::EditRole][col];
 			break;
 	}
 	return QVariant();
 }
 
-int AbstractTableModel::columnCount(const QModelIndex& parent) const {
+int AbstractTableModel::columnCount(const QModelIndex& /*parent*/) const {
 	return headers.size();
 }
 
-int AbstractTableModel::rowCount(const QModelIndex& parent) const {
+int AbstractTableModel::rowCount(const QModelIndex& /*parent*/) const {
 	return records.count();
 }
 
@@ -170,29 +203,29 @@ bool AbstractTableModel::insertRows(int row, int count, const QModelIndex& paren
 	return true;
 }
 
-// bool recordLessThan(const AbstractTableModel::d_record * s1, const AbstractTableModel::d_record * s2) {
-// 	return ((*s1) < (*s2));
-// }
+bool AbstractTableModel::removeRows(int row, int count, const QModelIndex& parent) {
+	beginRemoveRows(parent, row, row+count);
 
-// bool AbstractTableModel::lessThan(const QModelIndex& left, const QModelIndex& right) const {
+	QString query("DELETE FROM :table: WHERE id=?");
+	query.replace(":table:", table);
 
-// }
+	QSqlQuery q;
+	q.prepare(query);
 
-// void AbstractTableModel::sort(int column, Qt::SortOrder order) {FI();
-// 	sort(column, order, true);
-// }
+	for (int r = 0; r < count; ++r) {
+		q.bindValue(0, records[row+r]->arr[Qt::EditRole][HId].toInt());
+		if (!q.exec())
+			PR(q.lastError().databaseText().toStdString());
+	}
 
-// void AbstractTableModel::sort(int column, Qt::SortOrder order, bool emit_signal) {FI();
-// 	sort_column = column;
-// 	sort_order_asc = ( order == Qt::AscendingOrder ? true : false );
+	qDeleteAll(records.begin()+row, records.begin()+row+count);
+	records.remove(row, count);
+	endRemoveRows();
 
-// 	qStableSort(records.begin(), records.end(), recordLessThan);
+	return true;
+}
 
-// 	if (emit_signal)
-// 		emit dataChanged(this->index(0, 0), this->index(this->rowCount()-1, this->columnCount()));
-// }
-
-QVector< int > AbstractTableModel::find(int column, const QVariant& value, int role, int hits, Qt::MatchFlags flags) {
+QVector< int > AbstractTableModel::find(int column, const QVariant& value, int role, int hits, Qt::MatchFlags /*flags*/) {
 	find_role = role;
 	find_column = column;
 
@@ -200,33 +233,31 @@ QVector< int > AbstractTableModel::find(int column, const QVariant& value, int r
 	int hits_found = 0;
 
 	viter it = records.begin();
-	viter itb = records.begin();
 	viter ite = records.end();
 
-	while (true) {
+	do {
 		it = find(it, ite, value);
+// 		PR(it);
 		if (it != ite) {
 			int row = it - records.begin();
 			result.push_back(row);
 			if (++hits_found == hits)
 				break;
-		} else {
-			break;
+			++it;
 		}
-	}
+	} while (it != ite);
 
 	return result;
 }
 
-QVector< int > AbstractTableModel::search(int column, const QVariant& value, int role, int hits, Qt::MatchFlags flags) {
+QVector< int > AbstractTableModel::search(int column, const QVariant& value, int role, int hits, Qt::MatchFlags /*flags*/) {
 	find_role = role;
 	find_column = column;
-	
+
 	QVector<int> result;
 	int hits_found = 0;
-	
+
 	viter it = records.begin();
-	viter itb = records.begin();
 	viter ite = records.end();
 
 	while (true) {
@@ -242,6 +273,7 @@ QVector< int > AbstractTableModel::search(int column, const QVariant& value, int
 			result.push_back(row);
 			if (++hits_found == hits)
 				break;
+			++it;
 		} else {
 			break;
 		}
@@ -250,61 +282,12 @@ QVector< int > AbstractTableModel::search(int column, const QVariant& value, int
 	return result;
 }
 
-Qt::ItemFlags AbstractTableModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags AbstractTableModel::flags(const QModelIndex& /*index*/) const {
 	return Qt::ItemIsEnabled | Qt::ItemIsSelectable; 
 }
 
 bool AbstractTableModel::removeRecord(int row) {
-	int id = records.at(row)->arr[0][0].toInt();
-
-	QString query("DELETE FROM :table: WHERE id=?");
-	query.replace(":table:", table);
-
-	QSqlQuery q;
-	q.prepare(query);
-	q.bindValue(0, id);
-
-	bool status = q.exec();
-	if (status) {
-		beginRemoveRows(QModelIndex(), row, row);
-		records.remove(row);
-		endRemoveRows();
-	}
-
-	return status;
-}
-
-bool AbstractTableModel::setIndexData(const QModelIndex& idx, const QVariant& data) {
-	return setIndexData(idx.row(), idx.column(), data);
-}
-
-bool AbstractTableModel::setIndexData(int row, int column, const QVariant& data) {
-	QSqlQuery q;
-
-	QString query("UPDATE :table: SET ?=? WHERE id=?");
-	query.replace(":table:", table);
-
-	q.prepare(query);
-
-	bool status = false;
-	switch (dtypes[0][column]) {
-		case QVariant::Date:
-			q.bindValue(0, columns[column]);
-			q.bindValue(1, data.toDate().toString(Qt::ISODate));
-			q.bindValue(2, records.at(row)->arr[0][HId]);
-			status = q.exec();
-			break;
-		default:
-			q.bindValue(0, columns[column]);
-			q.bindValue(1, data.toInt());
-			q.bindValue(2, records.at(row)->arr[0][HId]);
-			status = q.exec();
-			break;
-	}
-	if (status) {
-		records[row]->arr[0][column] = data;
-	}PR(status);
-	return status;
+	return removeRows(row, 1);
 }
 
 bool AbstractTableModel::pushRow(const QSqlQuery& q, bool emit_signal) {
@@ -331,13 +314,14 @@ AbstractTableModel::viter AbstractTableModel::find(AbstractTableModel::viter beg
 }
 
 AbstractTableModel::d_record::d_record(AbstractTableModel * m) : model(m) {
-	arr[0].resize(m->columnCount());
-	arr[1].resize(m->columnCount());
+	arr[Qt::DisplayRole].resize(m->columnCount());
+	arr[Qt::DecorationRole].resize(m->columnCount());
+	arr[Qt::EditRole].resize(m->columnCount());
 }
 
 bool AbstractTableModel::d_record::operator<(const d_record * rhs) const {
-	QVariant v1 = this->arr[1][model->sort_column];
-	QVariant v2 = rhs->arr[1][rhs->model->sort_column];
+	QVariant v1 = this->arr[Qt::DisplayRole][model->sort_column];
+	QVariant v2 = rhs->arr[Qt::DisplayRole][rhs->model->sort_column];
 	bool res = false;
 PR(1);
 	switch (v1.type()) {
@@ -351,17 +335,20 @@ PR(1);
 			res = !( ( v1.toDate() < v2.toDate() ) xor model->sort_order_asc);
 			break;
 		case QVariant::String:
-// 			v1 = this->arr[1][model->sort_column];
-// 			v2 = rhs->arr[1][rhs->model->sort_column];
+// 			v1 = this->arr[Qt::DisplayRole][model->sort_column];
+// 			v2 = rhs->arr[Qt::DisplayRole][rhs->model->sort_column];
 			res = !( ( v1.toString() < v2.toString() ) xor model->sort_order_asc);
 			break;
+		default:
+			throw QString("No operation defined for type %1").arg(v1.type());
+			return false;
 	}
 	return res;
 }
 
 bool AbstractTableModel::d_record::operator<(const d_record & rhs) const {
-	QVariant v1 = this->arr[1][model->sort_column];
-	QVariant v2 = rhs.arr[1][rhs.model->sort_column];
+	QVariant v1 = this->arr[Qt::DisplayRole][model->sort_column];
+	QVariant v2 = rhs.arr[Qt::DisplayRole][rhs.model->sort_column];
 	bool res = false;
 
 	switch (v1.type()) {
@@ -375,17 +362,19 @@ bool AbstractTableModel::d_record::operator<(const d_record & rhs) const {
 			res = !( ( v1.toDate() < v2.toDate() ) xor model->sort_order_asc);
 			break;
 		case QVariant::String:
-// 			v1 = this->arr[1][model->sort_column];
-// 			v2 = rhs.arr[1][rhs.model->sort_column];
+// 			v1 = this->arr[Qt::DisplayRole][model->sort_column];
+// 			v2 = rhs.arr[Qt::DisplayRole][rhs.model->sort_column];
 			res = !( ( v1.toString() < v2.toString() ) xor model->sort_order_asc);
 			break;
+		default:
+			throw QString("No operation defined for type %1").arg(v1.type());
+			return false;
 	}
 	return res;
 }
 
 bool AbstractTableModel::d_record::operator==(const QVariant & rhs) const {
 	QVariant v1 = this->arr[model->find_role][model->find_column];
-
 	return ( v1 == rhs );
 }
 

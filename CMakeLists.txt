@@ -107,7 +107,9 @@ set(zarlok_icons_RESOURCES_RCC icons.rcc)
 set(zarlok_splash_RESOURCES src/splash.qrc)
 set(zarlok_splash_RESOURCES_RCC splash.rcc)
 
-set(zarlok_src_gui_views_SRCS		src/gui/views/BatchTableView.cpp
+set(zarlok_src_gui_views_SRCS
+									src/gui/views/AbstractTableView.cpp
+									src/gui/views/BatchTableView.cpp
 									src/gui/views/ProductsTableView.cpp
 									src/gui/views/DistributorTableView.cpp
 									src/gui/views/MealDaysTableView.cpp
@@ -153,6 +155,7 @@ set(zarlok_src_models_SRCS
 									src/models/MealDayTableModel.cpp
 									src/models/MealTableModel.cpp
 									src/models/MealTableModelProxy.cpp
+									src/models/DistributorTableModelProxy.cpp
 									src/models/DistributorTableModelProxyP.cpp
 									src/models/AbstractTableModel.cpp
 )

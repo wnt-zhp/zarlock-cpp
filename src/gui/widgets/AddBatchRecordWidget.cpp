@@ -79,7 +79,7 @@ void AddBatchRecordWidget::insertRecord() {
 	Database * db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
-	int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toInt();
+	unsigned int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toUInt();
 
 	// price
 	double netto, vat;
@@ -107,7 +107,7 @@ void AddBatchRecordWidget::insertRecord() {
 		}
 	} else {
 		if (db->addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value()*100, 0, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 			clearForm();
 			combo_products->setFocus();
 		}
@@ -226,7 +226,7 @@ void AddBatchRecordWidget::prepareInsert(bool visible) {
 }
 
 void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
-	unsigned int pid;
+	int pid;
 	QString spec, unit, invoice, notes;
 	QDate reg, expiry, entry;
 	int price, qty, used;

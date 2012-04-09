@@ -21,8 +21,10 @@
 #include "Database.h"
 #include "DataParser.h"
 
+#include <QStringBuilder>
+
 TabProductsWidget::TabProductsWidget(QWidget *) :
-	Ui::TabProductsWidget(), db(Database::Instance()), model_batch_proxyP(NULL) {
+	Ui::TabProductsWidget(), db(Database::Instance()), proxy_model_batch(NULL) {
 
 	setupUi(this);
 
@@ -42,7 +44,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
 	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
 
-	connect(table_products, SIGNAL(removeRecordRequested(QVector<int> &)), Database::Instance(), SLOT(removeProductsRecord(QVector<int> &)));
+	connect(table_products, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeProductsRecord(QVector<int> &, bool)));
 
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);
@@ -90,17 +92,17 @@ void TabProductsWidget::activateUi(bool activate) {
 		}
 
 		// batch proxy
-		model_batch_proxyP = new BatchTableModelProxyP(&pid);
-		model_batch_proxyP->setSourceModel(db->CachedBatch());
-		model_batch_proxyP->setDynamicSortFilter(true);
-// 		table_batchbyid->setModel(model_batch_proxyP);
-// 		table_batchbyid->hideColumn(BatchTableModel::HProdId);
+		proxy_model_batch = new QSortFilterProxyModel;
+		proxy_model_batch->setSourceModel(db->CachedBatch());
+		proxy_model_batch->setDynamicSortFilter(true);
+		proxy_model_batch->setFilterKeyColumn(BatchTableModel::HProdId);
+		proxy_model_batch->setFilterRole(Qt::EditRole);
 
-		model_distributor_proxyP = new DistributorTableModelProxyP(table_batchbyid);
-		model_distributor_proxyP->setSourceModel(db->CachedDistributor());
-		model_distributor_proxyP->setDynamicSortFilter(true);
-// 		model_distributor_proxyP->setModel(model_batch_proxyP);
-// 		model_distributor_proxyP->hideColumn(BatchTableModel::HProdId);
+		proxy_model_distributor = new QSortFilterProxyModel;
+		proxy_model_distributor->setSourceModel(db->CachedDistributor());
+		proxy_model_distributor->setDynamicSortFilter(true);
+		proxy_model_distributor->setFilterKeyColumn(DistributorTableModel::HBatchId);
+		proxy_model_distributor->setFilterRole(Qt::EditRole);
 	}
 }
 
@@ -123,17 +125,19 @@ void TabProductsWidget::edit_record(const QModelIndex& idx) {
 }
 
 void TabProductsWidget::doFilterBatches(const QModelIndex& idx) {
-	pid = model_prod->index(idx.row(), ProductsTableModel::HId).data();
-	model_batch_proxyP->invalidate();
-	table_batchbyid->setModel(model_batch_proxyP);
-	table_batchbyid->hideColumn(BatchTableModel::HProdId);
+	QString str = model_prod->index(idx.row(), ProductsTableModel::HId).data(Qt::EditRole).toString();
+	QString filter = "^" % str % "$";
+	proxy_model_batch->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
+	proxy_model_batch->invalidate();
+	table_batchbyid->setModel(proxy_model_batch);
 }
 
-void TabProductsWidget::doFilterDistributions(const QModelIndex& /*idx*/) {
-	model_distributor_proxyP->invalidate();
-	table_distributorbyid->setModel(model_distributor_proxyP);
-// 	table_distributorbyid->hideColumn(BatchTableModel::HProdId);
-	table_distributorbyid->setAlternatingRowColors(true);
+void TabProductsWidget::doFilterDistributions(const QModelIndex& idx) {
+	QString str = proxy_model_batch->index(idx.row(), BatchTableModel::HId).data(Qt::EditRole).toString();
+	QString filter = "^" % str % "$";
+	proxy_model_distributor->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
+	proxy_model_distributor->invalidate();
+	table_distributorbyid->setModel(proxy_model_distributor);
 }
 
 #include "TabProductsWidget.moc"

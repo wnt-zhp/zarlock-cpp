@@ -8,19 +8,31 @@
 #include "DBBrowser.h"
 
 namespace globals {
-	QPalette palette_ok = QPalette();
-	QPalette palette_bad = QPalette();
-	QColor item_expired = QColor();
-	QColor item_aexpired = QColor();
-	QColor item_nexpired = QColor();
+	QPalette palette_ok;
+	QPalette palette_bad;
+
+	QPalette item_palette;
+	QColor item_base;
+	QColor item_altbase;
+
+	QPalette item_expired_palette;
+	QColor item_expired_base;
+	QColor item_expired_altbase;
+
+	QPalette item_aexpired_palette;
+	QColor item_aexpired_base;
+	QColor item_aexpired_altbase;
+
+	QPalette item_nexpired_palette;
+	QColor item_nexpired_base;
+	QColor item_nexpired_altbase;
+
 	QFont font_edit = QFont();
 	QFont font_display = QFont();
 
 	QSettings * appSettings = NULL;
 
 	bool verbose_flag[VerboseLevel::VDummy] = { false, false };
-// 	verbose_flag[0] = false;
-// 	verbose_flag[1] = false;
 }
 
 // enum QtMsgType { QtInfoMsg, QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtSystemMsg };
@@ -64,6 +76,49 @@ void myMessageOutput(QtMsgType type, const char *msg)
 	}
 }
 
+void preparePallete() {
+	globals::palette_ok.setColor(QPalette::Base, Qt::green);
+	globals::palette_bad.setColor(QPalette::Base, Qt::red);
+
+	// Standard
+	globals::item_palette = QApplication::palette();
+	globals::item_base				.setRgb(0xff, 0xff, 0xff);
+	globals::item_altbase.setHsl(globals::item_base.hslHue(), globals::item_base.hslSaturation(), globals::item_base.lightness()-40);
+// 	globals::item_altbase			.setRgb(0xf0, 0xf0, 0xf0);
+	
+	globals::item_palette.setColor(QPalette::Base, globals::item_base);
+	globals::item_palette.setColor(QPalette::AlternateBase, globals::item_altbase);
+
+	// Expired
+	globals::item_expired_palette = QApplication::palette();
+	globals::item_expired_base		.setRgb(255, 192, 192);
+	globals::item_expired_altbase.setHsl(globals::item_expired_base.hslHue(), globals::item_expired_base.hslSaturation(), globals::item_expired_base.lightness()-40);
+// 	globals::item_expired_altbase	.setRgb(0xfa, 0xfa, 0xfa);
+	
+	globals::item_expired_palette.setColor(QPalette::Base, globals::item_expired_base);
+	globals::item_expired_palette.setColor(QPalette::AlternateBase, globals::item_expired_altbase);
+
+	// Almost expired
+	globals::item_aexpired_palette = QApplication::palette();
+// 	globals::item_aexpired_base		.setRgb(243, 255, 172);
+	globals::item_aexpired_base		.setRgb(255, 255, 225);
+	globals::item_aexpired_altbase.setHsl(globals::item_aexpired_base.hslHue(), globals::item_aexpired_base.hslSaturation(), globals::item_aexpired_base.lightness()-40);
+// 	globals::item_aexpired_altbase	.setRgb(0xfa, 0xfa, 0xfa);
+	
+	globals::item_aexpired_palette.setColor(QPalette::Base, globals::item_aexpired_base);
+	globals::item_aexpired_palette.setColor(QPalette::AlternateBase, globals::item_aexpired_altbase);
+
+	// Not expired
+	globals::item_nexpired_palette = QApplication::palette();
+// 	globals::item_nexpired_base		.setRgb(172, 255, 172);
+	globals::item_nexpired_base		.setRgb(201, 244, 213);
+	globals::item_nexpired_altbase.setHsl(globals::item_nexpired_base.hslHue(), globals::item_nexpired_base.hslSaturation(), globals::item_nexpired_base.lightness()-40);
+// 	globals::item_nexpired_altbase	.setRgb(0xfa, 0xfa, 0xfa);
+	
+	globals::item_nexpired_palette.setColor(QPalette::Base, globals::item_nexpired_base);
+	globals::item_nexpired_palette.setColor(QPalette::AlternateBase, globals::item_nexpired_altbase);
+}
+
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
 	qInstallMsgHandler(myMessageOutput);
@@ -87,11 +142,7 @@ TD
 
 	splash->showMessage(QObject::tr("Preparing palletes"));
 
-	globals::palette_ok.setColor(QPalette::Base, Qt::green);
-	globals::palette_bad.setColor(QPalette::Base, Qt::red);
-	globals::item_expired.setRgb(255, 172, 172);
-	globals::item_aexpired.setRgb(243, 255, 172);
-	globals::item_nexpired.setRgb(172, 255, 172);
+	preparePallete();
 
 	globals::font_edit.setItalic(true);
 // 	globals::font_ok.setBold(false);
@@ -106,6 +157,10 @@ TD
 // 	QTranslator qtTranslator;
 // 	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 // 	app.installTranslator(&qtTranslator);
+
+// 	QPalette pal = QApplication::palette();
+// 	pal.setColor(QPalette::AlternateBase, Qt::red);
+// 	QApplication::setPalette(pal);
 
 	splash->showMessage(QObject::tr("Loading translations"));
 
