@@ -62,8 +62,8 @@ if( UNIX AND NOT APPLE )
 endif( UNIX AND NOT APPLE )
 
 IF( MINGW )
-	set( APP_ICON ${CMAKE_PROJECT_NAME}ico.o )
-	set( APP_ICON_RC ${CMAKE_PROJECT_NAME}ico.rc )
+	set( APP_ICON appicon.o )
+	set( APP_ICON_RC src/appicon.rc )
 	# resource compilation for MinGW
 	ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON}
 						COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
