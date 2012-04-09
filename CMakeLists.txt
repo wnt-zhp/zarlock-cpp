@@ -214,10 +214,12 @@ install(FILES
 				${APP_ICON}
 				DESTINATION share/icons
 )
+if ( UNIX AND NOT APPLE )
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_ENTRY}
 				DESTINATION share/applications
 )
+ENDIF ( UNIX AND NOT APPLE )
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
