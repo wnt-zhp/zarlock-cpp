@@ -66,8 +66,9 @@ IF( MINGW )
 	set( APP_ICON_RC src/appicon.rc )
 	# resource compilation for MinGW
 	ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON}
-						COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
-							-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
+		COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR}
+			-i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
+			-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
 	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
 ELSE( MINGW )
 	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} crunchico.rc)
@@ -206,7 +207,7 @@ add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
 	${zarlok_splash_RESOURCES_RCC}
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
 
-add_executable(zarlok WIN32 ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
+add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
 
 # installation
