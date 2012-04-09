@@ -94,7 +94,10 @@ void TabDistributorWidget::setFilter() {
 }
 
 void TabDistributorWidget::setFilterString(const QString& string) {
-	proxy_model->setFilterRegExp(QRegExp(string, Qt::CaseInsensitive, QRegExp::FixedString));
+	QString f = string;
+	f.replace(' ', '*');
+// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString));
+	proxy_model->setFilterWildcard(f);
 	proxy_model->setFilterKeyColumn(DistributorTableModel::HBatchId);
 
 	setFilter();

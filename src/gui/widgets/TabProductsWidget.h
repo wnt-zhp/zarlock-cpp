@@ -40,7 +40,9 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void set_filter(const QString & str);
+	void setFilter();
+	void setFilterString(const QString & string);
+
 	void add_prod_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
 	void doFilterBatches(const QModelIndex & idx);
@@ -49,11 +51,13 @@ private slots:
 private:
 	Database * db;
 	ProductsTableModel * model_prod;
+	QSortFilterProxyModel * proxy_model;
 	QSortFilterProxyModel * proxy_model_batch;
 	QSortFilterProxyModel * proxy_model_distributor;
 
 	AddProductsRecordWidget * aprw;
 	QVariant pid;
+	public slots:
 };
 
 #endif // TABPRODUCTSWIDGET_H

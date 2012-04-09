@@ -24,7 +24,8 @@
 #include <QStringBuilder>
 
 TabProductsWidget::TabProductsWidget(QWidget *) :
-	Ui::TabProductsWidget(), db(Database::Instance()), proxy_model_batch(NULL) {
+	Ui::TabProductsWidget(), db(Database::Instance()),
+	proxy_model(NULL), proxy_model_batch(NULL), proxy_model_distributor(NULL) {
 
 	setupUi(this);
 
@@ -68,8 +69,18 @@ TabProductsWidget::~TabProductsWidget() {
 	if (aprw) delete aprw;
 }
 
-void TabProductsWidget::set_filter(const QString & /*str*/) {
+void TabProductsWidget::setFilter() {
+	proxy_model->invalidate();
+}
 
+void TabProductsWidget::setFilterString(const QString & string) {
+	QString f = string;
+	f.replace(' ', '*');
+	// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString));
+	proxy_model->setFilterWildcard(f);
+	proxy_model->setFilterKeyColumn(DistributorTableModel::HBatchId);
+
+	setFilter();
 }
 
 /**
@@ -84,10 +95,17 @@ void TabProductsWidget::activateUi(bool activate) {
 
 	if (activate) {
 // 		// products
+		if (!proxy_model) {
+			proxy_model = new QSortFilterProxyModel();
+			proxy_model->setDynamicSortFilter(true);
+			proxy_model->setSortCaseSensitivity(Qt::CaseInsensitive);
+		}
+
 		if ((model_prod = db->CachedProducts())) {
-			table_products->setModel(model_prod);
+			proxy_model->setSourceModel(model_prod);
+			table_products->setModel(proxy_model);
 			table_products->show();
-			connect(edit_filter_prod, SIGNAL(textChanged(QString)), model_prod, SLOT(filterDB(QString)));
+			connect(edit_filter_prod, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 			aprw->update_model();
 		}
 
@@ -125,7 +143,8 @@ void TabProductsWidget::edit_record(const QModelIndex& idx) {
 }
 
 void TabProductsWidget::doFilterBatches(const QModelIndex& idx) {
-	QString str = model_prod->index(idx.row(), ProductsTableModel::HId).data(Qt::EditRole).toString();
+	QModelIndex index = proxy_model->mapToSource(idx);
+	QString str = model_prod->index(index.row(), ProductsTableModel::HId).data(Qt::EditRole).toString();
 	QString filter = "^" % str % "$";
 	proxy_model_batch->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
 	proxy_model_batch->invalidate();
