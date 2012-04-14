@@ -59,15 +59,14 @@ public:
 	enum Headers {HId = 0, HBatchId, HQty, HDistDate, HEntryDate, HDistType, HDistTypeA, HDistTypeB, DummyHeadersSize };
 	enum Reasons {RGeneral = 0, RExpired, RMeal };
 
-	static int sort_column;
-	static bool sort_order_asc;
-
 protected:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
 	QVariant raw(const QModelIndex & idx) const;
 
-	QVariant prepareBatch(const QVariant & v);
-	QVariant prepareDistTypeB(const QVariant & v);
+	virtual QVariant prepareBatch(const QVariant & v);
+	virtual QVariant prepareDistTypeB(const QVariant & v);
+
+	virtual QVariant prepareQty(const QVariant& v, const QVariant & bid);
 };
 
 #endif // DISTRIBUTORTABLEMODEL_H

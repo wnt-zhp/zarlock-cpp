@@ -27,7 +27,7 @@
 #include "DistributorTableModel.h"
 #include "MealTabWidget.h"
 
-MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1) {
+MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1), cached_parent((MealTabWidget *)parent) {
 	CII();
 	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(doItemEdit(QListWidgetItem*)));
 }
@@ -46,14 +46,26 @@ void MealFoodList::populateModel() {
 
 		MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
 
-		QModelIndex didx = proxy->mapToSource(proxy->index(i, DistributorTableModel::HBatchId));
+		int distributor_id = proxy->index(i, DistributorTableModel::HId).data(Qt::EditRole).toInt();
+		mflidw->setWidgetData(distributor_id);
 
-		mflidw->setBatchData(didx);
 		this->addItem(qlwi);
 		this->setItemWidget(qlwi, (QWidget *)mflidw);
+
+		connect(mflidw, SIGNAL(itemRemoved(QListWidgetItem*)), this, SLOT(doItemRemoved(QListWidgetItem*)));
 	}
 
 	insertEmptySlot();
+}
+
+void MealFoodList::refreshModel() {
+	proxy->invalidate();
+
+	int num = this->count();
+
+	for (int i = 0; i < num; ++i) {
+		((MealFoodListItemDataWidget *)this->itemWidget(this->item(i)))->resetWidgetData();
+	}
 }
 
 void MealFoodList::insertEmptySlot() {
@@ -64,6 +76,7 @@ void MealFoodList::insertEmptySlot() {
 
 	this->addItem(qlwi);
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
+	mflidw->convertToEmpty();
 }
 
 void MealFoodList::setProxyModel(MealTableModelProxy* model) {
@@ -75,9 +88,29 @@ const MealTableModelProxy* MealFoodList::proxyModel() {
 }
 
 void MealFoodList::doItemEdit(QListWidgetItem* item) {
-	((MealTabWidget *)parent())->closeOpenItems();
-	((MealTabWidget *)parent())->markOpenItem(item);
+	cached_parent->closeOpenItems();
+	cached_parent->markOpenItem(item);
 	((MealFoodListItemDataWidget *)itemWidget(item))->buttonUpdate();
+	this->repaint();
+}
+
+void MealFoodList::doItemRemoved(QListWidgetItem* item) {
+	disconnect(sender(), SIGNAL(itemRemoved(QListWidgetItem*)), this, SLOT(doItemRemoved(QListWidgetItem*)));
+	to_remove.push_back(item);
+}
+
+void MealFoodList::paintEvent(QPaintEvent* e) {
+	int s = to_remove.size();
+	if (s) {
+		for (int i = 0; i < s; ++i)
+			this->takeItem(this->row(to_remove[i]));
+
+		qDeleteAll(to_remove);
+		to_remove.clear();
+		populateModel();
+	}
+
+	QListView::paintEvent(e);
 }
 
 #include "MealFoodList.moc"

@@ -190,25 +190,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 	switch (role) {
 		case Qt::StatusTipRole:
 		case Qt::DisplayRole:
-			if (col == HProdId) {
-				QModelIndexList qmil = db->CachedProducts()->match(
-					db->CachedProducts()->index(0, ProductsTableModel::HId),
-					Qt::EditRole, idx.data(RRaw).toInt(), 1, Qt::MatchExactly);
-				if (!qmil.isEmpty()) {
-					return db->CachedProducts()->index(qmil.at(0).row(), ProductsTableModel::HName).data(Qt::DisplayRole);
-				}
-			}
-
-			else if (col == HSpec) {
-				return QString(
-					records[row]->arr[Qt::DisplayRole][HProdId].toString() % " " % records[row]->arr[Qt::EditRole][col].toString());
-			}
-
-			else if (col == HPrice) {
-				return idx.data(Qt::EditRole).toInt()/100.0;
-			}
-
-			else if (col == HUnit) {
+			if (col == HUnit) {
 				QString unitf;
 				if (DataParser::unit(records[row]->arr[Qt::EditRole][HUnit].toString(), unitf)) {
 					return unitf;
@@ -230,7 +212,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				int total = records[row]->arr[Qt::EditRole][HStaQty].toInt();
 				int free = total - used;
 				QString qty;
-				return tr("%1 of %2").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
+				return tr("   %1 of %2   ").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
 			
 			return records[row]->arr[Qt::DisplayRole][col];
@@ -283,6 +265,8 @@ bool BatchTableModel::addRecord(int pid, const QString& spec, int price, const Q
 	q.bindValue(9, invoice);
 	q.bindValue(10, notes);
 	bool status = q.exec();
+
+	qInfo(globals::VLevel1, db->getLastExecutedQuery(q).toUtf8());
 
 	if (!status)
 		return false;
@@ -385,6 +369,7 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
 
 	rec->arr[Qt::DisplayRole][HProdId]			= prepareProduct(q.value(HProdId));
 	rec->arr[Qt::DisplayRole][HSpec]			= QVariant(rec->arr[Qt::DisplayRole][HProdId].toString() % " " % rec->arr[Qt::EditRole][HSpec].toString());
+	rec->arr[Qt::DisplayRole][HPrice]			= prepareQty(q.value(HPrice));
 	rec->arr[Qt::DisplayRole][HStaQty]			= prepareQty(q.value(HStaQty));
 	rec->arr[Qt::DisplayRole][HUsedQty]			= prepareQty(q.value(HUsedQty));
 	rec->arr[Qt::DisplayRole][HRegDate]			= prepareDate(q.value(HRegDate));

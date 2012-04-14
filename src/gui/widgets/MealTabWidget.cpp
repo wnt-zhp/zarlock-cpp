@@ -29,6 +29,7 @@
 #include <QAction>
 
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NULL), mtiw(NULL) {
+	CI();
 	this->setDocumentMode(true);
 
 	mtiw = new MealTabInsertWidget(this);
@@ -54,30 +55,36 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 }
 
 MealTabWidget::~MealTabWidget() {
+	DI();
 	delete batch_proxy;
 	delete che;
 	delete cexp;
-	FPR(__func__);
 }
 
 void MealTabWidget::setMealDayId(int mdid) {
+	if (meal_day_id == mdid)
+		return;
+
+	open_item = 0;
 	meal_day_id = mdid;
 
 	MealDayTableModel * mdt = Database::Instance()->CachedMealDay();
 	MealTableModel * mt = Database::Instance()->CachedMeal();
 
-	QModelIndexList mdl = mdt->match(mdt->index(0, MealDayTableModel::HId), Qt::EditRole, mdid, -1);
+	QModelIndexList mdl = mdt->match(mdt->index(0, MealDayTableModel::HId), Qt::EditRole, QVariant(mdid), -1, Qt::MatchExactly);
 	// if there is no days then return
 	if (mdl.count() != 1)
 		return;
 
 	QDate sel_meal_date = mdt->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-	
+
 	batch_proxy->setDateKey(sel_meal_date);
 	batch_proxy->invalidate();
 
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1, Qt::MatchExactly);
+
+	int last_selected_meal = this->currentIndex();
 
 	this->clear();
 
@@ -104,6 +111,10 @@ void MealTabWidget::setMealDayId(int mdid) {
 		proxy->setRefDate(sel_meal_date);
 		proxy->invalidate();
 		foodlist->populateModel();
+	}
+
+	if (last_selected_meal < this->count()) {
+		this->setCurrentIndex(last_selected_meal);
 	}
 }
 

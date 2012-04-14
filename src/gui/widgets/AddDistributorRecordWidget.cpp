@@ -52,6 +52,7 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	combo_products->setStyleSheet("color: black;");
 
 	pproxy = new BatchTableModelProxy(hideempty);
+	pproxy->setExtendedSpec(true);
 	update_model();
 }
 

@@ -24,6 +24,7 @@
 #include <QPainter>
 #include <QApplication>
 
+#include "globals.h"
 
 void PriceDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QStyleOptionViewItemV4 opt = option;
@@ -54,6 +55,25 @@ void UnitDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 
 	QStyle *style = widget ? widget->style() : QApplication::style();
 	style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+}
+
+
+void QtyOfAllDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+	int progress = index.data().toInt();
+
+	QString str = index.data(Qt::DisplayRole).toString().trimmed();
+	QString qtystr = str.left(str.indexOf(' '));
+	QString allstr = str.right(str.length()-str.lastIndexOf(' ', -2));
+
+	QStyleOptionProgressBar progressBarOption;
+	progressBarOption.rect = option.rect;
+	progressBarOption.minimum = 0;
+	progressBarOption.maximum = allstr.toDouble()*100;
+	progressBarOption.progress = qtystr.toDouble()*100;
+	progressBarOption.text = str;
+	progressBarOption.textVisible = true;
+
+	QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
 }
 
 #include "TableDelegates.moc"

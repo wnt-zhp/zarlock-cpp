@@ -35,6 +35,8 @@ public:
 						 
 	virtual ~DistributorTableModelProxyP();
 
+	virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 

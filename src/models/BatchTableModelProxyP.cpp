@@ -46,4 +46,17 @@ bool BatchTableModelProxyP::filterAcceptsRow(int sourceRow, const QModelIndex &s
 	return (*Pid == sourceModel()->index(sourceRow, BatchTableModel::HProdId, sourceParent).data(Qt::EditRole));
 }
 
+QVariant BatchTableModelProxyP::data(const QModelIndex& index, int role) const {
+	QVariant res = QSortFilterProxyModel::data(index, role);
+
+	if ( (index.column() == BatchTableModel::HSpec) and (role == Qt::DisplayRole) ) {
+		QString unit = this->mapToSource(this->index(index.row(), BatchTableModel::HUnit)).data(Qt::DisplayRole).toString();
+		QString price = this->mapToSource(this->index(index.row(), BatchTableModel::HPrice)).data(Qt::DisplayRole).toString();
+
+		return QVariant(tr("%1\t[ 1 unit = %2,\tprice: %3 zl/%2 ]").arg(res.toString()).arg(unit, 10, ' ').arg(price, 6, ' '));
+	}
+
+	return res;
+}
+
 #include "BatchTableModelProxyP.moc"

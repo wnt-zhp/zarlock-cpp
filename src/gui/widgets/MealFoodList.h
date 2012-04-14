@@ -24,6 +24,7 @@
 #include <QSortFilterProxyModel>
 #include "MealTableModelProxy.h"
 
+class MealTabWidget;
 
 class MealFoodList : public QListWidget {
 Q_OBJECT
@@ -37,14 +38,20 @@ public:
 	virtual void insertEmptySlot();
 public slots:
 	virtual void populateModel();
+	virtual void refreshModel();
 
-private slots:
 	virtual void doItemEdit(QListWidgetItem * item);
+	virtual void doItemRemoved(QListWidgetItem * item);
+
+protected:
+	virtual void paintEvent(QPaintEvent* e);
 
 private:
 	bool isdirty;
 	MealTableModelProxy * proxy;
 	int foodkey;
+	MealTabWidget * cached_parent;
+	QVector<QListWidgetItem *> to_remove;
 };
 
 #endif // MEALFOODLIST_H

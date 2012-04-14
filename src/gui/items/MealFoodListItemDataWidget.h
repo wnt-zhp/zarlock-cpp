@@ -20,9 +20,12 @@
 #ifndef MEALFOODLISTITEMDATAWIDGET_H
 #define MEALFOODLISTITEMDATAWIDGET_H
 
+#include <QDataWidgetMapper>
+
 #include "ui_MealFoodListItemDataWidget.h"
 #include "MealFoodList.h"
 #include "BatchTableModelProxy.h"
+#include "BatchTableView.h"
 
 class MealFoodListItemDataWidget : public QWidget, public Ui::MealFoodListItemDataWidget {
 Q_OBJECT
@@ -32,35 +35,45 @@ public:
 	virtual ~MealFoodListItemDataWidget();
 
 	bool isEmpty();
+	int distributorId();
 
 public slots:
-	void render(bool doRender);
+	void render();
+	void update();
 
 	void buttonAdd();
 	void buttonUpdate();
 	void buttonClose();
 	void buttonRemove();
 
-	void setBatchData(const QModelIndex & idx);
+	void setWidgetData(int id);
+	void resetWidgetData();
 	void convertToEmpty();
 
 protected slots:
 	void validateBatchAdd();
 	void validateAdd();
 
+signals:
+	void itemRemoved(QListWidgetItem * item);
+
 private:
-	bool empty, lock;
+	void prepareView();
+	void deleteView();
+
+	int mergeBox(const QModelIndexList & list);
+
+	bool empty, editable, lock;
 
 	double quantity;
-	QString batchlabel;
-	int proxyindex;
 
-	QModelIndex batch_idx;
-	QModelIndex dist_idx;
+	int batch_row;
+	int dist_id, dist_row;
 
 	MealFoodList * mfl;
 	QListWidgetItem * owner;
-	BatchTableModelProxy * btmp;
+	BatchTableModelProxy * proxy;
+	BatchTableView * tv;
 };
 
 #endif // MEALFOODLISTITEMDATAWIDGET_H

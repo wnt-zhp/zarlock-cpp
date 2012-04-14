@@ -42,8 +42,8 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
 // 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
-	connect(table_products, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterBatches(QModelIndex)));
-	connect(table_batchbyid, SIGNAL(clicked(QModelIndex)), this, SLOT(doFilterDistributions(QModelIndex)));
+	connect(table_products, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterBatches()));
+	connect(table_batchbyid, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterDistributions()));
 
 	connect(table_products, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeProductsRecord(QVector<int> &, bool)));
 
@@ -142,18 +142,33 @@ void TabProductsWidget::edit_record(const QModelIndex& idx) {
 	}
 }
 
-void TabProductsWidget::doFilterBatches(const QModelIndex& idx) {
-	QModelIndex index = proxy_model->mapToSource(idx);
-	QString str = model_prod->index(index.row(), ProductsTableModel::HId).data(Qt::EditRole).toString();
-	QString filter = "^" % str % "$";
+void TabProductsWidget::doFilterBatches() {
+	QModelIndexList l = table_products->selectionModel()->selectedRows();
+	QString tstr;
+	for (int b = 0; b < l.size(); ++b) {
+		QString str = proxy_model->index(l.at(b).row(), ProductsTableModel::HId).data(Qt::EditRole).toString();
+		tstr = tstr % "^" % str % "$";
+		if (b < l.size()-1)
+			tstr = tstr % "|";
+	}
+
+	QString filter = tstr;
 	proxy_model_batch->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
 	proxy_model_batch->invalidate();
 	table_batchbyid->setModel(proxy_model_batch);
 }
 
-void TabProductsWidget::doFilterDistributions(const QModelIndex& idx) {
-	QString str = proxy_model_batch->index(idx.row(), BatchTableModel::HId).data(Qt::EditRole).toString();
-	QString filter = "^" % str % "$";
+void TabProductsWidget::doFilterDistributions() {
+	QModelIndexList l = table_batchbyid->selectionModel()->selectedRows();
+	QString tstr;
+	for (int b = 0; b < l.size(); ++b) {
+		QString str = proxy_model_batch->index(l.at(b).row(), BatchTableModel::HId).data(Qt::EditRole).toString();
+		tstr = tstr % "^" % str % "$";
+		if (b < l.size()-1)
+			tstr = tstr % "|";
+	}
+
+	QString filter = tstr;
 	proxy_model_distributor->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive));
 	proxy_model_distributor->invalidate();
 	table_distributorbyid->setModel(proxy_model_distributor);

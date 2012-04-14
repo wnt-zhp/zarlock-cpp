@@ -87,15 +87,12 @@ public:
 // 	typedef QVector<AbstractTableModel::d_record *>::const_iterator viter;
 	typedef d_record * const * viter;
 
-public slots:
-// 	void filterDB(const QString &);
-
 signals:
 	void rowInserted(int row);
 
 private:
-	void clearRecords();
-	viter find(viter begin, viter end, const QVariant & val) const;
+	virtual void clearRecords();
+	virtual viter find(viter begin, viter end, const QVariant & val) const;
 
 private:
 	QSqlDatabase database;
@@ -103,8 +100,8 @@ private:
 protected:
 	QString table;
 
-	QVariant prepareQty(const QVariant & v);
-	QVariant prepareDate(const QVariant & v);
+	virtual QVariant prepareQty(const QVariant & v);
+	virtual QVariant prepareDate(const QVariant & v);
 
 	QVector<QString> columns;
 	QVector<QString> headers;

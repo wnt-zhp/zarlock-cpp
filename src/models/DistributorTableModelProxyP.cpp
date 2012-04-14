@@ -63,4 +63,25 @@ bool DistributorTableModelProxyP::filterAcceptsRow(int sourceRow, const QModelIn
 	return false;
 }
 
+QVariant DistributorTableModelProxyP::data(const QModelIndex& index, int role) const {
+	QVariant res = QSortFilterProxyModel::data(index, role);
+
+	if ( (index.column() == BatchTableModel::HSpec) and (role == Qt::DisplayRole) ) {
+		Database * db = Database::Instance();
+		QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, res.toInt());
+		if (!qmil.isEmpty()) {
+			// 		return db->CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+			
+			QString name = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+			QString unit = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+			QString price = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
+			// 		
+			// 		return QVariant(tr("%1\t[ 1 unit = %2, price: %3/%2 ]").arg(name).arg(unit).arg(price));
+			return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
+		}
+	}
+
+	return res;
+}
+
 #include "DistributorTableModelProxyP.moc"

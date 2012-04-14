@@ -216,6 +216,7 @@ bool AbstractTableModel::removeRows(int row, int count, const QModelIndex& paren
 		q.bindValue(0, records[row+r]->arr[Qt::EditRole][HId].toInt());
 		if (!q.exec())
 			PR(q.lastError().databaseText().toStdString());
+		qInfo(globals::VLevel1, db->getLastExecutedQuery(q).toUtf8());
 	}
 
 	qDeleteAll(records.begin()+row, records.begin()+row+count);
@@ -298,13 +299,17 @@ bool AbstractTableModel::pushRow(const QSqlQuery& q, bool emit_signal) {
 }
 
 int AbstractTableModel::getRowById(int id) throw (int) {
-	find_column = HId;
+	int r = -1;
 
-	viter f = find(records.begin(), records.end(), id);
+	int c = records.count();
+	for (int r = 0; r < c; ++r) {
+		if (records[r]->arr[Qt::EditRole][HId] == id)
+			return r;
+	}
 
-	if (f == records.end()) throw id;
+	throw id;
 
-	return (f - records.begin());
+	return 0;
 }
 
 AbstractTableModel::viter AbstractTableModel::find(AbstractTableModel::viter begin, AbstractTableModel::viter end, const QVariant & val) const {

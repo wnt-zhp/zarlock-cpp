@@ -35,9 +35,6 @@
 
 #include "Database.h"
 
-int DistributorTableModel::sort_column = 0;
-bool DistributorTableModel::sort_order_asc = true;
-
 /**
  * @brief Konstruktor - nic się nie dzieje.
  *
@@ -115,7 +112,14 @@ DistributorTableModel::DistributorTableModel(QObject* parent, QSqlDatabase sqldb
 QVariant DistributorTableModel::prepareBatch(const QVariant & v) {
 	QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, v.toInt());
 	if (!qmil.isEmpty()) {
-		return db->CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+// 		return db->CachedBatch()->index(qmil.first().row(), 2).data(Qt::DisplayRole);
+
+		QString name = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+		QString unit = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+		QString price = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
+// 		
+// 		return QVariant(tr("%1\t[ 1 unit = %2, price: %3/%2 ]").arg(name).arg(unit).arg(price));
+		return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
 	}
 	return QVariant();
 }
@@ -226,6 +230,8 @@ bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& dd
 	q.bindValue(6, dt_b);
 	bool status = q.exec();
 
+	qInfo(globals::VLevel1, db->getLastExecutedQuery(q).toUtf8());
+
 	if (!status)
 		return false;
 
@@ -264,6 +270,8 @@ bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, con
 	q.bindValue(6, dt_b);
 	q.bindValue(7, id);
 	bool status = q.exec();
+
+	qInfo(globals::VLevel1, db->getLastExecutedQuery(q).toUtf8());
 
 	if (!status) {
 		qFatal(q.lastError().driverText().toStdString().c_str());
@@ -319,7 +327,7 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signa
 	}
 	
 	rec->arr[Qt::DisplayRole][HBatchId]			= prepareBatch(q.value(HBatchId));
-	rec->arr[Qt::DisplayRole][HQty]				= prepareQty(q.value(HQty));
+	rec->arr[Qt::DisplayRole][HQty]				= prepareQty(q.value(HQty), rec->arr[Qt::EditRole][HBatchId]);
 	rec->arr[Qt::DisplayRole][HDistDate]		= prepareDate(q.value(HDistDate));
 	rec->arr[Qt::DisplayRole][HEntryDate]		= prepareDate(q.value(HEntryDate));
 	rec->arr[Qt::DisplayRole][HDistTypeB]		= prepareDistTypeB(q.value(HId));
@@ -328,6 +336,21 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signa
 		emit rowInserted(getRowById(rec->arr[Qt::DisplayRole][HId].toInt()));
 
 	return true;
+}
+
+QVariant DistributorTableModel::prepareQty(const QVariant& v, const QVariant & bid) {
+	QModelIndexList qmil = db->CachedBatch()->match(db->CachedBatch()->index(0, BatchTableModel::HId), Qt::EditRole, bid);
+	if (!qmil.isEmpty()) {
+
+// 		QString name = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
+		QString unit = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
+		QString price = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
+
+// 		return QVariant(tr("%1\t[ 1 unit = %2,\tprice: %3 zl/%2 ]").arg(v.toDouble()/100.0, 6, 'g', -1, ' ').arg(unit, 10, ' ').arg(price, 6, ' '));
+	}
+
+	return v.toDouble();
+// 	return AbstractTableModel::prepareQty(v);
 }
 
 #include "DistributorTableModel.moc"

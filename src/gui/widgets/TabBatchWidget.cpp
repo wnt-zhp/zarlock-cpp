@@ -59,7 +59,6 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
-// 	table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
 
 	syncdb = new QAction(tr("Sync database"), this);
 	createSMrep = new QAction(tr("Create SM reports"), this);
@@ -122,24 +121,10 @@ void TabBatchWidget::activateUi(bool activate) {
 
 void TabBatchWidget::addBatchRecord(bool newrec) {
 	abrw->prepareInsert(newrec);
-// 	if (newrec) {
-// // 		table_products->setVisible(false);
-// 		widget_add_batch->setVisible(true);
-// 	} else {
-// // 		table_products->setVisible(true);
-// 		widget_add_batch->setVisible(false);
-// 	}
 	widget_add_batch->setVisible(newrec);
 }
 
 void TabBatchWidget::editRecord(const QModelIndex& idx) {
-// 	if (model_batch->isDirty(idx)) {
-// 		table_batch->setEditTriggers(QAbstractItemView::DoubleClicked);
-// 	} else {
-// 		table_batch->setEditTriggers(QAbstractItemView::NoEditTriggers);
-// 	}
-
-// 	abrw->prepareUpdate(idx.model()->index(idx.row(), BatchTableModel::HId).data().toUInt());
 	abrw->prepareUpdate(idx);
 	widget_add_batch->setVisible(true);
 }
@@ -156,11 +141,6 @@ void TabBatchWidget::setFilterString(const QString& string) {
 	proxy_model->setFilterWildcard(f);
 	proxy_model->setFilterKeyColumn(BatchTableModel::HSpec);
 }
-
-// void TabBatchWidget::syncDB() {
-// 	Database::Instance().updateBatchQty();
-// 	Database::Instance().updateMealCosts();
-// }
 
 void TabBatchWidget::doCreateSMreports() {
 	DBReports::printSMReport();

@@ -45,8 +45,8 @@ private slots:
 
 	void add_prod_record(bool newrec = true);
 	void edit_record(const QModelIndex & idx);
-	void doFilterBatches(const QModelIndex & idx);
-	void doFilterDistributions(const QModelIndex & idx);
+	void doFilterBatches();
+	void doFilterDistributions();
 
 private:
 	Database * db;

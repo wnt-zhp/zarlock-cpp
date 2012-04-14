@@ -16,10 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QStringBuilder>
+
 #include "globals.h"
 
 #include "BatchTableModelProxy.h"
 #include "BatchTableModel.h"
+
+#include "Database.h"
 
 #include <QDate>
 
@@ -32,7 +36,7 @@
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
 												QSortFilterProxyModel(parent),
 												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL),
-												cb_hide(hide), itemnum(NULL) {
+												cb_hide(hide), itemnum(NULL), extended_spec(false) {
 	CI();
 }
 
@@ -59,18 +63,20 @@ BatchTableModelProxy::~BatchTableModelProxy() {
 }
 
 bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();	// quantity of free batches
-
 	bool qres = QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 	if (!qres)
 		return false;
-// 	QString str = sourceModel()->index(sourceRow, BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 
-// 	if (!str.contains(filter, Qt::CaseInsensitive))
-// 		return false;
+	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();	// quantity of free batches
 
-	if (cb_hide and cb_hide->isChecked() and free == 0)		// hide empty
-		return ((itemnum != NULL) and (sourceRow == *itemnum)) /*false*/;
+	if (cb_hide and cb_hide->isChecked() and free == 0) {		// hide empty
+		if (itemnum == NULL)
+			return false;
+		else {
+			if (sourceRow != *itemnum)
+				return false;
+		}
+	}
 
 	QDate refd;
 	if (datekey.isValid()) {
@@ -99,6 +105,25 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 }
 
 QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
+	QVariant res = QSortFilterProxyModel::data(index, role);
+
+	if ( extended_spec and (index.column() == BatchTableModel::HSpec) and (role == Qt::DisplayRole) ) {
+		QString name = this->mapToSource(this->index(index.row(), BatchTableModel::HSpec)).data(Qt::DisplayRole).toString();
+		QString unit = this->mapToSource(this->index(index.row(), BatchTableModel::HUnit)).data(Qt::DisplayRole).toString();
+		QString price = this->mapToSource(this->index(index.row(), BatchTableModel::HPrice)).data(Qt::DisplayRole).toString();
+		
+// 		return QVariant(tr("%1\t[ 1 unit = %2,\tprice: %3 zl/%2 ]").arg(res.toString()).arg(unit, 10, ' ').arg(price, 6, ' '));
+// 		index.data(Qt::DisplayRole).toString()
+
+		QString item_mark;
+		
+		if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum))
+			name = "* " % name;
+
+		return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
+
+	}
+
 	if (role == Qt::BackgroundRole) {
 			int row = index.row();
 			QDate expd = this->index(row, BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
@@ -124,7 +149,7 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 			else
 				return globals::item_nexpired_altbase;
 	}
-	return QSortFilterProxyModel::data(index, role);
+	return res;
 }
 
 void BatchTableModelProxy::setDateKey(const QDate& dk) {
@@ -141,6 +166,10 @@ void BatchTableModelProxy::allwaysAccept(const QModelIndex * idx) {
 
 void BatchTableModelProxy::setFilter(const QString& filter) {
 	this->filter = filter;
+}
+
+void BatchTableModelProxy::setExtendedSpec(bool extspec) {
+	extended_spec = extspec;
 }
 
 #include "BatchTableModelProxy.moc"
