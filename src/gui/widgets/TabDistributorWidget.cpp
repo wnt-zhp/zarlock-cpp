@@ -26,8 +26,7 @@
 #include <QtSql>
 
 
-TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
-	model_dist_delegate(NULL), proxy_model(NULL) {
+TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()), proxy_model(NULL) {
 	CI();
 
 	setupUi(this);
@@ -37,12 +36,11 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 	activateUi(true);
 
-// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 	connect(db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 	connect(cb_hidemeals, SIGNAL(stateChanged(int)), this, SLOT(setFilter()));
 
-	connect(model_dist, SIGNAL(rowInserted(int)), table_dist, SLOT(selectRow(int)));
+	connect(model_dist, SIGNAL(rowInserted(int)), this, SLOT(markSourceRowActive(int)));
 
 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
 	connect(table_dist, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(QVector<int>&, bool)));
@@ -55,7 +53,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 TabDistributorWidget::~TabDistributorWidget() {
 	DI();
 	activateUi(false);
-	if (adrw) delete adrw;
+	delete adrw;
 }
 
 /**
@@ -79,9 +77,6 @@ void TabDistributorWidget::activateUi(bool activate) {
 		if ((model_dist = db->CachedDistributor())){
 			proxy_model->setSourceModel(model_dist);
 			table_dist->setModel(proxy_model);
-			if (model_dist_delegate) delete model_dist_delegate;
-			model_dist_delegate = new QSqlRelationalDelegate(table_dist);
-			table_dist->setItemDelegate(model_dist_delegate);
 			table_dist->show();
 			adrw->update_model();
 		}
@@ -105,6 +100,11 @@ void TabDistributorWidget::setFilterString(const QString& string) {
 
 void TabDistributorWidget::editRecord(const QModelIndex& idx) {
 	adrw->prepareUpdate(proxy_model->mapToSource(idx));
+}
+
+void TabDistributorWidget::markSourceRowActive(int row) {
+	int proxy_row = proxy_model->mapFromSource(model_dist->index(row, DistributorTableModel::HId)).row();
+	table_dist->selectRow(row);
 }
 
 #include "TabDistributorWidget.moc"

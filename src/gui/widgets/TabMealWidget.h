@@ -68,6 +68,7 @@ private:
 	QAction * createPDF;
 	QAction * createPDFAll;
 	QAction * browsePDF;
+
 	bool lock;
 	int current_meal_row;
 };

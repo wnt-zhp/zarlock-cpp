@@ -131,7 +131,7 @@ void BatchTableView::removeRecord() {
 					}
 				}
 			} else {
-				v.push_back(Database::Instance()->CachedBatch()->getRowById((*it).data(Qt::EditRole).toInt()));
+				v.push_back((*it).data(Qt::EditRole).toInt());
 			}
 		}
 	}

@@ -23,6 +23,7 @@
 #include <QTabWidget>
 #include <QToolButton>
 #include <QMessageBox>
+#include <QMenu>
 
 #include "MealFoodList.h"
 #include "MealTabInsertWidget.h"
@@ -46,6 +47,8 @@ protected slots:
 	virtual void reloadTabs(int mealDayId);
 	virtual void closeTab(int index);
 
+	virtual void customContextMenuEvent(const QPoint & point);
+	
 private:
 	BatchTableModelProxy * batch_proxy;
 	QCheckBox * che;
@@ -53,6 +56,9 @@ private:
 	QListWidgetItem * open_item;
 	MealTabInsertWidget * mtiw;
 	int meal_day_id;
+
+	QMenu tab_context_menu;
+	QAction * tab_action_rename;
 
 	QVector<MealFoodList *> tab_handler;
 };

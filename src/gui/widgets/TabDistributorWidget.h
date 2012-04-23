@@ -25,13 +25,15 @@
 
 class DistributorTableModel;
 class AddDistributorRecordWidget;
-class QSqlRelationalDelegate;
 
 class TabDistributorWidget : public QWidget, public Ui::TabDistributorWidget {
 Q_OBJECT
 public:
 	TabDistributorWidget(QWidget * parent = NULL);
 	virtual ~TabDistributorWidget();
+
+public slots:
+	virtual void markSourceRowActive(int row);
 
 private:
 	void activateUi(bool activate = true);
@@ -45,7 +47,6 @@ private slots:
 private:
 	Database * db;
 	DistributorTableModel * model_dist;
-	QSqlRelationalDelegate * model_dist_delegate;
 
 	DistributorTableModelProxy * proxy_model;
 

@@ -57,6 +57,21 @@ void UnitDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 	style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
 }
 
+void QtyDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+	QStyleOptionViewItemV4 opt = option;
+	initStyleOption(&opt, index);
+	
+	opt.text = tr("%1").arg(index.data(Qt::DisplayRole).toDouble()/100,  0, 'f', 2);
+	
+	const QWidget * widget/* = QStyledItemDelegatePrivate::widget(option)*/;
+	if (const QStyleOptionViewItemV3 *v3 = qstyleoption_cast<const QStyleOptionViewItemV3 *>(&option))
+		widget = v3->widget;
+	else
+		widget = NULL;
+	
+	QStyle *style = widget ? widget->style() : QApplication::style();
+	style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+}
 
 void QtyOfAllDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 	int progress = index.data().toInt();

@@ -20,7 +20,7 @@
 #include "DistributorTableView.h"
 #include "DistributorTableModel.h"
 
-#include "Database.h"
+#include "TableDelegates.h"
 
 #include <QHeaderView>
 
@@ -33,6 +33,10 @@
  **/
 DistributorTableView::DistributorTableView(QWidget * parent) : AbstractTableView(parent) {
 	CI();
+
+	QtyDelegate * qty_delegate = new QtyDelegate;
+	setItemDelegateForColumn(DistributorTableModel::HQty, qty_delegate);
+
 	reloadPalette();
 }
 

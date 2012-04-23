@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>768</width>
+    <width>915</width>
     <height>437</height>
    </rect>
   </property>
@@ -71,7 +71,7 @@
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
          <item>
           <widget class="QLabel" name="label_data">
            <property name="text">
@@ -80,16 +80,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="tools">
-           <property name="text">
-            <string>...</string>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,1,1,1,0">
          <item>
           <widget class="QLabel" name="label_scouts">
            <property name="text">
@@ -104,6 +100,20 @@
           <widget class="QSpinBox" name="spin_scouts"/>
          </item>
          <item>
+          <widget class="QPushButton" name="push_edit_s">
+           <property name="text">
+            <string>Edit</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="label_leaders">
            <property name="text">
             <string>Leaders</string>
@@ -114,7 +124,21 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spin_leadres"/>
+          <widget class="QSpinBox" name="spin_leaders"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="push_edit_l">
+           <property name="text">
+            <string>Edit</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_others">
@@ -130,9 +154,23 @@
           <widget class="QSpinBox" name="spin_others"/>
          </item>
          <item>
-          <widget class="QPushButton" name="push_update">
+          <widget class="QPushButton" name="push_edit_o">
            <property name="text">
-            <string>&amp;Update</string>
+            <string>Edit</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tools">
+           <property name="text">
+            <string>...</string>
            </property>
           </widget>
          </item>
@@ -172,10 +210,6 @@
  <tabstops>
   <tabstop>list_days</tabstop>
   <tabstop>tools</tabstop>
-  <tabstop>spin_scouts</tabstop>
-  <tabstop>spin_leadres</tabstop>
-  <tabstop>spin_others</tabstop>
-  <tabstop>push_update</tabstop>
   <tabstop>tab_meals</tabstop>
  </tabstops>
  <resources/>

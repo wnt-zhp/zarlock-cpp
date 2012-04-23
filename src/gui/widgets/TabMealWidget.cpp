@@ -28,6 +28,7 @@
 #include <QToolButton>
 #include <QDesktopServices>
 #include <QProgressDialog>
+#include <QInputDialog>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 wmap(NULL), lock(false), current_meal_row(-1) {
@@ -42,7 +43,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	group_meals->setEnabled(true);
 
 	spin_scouts->setMaximum(9999);
-	spin_leadres->setMaximum(9999);
+	spin_leaders->setMaximum(9999);
 	spin_others->setMaximum(9999);
 
 	action_toggle->setFlat(true);
@@ -56,11 +57,15 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(list_days, SIGNAL(clicked(QModelIndex)), this, SLOT(selectDay(QModelIndex)));
 
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
-	connect(spin_leadres, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
+	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
 	connect(spin_others, SIGNAL(valueChanged(int)), this, SLOT(validateSpins()));
 
-	connect(push_update, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
+	connect(push_edit_s, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
+	connect(push_edit_l, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
+	connect(push_edit_o, SIGNAL(clicked(bool)), this, SLOT(doUpdate()));
+
 	connect(tab_meals, SIGNAL(currentChanged(int)), this, SLOT(mealTabChanged(int)));
+// 	connect(tab_meals, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(mealTabChanged(int)));
 
 	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
 	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
@@ -91,6 +96,12 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	globals::appSettings->beginGroup("TabMeal");
 	splitter->restoreState(globals::appSettings->value("splitter", QByteArray()).toByteArray());
 	globals::appSettings->endGroup();
+
+	spin_scouts->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	spin_leaders->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	spin_others->setButtonSymbols(QAbstractSpinBox::NoButtons);
+
+	mealTabChanged(-1);
 }
 
 TabMealWidget::~TabMealWidget() {
@@ -120,12 +131,21 @@ void TabMealWidget::activateUi(bool activate) {
 		wmap = new QDataWidgetMapper;
 		wmap->setModel(db->CachedMeal());
 		wmap->addMapping(spin_scouts, MealTableModel::HScouts);
-		wmap->addMapping(spin_leadres, MealTableModel::HLeaders);
+		wmap->addMapping(spin_leaders, MealTableModel::HLeaders);
 		wmap->addMapping(spin_others, MealTableModel::HOthers);
 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 
-		push_update->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-		push_update->setEnabled(false);
+		push_edit_s->setText(QString());
+		push_edit_l->setText(QString());
+		push_edit_o->setText(QString());
+
+		push_edit_s->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+		push_edit_l->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+		push_edit_o->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+
+		spin_scouts->setEnabled(false);
+		spin_leaders->setEnabled(false);
+		spin_others->setEnabled(false);
 	}
 }
 
@@ -195,31 +215,37 @@ void TabMealWidget::validateSpins() {
 //	FIXME: Aktualizacja nie działa poprawnie, zrób to porządnie.
 	wmap->setCurrentIndex(current_meal_row);
 
-	if ( spin_scouts->value() or spin_leadres->value() or spin_others->value() ) {
-		push_update->setEnabled(true);
-	} else {
-		push_update->setEnabled(false);
-	}
+// 	if ( spin_scouts->value() or spin_leaders->value() or spin_others->value() ) {
+// 		push_update->setEnabled(true);
+// 	} else {
+// 		push_update->setEnabled(false);
+// 	}
 }
 
 void TabMealWidget::mealTabChanged(int tab) {
 	int tabsqty = tab_meals->count();
 
-	checkForDirty();
-
 	if (tab == (tabsqty-1)) {
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
-		spin_scouts->setEnabled(false);
-		spin_leadres->setEnabled(false);
-		spin_others->setEnabled(false);
+// 		spin_scouts->setEnabled(false);
+// 		spin_leaders->setEnabled(false);
+// 		spin_others->setEnabled(false);
+		push_edit_s->setEnabled(false);
+		push_edit_l->setEnabled(false);
+		push_edit_o->setEnabled(false);
+
+		wmap->setCurrentIndex(-1);
 		return;
 	}
 
-	spin_scouts->setEnabled(true);
-	spin_leadres->setEnabled(true);
-	spin_others->setEnabled(true);
+// 	spin_scouts->setEnabled(true);
+// 	spin_leaders->setEnabled(true);
+// 	spin_others->setEnabled(true);
+	push_edit_s->setEnabled(true);
+	push_edit_l->setEnabled(true);
+	push_edit_o->setEnabled(true);
 
 	int i = tab_meals->currentIndex();
 	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
@@ -231,16 +257,56 @@ void TabMealWidget::mealTabChanged(int tab) {
 		return;
 
 	wmap->setCurrentIndex(meals.at(0).row());
-	push_update->setEnabled(false);
+// 	push_update->setEnabled(false);
 }
 
 void TabMealWidget::doUpdate() {
+	QString title;
+	int old_val = 0, min_val = 0, max_val = 0;
+	void * s = sender();
+
+	if (s == push_edit_s) {
+		title = tr("Scouts");
+		old_val = spin_scouts->value();
+		min_val = spin_scouts->minimum();
+		max_val = spin_scouts->maximum();
+	} else
+	if (s == push_edit_s) {
+		title = tr("Leaders");
+		old_val = spin_leaders->value();
+		min_val = spin_leaders->minimum();
+		max_val = spin_leaders->maximum();
+	} else
+	if (s == push_edit_s) {
+		title = tr("Others");
+		old_val = spin_others->value();
+		min_val = spin_others->minimum();
+		max_val = spin_others->maximum();
+	}
+
+	bool ok;
+	int val = QInputDialog::getInt(this, title,
+								   tr("Give number of persons for meal:"), old_val, min_val, max_val, 1, &ok);
+   
+	if (!ok)
+	   return;
+
+	if (s == push_edit_s) {
+		spin_scouts->setValue(val);
+	} else
+	if (s == push_edit_s) {
+		spin_others->setValue(val);
+	} else
+	if (s == push_edit_s) {
+		spin_leaders->setValue(val);
+	}
+
 	int mid = ((MealFoodList *)tab_meals->widget(tab_meals->currentIndex()))->proxyModel()->key();
-PR(mid);
+
 	QSqlQuery q;
 	q.prepare("UPDATE meal SET scouts=?, leaders=?, others=? WHERE id=?;");
 	q.bindValue(0, spin_scouts->value());
-	q.bindValue(1, spin_leadres->value());
+	q.bindValue(1, spin_leaders->value());
 	q.bindValue(2, spin_others->value());
 	q.bindValue(3, mid);
 	q.exec();
@@ -282,18 +348,20 @@ void TabMealWidget::doBrowseReports() {
 }
 
 void TabMealWidget::checkForDirty() {
-	if (push_update->isEnabled()) {
-		QMessageBox mbox(QMessageBox::Question, tr("Data has been changed"),
-			tr("Number of scouts for this meal has changed, do you want to save your changes?"),
-			QMessageBox::Save | QMessageBox::Discard
-		);
-		int ret = mbox.exec();
-		if (ret == QMessageBox::Save) {
-			PR(222);
-		}
-	}
 
-	push_update->setEnabled(false);
+
+// 	if (push_update->isEnabled()) {
+// 		QMessageBox mbox(QMessageBox::Question, tr("Data has been changed"),
+// 			tr("Number of scouts for this meal has changed, do you want to save your changes?"),
+// 			QMessageBox::Save | QMessageBox::Discard
+// 		);
+// 		int ret = mbox.exec();
+// 		if (ret == QMessageBox::Save) {
+// 			PR(222);
+// 		}
+// 	}
+
+// 	push_update->setEnabled(false);
 }
 
 #include "TabMealWidget.moc"

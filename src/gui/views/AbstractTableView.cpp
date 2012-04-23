@@ -123,7 +123,7 @@ void AbstractTableView::removeRecord() {
 	QVector<int> v;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
 		if ((*it).column() == 0)
-			v.push_back((*it).row());
+			v.push_back((*it).data(Qt::EditRole).toInt());
 	}
 
 	emit removeRecordRequested(v, true);

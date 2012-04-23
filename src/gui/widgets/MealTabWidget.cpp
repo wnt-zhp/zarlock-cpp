@@ -27,10 +27,21 @@
 #include <QListWidgetItem>
 #include <QStyle>
 #include <QAction>
+#include <QInputDialog>
 
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NULL), mtiw(NULL) {
 	CI();
 	this->setDocumentMode(true);
+
+	// Popup menu dla akcji usuwania rekordu z bazy.
+	tab_action_rename = new QAction(tr("&Rename"), this);
+	// 	removeRec->setShortcut(QKeySequence::Delete);
+	tab_action_rename->setToolTip(tr("Remove record from database"));
+	
+	//  Łączymy akcję kliknięcia w menu "Remove" z funkcją (slotem), która to wykona.
+	// 	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
+	tab_context_menu.addAction(tab_action_rename);
+
 
 	mtiw = new MealTabInsertWidget(this);
 
@@ -52,6 +63,9 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
 
 	tab_handler.reserve(20);
+
+	this->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this->tabBar(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuEvent(QPoint)));
 }
 
 MealTabWidget::~MealTabWidget() {
@@ -165,5 +179,36 @@ void MealTabWidget::closeTab(int index) {
 		}
 	}
 }
+
+void MealTabWidget::customContextMenuEvent(const QPoint & point) {
+
+	QTabBar * tb = tabBar();
+	QPoint gpoint = tb->mapToGlobal(point);
+
+	int t = tb->tabAt(point);
+
+	if (t == -1 or t == (this->count()-1))
+		return;
+
+	QAction * ac = tab_context_menu.exec(gpoint);
+
+	bool is_ok = false;
+	if (ac == tab_action_rename) {
+		QString newname = QInputDialog::getText(this, tr("Meal name rename"), tr("Set new meal name"), QLineEdit::Normal, tb->tabText(t), &is_ok);
+		if (is_ok && !newname.isEmpty()) {
+			MealTableModel * mt = Database::Instance()->CachedMeal();
+
+			mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
+			QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, meal_day_id, -1, Qt::MatchExactly);
+
+			mt->setData(mt->index(meals.at(t).row(), MealTableModel::HMealName), newname, Qt::EditRole);
+			if (!mt->submit())
+				mt->revert();
+			else
+				tb->setTabText(t, newname);
+		}
+	}
+}
+
 
 #include "MealTabWidget.moc"

@@ -102,10 +102,10 @@ private:
 	bool createDBFile(const QString& dbname, const QString& dbfilenoext);
 
 public slots:
-	virtual bool removeProductsRecord(QVector<int> & rows, bool askForConfirmation = true);
-	virtual bool removeBatchRecord(QVector<int> & rows, bool askForConfirmation = true);
-	virtual bool removeDistributorRecord(QVector<int> & rows, bool askForConfirmation = true);
-	virtual bool removeMealDayRecord(QVector<int> & rows, bool askForConfirmation = true);
+	virtual bool removeProductsRecord(QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeBatchRecord(QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeDistributorRecord(QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeMealDayRecord(QVector<int> & ids, bool askForConfirmation = true);
 
 private slots:
 	bool rebuild_models();

@@ -313,7 +313,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 	QSqlQuery q, q2;
 
 	QMap<QString, KMDB> kmm;
-	q2.prepare("SELECT id, spec, unit, price, start_qty, used_qty, invoice_no, booking FROM batch WHERE prod_id=? ORDER BY booking ASC;");
+	q2.prepare("SELECT id, spec, unit, price, start_qty, used_qty, invoice, regdate FROM batch WHERE prod_id=? ORDER BY regdate ASC;");
 // 	q3.prepare("SELECT quantity, distdate, reason3 FROM distributor WHERE batch_id IN ( ? ) ORDER BY distdate ASC;");
 
 	q.exec("SELECT id, name FROM products;");
@@ -409,14 +409,14 @@ void DBReports::printKMReport(QString * reportsdir) {
 		std::cout << ";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n";
 		out << QString::fromUtf8(";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n");
 
-		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n",
+		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n\n",
 					it->name.trimmed().toStdString().c_str(), it->spec.trimmed().toStdString().c_str(),
 					it->unit.trimmed().toStdString().c_str(), it->price_s.toStdString().c_str());
 
 		out << ";Nazwa towaru:;" << QString::fromUtf8(it->name.trimmed().toStdString().c_str()) << " "
 			<< QString::fromUtf8(it->spec.trimmed().toStdString().c_str()) << " "
 			<< QString::fromUtf8(it->unit.trimmed().toStdString().c_str())
-			<< ";cena:;" << it->price_s.toStdString().c_str() << endl;
+			<< ";cena:;" << it->price_s.toStdString().c_str() << endl << endl;
 
 		std::printf("Lp.,Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
 		std::cout << "1;2;3;4;5;6;7;8;9\n";
@@ -598,10 +598,10 @@ void DBReports::printSMReport(QString * reportsdir) {
 	QVector<double> batches_bilans_num(bnum);
 
 	// calculate number of days to proceed
-	q.exec("SELECT booking FROM batch ORDER BY booking ASC LIMIT 1;");
+	q.exec("SELECT regdate FROM batch ORDER BY regdate ASC LIMIT 1;");
 	if (q.next())
 		b_min = q.value(0).toDate();
-	q.exec("SELECT booking FROM batch ORDER BY booking DESC LIMIT 1;");
+	q.exec("SELECT regdate FROM batch ORDER BY regdate DESC LIMIT 1;");
 	if (q.next())
 		b_max = q.value(0).toDate();
 	q.exec("SELECT distdate FROM distributor ORDER BY distdate ASC LIMIT 1;");
@@ -627,7 +627,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 
 	q.prepare("SELECT * FROM batch WHERE booking=?;");
 	q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
-
+// return;
 	//##############################################
 	for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
 		QString cdate = b_min.addDays(i).toString(Qt::ISODate);

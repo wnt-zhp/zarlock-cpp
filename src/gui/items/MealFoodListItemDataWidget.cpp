@@ -266,7 +266,7 @@ void MealFoodListItemDataWidget::buttonRemove() {
 	Database * db = Database::Instance();
 	
 	QVector<int> v;
-	v.push_back(dist_row);
+	v.push_back(dist_id);
 	db->removeDistributorRecord(v);
 
 	db->CachedBatch()->selectRow(batch_row);
