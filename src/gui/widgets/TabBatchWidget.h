@@ -29,6 +29,9 @@
 #include <QtSql>
 #include <QCompleter>
 
+#include "DimmingWidget.h"
+// #include "DimmingMessage.h"
+
 class TabBatchWidget : public QWidget, public Ui::TabBatchWidget {
 Q_OBJECT
 public:
@@ -59,6 +62,8 @@ private:
 	QAction * syncdb;
 	QAction * createSMrep;
 	QAction * createKMrep;
+
+	DimmingWidget * dwbox;
 };
 
 #endif // TABBATCHWIDGET_H

@@ -50,6 +50,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addBatchRecord(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
+	connect(abrw, SIGNAL(canceled(bool)), this, SLOT(addBatchRecord(bool)));
 
 	connect(cb_expired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
@@ -82,6 +83,14 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
 	connect(table_batch, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(QVector<int>&, bool)));
+
+	dwbox = new DimmingWidget(this);
+	
+	dwbox->setOverlay(true, true);
+	dwbox->setWidget(widget_add_batch);
+	dwbox->setOverlayOpacity(100);
+// 
+// 	widget_add_batch->setVisible(true);
 }
 
 TabBatchWidget::~TabBatchWidget() {
@@ -120,13 +129,30 @@ void TabBatchWidget::activateUi(bool activate) {
 }
 
 void TabBatchWidget::addBatchRecord(bool newrec) {
+// 	PMessageBox * mbox = new PMessageBox(this);
+
+// 	mbox->setOverlay(true, true);
+// 	mbox->setMessage("My message for you");
+// 	QIcon ic = QApplication::style()->standardIcon(QStyle::SP_DesktopIcon);
+// 	mbox->setIcon(&ic);
+// 	mbox->go();
+
 	abrw->prepareInsert(newrec);
-	widget_add_batch->setVisible(newrec);
+// 	dwbox->setWidget(widget_add_batch);
+
+	if (newrec) {
+// 		widget_add_batch->setVisible(newrec);
+		dwbox->go();
+	} else {
+		dwbox->og();
+// 		widget_add_batch->setVisible(newrec);
+	}
 }
 
 void TabBatchWidget::editRecord(const QModelIndex& idx) {
 	abrw->prepareUpdate(idx);
 	widget_add_batch->setVisible(true);
+	dwbox->go();
 }
 
 void TabBatchWidget::setFilter() {

@@ -143,6 +143,9 @@ set(zarlok_src_gui_widgets_SRCS
 
 set(zarlok_src_gui_dialogs_SRCS
 									src/gui/dialogs/CampSettingsDialog.cpp
+									src/gui/dialogs/AbstractDimmingWidget.cpp
+									src/gui/dialogs/DimmingMessage.cpp
+									src/gui/dialogs/DimmingWidget.cpp
 )
 set(zarlok_src_gui_items_SRCS
 									src/gui/items/MealFoodListItemDataWidget.cpp
