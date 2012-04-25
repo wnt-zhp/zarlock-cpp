@@ -18,6 +18,7 @@
 
 #include "globals.h"
 #include "TabBatchWidget.h"
+#include <DimmingMessage.h>
 #include "Database.h"
 #include "DataParser.h"
 #include "DBReports.h"
@@ -41,7 +42,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	cb_hideempty->setChecked(false);
 
 	widget_add_batch->setVisible(false);
-	abrw = new AddBatchRecordWidget(widget_add_batch);
+	brw = new BatchRecordWidget(widget_add_batch);
 
 	activateUi(true);
 
@@ -49,8 +50,8 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addBatchRecord(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(abrw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(abrw, SIGNAL(canceled(bool)), this, SLOT(addBatchRecord(bool)));
+	connect(brw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
+	connect(brw, SIGNAL(canceled(bool)), this, SLOT(addBatchRecord(bool)));
 
 	connect(cb_expired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
@@ -98,7 +99,7 @@ TabBatchWidget::~TabBatchWidget() {
 	activateUi(false);
 // 	if (model_batch_delegate) delete model_batch_delegate;
 	if (proxy_model) delete proxy_model;
-	if (abrw) delete abrw;
+	if (brw) delete brw;
 }
 
 /**
@@ -121,7 +122,7 @@ void TabBatchWidget::activateUi(bool activate) {
 			table_batch->setModel(proxy_model);
 
 			table_batch->show();
-			abrw->update_model();
+			brw->update_model();
 
 			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), proxy_model, SLOT(invalidate()));
 		}
@@ -129,30 +130,32 @@ void TabBatchWidget::activateUi(bool activate) {
 }
 
 void TabBatchWidget::addBatchRecord(bool newrec) {
-// 	PMessageBox * mbox = new PMessageBox(this);
-
+// 	DimmingMessage * mbox = new DimmingMessage(this);
 // 	mbox->setOverlay(true, true);
 // 	mbox->setMessage("My message for you");
 // 	QIcon ic = QApplication::style()->standardIcon(QStyle::SP_DesktopIcon);
 // 	mbox->setIcon(&ic);
+// 	mbox->showBusy();
 // 	mbox->go();
 
-	abrw->prepareInsert(newrec);
 // 	dwbox->setWidget(widget_add_batch);
 
 	if (newrec) {
+		brw->prepareInsert(newrec);
 // 		widget_add_batch->setVisible(newrec);
-		dwbox->go();
+		dwbox->go(true);
 	} else {
 		dwbox->og();
+		dwbox->setEventTransparent(false);
 // 		widget_add_batch->setVisible(newrec);
 	}
 }
 
 void TabBatchWidget::editRecord(const QModelIndex& idx) {
-	abrw->prepareUpdate(idx);
+	brw->prepareUpdate(idx);
 	widget_add_batch->setVisible(true);
 	dwbox->go();
+	dwbox->setEventTransparent(true);
 }
 
 void TabBatchWidget::setFilter() {

@@ -803,10 +803,13 @@ bool Database::updateDistributorRecord(int row, int bid, int qty, const QDate & 
 
 // 	int id = this->CachedDistributor()->index(row, DistributorTableModel::HId).data(Qt::EditRole).toInt();
 
+	int oldbid = model_distributor->index(row, DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
 	bool status = model_distributor->updateRecord(row, bid, qty, ddate, rdate, disttype, dt_a, dt_b);
 
 	if (status) {
 		model_batch->selectRow(model_batch->getRowById(bid));
+		if (oldbid != bid)
+			model_batch->selectRow(model_batch->getRowById(oldbid));
 		updateDistributorWordList();
 	}
 

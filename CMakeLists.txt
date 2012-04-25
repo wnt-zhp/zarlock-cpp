@@ -83,7 +83,7 @@ set(zarlok_FORMS
 									src/ui/MainWindow.ui
 									src/ui/DatabaseBrowser.ui
 									src/ui/AddProductsRecordWidget.ui
-									src/ui/AddBatchRecordWidget.ui
+									src/ui/BatchRecordWidget.ui
 									src/ui/AddDistributorRecordWidget.ui
 )
 set(zarlok_widget_FORMS
@@ -128,7 +128,7 @@ set(zarlok_src_gui_inputs_SRCS
 )
 set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/AddProductsRecordWidget.cpp
-									src/gui/widgets/AddBatchRecordWidget.cpp
+									src/gui/widgets/BatchRecordWidget.cpp
 									src/gui/widgets/AddDistributorRecordWidget.cpp
 									src/gui/widgets/DBBrowser.cpp
 									src/gui/widgets/DBItemWidget.cpp
@@ -139,6 +139,7 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/MealTabWidget.cpp
 									src/gui/widgets/MealFoodList.cpp
 									src/gui/widgets/MealTabInsertWidget.cpp
+									src/gui/widgets/QProgressIndicator.cpp
 )
 
 set(zarlok_src_gui_dialogs_SRCS

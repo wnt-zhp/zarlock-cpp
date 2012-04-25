@@ -31,10 +31,13 @@ public:
 
 	void setWidget(QWidget * widget = NULL);
 
-	virtual void go();
+	virtual void go(bool modal = false);
+	virtual void og();
 
 private:
+	QWidget * overlay;
 	QWidget * widget;
+	bool modal_mode;
 };
 
 #endif // DIMMINGWIDGET_H

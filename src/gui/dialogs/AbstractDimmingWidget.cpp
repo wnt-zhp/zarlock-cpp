@@ -26,12 +26,12 @@ AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::
 	overlay_opacity(200), overlay_just_resize(false), overlay_dont_animate(false),
 	animate_direction(FINISHED), last_state(OUT), animate_move_direction(QTimeLine::Forward),
 	animate_start(TOPCENTER), animate_pause(MIDCENTER), animate_stop(BOTCENTER),
-	animate_duration(1400),  /*disable_parent_in_shown(false),*/
+	animate_duration(1400),  disable_parent_in_shown(false),
 	sceneX(new QTimeLine), sceneY(new QTimeLine), sceneF(new QTimeLine), effect(NULL)
 {
 	this->hide();
 
-	overlay->setAttribute(Qt::WA_TransparentForMouseEvents);
+// 	overlay->setAttribute(Qt::WA_TransparentForMouseEvents);
 	overlay->hide();
 
 	setEnabled(true);
@@ -226,7 +226,7 @@ QTimeLine * AbstractDimmingWidget::animate() {
 
 	// Run predefined callback functions for given direction
 // 	runCallBacks(animate_direction);
-// 	disable_parent();
+	disable_parent();
 
 	// Show/hide overlay if overlay enabled
 	if (overlay_enabled) {
@@ -284,18 +284,18 @@ void AbstractDimmingWidget::moveFrame(int frame) {
 void AbstractDimmingWidget::disable_parent() {
 	// FIXME: WTF it is?
 
-// 	if (disable_parent_in_shown) {
-// 		for (QObjectList::const_iterator it = parent_widget->children().begin(); it != parent_widget->children().end(); ++it)
-// 			if (*it != this and !(*it)->inherits("QLayout"))
-// 				((QWidget *)(*it))->setEnabled(last_direction != IN);
-// // 		parent.c
-// // 		for item in self.__parent.children():
-// // 		if not item == self and not item.inherits("QLayout"):
-// // 			try:
-// // 			item.setEnabled(not self.__last_direction == IN)
-// // 			except:
-// // 			pass
-// 	}
+	if (disable_parent_in_shown) {
+		for (QObjectList::const_iterator it = parent_widget->children().begin(); it != parent_widget->children().end(); ++it)
+			if (*it != this and !(*it)->inherits("QLayout"))
+				((QWidget *)(*it))->setEnabled(last_state != IN);
+// 		parent.c
+// 		for item in self.__parent.children():
+// 		if not item == self and not item.inherits("QLayout"):
+// 			try:
+// 			item.setEnabled(not self.__last_direction == IN)
+// 			except:
+// 			pass
+	}
 }
 
 void AbstractDimmingWidget::setAnimationCurve(QEasingCurve curve) {
@@ -356,6 +356,10 @@ void AbstractDimmingWidget::show() {
 
 void AbstractDimmingWidget::hide() {
 	QWidget::hide();
+}
+
+void AbstractDimmingWidget::setEventTransparent(bool transparent) {
+	overlay->setAttribute(Qt::WA_TransparentForMouseEvents, transparent);
 }
 
 

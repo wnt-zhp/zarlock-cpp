@@ -17,14 +17,14 @@
 */
 
 #include "globals.h"
-#include "AddBatchRecordWidget.h"
+#include "BatchRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
 
 #include <QStringList>
 #include <QSqlQuery>
 
-AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
+BatchRecordWidget::BatchRecordWidget(QWidget * parent) : Ui::BRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL),
 	idToUpdate(-1) {
@@ -60,9 +60,13 @@ AddBatchRecordWidget::AddBatchRecordWidget(QWidget * parent) : Ui::ABRWidget(),
 
 	edit_spec->enableEmpty(true);
 	edit_expiry->setDateReferenceObj(edit_book);
+
+	button_label_insert = action_addnext->text();
+	button_label_insert_and_exit = action_addexit->text();
+	button_label_exit = action_addexit->text();
 }
 
-AddBatchRecordWidget::~AddBatchRecordWidget() {
+BatchRecordWidget::~BatchRecordWidget() {
 	DI();
 
 	if (completer_spec) delete completer_spec;
@@ -75,7 +79,7 @@ AddBatchRecordWidget::~AddBatchRecordWidget() {
 	if (pproxy) delete pproxy;
 }
 
-void AddBatchRecordWidget::insertRecord() {
+void BatchRecordWidget::insertRecord() {
 	Database * db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
@@ -93,7 +97,6 @@ void AddBatchRecordWidget::insertRecord() {
 	}
 	regdate = edit_book->date();
 
-	// FIXME: edit_date->book() jest potencjalnie miejscem bledow
 	if (idToUpdate >= 0) {
 		BatchTableModel * btm = db->CachedBatch();
 		QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
@@ -114,13 +117,13 @@ void AddBatchRecordWidget::insertRecord() {
 	}
 }
 
-void AddBatchRecordWidget::insertRecordExit() {
+void BatchRecordWidget::insertRecordExit() {
 	insertRecord();
 // 	cancelForm();
 	this->setVisible(false);
 }
 
-void AddBatchRecordWidget::clearForm() {
+void BatchRecordWidget::clearForm() {
 	edit_spec->clear();
 // 	combo_spec->clear();
 	edit_expiry->clear();
@@ -133,12 +136,11 @@ void AddBatchRecordWidget::clearForm() {
 // 	edit_book->clear();
 }
 
-void AddBatchRecordWidget::cancelForm() {
-	prepareInsert(false);
+void BatchRecordWidget::cancelForm() {
 	emit canceled(false);
 }
 
-void AddBatchRecordWidget::validateCB(int i) {
+void BatchRecordWidget::validateCB(int i) {
 	Database * db = Database::Instance();
 
 	ProductsTableModel * ptm = db->CachedProducts();
@@ -155,7 +157,7 @@ void AddBatchRecordWidget::validateCB(int i) {
 	validateAdd();
 }
 
-void AddBatchRecordWidget::validateAdd() {
+void BatchRecordWidget::validateAdd() {
 // 	PR(combo_products->currentIndex());
 
 	if (edit_spec->ok() and edit_unit->ok() and
@@ -170,7 +172,7 @@ void AddBatchRecordWidget::validateAdd() {
 	}
 }
 
-void AddBatchRecordWidget::update_model() {
+void BatchRecordWidget::update_model() {
 	Database * db = Database::Instance();
 
 	if (pproxy) delete pproxy;
@@ -216,23 +218,23 @@ void AddBatchRecordWidget::update_model() {
 	validateCB(combo_products->currentIndex());
 }
 
-void AddBatchRecordWidget::prepareInsert(bool visible) {
-	action_addexit->setText(tr("Insert record and exit"));
-	action_addnext->setText(tr("Insert record and add next"));
+void BatchRecordWidget::prepareInsert(bool visible) {
+	action_addexit->setText(button_label_insert_and_exit);
+// 	action_addnext->setText(tr("Insert record and add next"));
+	action_addnext->show();
 	idToUpdate = -1;
 	if (visible) {
 		clearForm();
 	}
 }
 
-void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
+void BatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	int pid;
 	QString spec, unit, invoice, notes;
 	QDate reg, expiry, entry;
 	int price, qty, used;
 
 	clearForm();
-// 	update_model();
 
 	Database * db = Database::Instance();
 
@@ -260,8 +262,8 @@ void AddBatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	check_inf->setChecked(!expiry.isValid());
 	edit_invoice->setRaw(invoice);
 
-	action_addexit->setText(tr("Update record and exit"));
-	action_addnext->setText(tr("Update record and add next"));
+	action_addexit->setText(tr("Update record"));
+	action_addnext->hide();
 }
 
-#include "AddBatchRecordWidget.moc"
+#include "BatchRecordWidget.moc"

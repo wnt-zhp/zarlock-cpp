@@ -171,7 +171,6 @@ QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 			break;
 	}
 
-// 	return records[row]->arr[Qt::EditRole][col];
 	return QVariant();
 }
 

@@ -271,13 +271,13 @@ void TabMealWidget::doUpdate() {
 		min_val = spin_scouts->minimum();
 		max_val = spin_scouts->maximum();
 	} else
-	if (s == push_edit_s) {
+	if (s == push_edit_l) {
 		title = tr("Leaders");
 		old_val = spin_leaders->value();
 		min_val = spin_leaders->minimum();
 		max_val = spin_leaders->maximum();
 	} else
-	if (s == push_edit_s) {
+	if (s == push_edit_o) {
 		title = tr("Others");
 		old_val = spin_others->value();
 		min_val = spin_others->minimum();
@@ -294,11 +294,11 @@ void TabMealWidget::doUpdate() {
 	if (s == push_edit_s) {
 		spin_scouts->setValue(val);
 	} else
-	if (s == push_edit_s) {
-		spin_others->setValue(val);
-	} else
-	if (s == push_edit_s) {
+	if (s == push_edit_l) {
 		spin_leaders->setValue(val);
+	} else
+	if (s == push_edit_o) {
+		spin_others->setValue(val);
 	}
 
 	int mid = ((MealFoodList *)tab_meals->widget(tab_meals->currentIndex()))->proxyModel()->key();
@@ -310,7 +310,10 @@ void TabMealWidget::doUpdate() {
 	q.bindValue(2, spin_others->value());
 	q.bindValue(3, mid);
 	q.exec();
-	db->CachedMeal()->select();
+
+	QModelIndex i = list_days->currentIndex();
+	db->CachedMealDay()->select();
+	list_days->setCurrentIndex(i);
 }
 
 void TabMealWidget::doPrepareReport() {
@@ -321,7 +324,7 @@ void TabMealWidget::doPrepareReport() {
 
 void TabMealWidget::doPrepareReports() {
 	QString fn;
-	int num = db->CachedMeal()->rowCount();
+	int num = db->CachedMealDay()->rowCount();
 
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
 	progress.setMinimumDuration(0);

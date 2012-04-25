@@ -3,5 +3,6 @@
 	<file>resources/report_batch.tpl</file>
 	<file>resources/report_dailymeal.tpl</file>
 	<file>resources/report.css</file>
+	<file>resources/report_dailymeal.css</file>
 </qresource>
 </RCC>

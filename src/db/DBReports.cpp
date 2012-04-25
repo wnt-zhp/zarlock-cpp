@@ -146,7 +146,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 		exit(EXIT_FAILURE);
 	}
 
-	QFile sheet_css(":/resources/report.css");
+	QFile sheet_css(":/resources/report_dailymeal.css");
 	if (!sheet_css.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 			QObject::tr("Unable to find resources in ") +
@@ -189,91 +189,75 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	cur.movePosition(QTextCursor::Start);
 
 	// Products table preparation
-	QSqlQuery q;
+	QSqlQuery q, q2, q3;
 
-	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
-		QSqlDatabase::database().transaction();
+// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+// 		QSqlDatabase::database().transaction();
 
-	q.prepare("SELECT scouts, leaders, others FROM meal WHERE distdate=?;");
+	q.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
 	q.bindValue(0, date);
-	q.exec();
+	if (!q.exec())
+		PR(q.lastError().databaseText().toStdString());
 
-	QString distdate;
-	int sco = 0, lea = 0, oth = 0, all = 0;
+	if (!q.next())
+		return;
 
-	while (q.next()) {
-		sco = q.value(0).toInt();
-		lea = q.value(1).toInt();
-		oth = q.value(2).toInt();
-		all = lea+sco+oth;
-		distdate = QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleLongDate);
-	}
+	double costs = q.value(1).toDouble()/10000;
 
-	QString cont0, cont2, cont3, cont4;
-	QString cont1, cont5, cont6;
-	QString contadd, spec, unit;
-	double qty, costs = 0;
+	q2.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
+	q2.bindValue(0, q.value(0));
+	if (!q2.exec())
+		PR(q2.lastError().databaseText().toStdString());
 
-	QModelIndexList idxl = db->CachedDistributor()->match(db->CachedDistributor()->index(0, DistributorTableModel::HDistDate), Qt::EditRole, QDate::fromString(date, Qt::ISODate).toString(Qt::DefaultLocaleShortDate), -1);
-	for (int i = 0; i < idxl.count(); ++i) {
-		if (db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt() != 2)
-			continue;
+	int id, kind;
+	QString name;
+	int sco = 0, lea = 0, oth = 0;
+	int all_sco = 0, all_lea = 0, all_oth = 0;
 
-		spec = db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data().toString();
-		qty = db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HQty).data().toDouble();
+	QVector<QString> headers;
+	QVector<QString> contents;
 
-		q.prepare("SELECT batch.unit,batch.price FROM batch WHERE batch.id=?;");
-		q.bindValue(0, db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HBatchId).data(DistributorTableModel::RRaw).toInt());
-		q.exec();
-		if (q.next()) {
-			unit = q.value(0).toString();
-			double netto, tax;
-			if (DataParser::price(q.value(1).toString(), netto, tax)) {
-				costs += netto*(1.0 + tax/100.0)*qty;
-			}
+	const QString header_tmp = "<td width=\"auto\">%1 | %2/%3/%4</td>";
+
+	BatchTableModel * btm = db->CachedBatch();
+	DistributorTableModel * dtm = db->CachedDistributor();
+
+	while (q2.next()) {
+		id = q2.value(0).toInt();
+		kind = q2.value(1).toInt();
+		name = q2.value(2).toString();
+		sco = q2.value(3).toInt();
+		lea = q2.value(4).toInt();
+		oth = q2.value(5).toInt();
+
+		all_sco += sco;
+		all_lea += lea;
+		all_oth += oth;
+	
+		QString h = header_tmp.arg(name).arg(sco).arg(lea).arg(oth);
+		headers.push_back(h);
+
+		QString content;
+
+		q3.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
+		q3.bindValue(0, id);
+		q3.exec();
+
+		while (q3.next()) {
+			int batch_id = q3.value(1).toInt();
+			QString spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
+			double qty = q3.value(2).toInt();
+			QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
+
+			content.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty/100).arg(unit));
 		}
 
-		switch (db->CachedDistributor()->index(idxl.at(i).row(), DistributorTableModel::HDistTypeB).data().toInt()) {
-			case 0:
-				cont0.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
-				break;
-			case 1:
-				cont1.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
-				break;
-			case 2:
-				cont2.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
-				break;
-			case 3:
-				cont3.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
-				break;
-			case 4:
-				cont4.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty).arg(unit));
-				break;
-			case 5:
-				cont5.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
-				break;
-			case 6:
-				cont6.append(QString("%1 - %2 x %3, ").arg(spec).arg(qty).arg(unit));
-				break;
-		}
+// 		if (q.driver()->hasFeature(QSqlDriver::Transactions))
+// 			if (!QSqlDatabase::database().commit())
+// 				QSqlDatabase::database().rollback();
+
+		contents.push_back("<td>" % content % "</td>");
 	}
-
-	while (q.next()) {
-		cont1.append("%1 - %2 x %3\n").arg(q.value(0).toString()).arg(q.value(2).toDouble()).arg(q.value(1).toString());
-	}
-
-	if (q.driver()->hasFeature(QSqlDriver::Transactions))
-		if (!QSqlDatabase::database().commit())
-			QSqlDatabase::database().rollback();
-
-	// Print document
-
-	if (!cont1.isEmpty())
-		contadd.append("* " % QObject::tr("2nd breakfast") % ": " % cont1 % "<br />");
-	if (!cont5.isEmpty())
-		contadd.append("* " % QObject::tr("Other 1") % ": " % cont5 % "<br />");
-	if (!cont6.isEmpty())
-		contadd.append("* " % QObject::tr("Other 2") % ": " % cont6 % "<br />");
 
 	QString tpl = dailymeal_tstream.readAll();
 	tpl.replace("@DATE@", date);
@@ -282,18 +266,21 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	tpl.replace("@QUATER@", db->cs()->campQuarter);
 	tpl.replace("@OTHER@", db->cs()->campOthers);
 	tpl.replace("@LEADER@", db->cs()->campLeader);
-	tpl.replace("@SCOUTSNO@", QString().sprintf("%d", sco));
-	tpl.replace("@LEADERSNO@", QString().sprintf("%d", lea));
-	tpl.replace("@OTHERSNO@", QString().sprintf("%d", oth));
-	tpl.replace("@ALL@", QString().sprintf("%d", all));
+	tpl.replace("@SCOUTSNO@", QString().sprintf("%d", all_sco));
+	tpl.replace("@LEADERSNO@", QString().sprintf("%d", all_lea));
+	tpl.replace("@OTHERSNO@", QString().sprintf("%d", all_oth));
+	tpl.replace("@ALL@", QString().sprintf("%d", all_sco + all_lea + all_oth));
 	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db->cs()->avgCosts));
-	tpl.replace("@AVG@", QString().sprintf("%.2f", costs/all));
+	tpl.replace("@AVG@", QString().sprintf("%.2f", costs));
 
-	tpl.replace("@TABLE_CONTENT_1@", cont0);
-	tpl.replace("@TABLE_CONTENT_2@", cont2);
-	tpl.replace("@TABLE_CONTENT_3@", cont3);
-	tpl.replace("@TABLE_CONTENT_4@", cont4);
-	tpl.replace("@TABLE_CONTENT_ADD@", contadd);
+	QString h, c;
+	for (int i = 0; i < headers.size(); ++i) {
+		h = h % headers[i];
+		c = c % contents[i];
+	}
+	tpl.replace("@TABLE_HEADERS@", h);
+	tpl.replace("@TABLE_CONTENTS@", c);
+
 	doc.setHtml(tpl);
 
 	doc.print(&printer);

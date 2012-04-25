@@ -24,7 +24,7 @@
 
 #include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
-#include "AddBatchRecordWidget.h"
+#include "BatchRecordWidget.h"
 
 #include <QtSql>
 #include <QCompleter>

@@ -17,19 +17,19 @@
 */
 
 
-#ifndef ADDBATCHRECORDWIDGET_H
-#define ADDBATCHRECORDWIDGET_H
+#ifndef BATCHRECORDWIDGET_H
+#define BATCHRECORDWIDGET_H
 
 #include <QCompleter>
 #include <QSortFilterProxyModel>
 
-#include "ui_AddBatchRecordWidget.h"
+#include "ui_BatchRecordWidget.h"
 
-class AddBatchRecordWidget : public QWidget, public Ui::ABRWidget {
+class BatchRecordWidget : public QWidget, public Ui::BRWidget {
 Q_OBJECT
 public:
-	AddBatchRecordWidget(QWidget * parent = NULL);
-	virtual ~AddBatchRecordWidget();
+	BatchRecordWidget(QWidget * parent = NULL);
+	virtual ~BatchRecordWidget();
 
 signals:
 	void canceled(bool);
@@ -60,6 +60,9 @@ private:
 	QSortFilterProxyModel * pproxy;
 
 	int idToUpdate;
+	QString button_label_insert;
+	QString button_label_insert_and_exit;
+	QString button_label_exit;
 };
 
-#endif // ADDBATCHRECORDWIDGET_H
+#endif // BATCHRECORDWIDGET_H

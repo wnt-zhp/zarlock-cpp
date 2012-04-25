@@ -21,6 +21,8 @@
 #define DIMMINGMESSAGE_H
 
 #include "AbstractDimmingWidget.h"
+#include "QProgressIndicator.h"
+
 #include <QStyle>
 #include <QLabel>
 
@@ -31,11 +33,12 @@ public:
 
 	void setMessage(const QString & message);
 	void setIcon(QIcon * icon = NULL);
+	void showBusy(bool show = true);
 
 private:
 	QStyle * st;
 	QLabel * icon;
-// 	QProgressIndicator * busy;
+	QProgressIndicator * busy;
 	QLabel * label;
 };
 

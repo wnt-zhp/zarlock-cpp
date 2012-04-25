@@ -24,7 +24,7 @@
 
 #include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
-#include "AddBatchRecordWidget.h"
+#include "BatchRecordWidget.h"
 
 #include <QtSql>
 #include <QCompleter>
@@ -57,7 +57,7 @@ private:
 	BatchTableModelProxy * proxy_model;
 	QSqlRelationalDelegate * model_batch_delegate;
 
-	AddBatchRecordWidget * abrw;
+	BatchRecordWidget * brw;
 
 	QAction * syncdb;
 	QAction * createSMrep;

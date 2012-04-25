@@ -2,114 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="pl_PL">
 <context>
-    <name>ABRWidget</name>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="14"/>
-        <source>Add new product specifier</source>
-        <translation>Dodaj nową partię produktu</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="20"/>
-        <source>Add new record</source>
-        <translation>Dodaj nowy rekord</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="36"/>
-        <source>Product</source>
-        <translation>Produkt</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="43"/>
-        <source>Quantity</source>
-        <translation>Ilość</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="50"/>
-        <source>Price</source>
-        <translation>Cena</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="57"/>
-        <source>Booking</source>
-        <translation>Wpis</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="66"/>
-        <source>price</source>
-        <translation>cena</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="85"/>
-        <source>booking time</source>
-        <translation>data katalogowania</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="92"/>
-        <source>Spec</source>
-        <translation>Nazwa</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="99"/>
-        <source>Unit</source>
-        <translation>Jednostka</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="106"/>
-        <source>Invoice</source>
-        <translation>Faktura</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="113"/>
-        <source>Expiry</source>
-        <translation>Ważność</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="127"/>
-        <source>specificator</source>
-        <translation>specyfikator produktu</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="134"/>
-        <source>unit</source>
-        <translation>jednostka</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="120"/>
-        <source>invoice number</source>
-        <translation>numer faktury</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="76"/>
-        <source>&amp;Unit price</source>
-        <translation>&amp;Cena jednostkowa</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="143"/>
-        <source>expiry date</source>
-        <translation>data ważności produktu</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="150"/>
-        <source>&amp;No expire</source>
-        <translation>&amp;Nie traci ważnosci</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="171"/>
-        <source>&amp;Save and Add next</source>
-        <translation>&amp;Zapisz i dodaj kolejny</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="178"/>
-        <source>Save and &amp;Exit</source>
-        <translation>Zapisz i &amp;wyjdź</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddBatchRecordWidget.ui" line="185"/>
-        <source>&amp;Cancel</source>
-        <translation>&amp;Anuluj</translation>
-    </message>
-</context>
-<context>
     <name>ADRWidget</name>
     <message>
         <location filename="../ui/AddDistributorRecordWidget.ui" line="20"/>
@@ -320,29 +212,6 @@
     </message>
 </context>
 <context>
-    <name>AddBatchRecordWidget</name>
-    <message>
-        <location filename="../gui/widgets/AddBatchRecordWidget.cpp" line="220"/>
-        <source>Insert record and exit</source>
-        <translation>Dodaj rekord i zamknij</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddBatchRecordWidget.cpp" line="221"/>
-        <source>Insert record and add next</source>
-        <translation>Dodaj rekord</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddBatchRecordWidget.cpp" line="263"/>
-        <source>Update record and exit</source>
-        <translation>Zmień rekord i zamknij</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddBatchRecordWidget.cpp" line="264"/>
-        <source>Update record and add next</source>
-        <translation>Zmień rekord</translation>
-    </message>
-</context>
-<context>
     <name>AddDistributorRecordWidget</name>
     <message>
         <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="130"/>
@@ -363,6 +232,117 @@
         <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="234"/>
         <source>Update record and exit</source>
         <translation>Zmień rekord i zamknij</translation>
+    </message>
+</context>
+<context>
+    <name>BRWidget</name>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="17"/>
+        <source>Batch record</source>
+        <translation>Partia</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="26"/>
+        <source>Invoice</source>
+        <translation>Faktura</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="35"/>
+        <source>expiry date</source>
+        <translation>data ważności</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="42"/>
+        <source>&amp;No expire</source>
+        <translation>&amp;Nie traci ważnosci</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="51"/>
+        <source>unit</source>
+        <translation>jednostka</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="58"/>
+        <source>Spec</source>
+        <translation>Nazwa</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="65"/>
+        <source>Unit</source>
+        <translation>Jednostka</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="72"/>
+        <source>Price</source>
+        <translation>Cena</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="86"/>
+        <source>Expiry</source>
+        <translation>Ważność</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="93"/>
+        <source>Quantity</source>
+        <translation>Ilość</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="100"/>
+        <source>Booking</source>
+        <translation>Wpis</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="107"/>
+        <source>booking time</source>
+        <translation>data katalogowania</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="121"/>
+        <source>Product</source>
+        <translation>Produkt</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="130"/>
+        <source>price</source>
+        <translation>cena</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="140"/>
+        <source>&amp;Unit price</source>
+        <translation>&amp;Cena jednostkowa</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="149"/>
+        <source>specificator</source>
+        <translation>specyfikator produktu</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="156"/>
+        <source>invoice number</source>
+        <translation>numer faktury</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="175"/>
+        <source>&amp;Insert</source>
+        <translation>&amp;Dodaj</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="182"/>
+        <source>Insert and &amp;Exit</source>
+        <translation>Dodaj i &amp;wyjdź</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="189"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Anuluj</translation>
+    </message>
+</context>
+<context>
+    <name>BatchRecordWidget</name>
+    <message>
+        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="265"/>
+        <source>Update record</source>
+        <translation>Zmień</translation>
     </message>
 </context>
 <context>
@@ -423,7 +403,7 @@
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="215"/>
+        <location filename="../models/BatchTableModel.cpp" line="214"/>
         <source>   %1 of %2   </source>
         <translation>   %1 z %2   </translation>
     </message>
@@ -452,7 +432,7 @@
         <translation>Faktura</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="201"/>
+        <location filename="../models/BatchTableModel.cpp" line="200"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="218"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
@@ -1172,21 +1152,6 @@ Click Close to exit.</source>
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="272"/>
-        <source>2nd breakfast</source>
-        <translation>Drugie śniadanie</translation>
-    </message>
-    <message>
-        <location filename="../db/DBReports.cpp" line="274"/>
-        <source>Other 1</source>
-        <translation>Inny posiłek</translation>
-    </message>
-    <message>
-        <location filename="../db/DBReports.cpp" line="276"/>
-        <source>Other 2</source>
-        <translation>Inny posiłek</translation>
-    </message>
-    <message>
         <location filename="../db/Database.cpp" line="266"/>
         <location filename="../db/Database.cpp" line="284"/>
         <location filename="../db/Database.cpp" line="288"/>
@@ -1326,22 +1291,22 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Dodaj &amp;partię</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabBatchWidget.cpp" line="63"/>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="65"/>
         <source>Sync database</source>
         <translation>Synchronizuj bazę danych</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabBatchWidget.cpp" line="64"/>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="66"/>
         <source>Create SM reports</source>
         <translation>Stwórz raport Stanu Magazynu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabBatchWidget.cpp" line="65"/>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="67"/>
         <source>Create KM reports</source>
         <translation>Utwórz zaport Kartotek Magazynowych</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabBatchWidget.cpp" line="70"/>
+        <location filename="../gui/widgets/TabBatchWidget.cpp" line="72"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
@@ -1446,17 +1411,17 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Podaj numer osób na posiłek:</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="326"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="329"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="326"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="329"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="335"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="338"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

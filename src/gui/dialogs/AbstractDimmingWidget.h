@@ -44,6 +44,7 @@ public:
 	void setAnimationCurve(QEasingCurve curve);
 	void setDuration(int duration = 2000, int animate_duration = 1000);
 	void setOverlayOpacity(int opacity = 200);
+	void setEventTransparent(bool transparent = true);
 // 	virtual void resizeEvent(QResizeEvent * event);
 
 	virtual void go();
@@ -69,10 +70,8 @@ private slots:
 	void finalize();
 
 protected slots:
-// 	void runCallBacks(PState state = FINISHED);
 	void setOverlayStyle(int opacity);
 	void moveFrame(int frame);
-// 	void setMeHidden();
 
 protected:
 	int duration;
@@ -98,6 +97,8 @@ private:
 	PTextPosition animate_stop;
 	int animate_duration;
 	QEasingCurve animation;
+
+	bool disable_parent_in_shown;
 
 	QTimeLine * sceneX;
 	QTimeLine * sceneY;

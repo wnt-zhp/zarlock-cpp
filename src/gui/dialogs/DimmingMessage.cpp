@@ -31,9 +31,10 @@ DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(new QWi
 	layout()->addWidget(icon);
 
 	// TODO: Implement this
-// 	busy = new QProgressIndicator(this, );
-// 	busy->hide();
-// 	layout->addWidget(busy);
+	busy = new QProgressIndicator();
+	busy->hide();
+	busy->setColor(Qt::white);
+	layout()->addWidget(busy);
 
 	label = new QLabel(this);
 	layout()->addWidget(label);
@@ -44,7 +45,7 @@ DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(new QWi
 
 DimmingMessage::~DimmingMessage() {
 	delete label;
-// 	delete busy;
+	delete busy;
 	delete icon;
 }
 
@@ -68,4 +69,12 @@ void DimmingMessage::setIcon(QIcon * icon) {
 		this->icon->show();
 		this->adjustSize();
 	}
+}
+
+void DimmingMessage::showBusy(bool show) {
+	busy->setVisible(show);
+	if (show)
+		busy->startAnimation();
+	else
+		busy->stopAnimation();
 }
