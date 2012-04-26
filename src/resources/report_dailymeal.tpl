@@ -15,8 +15,7 @@ Zapotrzebowanie żywnościowe
 <td width="50%" align="right">Organizator: @ORG@</td><td />
 </tr></table>
 
-<table class="header">
-<tr>
+<table class="header"><tr>
 <td>Zatwierdzona w planie żywnościowym średnia stawka dzienna: @AVGCOSTS@ zł</td>
 </tr></table>
 
@@ -27,9 +26,7 @@ Zapotrzebowanie żywnościowe
 	@TABLE_HEADERS@
 </tr></thead>
 <tbody>
-<tr>
-@TABLE_CONTENTS@
-</tr>
+<tr>@TABLE_CONTENTS@</tr>
 </tbody>
 <tfoot>
 </tfoot>

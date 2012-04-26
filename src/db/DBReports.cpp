@@ -42,10 +42,10 @@
 struct KMDB_entry {
 	int bid;
 	QString invoice;
-	QString date;
+	QDate date;
 	int qty;
 	int used_qty;
-	void init(int id, const QString & inv, const QString & edate, int q, int uq) {
+	void init(int id, const QString & inv, const QDate & edate, int q, int uq) {
 		bid = id;
 		invoice = inv;
 		date = edate;
@@ -249,7 +249,9 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 			double qty = q3.value(2).toInt();
 			QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
 
-			content.append(QString("%1 - %2 x %3<br />").arg(spec).arg(qty/100).arg(unit));
+			if (!content.isEmpty())
+				content = content % "<br />";
+			content =  content % QString("%1 - %2 x %3").arg(spec).arg(qty/100).arg(unit);
 		}
 
 // 		if (q.driver()->hasFeature(QSqlDriver::Transactions))
@@ -294,8 +296,8 @@ void DBReports::printKMReport(QString * reportsdir) {
 	if (reportsdir)
 		*reportsdir = dbsavepath.absolutePath();
 
-	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
-		QSqlDatabase::database().transaction();
+// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+// 		QSqlDatabase::database().transaction();
 
 	QSqlQuery q, q2;
 
@@ -314,16 +316,12 @@ void DBReports::printKMReport(QString * reportsdir) {
 			int bid = q2.value(0).toInt();
 			QString spec = q2.value(1).toString().trimmed().toUtf8();
 			QString unit;
-			DataParser::unit(q2.value(2).toString().trimmed(), unit);
-			QString price_s;
-			DataParser::price(q2.value(3).toString().trimmed(), price_s);
-			double netto_t, vat_t;
-			DataParser::price(q2.value(3).toString().trimmed(), netto_t, vat_t);
-			int price = netto_t*(100+vat_t);
+			int price = q2.value(3).toInt();
+			QString price_s = QString("%1 zl").arg(double(price)/100, 0, 'f', 2);;
 			int qty = q2.value(4).toInt();
 			int uqty = q2.value(5).toInt();
 			QString invoice = q2.value(6).toString().trimmed();
-			QString entrydate = q2.value(7).toString();
+			QDate entrydate = q2.value(7).toDate();
 
 			QString bidname = QString().sprintf("%d", id) % "_" %
 								name % "_" % spec % "_" % unit % "_" % price_s % "_";
@@ -349,12 +347,12 @@ void DBReports::printKMReport(QString * reportsdir) {
 		}
 	}
 
-	if (q.driver()->hasFeature(QSqlDriver::Transactions))
-		if (!QSqlDatabase::database().commit())
-			QSqlDatabase::database().rollback();
+// 	if (q.driver()->hasFeature(QSqlDriver::Transactions))
+// 		if (!QSqlDatabase::database().commit())
+// 			QSqlDatabase::database().rollback();
 
-	for (QMap<QString, KMDB>::iterator it = kmm.begin(); it != kmm.end(); ++it) {
-		QString ofile = dbsavepath.absolutePath() % QString("/") % "KM_" % QString().sprintf("%03d", it->id) % ".csv";
+	for (QMap<QString, KMDB>::iterator kmm_iter = kmm.begin(); kmm_iter != kmm.end(); ++kmm_iter) {
+		QString ofile = dbsavepath.absolutePath() % QString("/") % "KM_" % QString().sprintf("%03d", kmm_iter->id) % ".csv";
 
 		QFile file(ofile);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -367,25 +365,25 @@ void DBReports::printKMReport(QString * reportsdir) {
 		out.setRealNumberPrecision(2);
 		out.setLocale(QLocale(QLocale::C));
 
-		std::cout << "=================== " << ofile.toStdString() << std::endl;
+// 		std::cout << "=================== " << ofile.toStdString() << std::endl;
 
 		QString qrange("-1");
-		for (int ii = 0; ii < it->batches.size(); ++ii) {
-			qrange = qrange % ", " % QString::number(it->batches[ii].bid);
+		for (int ii = 0; ii < kmm_iter->batches.size(); ++ii) {
+			qrange = qrange % ", " % QString::number(kmm_iter->batches[ii].bid);
 		}
 
-		QString qqq = QString("SELECT batch_id, quantity, distdate, reason, reason2, reason3 FROM distributor WHERE batch_id IN ( %1 ) ORDER BY distdate ASC;").arg(qrange);
+		QString qqq = QString("SELECT batch_id, quantity, distdate, disttype, disttype_a, disttype_b FROM distributor WHERE batch_id IN ( %1 ) ORDER BY distdate ASC;").arg(qrange);
 		QSqlQuery q3(qqq);
 		q3.exec();
 
-		int itidx = 0;
-		int gidx = 1;
+		int kmm_iteridx = 0;	// iterator index
+		int gidx = 1;			// position index
 
 		int bid = -1;
 		int qty = 0;
-		QString dd = "9999-99-99";
+		QDate dd = QDate::fromString("9999-99-99", Qt::ISODate);
 		int disttype = 0;
-		QString disttype_a, disttype_b;
+		QVariant disttype_a, disttype_b;
 
 		int tot_qty = 0;
 		int tot_price = 0;
@@ -393,111 +391,102 @@ void DBReports::printKMReport(QString * reportsdir) {
 		bool bisempty = false;
 		bool disempty = false;
 
-		std::cout << ";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n";
+// 		std::cout << ";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n";
 		out << QString::fromUtf8(";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n");
 
-		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n\n",
-					it->name.trimmed().toStdString().c_str(), it->spec.trimmed().toStdString().c_str(),
-					it->unit.trimmed().toStdString().c_str(), it->price_s.toStdString().c_str());
+// 		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n\n",
+// 					kmm_iter->name.trimmed().toStdString().c_str(), kmm_iter->spec.trimmed().toStdString().c_str(),
+// 					kmm_iter->unit.trimmed().toStdString().c_str(), kmm_iter->price_s.toStdString().c_str());
 
-		out << ";Nazwa towaru:;" << QString::fromUtf8(it->name.trimmed().toStdString().c_str()) << " "
-			<< QString::fromUtf8(it->spec.trimmed().toStdString().c_str()) << " "
-			<< QString::fromUtf8(it->unit.trimmed().toStdString().c_str())
-			<< ";cena:;" << it->price_s.toStdString().c_str() << endl << endl;
+		out << ";Nazwa towaru:;" << QString::fromUtf8(kmm_iter->name.trimmed().toStdString().c_str()) << " "
+			<< QString::fromUtf8(kmm_iter->spec.trimmed().toStdString().c_str()) << " "
+			<< QString::fromUtf8(kmm_iter->unit.trimmed().toStdString().c_str())
+			<< ";cena:;" << kmm_iter->price_s.toStdString().c_str() << endl << endl;
 
-		std::printf("Lp.,Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
-		std::cout << "1;2;3;4;5;6;7;8;9\n";
+// 		std::printf("Lp.,Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
+// 		std::cout << "1;2;3;4;5;6;7;8;9\n";
 
 		out << QString::fromUtf8("Lp.;Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
-		out << "1;2;3;4;5;6;7;8;9\n";
+		out << "1;2;3;4;5;6;7;8;9";
 
 		// browse over all batch and distributor entries (sorted by time)
-		while (!bisempty and !disempty) {
-			// read distributor empty
+		while (!bisempty or !disempty) {/*PR(kmm_iter->id);PR(bisempty);PR(disempty);*/
+			// get distribution
 			if (q3.next()) {
 				bid = q3.value(0).toInt();
 				qty = q3.value(1).toInt();
-				dd = q3.value(2).toString();
+				dd = q3.value(2).toDate();
 				disttype = q3.value(3).toInt();
-				disttype_a = q3.value(4).toString();
+				disttype_a = q3.value(4).toInt();
 				disttype_b = q3.value(5).toString();
 			} else {
-			// if no more distributions mark as empty
+				// if no more distributions mark as empty
 				disempty = true;
 			}
 
-			// find all abtches entry with date earlier than current distributor
-			// and print
-			while ((itidx < it->batches.size()) and (dd >= it->batches[itidx].date)) {
-				tot_qty += it->batches[itidx].qty;
-				tot_price += it->batches[itidx].qty * it->price;
+			// iterate over batches IF
+			// there are some batches AND
+			// batch is earlier or equal than last distributor OR there is no more distributions
+			// then print batch
+			while (!bisempty and ( kmm_iter->batches[kmm_iteridx].date <= dd or disempty )) {
+				tot_qty += kmm_iter->batches[kmm_iteridx].qty;
+				tot_price += kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price;
 
-				std::cout << "B: " << gidx << ";" << it->batches[itidx].date.toStdString() << ";"
-						<< it->batches[itidx].invoice.toStdString() << ";"
-						<< it->batches[itidx].qty << ";" << it->batches[itidx].qty * it->price << ";;;"
-						<< tot_qty/100 << ";" << tot_price/100 << "\n";
+//				std::cout << "B: " << gidx << ";" << kmm_iter->batches[kmm_iteridx].date.toStdString() << ";"
+//						<< kmm_iter->batches[kmm_iteridx].invoice.toStdString() << ";"
+//						<< kmm_iter->batches[kmm_iteridx].qty << ";" << kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price << ";;;"
+//						<< tot_qty/100 << ";" << tot_price/100 << "\n";
 
-				out << gidx << ";" << it->batches[itidx].date.toStdString().c_str() << ";"
-					<< QString::fromUtf8(it->batches[itidx].invoice.toStdString().c_str()) << ";"
-					<< it->batches[itidx].qty/100 << ";"
-					<< it->batches[itidx].qty * it->price/10000 << ";;;"
-					<< tot_qty/100 << ";" << tot_price/100 << "\n";
+				out << "\n" << gidx << ";" << kmm_iter->batches[kmm_iteridx].date.toString(Qt::ISODate).toStdString().c_str() << ";"
+					<< QString::fromUtf8(kmm_iter->batches[kmm_iteridx].invoice.toStdString().c_str()) << ";"
+					<< double(kmm_iter->batches[kmm_iteridx].qty)/100 << ";"
+					<< double(kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price)/10000 << ";;;"
+					<< double(tot_qty)/100 << ";" << double(tot_price)/10000;
 
-				++itidx;
 				++gidx;
-			}
-			// if no more batches mark as empty
-			if (itidx == it->batches.size())
-				bisempty = true;
 
-			// print distributions
-			if (!disempty && it->batches.size()) {
-				if (itidx == 0) {
-					std::cerr << "Problem with KM for **" << it.key().toStdString() << "**\t\tsand Batch ID **" << bid << "**\n";
+				// if no more batches mark as empty
+				if (++kmm_iteridx == kmm_iter->batches.size()) {
+					bisempty = true;
+					break;
+				}
+			}
+
+			// else if there are still some distributions
+			if (!disempty) {
+				// if there is distribution but not batch yet
+				// then we have problem
+				if (kmm_iteridx == 0) {
+					std::cerr << "Problem with KM for **" << kmm_iter.key().toStdString() << "**\t\tand Batch ID **" << bid << "**\n";
 				}
 
+				// print distributions
 				QString reas;
 				switch (disttype) {
 					case 0:
-						reas = QString(disttype_a % " " % disttype_b).trimmed();
+						reas = QString(disttype_a.toString() % " " % disttype_b.toString()).trimmed();
 						break;
 					case 2:
-						reas = "Wydanie na %1";
-						switch (disttype_a.toInt()) {
-							case 0:
-								reas = reas.arg("śniadanie");
-								break;
-							case 1:
-								reas = reas.arg("drugie śniadanie");
-								break;
-							case 2:
-								reas = reas.arg("obiad");
-								break;
-							case 3:
-								reas = reas.arg("podwieczorek");
-								break;
-							case 4:
-								reas = reas.arg("kolację");
-								break;
-							case 5:
-								reas = reas.arg("inny posiłek 1");
-								break;
-							case 6:
-								reas = reas.arg("inny posiłek 2");
-								break;
+						QString qs4 = QString("SELECT name FROM meal WHERE id=%1;").arg(disttype_a.toInt());
+						QSqlQuery q4(qs4);
+						q4.exec();
+						
+						if (q4.next()) {
+							reas = QString("Wydanie na %1").arg(q4.value(0).toString());
 						}
+						break;
 				}
-
+				
 				tot_qty -= qty;
-				tot_price -= qty * it->price;
-
-				std::cout << "D: " <<  gidx << "," << dd.toStdString() << "," << reas.toStdString() << ",,,"
-							<< qty << "," << qty * it->price << ","
-							<< tot_qty << "," << tot_price << "\n";
-
-				out << gidx << "," << dd.toStdString().c_str() << "," << QString::fromUtf8(reas.toStdString().c_str()) << ",,,"
-					<< qty/100 << "," << qty * it->price/10000 << ","
-					<< tot_qty/100 << "," << tot_price/100 << "\n";
+				tot_price -= qty * kmm_iter->price;
+				
+// 				std::cout << "D: " <<  gidx << "," << dd.toStdString() << "," << reas.toStdString() << ",,,"
+// 							<< qty << "," << qty * kmm_iter->price << ","
+// 							<< tot_qty << "," << tot_price << "\n";
+				
+				out << "\n" << gidx << "," << dd.toString(Qt::ISODate).toStdString().c_str() << "," << QString::fromUtf8(reas.toStdString().c_str()) << ",,,"
+				<< double(qty)/100 << "," << double(qty * kmm_iter->price)/10000 << ","
+				<< double(tot_qty)/100 << "," << double(tot_price)/10000;
 
 				++gidx;
 			}
@@ -612,7 +601,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 	QString bidname, bunit;
 	double bqty;
 
-	q.prepare("SELECT * FROM batch WHERE booking=?;");
+	q.prepare("SELECT * FROM batch WHERE regdate=?;");
 	q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
 // return;
 	//##############################################
@@ -723,8 +712,8 @@ void DBReports::printSMReport(QString * reportsdir) {
 
 // 		std::printf("## batches bilans for day %s\n", cdate.toStdString().c_str());
 // 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
-		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
-			int idx = it.value();
+		for (QMap<QString, int>::iterator kmm_iter = batches_in_stock.begin(); kmm_iter != batches_in_stock.end(); ++kmm_iter) {
+			int idx = kmm_iter.value();
 			if (batches_in_stock_num[idx] > 0.0) {
 // 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
 				out << QString::fromUtf8(bnames[idx].toStdString().c_str()) << ";" << QString::fromUtf8(bunits[idx].toStdString().c_str()) << ";" << batches_in_stock_num[idx] << endl;
