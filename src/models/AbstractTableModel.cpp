@@ -82,9 +82,10 @@ bool AbstractTableModel::select() {
 	int r = -1;
 
 	q.first();
-	do {
-	fillRow(q, ++r, false);
-	} while (q.next());
+	while (q.isValid()) {
+		fillRow(q, ++r, false);
+		q.next();
+	};
 
 // 	sort(sort_column, sort_order_asc ? Qt::AscendingOrder : Qt::DescendingOrder, true);
 

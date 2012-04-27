@@ -101,6 +101,11 @@ private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
 	bool createDBFile(const QString& dbname, const QString& dbfilenoext);
 
+	bool createDBStructure(const QString& dbfile);
+
+	bool doDBUpgrade(unsigned int version);
+	bool execQueryFromFile(const QString & resource);
+
 public slots:
 	virtual bool removeProductsRecord(QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeBatchRecord(QVector<int> & ids, bool askForConfirmation = true);
@@ -140,9 +145,6 @@ private:
 	QVector<QStringList> plist;
 	QVector<QStringList> blist;
 	QVector<QStringList> dlist;
-
-	bool doDBUpgrade(unsigned int version);
-	bool execQueryFromFile(const QString & resource);
 
 	bool locked;
 

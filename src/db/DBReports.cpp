@@ -484,9 +484,9 @@ void DBReports::printKMReport(QString * reportsdir) {
 // 							<< qty << "," << qty * kmm_iter->price << ","
 // 							<< tot_qty << "," << tot_price << "\n";
 				
-				out << "\n" << gidx << "," << dd.toString(Qt::ISODate).toStdString().c_str() << "," << QString::fromUtf8(reas.toStdString().c_str()) << ",,,"
-				<< double(qty)/100 << "," << double(qty * kmm_iter->price)/10000 << ","
-				<< double(tot_qty)/100 << "," << double(tot_price)/10000;
+				out << "\n" << gidx << ";" << dd.toString(Qt::ISODate).toStdString().c_str() << ";" << QString::fromUtf8(reas.toStdString().c_str()) << ";;;"
+				<< double(qty)/100 << ";" << double(qty * kmm_iter->price)/10000 << ";"
+				<< double(tot_qty)/100 << ";" << double(tot_price)/10000;
 
 				++gidx;
 			}

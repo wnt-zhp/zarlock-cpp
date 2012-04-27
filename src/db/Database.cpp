@@ -52,7 +52,7 @@ Database * Database::dbi = NULL;
 Database * Database::Instance() {
 	if (!dbi) {
 		dbi = new Database;
-		FPR(__func__);
+		FI();
 		std::cout << "++ Create Database instance\n";
 	}
 
@@ -74,7 +74,6 @@ Database::Database() : QObject(),
 {
 	CI();
 	db = QSqlDatabase::addDatabase("QSQLITE");
-// 	PR(db.driver()->hasFeature(QSqlDriver::Transactions));
 }
 
 Database::Database(const Database & /*db*/) : QObject() {
@@ -284,6 +283,7 @@ bool Database::rebuild_models() {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_mealday->lastError().text(), QMessageBox::Abort);
 		return false;
 	}
+
 	if (!model_meal->select()) {
 		QMessageBox::critical(0, QObject::tr("Database error"), model_meal->lastError().text(), QMessageBox::Abort);
 		return false;
@@ -378,13 +378,7 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 	}	
 
 	if (createDBFile(dbname, dbfilenoext)) {
-		db.setDatabaseName(dbfile);
-		if (!db.open())
-			return false;
-
-		execQueryFromFile(":/resources/database_00000301.sql");
-// TODO: Fix it later
-		execQueryFromFile(":/resources/test_data_3100.sql");
+		createDBStructure(dbfile);
 
 	}
 
@@ -428,6 +422,14 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 	file.close();
 
 	return true;
+}
+
+bool Database::createDBStructure(const QString& dbfile) {
+	db.setDatabaseName(dbfile);
+	if (!db.open())
+		return false;
+
+	return execQueryFromFile(":/resources/database_00000301.sql");
 }
 
 // void Database::updateBatchQty() {

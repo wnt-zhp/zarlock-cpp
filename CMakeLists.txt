@@ -124,7 +124,6 @@ set(zarlok_src_gui_inputs_SRCS
 									src/gui/inputs/PriceInput.cpp
 									src/gui/inputs/QtyInput.cpp
 									src/gui/inputs/TextInput.cpp
-									src/gui/inputs/CustomMealComboBox.cpp
 )
 set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/AddProductsRecordWidget.cpp

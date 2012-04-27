@@ -33,13 +33,14 @@ CREATE TRIGGER m_upd    AFTER UPDATE OF scouts,leaders,others ON meal FOR EACH R
 -- CREATE TRIGGER IF NOT EXISTS meal_trig_delete AFTER DELETE ON meal FOR EACH ROW BEGIN DELETE FROM distributor WHERE reason3=2 AND reason=OLD.id; END;
 -- CREATE TRIGGER IF NOT EXISTS meal_trig_sync AFTER UPDATE ON meal FOR EACH ROW BEGIN DELETE FROM distributor WHERE reason3=2 AND reason=OLD.id; END;
 -- Settings vales
--- INSERT INTO settings VALUES (1, 0);
--- INSERT INTO settings VALUES (2, "");
--- INSERT INTO settings VALUES (4, "");
--- INSERT INTO settings VALUES (8, "");
--- INSERT INTO settings VALUES (16, "");
--- INSERT INTO settings VALUES (32, 0);
--- INSERT INTO settings VALUES (64, 0);
--- INSERT INTO settings VALUES (128, "");
--- INSERT INTO settings VALUES (256, "");
--- INSERT INTO settings VALUES (51
+INSERT INTO settings VALUES (1, 0);
+INSERT INTO settings VALUES (2, "");
+INSERT INTO settings VALUES (4, "");
+INSERT INTO settings VALUES (8, "");
+INSERT INTO settings VALUES (16, "");
+INSERT INTO settings VALUES (32, 0);
+INSERT INTO settings VALUES (64, 0);
+INSERT INTO settings VALUES (128, "");
+INSERT INTO settings VALUES (256, "");
+INSERT INTO settings VALUES (512, "");
+INSERT INTO settings VALUES ('dbversion', 769);
