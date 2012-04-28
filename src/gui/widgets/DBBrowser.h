@@ -34,7 +34,7 @@ public:
 	virtual void configure(int argc, char * argv[]);
 
 public slots:
-	void dbb_list_selected(QListWidgetItem * item);
+	void databaseSelected(QListWidgetItem * item);
 	void newDatabaseCreator(bool autoopen = true);
 
 	void openZarlock(const QString & dbname);

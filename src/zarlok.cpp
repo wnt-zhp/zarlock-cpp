@@ -150,10 +150,13 @@ void zarlok::doExitZarlok() {
 void zarlok::activateUi(bool activate) {
 	MainTab->setEnabled(activate);
 
+	if (!db->cs()->isCorrect)
+		if (!doCampSettings())
+			doSwitchDB();
+
 	if (activate) {
 		dbiw->update(db->cs());
 	} else {
-		doCampSettings();
 	}
 }
 
@@ -186,13 +189,13 @@ void zarlok::printDailyReport() {
 // 	DBReports::printDailyReport(dbname, QDate::currentDate());
 }
 
-void zarlok::doCampSettings() {
+bool zarlok::doCampSettings() {
 	CampSettingsDialog csd(db->cs());
-	if (csd.exec()) {
-		db->cs()->writeCampSettings();
-		dbiw->update(db->cs());
-	}
-	activateUi(db->cs()->isCorrect);
+
+	int ans = csd.exec();
+	PR(ans);
+
+	return ans;
 }
 
 void zarlok::updateAppTitle() {

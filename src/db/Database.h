@@ -52,6 +52,7 @@ public:
 	QString getLastExecutedQuery(const QSqlQuery& query);
 
 	bool open_database(const QString& dbname, bool autoupgrade = true);
+	bool create_database(const QString& dbname);
 	bool close_database();
 	void save_database();
 
@@ -99,9 +100,11 @@ public:
 
 private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
-	bool createDBFile(const QString& dbname, const QString& dbfilenoext);
+	bool createDBFile(const QString& dbname);
 
 	bool createDBStructure(const QString& dbfile);
+
+	QString fileFromDBName(const QString & dbname);
 
 	bool doDBUpgrade(unsigned int version);
 	bool execQueryFromFile(const QString & resource);
@@ -155,6 +158,9 @@ private:
 						dbv_JAN12	= 0x0000301
 	};
 	static const unsigned int DBVERSION = dbv_JAN12;
+
+	static const QString dbfilext;
+	static const QString infofilext;
 };
 
 #endif // DATABASE_H

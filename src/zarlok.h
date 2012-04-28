@@ -27,6 +27,7 @@ private:
 	void updateAppTitle();
 
 	void closeEvent(QCloseEvent *event);
+
 signals:
 	void exitZarlok();
 	void switchDB();
@@ -34,7 +35,7 @@ signals:
 private slots:
 	void doSwitchDB();
 	void doExitZarlok();
-	void doCampSettings();
+	bool doCampSettings();
 
 	void printDailyReport();
 

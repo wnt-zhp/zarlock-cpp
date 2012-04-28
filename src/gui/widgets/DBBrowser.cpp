@@ -35,7 +35,7 @@ DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL), show_browser(f
 
 	this->setVisible(false);
 	setupUi(this);
-	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(dbb_list_selected(QListWidgetItem *)));
+	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(databaseSelected(QListWidgetItem *)));
 	connect(dbb_new, SIGNAL(clicked(bool)), this, SLOT(newDatabaseCreator()));
 	connect(dbb_quit, SIGNAL(clicked(bool)), this, SLOT(close()));
 
@@ -186,7 +186,7 @@ void DBBrowser::closeZarlock() {
 
 // openZarlock();
 		
-void DBBrowser::dbb_list_selected(QListWidgetItem * item) {
+void DBBrowser::databaseSelected(QListWidgetItem * item) {
 	QString dbname = item->data(Qt::UserRole).toString();
 	openZarlock(dbname);
 }
@@ -251,7 +251,8 @@ void DBBrowser::newDatabaseCreator(bool autoopen) {
 
 	if (wasOK && autoopen) {
 // 		Database::Instance().open_database(dbname, true);
-		openZarlock(dbname);
+// 		openZarlock(dbname);
+		Database::Instance()->create_database(dbname);
 		refreshList();
 	} else
 		this->setVisible(true);

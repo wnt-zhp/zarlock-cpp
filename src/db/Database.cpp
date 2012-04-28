@@ -39,6 +39,9 @@ const int Database::plist_size = 3;
 const int Database::blist_size = 7;
 const int Database::dlist_size = 4;
 
+const QString Database::dbfilext = ".db";
+const QString Database::infofilext = ".info";
+
 /**
  * @brief Instancja klasy Database
  **/
@@ -218,6 +221,10 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	return rebuild_models();
 }
 
+bool Database::create_database(const QString& dbname) {
+	return createDBFile(dbname);
+}
+
 /**
  * @brief ...
  *
@@ -334,6 +341,13 @@ bool Database::execQueryFromFile(const QString& resource) {
 	return true;
 }
 
+QString Database::fileFromDBName(const QString& dbname) {
+	QString safename = dbname;
+	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
+
+	return QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
+}
+
 /**
  * @brief Otwórz plik z bazą danych
  *
@@ -350,21 +364,16 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		return false;
 	}
 
-	QString safename = dbname;
-	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
-
-	QString dbfilenoext = QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
-	QString dbfile = dbfilenoext % ".db";
+	QString dbfile = fileFromDBName(dbname) % dbfilext;
 
 	QFile fdbfile(dbfile);
-
-	int create = QMessageBox::No;
 
 	if (fdbfile.exists()) {
 		db.setDatabaseName(dbfile);
 		return db.open();
 	}
 
+	int create = QMessageBox::No;
 	if (!createifnotexists) {
 		QMessageBox msgBox;
 		msgBox.setText(tr("The database name \"%1\" doesn't exists!").arg(dbname));
@@ -377,12 +386,7 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 			return false;
 	}	
 
-	if (createDBFile(dbname, dbfilenoext)) {
-		createDBStructure(dbfile);
-
-	}
-
-	return false;
+	return createDBFile(dbname);
 }
 
 /**
@@ -392,13 +396,14 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
  * @param dbfilenoext Nazwa (bez rozszerzenia) pliku bazy danych
  * @return bool true jeśli poprawnie stworzono nowy plik i zainicjowano bazę danych
  **/
-bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext) {
+bool Database::createDBFile(const QString & dbname) {
 	QDir dbsavepath(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
-	QString datafile = dbfilenoext % ".db";
-	QString infofile = dbfilenoext % ".info";
+	QString dbfilenoext = fileFromDBName(dbname);
+	QString datafile = dbfilenoext % dbfilext;
+	QString infofile = dbfilenoext % infofilext;
 
 	QFile file(datafile);
 	if (file.exists()) {
@@ -421,7 +426,7 @@ bool Database::createDBFile(const QString & dbname, const QString & dbfilenoext)
 	file.write(dbname.toUtf8());
 	file.close();
 
-	return true;
+	return createDBStructure(datafile);
 }
 
 bool Database::createDBStructure(const QString& dbfile) {
@@ -484,6 +489,88 @@ bool Database::createDBStructure(const QString& dbfile) {
 // 	model_mealday->select();
 // }
 
+/** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
+ *  @param version wersja bazy danych do aktualizacji
+ *  @return zwraca true jeśliaktualiazcja zakończona sukcesem, w przeciwnym wypadku zmienna version zawiera
+ * numer ostatniej wersji dla której aktualizacja zakończyla się sukcesem.
+ */
+bool Database::doDBUpgrade(unsigned int version) {
+	QSqlQuery qdbup, q;
+	QString str;
+	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, 0);
+	int pos = 0;
+	
+	switch (version) {
+		case dbv_INIT:
+			PR("Upgrade from 0");
+			str = "UPDATE settings SET value='%1' WHERE key='dbversion';";
+			qdbup.exec(str.arg(dbv_AUG11));
+			return doDBUpgrade((unsigned int)dbv_AUG11);
+			break;
+		case dbv_AUG11:
+			PR("Upgrade to"); PR(dbv_JAN12);
+			progress.setMinimumDuration(0);
+			progress.setWindowModality(Qt::WindowModal);
+			progress.setCancelButton(NULL);
+			
+			q.exec("SELECT count(id) FROM batch;");			
+			progress.setMaximum(5+q.value(0).toInt());
+			
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_a.sql");
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/database_00000301.sql");
+			progress.setValue(pos++);
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_b.sql");
+			progress.setValue(pos++);
+			
+			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
+			
+			if (db.driver()->hasFeature(QSqlDriver::Transactions))
+				db.transaction();
+			while (q.next()) {
+				progress.setValue(pos++);
+				int bid = q.value(0).toInt();
+				QString expdate = q.value(3).toString();
+				QString price = q.value(4).toString();
+				QString regdate = q.value(5).toString();
+				
+				double netto, vat;
+				DataParser::price(price, netto, vat);
+				
+				QDate regdate_n, expdate_n, entrydate_n;
+				regdate_n = QDate::fromString(regdate, Qt::ISODate);
+				DataParser::date(expdate, expdate_n, regdate_n);
+				
+				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
+				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
+				qdbup.bindValue(1, int(netto*(vat+100)));
+				qdbup.bindValue(2, bid);
+				qdbup.exec();
+				qdbup.finish();
+			}
+			q.finish();
+			if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
+				if (!db.commit()) {
+					db.rollback();
+					return false;
+				}
+			}
+			progress.setValue(pos++);
+			
+			// 			while (q.isActive() or qdbup.isActive()) {}
+			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
+			progress.setValue(pos++);
+			
+			return true;
+			
+			case dbv_JAN12:
+				PR("Database up-to-date!");
+				return true;
+	}
+	return false;
+}
+
 void Database::updateProductsWordList() {
 	QSqlQuery qsq("SELECT name, unit, expire FROM products;");
 
@@ -528,88 +615,6 @@ void Database::updateDistributorWordList() {
 		dlist[i].removeDuplicates();
 
 	emit distributorWordListUpdated();
-}
-
-/** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
- *  @param version wersja bazy danych do aktualizacji
- *  @return zwraca true jeśliaktualiazcja zakończona sukcesem, w przeciwnym wypadku zmienna version zawiera
- * numer ostatniej wersji dla której aktualizacja zakończyla się sukcesem.
- */
-bool Database::doDBUpgrade(unsigned int version) {
-	QSqlQuery qdbup, q;
-	QString str;
-	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, 0);
-	int pos = 0;
-
-	switch (version) {
-		case dbv_INIT:
-			PR("Upgrade from 0");
-			str = "UPDATE settings SET value='%1' WHERE key='dbversion';";
-			qdbup.exec(str.arg(dbv_AUG11));
-			return doDBUpgrade((unsigned int)dbv_AUG11);
-			break;
-		case dbv_AUG11:
-			PR("Upgrade to"); PR(dbv_JAN12);
-			progress.setMinimumDuration(0);
-			progress.setWindowModality(Qt::WindowModal);
-			progress.setCancelButton(NULL);
-
-			q.exec("SELECT count(id) FROM batch;");			
-			progress.setMaximum(5+q.value(0).toInt());
-
-			progress.setValue(pos++);
-			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_a.sql");
-			progress.setValue(pos++);
-			execQueryFromFile(":/resources/database_00000301.sql");
-			progress.setValue(pos++);
-			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_b.sql");
-			progress.setValue(pos++);
-
-			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
-
-			if (db.driver()->hasFeature(QSqlDriver::Transactions))
-				db.transaction();
-			while (q.next()) {
-				progress.setValue(pos++);
-				int bid = q.value(0).toInt();
-				QString expdate = q.value(3).toString();
-				QString price = q.value(4).toString();
-				QString regdate = q.value(5).toString();
-
-				double netto, vat;
-				DataParser::price(price, netto, vat);
-
-				QDate regdate_n, expdate_n, entrydate_n;
-				regdate_n = QDate::fromString(regdate, Qt::ISODate);
-				DataParser::date(expdate, expdate_n, regdate_n);
-
-				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
-				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
-				qdbup.bindValue(1, int(netto*(vat+100)));
-				qdbup.bindValue(2, bid);
-				qdbup.exec();
-				qdbup.finish();
-			}
-			q.finish();
-			if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
-				if (!db.commit()) {
-					db.rollback();
-					return false;
-				}
-			}
-			progress.setValue(pos++);
-
-// 			while (q.isActive() or qdbup.isActive()) {}
-			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
-			progress.setValue(pos++);
-
-			return true;
-
-		case dbv_JAN12:
-			PR("Database up-to-date!");
-			return true;
-	}
-	return false;
 }
 
 bool Database::addProductsRecord(const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
