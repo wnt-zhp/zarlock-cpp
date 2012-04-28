@@ -138,7 +138,7 @@ set(zarlok_src_gui_widgets_SRCS
 									src/gui/widgets/MealTabWidget.cpp
 									src/gui/widgets/MealFoodList.cpp
 									src/gui/widgets/MealTabInsertWidget.cpp
-									src/gui/widgets/QProgressIndicator.cpp
+ 									src/gui/widgets/QProgressIndicator.cpp
 )
 
 set(zarlok_src_gui_dialogs_SRCS

@@ -49,11 +49,13 @@ MealTabInsertWidget::MealTabInsertWidget(QWidget * /*parent*/) : Ui::MealTabInse
 // 	push_dinner->setIconSize(QSize(32,32));
 // 	push_other->setIconSize(QSize(32,32));
 
+	push_other->setEnabled(true);
+
 	validateAdd();
 }
 
 MealTabInsertWidget::~MealTabInsertWidget() {
-	FPR(__func__);
+	FI();
 	activateUi(false);
 }
 
@@ -68,7 +70,7 @@ void MealTabInsertWidget::activateUi(bool activate) {
 // 	this->setVisible(activate);
 	if (activate) {
 		MealTableModel * mm = Database::Instance()->CachedMeal();
-		QModelIndexList ml  = mm ->match(mm->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1);
+		QModelIndexList ml  = mm ->match(mm->index(0, MealTableModel::HMealDay), Qt::EditRole, mdid, -1, Qt::MatchExactly);
 
 		for (int i = 0; i < ml.size(); ++i) {
 			int mealkind = mm->index(ml.at(i).row(), MealTableModel::HMealKind).data(Qt::EditRole).toInt();
@@ -101,7 +103,7 @@ void MealTabInsertWidget::activateUi(bool activate) {
 		push_lunch->setEnabled(true);
 		push_tea->setEnabled(true);
 		push_dinner->setEnabled(true);
-		push_br->setEnabled(true);
+		push_other->setEnabled(true);
 	}
 }
 

@@ -118,7 +118,7 @@ void MealTabWidget::setMealDayId(int mdid) {
 		MealFoodList * foodlist = new MealFoodList(this);
 		this->insertTab(0, foodlist, mn);
 		tab_handler.push_back(foodlist);
-		
+
 		foodlist->setProxyModel(proxy);
 
 		proxy->setKey(mid);
@@ -127,7 +127,7 @@ void MealTabWidget::setMealDayId(int mdid) {
 		foodlist->populateModel();
 	}
 
-	if (last_selected_meal < this->count()) {
+	if (last_selected_meal < (this->count() - 1)) {
 		this->setCurrentIndex(last_selected_meal);
 	}
 }

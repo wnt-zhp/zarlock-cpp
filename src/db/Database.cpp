@@ -30,6 +30,8 @@
 #include <QDir>
 #include <QStringBuilder>
 
+#include<QDebug>
+
 #include "Database.h"
 #include "DataParser.h"
 #include "globals.h"
@@ -304,8 +306,6 @@ bool Database::rebuild_models() {
 }
 
 bool Database::execQueryFromFile(const QString& resource) {
-	QSqlQuery query;
-
 	if (!db.isOpen())
 		return false;
 
@@ -321,15 +321,19 @@ bool Database::execQueryFromFile(const QString& resource) {
 		if (line.trimmed().isEmpty())
 			continue;
 
-// 		query.exec(line.fromUtf8(line.toStdString().c_str()));
+		if (line.startsWith("--"))
+			continue;
+
+		QSqlQuery query;
+
 		if (!query.exec(line.fromUtf8(line.toStdString().c_str()))) {
-			PR(query.lastError().text().toStdString());
-			PR(query.lastQuery().toStdString());
+// 			PR(query.lastError().text().toStdString());
+// 			PR(query.lastQuery().toStdString());
+			qDebug() << "Failed to create table:" << query.lastError();
 		} else {
 // 			PR(query.lastQuery().toStdString());
 		}
 	}
-	query.finish();
 
 	if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
 		if (!db.commit()) {
@@ -337,7 +341,6 @@ bool Database::execQueryFromFile(const QString& resource) {
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -499,7 +502,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 	QString str;
 	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, 0);
 	int pos = 0;
-	
+
 	switch (version) {
 		case dbv_INIT:
 			PR("Upgrade from 0");
