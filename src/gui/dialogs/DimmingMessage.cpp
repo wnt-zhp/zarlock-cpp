@@ -16,18 +16,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "globals.h"
 
 #include "DimmingMessage.h"
 #include <QHBoxLayout>
+#include <QLayout>
 
 DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(new QWidget(parent), parent) {
+	CII();
 	QString stylesheet = "color:white; background-color:rgba(0,0,0,200); border: 1px solid rgba(0,0,0,200); border-radius:4px;";
 	this->setStyleSheet(stylesheet);
 
 	setLayout(new QHBoxLayout(this));
 
-	icon = new QLabel(this);
-	icon->hide();
+	icon = new QLabel;
+	setIcon((QIcon()));
 	layout()->addWidget(icon);
 
 	// TODO: Implement this
@@ -44,6 +47,7 @@ DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(new QWi
 }
 
 DimmingMessage::~DimmingMessage() {
+	DII();
 	delete label;
 	delete busy;
 	delete icon;
@@ -61,14 +65,15 @@ void DimmingMessage::setMessage(const QString& message) {
 	}
 }
 
-void DimmingMessage::setIcon(QIcon * icon) {
-	if (!icon)
-		this->icon->hide();
-	else {
-		this->icon->setPixmap(icon->pixmap(22, 22));
+void DimmingMessage::setIcon(const QIcon & icon) {
+	if (!icon.isNull()) {
+		this->icon->setPixmap(icon.pixmap(22, 22));
 		this->icon->show();
-		this->adjustSize();
 	}
+	else {
+		this->icon->hide();
+	}
+	this->adjustSize();
 }
 
 void DimmingMessage::showBusy(bool show) {

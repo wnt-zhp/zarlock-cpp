@@ -22,9 +22,11 @@
 
 #include <QWidget>
 #include <QGraphicsDropShadowEffect>
+#include <QContextMenuEvent>
 #include <QTimeLine>
 #include <QDate>
 #include <qcoreevent.h>
+#include "EventFilter.h"
 
 class AbstractDimmingWidget : public QWidget {
 Q_OBJECT
@@ -45,7 +47,7 @@ public:
 	void setDuration(int duration = 2000, int animate_duration = 1000);
 	void setOverlayOpacity(int opacity = 200);
 	void setEventTransparent(bool transparent = true);
-// 	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* );
 
 	virtual void go();
 	virtual void og();
@@ -60,14 +62,13 @@ private:
 	QTimeLine * animate();
 	QTimeLine * animate(QTimeLine * start_after);
 
-	void updateParentResizeEvent();
-
 	void disable_parent();
 
 	void setOverlayClickMethod(/*method*/);
 
 private slots:
 	void finalize();
+	void parentResizeEvent();
 
 protected slots:
 	void setOverlayStyle(int opacity);
@@ -105,6 +106,7 @@ private:
 	QTimeLine * sceneF;
 
 	QGraphicsDropShadowEffect * effect;
+	EventFilter * evfilter;
 };
 
 #endif // ABSTRACTDIMMINGWIDGET_H

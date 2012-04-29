@@ -11,6 +11,7 @@
 #include "ui_MainWindow.h"
 
 #include "DBItemWidget.h"
+#include "DimmingMessage.h"
 
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
@@ -63,6 +64,8 @@ private:
 	QAction * actionSwitchDB;
 	QAction * actionConfigDB;
 	DBItemWidget * dbiw;
+
+	DimmingMessage * dw;
 };
 
 #endif // zarlok_H

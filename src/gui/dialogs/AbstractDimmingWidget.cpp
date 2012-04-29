@@ -19,6 +19,7 @@
 #include "globals.h"
 
 #include "AbstractDimmingWidget.h"
+#include <QContextMenuEvent>
 
 AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f),
 	duration(2000), overlay(ov), parent_widget(parent), init_finished(false),
@@ -27,7 +28,8 @@ AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::
 	animate_direction(FINISHED), last_state(OUT), animate_move_direction(QTimeLine::Forward),
 	animate_start(TOPCENTER), animate_pause(MIDCENTER), animate_stop(BOTCENTER),
 	animate_duration(1400),  disable_parent_in_shown(false),
-	sceneX(new QTimeLine), sceneY(new QTimeLine), sceneF(new QTimeLine), effect(NULL)
+	sceneX(new QTimeLine), sceneY(new QTimeLine), sceneF(new QTimeLine), effect(NULL),
+	evfilter(NULL)
 {
 	this->hide();
 
@@ -35,7 +37,6 @@ AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::
 	overlay->hide();
 
 	setEnabled(true);
-	updateParentResizeEvent();
 
 	if (overlay_enabled)
 		setOverlay(overlay_animated, overlay_styled);
@@ -52,6 +53,11 @@ AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::
 	connect(sceneF, SIGNAL(frameChanged(int)), this, SLOT(setOverlayStyle(int)));
 
 	init_finished = true;
+
+	evfilter = new EventFilter;
+	parent_widget->installEventFilter(evfilter);
+
+	connect(evfilter, SIGNAL(resized()), this, SLOT(parentResizeEvent()));
 }
 
 AbstractDimmingWidget::~AbstractDimmingWidget() {
@@ -62,9 +68,6 @@ AbstractDimmingWidget::~AbstractDimmingWidget() {
 	delete effect;
 }
 
-void AbstractDimmingWidget::updateParentResizeEvent() {
-// 	resizeEvent(NULL);
-}
 
 // void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
 // 	// FIXME: what to do with tris resize?
@@ -115,6 +118,8 @@ QTimeLine * AbstractDimmingWidget::animate(QTimeLine * start_after) {
 			disconnect(start_after, SIGNAL(finished()), this, SLOT(animate()));
 			connect(start_after, SIGNAL(finished()), this, SLOT(animate()));
 			return NULL;
+		} else {
+			animate();
 		}
 	}
 	return NULL;
@@ -122,7 +127,7 @@ QTimeLine * AbstractDimmingWidget::animate(QTimeLine * start_after) {
 
 QTimeLine * AbstractDimmingWidget::animate() {
 	overlay->resize(parent_widget->size());
-
+	qDebug() << parent_widget->size();
 	// Stop all running animations
 	sceneX->stop();
 	sceneY->stop();
@@ -150,13 +155,15 @@ QTimeLine * AbstractDimmingWidget::animate() {
 	int p_height = parent_widget->height();
 	int _width  = this->width();
 	int _height = this->height();
+	int curr_x = this->x();
+	int curr_y = this->y();
 
 	// Calculate new positions for given points
 	int limits[CURRENT+1][2] = {
 		{ 0, 0 }, { p_width/2 - _width/2, 0 }, { p_width - _width, 0 },
 		{ 0, p_height/2 - _height/2 }, { p_width/2 - _width/2, p_height/2 - _height/2 }, { p_width - _width, p_height/2 - _height/2 },
 		{ 0, p_height - _height }, { p_width/2 - _width/2, p_height - _height }, { p_width - _width, p_height - _height },
-		{ this->x(), this->y() }
+		{ curr_x, curr_y }
 	};
 
 	// Update start and stop positions for given direction
@@ -215,11 +222,11 @@ QTimeLine * AbstractDimmingWidget::animate() {
 		sceneX->setFrameRange(limits[animate_stop][0], limits[animate_pause][0]);
 		sceneY->setFrameRange(limits[animate_stop][1], limits[animate_pause][1]);
 	} else {
-		move(limits[animate_start][0], limits[animate_start][1]);
-		
+// 		move(limits[animate_start][0], limits[animate_start][1]);
+
 		// Set calculated start and stop positions
-		sceneX->setFrameRange(limits[animate_start][0], limits[animate_stop][0]);
-		sceneY->setFrameRange(limits[animate_start][1], limits[animate_stop][1]);
+		sceneX->setFrameRange(curr_x, limits[animate_pause][0]);
+		sceneY->setFrameRange(curr_y, limits[animate_pause][1]);
 	}
 
 	// Move the widget to calculated start position
@@ -258,11 +265,14 @@ QTimeLine * AbstractDimmingWidget::animate() {
 }
 
 void AbstractDimmingWidget::finalize() {
+	FII();
+// 	parentResizeEvent();
+
 	last_state = animate_direction;
 	animate_direction = FINISHED;
 
 	if (animate_direction == FINISHED) {
-		updateParentResizeEvent();
+// 		parentResizeEvent();
 	}
 
 	if (last_state == IN) {
@@ -304,6 +314,7 @@ void AbstractDimmingWidget::setAnimationCurve(QEasingCurve curve) {
 }
 
 void AbstractDimmingWidget::go() {
+	adjustSize();
 	if (init_finished and (last_state != IN)) {
 		animate_direction = IN;
 		animate();
@@ -360,6 +371,23 @@ void AbstractDimmingWidget::hide() {
 
 void AbstractDimmingWidget::setEventTransparent(bool transparent) {
 	overlay->setAttribute(Qt::WA_TransparentForMouseEvents, transparent);
+}
+
+void AbstractDimmingWidget::parentResizeEvent() {
+	if (overlay_enabled) {
+		overlay->resize(parent_widget->size());
+		if (this->isVisible() or this->last_state == IN) {
+// 			qDebug() << parent_widget->size();
+			overlay_just_resize = true;
+			animate(sceneX);
+			overlay_just_resize = false;
+		}
+	}
+}
+
+void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
+	animate();
+	QWidget::resizeEvent(event);
 }
 
 

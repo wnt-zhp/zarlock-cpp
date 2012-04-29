@@ -29,7 +29,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>@info</string>
+      <string>Database not loaded</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>

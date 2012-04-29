@@ -25,7 +25,7 @@
  * @param parent QMainWindow
  **/
 zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
-					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL) {
+					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL), dw(NULL) {
 	CI();
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
@@ -99,6 +99,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doSwitchDB()));
 
+// 	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
 	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
 
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
@@ -108,7 +109,10 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	readSettings();
 
-	activateUi(db->cs()->isCorrect);
+	if (!db->cs()->isCorrect)
+		doCampSettings();
+	else
+		activateUi(db->cs()->isCorrect);
 // 	updateAppTitle();
 
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -125,6 +129,8 @@ zarlok::~zarlok() {
 
 	delete toolbar;
 	delete dbtoolbar;
+
+	delete dw;
 }
 
 void zarlok::doSwitchDB() {
@@ -150,9 +156,17 @@ void zarlok::doExitZarlok() {
 void zarlok::activateUi(bool activate) {
 	MainTab->setEnabled(activate);
 
-	if (!db->cs()->isCorrect)
-		if (!doCampSettings())
-			doSwitchDB();
+	if (!db->cs()->isCorrect) {
+// 		doSwitchDB();
+		delete dw;
+		dw = new DimmingMessage(MainTab);
+		dw->setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical));
+		dw->setMessage(tr("Database is not loaded properly."));
+		dw->go();
+	} else {
+		if (dw)
+			dw->og();
+	}
 
 	if (activate) {
 		dbiw->update(db->cs());
@@ -193,7 +207,12 @@ bool zarlok::doCampSettings() {
 	CampSettingsDialog csd(db->cs());
 
 	int ans = csd.exec();
-	PR(ans);
+
+	if (ans)
+		db->cs()->writeCampSettings();
+
+	activateUi(db->cs()->isCorrect);
+	
 
 	return ans;
 }

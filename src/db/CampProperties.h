@@ -37,21 +37,26 @@ struct CampProperties {
 	QString campQuarter;		// quartermaster's name
 	QString campOthers;			// others
 
-	enum dbkeys {	HisCorrect		= 0x001,
-					HcampName		= 0x002,
-					HcampPlace		= 0x003,
-					HcampOrg		= 0x004,
-					HcampDateBegin	= 0x005,
-					HcampDateEnd	= 0x006,
-					HscoutsNo		= 0x007,
-					HleadersNo		= 0x008,
-					HAvgCosts		= 0x009,
-					HcampLeader		= 0x00a,
-					HcampQuarter	= 0x00b,
-					HcampOthers		= 0x00c
+	enum dbkeysnum {	HisCorrect,
+						HcampName,
+						HcampPlace,
+						HcampOrg,
+						HcampDateBegin,
+						HcampDateEnd,
+						HscoutsNo,
+						HleadersNo,
+						HAvgCosts,
+						HcampLeader,
+						HcampQuarter,
+						HcampOthers,
+						Hdummy
 	};
+
+	static const QVector<QString> dbsetkeys;
+
 	void writeCampSettings();
 	void readCampSettings();
+	void resetCampSettings();
 };
 
 #endif /* __CAMPPROPERTIES_H__ */

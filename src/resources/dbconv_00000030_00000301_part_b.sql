@@ -12,6 +12,18 @@ INSERT INTO meal SELECT DISTINCT null,CAST(md.id as INTEGER),CAST(d.reason AS IN
 UPDATE distributor SET disttype_a=(SELECT meal.id FROM meal,distributor_tmp,meal_day WHERE meal_day.mealdate=distributor_tmp.distdate AND meal.mealday=meal_day.id AND meal.mealkind=distributor_tmp.reason AND distributor_tmp.id=distributor.id);
 -- Update settings
 INSERT OR REPLACE INTO settings(key, value) SELECT key, value FROM settings_tmp;
+UPDATE settings SET key="IsDatabaseCorrect" WHERE key="1";
+UPDATE settings SET key="CampName" WHERE key="2";
+UPDATE settings SET key="CampPlace" WHERE key="3";
+UPDATE settings SET key="CampOrg" WHERE key="4";
+UPDATE settings SET key="CampDateBegin" WHERE key="5";
+UPDATE settings SET key="CampDateEnd" WHERE key="6";
+UPDATE settings SET key="ScoutsNo" WHERE key="7";
+UPDATE settings SET key="LeadersNo" WHERE key="8";
+UPDATE settings SET key="AvgCosts" WHERE key="9";
+UPDATE settings SET key="CampLeader" WHERE key="10";
+UPDATE settings SET key="CampQuarter" WHERE key="11";
+UPDATE settings SET key="CampOthers" WHERE key="12";
 UPDATE settings SET value=769 WHERE key='dbversion';
 
 -- Update batch

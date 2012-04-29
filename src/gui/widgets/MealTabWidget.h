@@ -46,9 +46,13 @@ public slots:
 protected slots:
 	virtual void reloadTabs(int mealDayId);
 	virtual void closeTab(int index);
+	virtual void prepareTab(int mealid);
 
 	virtual void customContextMenuEvent(const QPoint & point);
-	
+
+private:
+	void prepareTab(int mealid, const QDate & mealday, int pos = 0);
+
 private:
 	BatchTableModelProxy * batch_proxy;
 	QCheckBox * che;
@@ -61,6 +65,8 @@ private:
 	QAction * tab_action_rename;
 
 	QVector<MealFoodList *> tab_handler;
+
+	QDate current_selected_day;
 };
 
 #endif // MEALTABWIDGET_H

@@ -60,7 +60,8 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 	this->setTabsClosable(true);
 
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
+// 	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
+	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(prepareTab(int)));
 
 	tab_handler.reserve(20);
 
@@ -76,8 +77,8 @@ MealTabWidget::~MealTabWidget() {
 }
 
 void MealTabWidget::setMealDayId(int mdid) {
-	if (meal_day_id == mdid)
-		return;
+// 	if (meal_day_id == mdid)
+// 		return;
 
 	open_item = 0;
 	meal_day_id = mdid;
@@ -90,9 +91,9 @@ void MealTabWidget::setMealDayId(int mdid) {
 	if (mdl.count() != 1)
 		return;
 
-	QDate sel_meal_date = mdt->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+	current_selected_day = mdt->index(mdl.at(0).row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
-	batch_proxy->setDateKey(sel_meal_date);
+	batch_proxy->setDateKey(current_selected_day);
 	batch_proxy->invalidate();
 
 	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
@@ -110,27 +111,66 @@ void MealTabWidget::setMealDayId(int mdid) {
 
 	for (int i = meals.size()-1; i >=0; --i) {
 		int mid = mt->index(meals.at(i).row(), MealTableModel::HId).data().toInt();
-		QString mn = mt->index(meals.at(i).row(), MealTableModel::HMealName).data().toString();
-
-		MealTableModelProxy * proxy = new MealTableModelProxy;
-		proxy->setSourceModel((QAbstractItemModel *)Database::Instance()->CachedDistributor());
-
-		MealFoodList * foodlist = new MealFoodList(this);
-		this->insertTab(0, foodlist, mn);
-		tab_handler.push_back(foodlist);
-
-		foodlist->setProxyModel(proxy);
-
-		proxy->setKey(mid);
-		proxy->setRefDate(sel_meal_date);
-		proxy->invalidate();
-		foodlist->populateModel();
+		prepareTab(mid, current_selected_day);
 	}
 
 	if (last_selected_meal < (this->count() - 1)) {
 		this->setCurrentIndex(last_selected_meal);
 	}
 }
+
+void MealTabWidget::prepareTab(int mealid) {
+	batch_proxy->setDateKey(current_selected_day);
+	batch_proxy->invalidate();
+
+	MealTableModel * mt = Database::Instance()->CachedMeal();
+	mt->sort(MealTableModel::HMealKind, Qt::AscendingOrder);
+	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HMealDay), Qt::EditRole, meal_day_id, -1, Qt::MatchExactly);
+
+	int c = this->indexOf(mtiw);
+	int nm = 0;
+
+	for (int i = 0; i <= c; ++i) {PR(i);
+		nm = mt->index(meals.at(i).row(), MealTableModel::HId).data(Qt::EditRole).toInt();PR(nm);
+		if (i < c) {
+			int tm = ((MealTableModelProxy *)(((MealFoodList *)(this->widget(i)))->proxyModel()))->key();PR(tm);
+			if (nm != tm) {
+				prepareTab(nm, current_selected_day, i);
+				break;
+			}
+		}
+	}
+
+	if (nm > 0)
+		prepareTab(nm, current_selected_day, c);
+
+	mtiw->setKey(meal_day_id);
+}
+
+void MealTabWidget::prepareTab(int mealid, const QDate & mealday, int pos) {
+	MealTableModel * mt = Database::Instance()->CachedMeal();
+	QModelIndexList ml = mt->match(mt->index(0, MealTableModel::HId), Qt::EditRole, mealid, 1, Qt::MatchExactly);
+
+	if (ml.size() != 1)
+		return;
+
+	QString mn = mt->index(ml.at(0).row(), MealTableModel::HMealName).data().toString();
+	
+	MealTableModelProxy * proxy = new MealTableModelProxy;
+	proxy->setSourceModel((QAbstractItemModel *)Database::Instance()->CachedDistributor());
+	
+	MealFoodList * foodlist = new MealFoodList(this);
+	this->insertTab(pos, foodlist, mn);
+	tab_handler.insert(pos, foodlist);
+	
+	foodlist->setProxyModel(proxy);
+	
+	proxy->setKey(mealid);
+	proxy->setRefDate(mealday);
+	proxy->invalidate();
+	foodlist->populateModel();
+}
+
 
 BatchTableModelProxy* MealTabWidget::getBatchProxyModel() const {
 	return batch_proxy;
@@ -174,8 +214,10 @@ void MealTabWidget::closeTab(int index) {
 
 			QVector<int> v;
 			v.push_back(mid);
-			if (Database::Instance()->removeMealRecord(v))
+			if (Database::Instance()->removeMealRecord(v)) {
 				this->removeTab(index);
+				mtiw->setKey(meal_day_id);
+			}
 		}
 	}
 }

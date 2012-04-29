@@ -23,6 +23,7 @@
 #include <QtGui/QPalette>
 #include <QtGui/QFont>
 #include <QtCore/QSettings>
+#include <QDebug>
 
 #include "Logger.h"
 

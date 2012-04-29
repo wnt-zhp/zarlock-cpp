@@ -71,7 +71,7 @@ void Database::Destroy() {
 	}
 }
 
-Database::Database() : QObject(),
+Database::Database() : QObject(), camp(NULL),
 	model_products(NULL), model_batch(NULL), model_distributor(NULL),
 	model_mealday(NULL), model_meal(NULL),
 	plist(QVector<QStringList>(plist_size)), blist(QVector<QStringList>(blist_size)),
@@ -206,6 +206,7 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	model_meal->setEditStrategy(QSqlTableModel::OnManualSubmit);
 // 	model_meal->setSort(MealTableModel::HDistDate, Qt::AscendingOrder);
 
+	delete camp;
 	camp = new CampProperties;
 	camp->readCampSettings();
 

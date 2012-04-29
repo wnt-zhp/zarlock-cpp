@@ -169,7 +169,14 @@ set(zarlok_src_db_SRCS
 									src/db/Database.cpp
 									src/db/CampProperties.cpp
 )
-set(zarlok_src_misc_SRCS src/Logger.cpp src/DataParser.cpp src/zarlok.cpp main.cpp)
+set(zarlok_src_misc_SRCS
+									src/EventFilter.cpp
+									src/Logger.cpp
+									src/DataParser.cpp
+									src/zarlok.cpp
+									main.cpp
+)
+
 set(zarlok_INCS config.h)
 set(zarlok_SRCS
 									${zarlok_INCS}

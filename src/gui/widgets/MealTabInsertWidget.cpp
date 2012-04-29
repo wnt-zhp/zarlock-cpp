@@ -143,7 +143,8 @@ void MealTabInsertWidget::pushButton() {
 
 	db->CachedMeal()->select();
 
-	emit mealInserted(mdid);
+	int mid = db->CachedMeal()->index(db->CachedMeal()->rowCount()-1, MealTableModel::HId).data(Qt::EditRole).toInt();
+	emit mealInserted(mid);
 }
 
 void MealTabInsertWidget::setKey(int mealdayid) {

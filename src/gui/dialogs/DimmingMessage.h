@@ -32,7 +32,7 @@ public:
 	virtual ~DimmingMessage();
 
 	void setMessage(const QString & message);
-	void setIcon(QIcon * icon = NULL);
+	void setIcon(const QIcon & icon);
 	void showBusy(bool show = true);
 
 private:

@@ -17,33 +17,43 @@
 */
 
 #include "CampProperties.h"
+#include "Database.h"
+#include "globals.h"
 
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QVariant>
+
+const QVector<QString> CampProperties::dbsetkeys = {
+	"IsDatabaseCorrect", "CampName", "CampPlace", "CampOrg",
+	"CampDateBegin", "CampDateEnd", "ScoutsNo", "LeadersNo",
+	"AvgCosts", "CampLeader", "CampQuarter", "CampOthers"
+};
 
 void CampProperties::writeCampSettings() {
 	QSqlQuery csq;
-	QString query("UPDATE settings SET value=\"%2\" WHERE key=\"%1\";");
+	QString query("INSERT OR REPLACE INTO settings(key, value) VALUES(\"%1\", \"%2\");");
 
-	csq.exec(query.arg(CampProperties::HisCorrect).arg(this->isCorrect));
-	csq.exec(query.arg(CampProperties::HcampName).arg(this->campName));
-	csq.exec(query.arg(CampProperties::HcampPlace).arg(this->campPlace));
-	csq.exec(query.arg(CampProperties::HcampOrg).arg(this->campOrg));
-	csq.exec(query.arg(CampProperties::HcampDateBegin).arg(this->campDateBegin.toString(Qt::ISODate)));
-	csq.exec(query.arg(CampProperties::HcampDateEnd).arg(this->campDateEnd.toString(Qt::ISODate)));
-	csq.exec(query.arg(CampProperties::HscoutsNo).arg(this->scoutsNo));
-	csq.exec(query.arg(CampProperties::HleadersNo).arg(this->leadersNo));
-	csq.exec(query.arg(CampProperties::HAvgCosts).arg(this->avgCosts));
-	csq.exec(query.arg(CampProperties::HcampLeader).arg(this->campLeader));
-	csq.exec(query.arg(CampProperties::HcampQuarter).arg(this->campQuarter));
-	csq.exec(query.arg(CampProperties::HcampOthers).arg(this->campOthers));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HisCorrect]).arg(this->isCorrect));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampName]).arg(this->campName));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampPlace]).arg(this->campPlace));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampOrg]).arg(this->campOrg));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampDateBegin]).arg(this->campDateBegin.toString(Qt::ISODate)));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampDateEnd]).arg(this->campDateEnd.toString(Qt::ISODate)));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HscoutsNo]).arg(this->scoutsNo));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HleadersNo]).arg(this->leadersNo));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HAvgCosts]).arg(this->avgCosts));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampLeader]).arg(this->campLeader));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampQuarter]).arg(this->campQuarter));
+	csq.exec(query.arg(dbsetkeys[CampProperties::HcampOthers]).arg(this->campOthers));
 }
 
 void CampProperties::readCampSettings() {
 	QSqlQuery csq;
 	csq.exec("SELECT * FROM settings;");
 	while(csq.next()) {
-		switch (csq.value(0).toInt()) {
+		QVector<QString>::const_iterator fpos = qFind(dbsetkeys.begin(), dbsetkeys.end(), csq.value(0).toString());
+		switch (fpos - dbsetkeys.begin()) {
 			case CampProperties::HisCorrect:
 				this->isCorrect = csq.value(1).toBool();
 				break;
@@ -82,4 +92,19 @@ void CampProperties::readCampSettings() {
 				break;
 		}
 	}
+}
+
+void CampProperties::resetCampSettings() {
+	isCorrect = false;				// is camp set correct
+	campName = "";					// camp name
+	campPlace = "";					// camp place
+	campOrg = "";					// camp organizator
+	campDateBegin = QDate();		// camp begin date
+	campDateEnd = QDate();			// camp end date
+	scoutsNo = 0;					// amount of scoutsNo
+	leadersNo = 0;					// amount of leaders
+	avgCosts = 0;					// average meal costs per day
+	campLeader = "";				// leader's name
+	campQuarter = "";				// quartermaster's name
+	campOthers = "";				// others
 }
