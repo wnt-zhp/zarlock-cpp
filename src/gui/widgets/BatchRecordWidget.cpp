@@ -34,6 +34,8 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : Ui::BRWidget(),
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
+	action_cancel->setShortcut(Qt::Key_Escape);
+
 	connect(edit_book, SIGNAL(dataChanged()), edit_expiry, SLOT(doRefresh()));
 
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
