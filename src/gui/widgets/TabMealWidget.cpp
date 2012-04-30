@@ -235,8 +235,7 @@ void TabMealWidget::mealTabChanged(int tab) {
 		return;
 
 	int tabsqty = tab_meals->count();
-PR(tab);
-PR(tabsqty);
+
 	if (tab == (tabsqty-1)) {
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);

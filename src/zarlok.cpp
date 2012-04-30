@@ -54,6 +54,8 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 // 	toolbar->addSeparator();
 // 	toolbar->addSeparator();
 	toolbar->addAction(actionAbout);
+	toolbar->setFloatable(false);
+	toolbar->setMovable(false);
 
 	dbtoolbar = addToolBar(tr("Database"));
 	dbtoolbar->setWindowTitle("Database1");
@@ -70,6 +72,8 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar->addWidget(dbiw);
 	dbtoolbar->addAction(actionConfigDB);
 	dbtoolbar->addAction(actionSwitchDB);
+	dbtoolbar->setFloatable(false);
+	dbtoolbar->setMovable(false);
 
 	tpw = new TabProductsWidget();
 	tbw = new TabBatchWidget();
