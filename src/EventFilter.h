@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2012  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,38 +17,20 @@
 */
 
 
-#ifndef MEALTABINSERTWIDGET_H
-#define MEALTABINSERTWIDGET_H
+#ifndef EVENTFILTER_H
+#define EVENTFILTER_H
 
-#include "ui_MealTabInsertWidget.h"
+#include <QObject>
 
-#include "BatchTableModel.h"
-#include "BatchTableModelProxy.h"
-#include "BatchRecordWidget.h"
 
-#include <QtSql>
-#include <QCompleter>
-
-class Database;
-
-class MealTabInsertWidget : public QWidget, public Ui::MealTabInsertWidget {
+class EventFilter : public QObject {
 Q_OBJECT
 public:
-	MealTabInsertWidget(QWidget * parent = NULL);
-	virtual ~MealTabInsertWidget();
+	// virtual bool event(QEvent* );
+	virtual bool eventFilter(QObject* , QEvent* );
 
-	void setKey(int mealdayid);
-
-private slots:
-	void validateAdd();
-	void pushButton();
-
-private:
-	void activateUi(bool activate = true);
-
-private:
-	Database * db;
-	int mdid;
+signals:
+	void resized();
 };
 
-#endif // MEALTABINSERTWIDGET_H
+#endif // EVENTFILTER_H

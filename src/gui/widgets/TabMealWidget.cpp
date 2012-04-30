@@ -23,6 +23,7 @@
 #include "TabMealWidget.h"
 #include "TableDelegates.h"
 #include "DBReports.h"
+#include "MealManager.h"
 
 #include <QPushButton>
 #include <QToolButton>
@@ -86,7 +87,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
 	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
-	connect(list_days, SIGNAL(removeRecordRequested(QVector<int>&,bool)), Database::Instance(), SLOT(removeMealDayRecord(QVector<int>&,bool)));
+	mm = MealManager::Instance();
+	connect(list_days, SIGNAL(removeRecordRequested(QVector<int>&,bool)), mm, SLOT(removeMealDayRecord(QVector<int>&,bool)));
 
 	seldate = QDate::currentDate().toString(Qt::ISODate);
 
@@ -153,8 +155,14 @@ void TabMealWidget::activateUi(bool activate) {
  **/
 // TODO: wyczysc kod z komentarza
 void TabMealWidget::add_mealday() {
-	db->addMealDayRecord(calendar->selectedDate(), 0);
-	
+	MealManager * mm = MealManager::Instance();
+
+	mm->addMealDayRecord(calendar->selectedDate(), 0);
+
+	QVariant mdid = mm->getMealDayId(calendar->selectedDate());
+	if (!mdid.isNull())
+		mm->mealDayDefauls(mdid.toInt());
+
 	hightlight_day(calendar->selectedDate());
 // 	, true, db->cs()->scoutsNo, db->cs()->leadersNo, 0, 0.0, "]:->"
 	db->CachedMealDay()->select();
@@ -223,8 +231,12 @@ void TabMealWidget::validateSpins() {
 }
 
 void TabMealWidget::mealTabChanged(int tab) {
-	int tabsqty = tab_meals->count();
+	if (tab == -1)
+		return;
 
+	int tabsqty = tab_meals->count();
+PR(tab);
+PR(tabsqty);
 	if (tab == (tabsqty-1)) {
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
 // 		((QSpinBox *)(mapper->mappedWidgetAt(MealTableModel::HScouts)))->setValue(100);
@@ -236,6 +248,7 @@ void TabMealWidget::mealTabChanged(int tab) {
 		push_edit_l->setEnabled(false);
 		push_edit_o->setEnabled(false);
 
+		widget_spins->setVisible(false);
 		wmap->setCurrentIndex(-1);
 		return;
 	}
@@ -246,8 +259,9 @@ void TabMealWidget::mealTabChanged(int tab) {
 	push_edit_s->setEnabled(true);
 	push_edit_l->setEnabled(true);
 	push_edit_o->setEnabled(true);
+	widget_spins->setVisible(true);
 
-	int i = tab_meals->currentIndex();
+	int i = tab;//tab_meals->currentIndex();PR(i);
 	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
 
 	MealTableModel * mt = db->CachedMeal();

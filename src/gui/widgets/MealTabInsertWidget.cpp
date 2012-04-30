@@ -21,6 +21,7 @@
 #include "Database.h"
 #include "DataParser.h"
 #include "DBReports.h"
+#include "MealManager.h"
 
 MealTabInsertWidget::MealTabInsertWidget(QWidget * /*parent*/) : Ui::MealTabInsertWidget(), db(Database::Instance()) {
 	setupUi(this);
@@ -75,22 +76,22 @@ void MealTabInsertWidget::activateUi(bool activate) {
 		for (int i = 0; i < ml.size(); ++i) {
 			int mealkind = mm->index(ml.at(i).row(), MealTableModel::HMealKind).data(Qt::EditRole).toInt();
 			switch (mealkind) {
-				case MealTableModel::MBreakfast:
+				case MealManager::MBreakfast:
 					push_br->setEnabled(false);
 					break;
-				case MealTableModel::MBreakfast2:
+				case MealManager::MBrunch:
 					push_br2->setEnabled(false);
 					break;
-				case MealTableModel::MLunch:
+				case MealManager::MLunch:
 					push_lunch->setEnabled(false);
 					break;
-				case MealTableModel::MTea:
+				case MealManager::MTea:
 					push_tea->setEnabled(false);
 					break;
-				case MealTableModel::MDiner:
+				case MealManager::MDiner:
 					push_dinner->setEnabled(false);
 					break;
-				case MealTableModel::MOther:
+				case MealManager::MOther:
 // 					push_br->setEnabled(false);
 					break;
 				default:
@@ -108,43 +109,40 @@ void MealTabInsertWidget::activateUi(bool activate) {
 }
 
 void MealTabInsertWidget::pushButton() {
-	Database * db = Database::Instance();
+	MealManager * mm = MealManager::Instance();
 
 	int mealkind = -1;
 	if (sender() == push_br) {
-		db->addMealRecord(mdid, MealTableModel::MBreakfast, tr("Breakfast"), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MBreakfast;
+		mm->insertMeal(mdid, MealManager::MBreakfast);
+		mealkind = MealManager::MBreakfast;
 	}
 	else
 	if (sender() == push_br2) {
-		db->addMealRecord(mdid, MealTableModel::MBreakfast2, tr("2nd breakfast"), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MBreakfast2;
+		mm->insertMeal(mdid, MealManager::MBrunch);
+		mealkind = MealManager::MBrunch;
 	}
 	else
 	if (sender() == push_lunch) {
-		db->addMealRecord(mdid, MealTableModel::MLunch, tr("Lunch"), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MLunch;
+		mm->insertMeal(mdid, MealManager::MLunch);
+		mealkind = MealManager::MLunch;
 	}
 	else
 	if (sender() == push_tea) {
-		db->addMealRecord(mdid, MealTableModel::MTea, tr("Tea"), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MTea;
+		mm->insertMeal(mdid, MealManager::MTea);
+		mealkind = MealManager::MTea;
 	}
 	else
 	if (sender() == push_dinner) {
-		db->addMealRecord(mdid, MealTableModel::MDiner, tr("Diner"), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MDiner;
+		mm->insertMeal(mdid, MealManager::MDiner);
+		mealkind = MealManager::MDiner;
 	}
 	else
 	if (sender() == push_other) {
-		db->addMealRecord(mdid, MealTableModel::MOther, line_other->text(), 0, 0, 0, 0, "");
-		mealkind = MealTableModel::MOther;
+		mm->insertMeal(mdid, MealManager::MOther, line_other->text());
+		mealkind = MealManager::MOther;
 	}
 
-	db->CachedMeal()->select();
-
-	int mid = db->CachedMeal()->index(db->CachedMeal()->rowCount()-1, MealTableModel::HId).data(Qt::EditRole).toInt();
-	emit mealInserted(mid);
+	mm->selectMeal();
 }
 
 void MealTabInsertWidget::setKey(int mealdayid) {

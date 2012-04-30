@@ -168,6 +168,7 @@ set(zarlok_src_db_SRCS
 									src/db/DBReports.cpp
 									src/db/Database.cpp
 									src/db/CampProperties.cpp
+									src/db/MealManager.cpp
 )
 set(zarlok_src_misc_SRCS
 									src/EventFilter.cpp

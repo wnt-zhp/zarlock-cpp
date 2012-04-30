@@ -1,6 +1,6 @@
 /*
     <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    Copyright (C) 2012  Rafał Lalik <rafal.lalik@ph.tum.de>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,38 +17,25 @@
 */
 
 
-#ifndef MEALTABINSERTWIDGET_H
-#define MEALTABINSERTWIDGET_H
+#include "EventFilter.h"
+#include <qcoreevent.h>
 
-#include "ui_MealTabInsertWidget.h"
+// bool EventFilter::event(QEvent* )
+// {
+// return QObject::event();
+// }
 
-#include "BatchTableModel.h"
-#include "BatchTableModelProxy.h"
-#include "BatchRecordWidget.h"
+bool EventFilter::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::Resize) {
+// 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+// 		qDebug("Ate key press %d", keyEvent->key());
+		emit resized();
+		return true;
+	} else {
+		// standard event processing
+		return QObject::eventFilter(obj, event);
+	}
+}
 
-#include <QtSql>
-#include <QCompleter>
-
-class Database;
-
-class MealTabInsertWidget : public QWidget, public Ui::MealTabInsertWidget {
-Q_OBJECT
-public:
-	MealTabInsertWidget(QWidget * parent = NULL);
-	virtual ~MealTabInsertWidget();
-
-	void setKey(int mealdayid);
-
-private slots:
-	void validateAdd();
-	void pushButton();
-
-private:
-	void activateUi(bool activate = true);
-
-private:
-	Database * db;
-	int mdid;
-};
-
-#endif // MEALTABINSERTWIDGET_H
+#include "EventFilter.moc"

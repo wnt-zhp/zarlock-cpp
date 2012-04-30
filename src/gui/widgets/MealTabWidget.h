@@ -28,6 +28,7 @@
 #include "MealFoodList.h"
 #include "MealTabInsertWidget.h"
 #include "BatchTableModelProxy.h"
+#include "MealManager.h"
 
 class MealTabWidget : public QTabWidget {
 Q_OBJECT
@@ -46,7 +47,7 @@ public slots:
 protected slots:
 	virtual void reloadTabs(int mealDayId);
 	virtual void closeTab(int index);
-	virtual void prepareTab(int mealid);
+	virtual void prepareTab(int mealDayId);
 
 	virtual void customContextMenuEvent(const QPoint & point);
 
@@ -67,6 +68,8 @@ private:
 	QVector<MealFoodList *> tab_handler;
 
 	QDate current_selected_day;
+
+	MealManager * mm;
 };
 
 #endif // MEALTABWIDGET_H

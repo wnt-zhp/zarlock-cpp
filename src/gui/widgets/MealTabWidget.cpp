@@ -23,6 +23,7 @@
 #include "DistributorTableModel.h"
 #include "Database.h"
 #include "MealFoodListItemDataWidget.h"
+#include "MealManager.h"
 
 #include <QListWidgetItem>
 #include <QStyle>
@@ -59,9 +60,11 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 
 	this->setTabsClosable(true);
 
+	mm = MealManager::Instance();
+
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 // 	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(reloadTabs(int)));
-	connect(mtiw, SIGNAL(mealInserted(int)), this, SLOT(prepareTab(int)));
+	connect(mm, SIGNAL(mealInserted(int)), this, SLOT(prepareTab(int)));
 
 	tab_handler.reserve(20);
 
@@ -119,7 +122,10 @@ void MealTabWidget::setMealDayId(int mdid) {
 	}
 }
 
-void MealTabWidget::prepareTab(int mealid) {
+void MealTabWidget::prepareTab(int mealDayId) {
+	if (meal_day_id !=  mealDayId)
+		return;
+
 	batch_proxy->setDateKey(current_selected_day);
 	batch_proxy->invalidate();
 
@@ -130,21 +136,21 @@ void MealTabWidget::prepareTab(int mealid) {
 	int c = this->indexOf(mtiw);
 	int nm = 0;
 
-	for (int i = 0; i <= c; ++i) {PR(i);
-		nm = mt->index(meals.at(i).row(), MealTableModel::HId).data(Qt::EditRole).toInt();PR(nm);
+	mtiw->setKey(meal_day_id);
+
+	for (int i = 0; i <= c; ++i) {
+		nm = mt->index(meals.at(i).row(), MealTableModel::HId).data(Qt::EditRole).toInt();
 		if (i < c) {
-			int tm = ((MealTableModelProxy *)(((MealFoodList *)(this->widget(i)))->proxyModel()))->key();PR(tm);
+			int tm = ((MealTableModelProxy *)(((MealFoodList *)(this->widget(i)))->proxyModel()))->key();
 			if (nm != tm) {
 				prepareTab(nm, current_selected_day, i);
-				break;
+				return;
 			}
 		}
 	}
 
 	if (nm > 0)
 		prepareTab(nm, current_selected_day, c);
-
-	mtiw->setKey(meal_day_id);
 }
 
 void MealTabWidget::prepareTab(int mealid, const QDate & mealday, int pos) {
@@ -214,7 +220,7 @@ void MealTabWidget::closeTab(int index) {
 
 			QVector<int> v;
 			v.push_back(mid);
-			if (Database::Instance()->removeMealRecord(v)) {
+			if (MealManager::Instance()->removeMealRecord(v)) {
 				this->removeTab(index);
 				mtiw->setKey(meal_day_id);
 			}
@@ -251,6 +257,5 @@ void MealTabWidget::customContextMenuEvent(const QPoint & point) {
 		}
 	}
 }
-
 
 #include "MealTabWidget.moc"

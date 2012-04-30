@@ -55,7 +55,6 @@ private:
 
 public:
 	enum Headers {HId = 0, HMealDay, HMealKind, HMealName, HScouts, HLeaders, HOthers, HAvgCosts, HNotes };
-	enum Meal {MBreakfast = 0, MBreakfast2, MLunch, MTea,  MDiner, MOther };
 
 protected:
 	bool autosubmit;

@@ -77,14 +77,6 @@ public:
 	virtual bool updateDistributorRecord(int row, int bid, int qty, const QDate & ddate, const QDate & rdate, int disttype, const QString & dt_a, const QString & dt_b);
 	virtual bool getDistributorRecord(int row, int & bid, int & qty, QDate & distdate, QDate & entrydate, int & disttype, QString & dt_a, QString & dt_b);
 
-	virtual bool addMealDayRecord(const QDate & mealday, int avgcost);
-	virtual bool updateMealDayRecord(const int row, const QDate & mealday, int avgcost);
-	virtual bool getMealDayRecord(const int row, int & mdid, QDate & mealday, int & avgcost);
-
-	virtual bool addMealRecord(int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
-	virtual bool updateMealRecord(int mid, int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
-	virtual bool removeMealRecord(const QVector<int> & ids);
-
 	inline ProductsTableModel * CachedProducts() { return model_products; }
 	inline BatchTableModel * CachedBatch() { return model_batch; }
 	inline DistributorTableModel * CachedDistributor() { return model_distributor; }
@@ -113,7 +105,6 @@ public slots:
 	virtual bool removeProductsRecord(QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeBatchRecord(QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeDistributorRecord(QVector<int> & ids, bool askForConfirmation = true);
-	virtual bool removeMealDayRecord(QVector<int> & ids, bool askForConfirmation = true);
 
 private slots:
 	bool rebuild_models();

@@ -25,6 +25,7 @@
 #include "Database.h"
 #include "DistributorTableModel.h"
 #include "MealTableModel.h"
+#include "MealManager.h"
 
 #include <QtSql>
 #include <QCompleter>
@@ -71,6 +72,8 @@ private:
 
 	bool lock;
 	int current_meal_row;
+
+	MealManager * mm;
 };
 
 #endif // TABMEALWIDGET_H

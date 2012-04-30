@@ -340,7 +340,7 @@
 <context>
     <name>BatchRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="265"/>
+        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="267"/>
         <source>Update record</source>
         <translation>Zmień</translation>
     </message>
@@ -599,19 +599,19 @@
     <name>DBItem</name>
     <message>
         <location filename="../ui/DBItem.ui" line="32"/>
-        <source>@info</source>
-        <translation></translation>
+        <source>Database not loaded</source>
+        <translation>Baza danych nie jest załadowana</translation>
     </message>
 </context>
 <context>
     <name>Database</name>
     <message>
-        <location filename="../db/Database.cpp" line="110"/>
+        <location filename="../db/Database.cpp" line="114"/>
         <source>Cannot create database</source>
         <translation>Nie mogę stworzyć bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="111"/>
+        <location filename="../db/Database.cpp" line="115"/>
         <source>Unable to establish a database connection.
 This application needs SQLite support. Please read the Qt SQL driver documentation for information how to build it.
 
@@ -622,73 +622,73 @@ Ta aplikacja wymaga wsparcia dla SQLite. Proszę zapoznań się z dokumentacją 
 Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="130"/>
+        <location filename="../db/Database.cpp" line="134"/>
         <source>Your database &quot;%1&quot; is corrupted. Unable to find version number.</source>
         <translation>Twoja baza danych &quot;%1&quot; jest uszkodzona. Nie można znaleźć numeru wersji.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="131"/>
-        <location filename="../db/Database.cpp" line="169"/>
+        <location filename="../db/Database.cpp" line="135"/>
+        <location filename="../db/Database.cpp" line="173"/>
         <source>This is critical error and if your database has important data, please contact with Zarlok team in WNT GK to help you solve your problem.</source>
         <translation>To jest krytyczny błąd i jeśli Twoja baza danych zawiera ważne dane, skontaktuj się z zespołem Żarłoka w WNT GK, który pomoże rozwiązać Twój problem.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="144"/>
+        <location filename="../db/Database.cpp" line="148"/>
         <source>Your database &quot;%1&quot; is in version %2 and is newer than supported version %3.</source>
         <translation>Baza danych&quot;%1&quot; jest w wersji %2 i jest nowsza niż wspierana wersja %3.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="145"/>
+        <location filename="../db/Database.cpp" line="149"/>
         <source>Please upgrade Zarlok to the newest version.</source>
         <translation>Proszę zaktualizować Żarłoka do najnowszej wersji.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="156"/>
+        <location filename="../db/Database.cpp" line="160"/>
         <source>You have been asked for upgrade of database &quot;%1&quot; from version %2 to version %3.</source>
         <translation>Zostałeś poproszony o aktualizację bazy danych &quot;%1&quot; z wersji %2 do wersji %3.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="168"/>
+        <location filename="../db/Database.cpp" line="172"/>
         <source>Database &quot;%1&quot; upgrade failed.</source>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="539"/>
+        <location filename="../db/Database.cpp" line="504"/>
         <source>Updating database...</source>
         <translation>Aktualizacja bazy danych...</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="539"/>
+        <location filename="../db/Database.cpp" line="504"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="157"/>
+        <location filename="../db/Database.cpp" line="161"/>
         <source>Do you want to upgrade?</source>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="347"/>
+        <location filename="../db/Database.cpp" line="365"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="370"/>
+        <location filename="../db/Database.cpp" line="383"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="371"/>
+        <location filename="../db/Database.cpp" line="384"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="412"/>
+        <location filename="../db/Database.cpp" line="415"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="413"/>
+        <location filename="../db/Database.cpp" line="416"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -916,19 +916,16 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/MealTabInsertWidget.ui" line="49"/>
-        <location filename="../gui/widgets/MealTabInsertWidget.cpp" line="123"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
         <location filename="../ui/MealTabInsertWidget.ui" line="56"/>
-        <location filename="../gui/widgets/MealTabInsertWidget.cpp" line="118"/>
-        <source>2nd breakfast</source>
+        <source>Brunch</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
         <location filename="../ui/MealTabInsertWidget.ui" line="63"/>
-        <location filename="../gui/widgets/MealTabInsertWidget.cpp" line="128"/>
         <source>Tea</source>
         <translation>Podwieczorek</translation>
     </message>
@@ -939,13 +936,11 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/MealTabInsertWidget.ui" line="77"/>
-        <location filename="../gui/widgets/MealTabInsertWidget.cpp" line="113"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
         <location filename="../ui/MealTabInsertWidget.ui" line="35"/>
-        <location filename="../gui/widgets/MealTabInsertWidget.cpp" line="133"/>
         <source>Diner</source>
         <translation>Kolacja</translation>
     </message>
@@ -953,43 +948,43 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealTabWidget</name>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="37"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="38"/>
         <source>&amp;Rename</source>
         <translation>Zmień &amp;nazwę</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="39"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="40"/>
         <source>Remove record from database</source>
         <translation>Usuń rekord z bazy danych</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="109"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="113"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="164"/>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="169"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="210"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="215"/>
         <source>Remove meal</source>
         <translation>Usuń posiłek</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="165"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="211"/>
         <source>This meal contain %1 distributed parties. Remove them all first before you delete meal.</source>
         <translation>Ten posiłek zawiera %1 wydanych partii. Zanim usuniesz posiłek usuń partie z posiłku.</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="170"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="216"/>
         <source>Are you sure to remove this meal?</source>
         <translation>Na pewno chcesz usunąc ten posiłek?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="197"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="245"/>
         <source>Meal name rename</source>
         <translation>Zmiana nazwy posiłku</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/MealTabWidget.cpp" line="197"/>
+        <location filename="../gui/widgets/MealTabWidget.cpp" line="245"/>
         <source>Set new meal name</source>
         <translation>Nowa nazwa posiłku</translation>
     </message>
@@ -1152,9 +1147,9 @@ Click Close to exit.</source>
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="266"/>
-        <location filename="../db/Database.cpp" line="284"/>
-        <location filename="../db/Database.cpp" line="288"/>
+        <location filename="../db/Database.cpp" line="275"/>
+        <location filename="../db/Database.cpp" line="293"/>
+        <location filename="../db/Database.cpp" line="298"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
@@ -1222,14 +1217,44 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="129"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="131"/>
         <source>No day selected yet</source>
         <translation>Nie wybrano żadnego dnia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="203"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="211"/>
         <source>Selected day: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Dzień: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="52"/>
+        <source>Breakfast</source>
+        <translation>Śniadanie</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="52"/>
+        <source>Brunch</source>
+        <translation>Drugie śniadanie</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="53"/>
+        <source>Lunch</source>
+        <translation>Obiad</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="53"/>
+        <source>Tea</source>
+        <translation>Podwieczorek</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="54"/>
+        <source>Diner</source>
+        <translation>Kolacja</translation>
+    </message>
+    <message>
+        <location filename="../db/MealManager.cpp" line="54"/>
+        <source>Other</source>
+        <translation>Inny</translation>
     </message>
 </context>
 <context>
@@ -1347,81 +1372,81 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="105"/>
-        <location filename="../ui/TabMealWidget.ui" line="132"/>
-        <location filename="../ui/TabMealWidget.ui" line="159"/>
+        <location filename="../ui/TabMealWidget.ui" line="155"/>
+        <location filename="../ui/TabMealWidget.ui" line="182"/>
+        <location filename="../ui/TabMealWidget.ui" line="209"/>
         <source>Edit</source>
         <translation>Edytuj</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="173"/>
+        <location filename="../ui/TabMealWidget.ui" line="92"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="92"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="269"/>
+        <location filename="../ui/TabMealWidget.ui" line="142"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="283"/>
         <source>Scouts</source>
         <translation>Harcerzy</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="119"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="275"/>
+        <location filename="../ui/TabMealWidget.ui" line="169"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="289"/>
         <source>Leaders</source>
         <translation>Kadry</translation>
     </message>
     <message>
-        <location filename="../ui/TabMealWidget.ui" line="146"/>
+        <location filename="../ui/TabMealWidget.ui" line="196"/>
         <source>Other</source>
         <translation>Pozostali</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="40"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="41"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="70"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="71"/>
         <source>Create &amp;&amp; view PDF report</source>
         <translation>Stworzy i zobacz raport ZZ</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="71"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="72"/>
         <source>Create all PDF reports</source>
         <translation>Twórz raporty dla wszystkich</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="72"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="73"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="76"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="77"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="281"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="295"/>
         <source>Others</source>
         <translation>Inni</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="289"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="303"/>
         <source>Give number of persons for meal:</source>
         <translation>Podaj numer osób na posiłek:</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="329"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="343"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="329"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="343"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="338"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="352"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>
@@ -1531,17 +1556,22 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="209"/>
+        <location filename="../zarlok.cpp" line="164"/>
+        <source>Database is not loaded properly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="231"/>
         <source>About Menu</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="210"/>
+        <location filename="../zarlok.cpp" line="232"/>
         <source>The &lt;b&gt;Menu&lt;/b&gt; example shows how to create menu-bar menus and context menus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="215"/>
+        <location filename="../zarlok.cpp" line="237"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>
