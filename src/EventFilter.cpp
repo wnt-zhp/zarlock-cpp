@@ -20,22 +20,30 @@
 #include "EventFilter.h"
 #include <qcoreevent.h>
 
+#include "globals.h"
+
 // bool EventFilter::event(QEvent* )
 // {
 // return QObject::event();
 // }
 
-bool EventFilter::eventFilter(QObject *obj, QEvent *event)
-{
+bool EventFilter::eventFilter(QObject * obj, QEvent * event) {
 	if (event->type() == QEvent::Resize) {
 // 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 // 		qDebug("Ate key press %d", keyEvent->key());
+
+// 		QVector<QObject *>::iterator f = qFind(array, obj);
 		emit resized();
+
 		return true;
 	} else {
 		// standard event processing
 		return QObject::eventFilter(obj, event);
 	}
 }
+
+// EventFilter::addMonitoredObjects(QObject * obj) {
+// 	array.push_back(obj);
+// }
 
 #include "EventFilter.moc"

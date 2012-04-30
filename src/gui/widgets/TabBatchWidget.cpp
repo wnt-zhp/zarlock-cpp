@@ -151,7 +151,7 @@ void TabBatchWidget::addBatchRecord(bool newrec) {
 	}
 }
 
-void TabBatchWidget::editRecord(const QModelIndex& idx) {
+void TabBatchWidget::editRecord(const QModelIndex& idx) {PR(__func__);
 	brw->prepareUpdate(idx);
 	widget_add_batch->setVisible(true);
 	dwbox->go();
@@ -166,9 +166,10 @@ void TabBatchWidget::setFilter() {
 void TabBatchWidget::setFilterString(const QString& string) {
 	QString f = string;
 	f.replace(' ', '*');
-// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString));
+// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::Wildcard));
 	proxy_model->setFilterWildcard(f);
 	proxy_model->setFilterKeyColumn(BatchTableModel::HSpec);
+	proxy_model->setFilterRole(Qt::UserRole);
 }
 
 void TabBatchWidget::doCreateSMreports() {

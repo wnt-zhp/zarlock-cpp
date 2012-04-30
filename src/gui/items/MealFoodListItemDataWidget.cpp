@@ -57,18 +57,22 @@ owner(item), tv(NULL)
 	batch->setAutoCompletion(true);
 	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
 	
-	addB->setMaximumSize(24, 24);
+	addB->setMaximumSize(32, 32);
 	addB->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-	updateB->setMaximumSize(24, 24);
+	addB->setIconSize(QSize(16,16));
+	updateB->setMaximumSize(32, 32);
 	updateB->setIcon(style()->standardIcon(QStyle::SP_DialogOpenButton));
-	removeB->setMaximumSize(24, 24);
+	updateB->setIconSize(QSize(16,16));
+	removeB->setMaximumSize(32, 32);
 	removeB->setIcon(style()->standardIcon(QStyle::SP_TrashIcon));
-	closeB->setMaximumSize(24, 24);
+	removeB->setIconSize(QSize(16,16));
+	closeB->setMaximumSize(32, 32);
 	closeB->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+	closeB->setIconSize(QSize(16,16));
 	
-	qty->setMaximumSize(128, 24);
+	qty->setMaximumSize(128, 32);
 	qty->setMaximum(9999);
-	qty_label->setMaximumSize(128, 24);
+	qty_label->setMaximumSize(128, 32);
 	
 	connect(batch, SIGNAL(activated(int)), this, SLOT(validateBatchAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));

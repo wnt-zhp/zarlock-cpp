@@ -63,8 +63,6 @@ public:
 	virtual bool selectRow(int row);
 	virtual bool selectColumn(int column);
 
-	virtual bool pushRow(const QSqlQuery & rec, bool emit_signal = true);
-	virtual bool fillRow(const QSqlQuery & rec, int row, bool emit_signal = true) = 0;
 	virtual int getRowById(int id) throw (int);
 
 public:
@@ -89,6 +87,10 @@ public:
 
 signals:
 	void rowInserted(int row);
+
+protected:
+	virtual bool pushRow(const QSqlQuery & rec, bool emit_signal = true);
+	virtual bool fillRow(const QSqlQuery & rec, int row, bool emit_signal = true) = 0;
 
 private:
 	virtual void clearRecords();

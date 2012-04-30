@@ -45,8 +45,8 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractT
 	headers.push_back(tr("Booking"));
 	headers.push_back(tr("Expiry"));
 	headers.push_back(tr("Entry date"));
-	headers.push_back(tr("Notes"));
 	headers.push_back(tr("Invoice"));
+	headers.push_back(tr("Notes"));
 
 	columns.push_back("id");
 	columns.push_back("prod_id");
@@ -58,8 +58,8 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractT
 	columns.push_back("regdate");
 	columns.push_back("expirydate");
 	columns.push_back("entrydate");
-	columns.push_back("notes");
 	columns.push_back("invoice");
+	columns.push_back("notes");
 
 	dtypes[Qt::DisplayRole].push_back(QVariant::Int);
 	dtypes[Qt::DisplayRole].push_back(QVariant::String);
@@ -102,7 +102,7 @@ BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractT
 }
 
 BatchTableModel::~BatchTableModel() {
-	FPR(__func__);
+	DI();
 }
 
 QVariant BatchTableModel::prepareProduct(const QVariant& v) {
@@ -130,6 +130,10 @@ QVariant BatchTableModel::prepareProduct(const QVariant& v) {
 QVariant BatchTableModel::data(const QModelIndex & idx, int role) const {
 	int row = idx.row();
 	int col = idx.column();
+
+	if (col == HSpec and role == Qt::UserRole) {
+		return filter_data[row];
+	}
 
 	switch (role) {
 		case Qt::DisplayRole:
@@ -375,6 +379,8 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
 	rec->arr[Qt::DisplayRole][HExpiryDate]		= prepareDate(q.value(HExpiryDate));
 	rec->arr[Qt::DisplayRole][HEntryDate]		= prepareDate(q.value(HEntryDate));
 
+	filter_data[row] = rec->arr[Qt::DisplayRole][HSpec].toString() % " " % rec->arr[Qt::DisplayRole][HInvoice].toString();
+
 	if (emit_signal)
 		emit dataChanged(this->index(row, HId), this->index(row, this->columnCount()));
 
@@ -383,6 +389,25 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
 
 void BatchTableModel::autoSubmit(bool asub) {
 	autosubmit = asub;
+}
+
+bool BatchTableModel::insertRows(int row, int count, const QModelIndex& parent) {
+	filter_data.insert(row, count, QString());
+
+	return AbstractTableModel::insertRows(row, count, parent);
+}
+
+bool BatchTableModel::removeRows(int row, int count, const QModelIndex& parent) {
+	filter_data.remove(row, count);
+
+	return AbstractTableModel::removeRows(row, count, parent);
+}
+
+
+bool BatchTableModel::pushRow(const QSqlQuery& rec, bool emit_signal) {
+	filter_data.push_back(QString());
+
+	return AbstractTableModel::pushRow(rec, emit_signal);
 }
 
 #include "BatchTableModel.moc"

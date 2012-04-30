@@ -374,6 +374,9 @@ void AbstractDimmingWidget::setEventTransparent(bool transparent) {
 }
 
 void AbstractDimmingWidget::parentResizeEvent() {
+	if (this->isHidden())
+		return;
+
 	if (overlay_enabled) {
 		overlay->resize(parent_widget->size());
 		if (this->isVisible() or this->last_state == IN) {
@@ -386,7 +389,9 @@ void AbstractDimmingWidget::parentResizeEvent() {
 }
 
 void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
-	animate();
+	if (this->isVisible())
+		animate();
+
 	QWidget::resizeEvent(event);
 }
 

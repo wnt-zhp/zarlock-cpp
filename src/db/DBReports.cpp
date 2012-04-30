@@ -209,7 +209,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	if (!q2.exec())
 		PR(q2.lastError().databaseText().toStdString());
 
-	int id, kind;
+	int id/*, kind*/;
 	QString name;
 	int sco = 0, lea = 0, oth = 0;
 	int all_sco = 0, all_lea = 0, all_oth = 0;
@@ -220,11 +220,10 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	const QString header_tmp = "<td width=\"auto\">%1 | %2/%3/%4</td>";
 
 	BatchTableModel * btm = db->CachedBatch();
-	DistributorTableModel * dtm = db->CachedDistributor();
 
 	while (q2.next()) {
 		id = q2.value(0).toInt();
-		kind = q2.value(1).toInt();
+// 		kind = q2.value(1).toInt();
 		name = q2.value(2).toString();
 		sco = q2.value(3).toInt();
 		lea = q2.value(4).toInt();

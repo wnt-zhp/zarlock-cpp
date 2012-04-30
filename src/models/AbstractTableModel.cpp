@@ -300,8 +300,6 @@ bool AbstractTableModel::pushRow(const QSqlQuery& q, bool emit_signal) {
 }
 
 int AbstractTableModel::getRowById(int id) throw (int) {
-	int r = -1;
-
 	int c = records.count();
 	for (int r = 0; r < c; ++r) {
 		if (records[r]->arr[Qt::EditRole][HId] == id)

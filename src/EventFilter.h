@@ -21,7 +21,7 @@
 #define EVENTFILTER_H
 
 #include <QObject>
-
+#include <QVector>
 
 class EventFilter : public QObject {
 Q_OBJECT
@@ -29,8 +29,13 @@ public:
 	// virtual bool event(QEvent* );
 	virtual bool eventFilter(QObject* , QEvent* );
 
+// 	virtual void addMonitoredObjects(QObject * obj);
+
 signals:
 	void resized();
+
+private:
+// 	QVector<QObject *> array;
 };
 
 #endif // EVENTFILTER_H

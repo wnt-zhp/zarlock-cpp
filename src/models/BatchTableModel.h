@@ -37,6 +37,9 @@ public:
 
 	virtual QVariant data(const QModelIndex& idx, int role = Qt::DisplayRole) const;
 
+	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
+	virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+
 	virtual bool addRecord(int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool updateRecord(int row, int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool getRecord(int row, int & pid, QString& spec, int & price, QString& unit, int & qty, int & used, QDate& reg, QDate& expiry, QDate& entry, QString& invoice, QString& notes);
@@ -46,8 +49,11 @@ public:
 	virtual void autoSubmit(bool asub = true);
 
 public:
-	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HNotes, HInvoice, DummyHeadersSize }; // HENameQty
+	enum Headers {HId = 0, HProdId, HSpec, HPrice, HUnit, HStaQty, HUsedQty, HRegDate, HExpiryDate, HEntryDate, HInvoice, HNotes, DummyHeadersSize }; // HENameQty
 	enum UserRoles { RRaw = Qt::UserRole + 1, RNameQty = Qt::UserRole + 10, RFreeQty };
+
+protected:
+	virtual bool pushRow(const QSqlQuery& rec, bool emit_signal = true);
 
 private:
 	QVariant display(const QModelIndex & idx, const int role = Qt::DisplayRole) const;
@@ -57,6 +63,8 @@ protected:
 	QVariant prepareProduct(const QVariant & v);
 
 	bool autosubmit;
+
+	QVector<QString> filter_data;
 };
 
 #endif // BATCHTABLEMODEL_H
