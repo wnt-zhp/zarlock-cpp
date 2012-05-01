@@ -40,6 +40,9 @@ void MealFoodList::populateModel() {
 	int num = proxy->rowCount();
 
 	this->clear();
+
+	insertHeaderSlot();
+
 	for (int i = 0; i < num; ++i) {
 		QListWidgetItem * qlwi = new QListWidgetItem(this);
 		qlwi->setSizeHint(QSize(100, 32));
@@ -77,6 +80,19 @@ void MealFoodList::insertEmptySlot() {
 	this->addItem(qlwi);
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
 	mflidw->convertToEmpty();
+}
+
+void MealFoodList::insertHeaderSlot() {
+	QListWidgetItem * qlwi = new QListWidgetItem(this);
+	qlwi->setSizeHint(QSize(100, 36));
+	
+	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
+	
+	this->insertItem(0, qlwi);
+	this->setItemWidget(qlwi, (QWidget *)mflidw);
+	mflidw->convertToHeader();
+
+// 	((QVBoxLayout *)((QWidget *)parent())->layout())->insertWidget(0, mflidw);
 }
 
 void MealFoodList::setProxyModel(MealTableModelProxy* model) {

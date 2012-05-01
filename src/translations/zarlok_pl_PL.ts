@@ -348,7 +348,7 @@
 <context>
     <name>BatchTableModel</name>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="168"/>
+        <location filename="../models/BatchTableModel.cpp" line="172"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="71"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="253"/>
         <source> (quantity: %1)</source>
@@ -403,7 +403,7 @@
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="214"/>
+        <location filename="../models/BatchTableModel.cpp" line="218"/>
         <source>   %1 of %2   </source>
         <translation>   %1 z %2   </translation>
     </message>
@@ -420,19 +420,19 @@
         <translation>Data wpisu</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="48"/>
+        <location filename="../models/BatchTableModel.cpp" line="49"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="166"/>
         <source>Notes</source>
         <translation>Notatka</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="49"/>
+        <location filename="../models/BatchTableModel.cpp" line="48"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="167"/>
         <source>Invoice</source>
         <translation>Faktura</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="200"/>
+        <location filename="../models/BatchTableModel.cpp" line="204"/>
         <location filename="../models/backups/BatchTableModel.cpp" line="218"/>
         <source>Parser error!</source>
         <translation>Błąd przetwarzania!</translation>
@@ -865,44 +865,78 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="25"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="22"/>
+        <source>Batch to distribute</source>
+        <translation>Partia do wydania</translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="29"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="32"/>
         <source>Batch name</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="51"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
+        <source>Quantity</source>
+        <translation>Ilość</translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="65"/>
         <source>Qty value</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="78"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="103"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="105"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="136"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="304"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="138"/>
+        <source>Delete entry</source>
+        <translation>Usuń wpis</translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="148"/>
+        <source>Insert</source>
+        <translation>Dodaj</translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="155"/>
+        <source>Edit entry</source>
+        <translation>Edytuj wpis</translation>
+    </message>
+    <message>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="165"/>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="109"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="140"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="308"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="353"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="357"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="354"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="358"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="384"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="388"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
@@ -1385,13 +1419,13 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="142"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="283"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="282"/>
         <source>Scouts</source>
         <translation>Harcerzy</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="169"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="289"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="288"/>
         <source>Leaders</source>
         <translation>Kadry</translation>
     </message>
@@ -1426,27 +1460,27 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="295"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="294"/>
         <source>Others</source>
         <translation>Inni</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="303"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="302"/>
         <source>Give number of persons for meal:</source>
         <translation>Podaj numer osób na posiłek:</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="343"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="342"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="343"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="342"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="352"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="351"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>
@@ -1531,47 +1565,47 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Główny</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="58"/>
+        <location filename="../zarlok.cpp" line="60"/>
         <source>Database</source>
         <translation>Baza danych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="79"/>
+        <location filename="../zarlok.cpp" line="83"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="80"/>
+        <location filename="../zarlok.cpp" line="84"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="81"/>
+        <location filename="../zarlok.cpp" line="85"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="82"/>
+        <location filename="../zarlok.cpp" line="86"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="164"/>
+        <location filename="../zarlok.cpp" line="168"/>
         <source>Database is not loaded properly.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="231"/>
+        <location filename="../zarlok.cpp" line="235"/>
         <source>About Menu</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="232"/>
+        <location filename="../zarlok.cpp" line="236"/>
         <source>The &lt;b&gt;Menu&lt;/b&gt; example shows how to create menu-bar menus and context menus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="237"/>
+        <location filename="../zarlok.cpp" line="241"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>

@@ -117,7 +117,7 @@ bool DataParser::unit(const QString & data, QString & unit_formated) {
 
 bool DataParser::date(const QString & data, QDate & date_formated, const QDate & ref) {
 	QRegExp rx1("^\\s*([+-]\\d+|0)\\s*$");
-	QRegExp rx2("^\\s*dzis\\s*$");
+	QRegExp rx2("^\\s*(d|dzis|dziś)\\s*$");
 	QRegExp rx3("^\\s*(\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d\\d\\d))?)?\\s*$");	// dd/mm//yy
 // 	QRegExp rx3("^\\s*(\\d\\d\\d\\d?)([.:;,-/ ](\\d\\d?)([.:;,-/ ](\\d\\d))?)?\\s*$");	// dd/mm//yy
 

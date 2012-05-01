@@ -435,4 +435,64 @@ void MealFoodListItemDataWidget::resetWidgetData() {
 	setWidgetData(dist_id);
 }
 
+void MealFoodListItemDataWidget::convertToHeader() {
+	editable = false;
+	batch_row = -1;
+	batch_label->setText(tr("Batch"));
+	qty_label->setText(tr("Quantity"));
+	label_price->setText(tr("Price"));
+	label_unit->setText(tr("Unit"));
+
+	QPalette bkg, text;
+	bkg.setBrush(QPalette::Window, QBrush(Qt::gray));
+	this->setAutoFillBackground(true);
+	this->setPalette(bkg);
+
+	text.setBrush(QPalette::Base, QBrush(Qt::darkGray));
+	text.setBrush(QPalette::Text, QBrush(Qt::white));
+
+	text.setBrush(QPalette::Button, QBrush(Qt::darkGray));
+	text.setBrush(QPalette::ButtonText, QBrush(Qt::white));
+	text.setBrush(QPalette::ButtonText, QBrush(Qt::white));
+
+	batch_label->setAutoFillBackground(true);
+	qty_label->setAutoFillBackground(true);
+	label_price->setAutoFillBackground(true);
+	label_unit->setAutoFillBackground(true);
+
+	batch_label->setPalette(text);
+	qty_label->setPalette(text);
+	label_price->setPalette(text);
+	label_unit->setPalette(text);
+
+	batch_label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	qty_label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	label_price->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	label_unit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+	delete addB;
+	addB = (QPushButton *)((void *)new QLabel(tr("Actions")));
+	this->layout()->addWidget(addB);
+// 	addB->setText(tr("Actions"));
+// 	addB->setIcon(QIcon());
+// 	addB->setFlat(true);
+// 	addB->setCheckable(false);
+	addB->setVisible(true);
+	addB->setMinimumSize(QSize(64, 16));
+	((QLabel *)addB)->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	addB->setAutoFillBackground(true);
+	addB->setPalette(text);
+
+// 	addB->setVisible(false);
+	updateB->setVisible(false);
+	removeB->setVisible(false);
+	closeB->setVisible(false);
+
+	qty->setVisible(false);
+	qty_label->setVisible(true);
+	
+	batch->setVisible(false);
+	batch_label->setVisible(true);
+}
+
 #include "MealFoodListItemDataWidget.moc"

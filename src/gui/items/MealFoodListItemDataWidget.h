@@ -49,6 +49,7 @@ public slots:
 	void setWidgetData(int id);
 	void resetWidgetData();
 	void convertToEmpty();
+	void convertToHeader();
 
 protected slots:
 	void validateBatchAdd();

@@ -36,6 +36,7 @@ public:
 	virtual const MealTableModelProxy * proxyModel();
 
 	virtual void insertEmptySlot();
+	virtual void insertHeaderSlot();
 public slots:
 	virtual void populateModel();
 	virtual void refreshModel();

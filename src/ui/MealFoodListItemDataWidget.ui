@@ -17,10 +17,17 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QComboBox" name="batch"/>
+      <widget class="QComboBox" name="batch">
+       <property name="toolTip">
+        <string>Batch to distribute</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="batch_label">
+       <property name="toolTip">
+        <string>Batch name</string>
+       </property>
        <property name="text">
         <string>Batch name</string>
        </property>
@@ -31,7 +38,11 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QDoubleSpinBox" name="qty"/>
+      <widget class="QDoubleSpinBox" name="qty">
+       <property name="toolTip">
+        <string>Quantity</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="qty_label">
@@ -46,6 +57,9 @@
          <width>100</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Quantity</string>
        </property>
        <property name="text">
         <string>Qty value</string>
@@ -74,6 +88,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Unit</string>
+     </property>
      <property name="text">
       <string>Unit</string>
      </property>
@@ -99,6 +116,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Price</string>
+     </property>
      <property name="text">
       <string>Price</string>
      </property>
@@ -114,16 +134,26 @@
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
       <widget class="QPushButton" name="removeB">
+       <property name="toolTip">
+        <string>Delete entry</string>
+       </property>
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="addB"/>
+      <widget class="QPushButton" name="addB">
+       <property name="toolTip">
+        <string>Insert</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="updateB">
+       <property name="toolTip">
+        <string>Edit entry</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -131,6 +161,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="closeB">
+       <property name="toolTip">
+        <string>Cancel</string>
+       </property>
        <property name="text">
         <string/>
        </property>
