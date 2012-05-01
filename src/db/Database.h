@@ -96,7 +96,7 @@ private:
 
 	bool createDBStructure(const QString& dbfile);
 
-	QString fileFromDBName(const QString & dbname);
+	QString fileFromDBName(const QString & dbname, bool fullpath = true);
 
 	bool doDBUpgrade(unsigned int version);
 	bool execQueryFromFile(const QString & resource);

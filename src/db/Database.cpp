@@ -345,11 +345,14 @@ bool Database::execQueryFromFile(const QString& resource) {
 	return true;
 }
 
-QString Database::fileFromDBName(const QString& dbname) {
+QString Database::fileFromDBName(const QString& dbname, bool fullpath) {
 	QString safename = dbname;
 	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
 
-	return QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
+	if (fullpath)
+		return QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;
+	else
+		return safename;
 }
 
 /**
@@ -373,6 +376,11 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 	QFile fdbfile(dbfile);
 
 	if (fdbfile.exists()) {
+		QString bp = QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % "/backups/";
+		QDir bpd(bp);
+		if (!bpd.exists(bp))
+			bpd.mkpath(bp);
+		fdbfile.copy(bp % "/" % fileFromDBName(dbname, false) % "_backup_" % QDateTime::currentDateTime().toString("yyyyMMdd_hhmmsszzz") % dbfilext);
 		db.setDatabaseName(dbfile);
 		return db.open();
 	}
