@@ -24,11 +24,17 @@
 #include <QSqlError>
 #include <QVariant>
 
-const QVector<QString> CampProperties::dbsetkeys = {
+// const QVector<QString> CampProperties::dbsetkeys = {
+// 	"IsDatabaseCorrect", "CampName", "CampPlace", "CampOrg",
+// 	"CampDateBegin", "CampDateEnd", "ScoutsNo", "LeadersNo",
+// 	"AvgCosts", "CampLeader", "CampQuarter", "CampOthers"
+// };
+
+const QVector<QString> CampProperties::dbsetkeys = QVector<QString>({ 
 	"IsDatabaseCorrect", "CampName", "CampPlace", "CampOrg",
 	"CampDateBegin", "CampDateEnd", "ScoutsNo", "LeadersNo",
 	"AvgCosts", "CampLeader", "CampQuarter", "CampOthers"
-};
+});
 
 void CampProperties::writeCampSettings() {
 	QSqlQuery csq;
