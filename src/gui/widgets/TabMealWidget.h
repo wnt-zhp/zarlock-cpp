@@ -51,6 +51,8 @@ private slots:
 	void doPrepareReports();
 	void doBrowseReports();
 
+	void toggleSpinWidget(bool state);
+
 private:
 	void checkForDirty();
 

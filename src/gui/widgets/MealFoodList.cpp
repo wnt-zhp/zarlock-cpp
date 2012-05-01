@@ -37,6 +37,7 @@ MealFoodList::~MealFoodList() {
 }
 
 void MealFoodList::populateModel() {
+	proxy->invalidate();
 	int num = proxy->rowCount();
 
 	this->clear();
@@ -54,8 +55,6 @@ void MealFoodList::populateModel() {
 
 		this->addItem(qlwi);
 		this->setItemWidget(qlwi, (QWidget *)mflidw);
-
-		connect(mflidw, SIGNAL(itemRemoved(QListWidgetItem*)), this, SLOT(doItemRemoved(QListWidgetItem*)));
 	}
 
 	insertEmptySlot();
@@ -111,7 +110,7 @@ void MealFoodList::doItemEdit(QListWidgetItem* item) {
 }
 
 void MealFoodList::doItemRemoved(QListWidgetItem* item) {
-	disconnect(sender(), SIGNAL(itemRemoved(QListWidgetItem*)), this, SLOT(doItemRemoved(QListWidgetItem*)));
+// 	disconnect(sender(), SIGNAL(itemRemoved(QListWidgetItem*)), this, SLOT(doItemRemoved(QListWidgetItem*)));
 	to_remove.push_back(item);
 }
 

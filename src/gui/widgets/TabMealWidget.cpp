@@ -104,6 +104,7 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 	spin_others->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
 	mealTabChanged(-1);
+	toggleSpinWidget(false);
 }
 
 TabMealWidget::~TabMealWidget() {
@@ -145,9 +146,9 @@ void TabMealWidget::activateUi(bool activate) {
 		push_edit_l->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
 		push_edit_o->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
 
-		spin_scouts->setEnabled(false);
-		spin_leaders->setEnabled(false);
-		spin_others->setEnabled(false);
+// 		spin_scouts->setEnabled(false);
+// 		spin_leaders->setEnabled(false);
+// 		spin_others->setEnabled(false);
 	}
 }
 
@@ -220,8 +221,12 @@ void TabMealWidget::validateSpins() {
 // 	((QSpinBox *)sender())->setFocus();
 
 #warning	FIMXE
+// \todo Aktualizacja nie działa poprawnie, zrób to porządnie.
 //	FIXME: Aktualizacja nie działa poprawnie, zrób to porządnie.
-	wmap->setCurrentIndex(current_meal_row);
+// wmap->submit();
+// db->CachedMealDay()->select();
+// db->CachedMeal()->select();
+// 	wmap->setCurrentIndex(current_meal_row);
 
 // 	if ( spin_scouts->value() or spin_leaders->value() or spin_others->value() ) {
 // 		push_update->setEnabled(true);
@@ -243,11 +248,9 @@ void TabMealWidget::mealTabChanged(int tab) {
 // 		spin_scouts->setEnabled(false);
 // 		spin_leaders->setEnabled(false);
 // 		spin_others->setEnabled(false);
-		push_edit_s->setEnabled(false);
-		push_edit_l->setEnabled(false);
-		push_edit_o->setEnabled(false);
 
-		widget_spins->setVisible(false);
+		toggleSpinWidget(false);
+
 		wmap->setCurrentIndex(-1);
 		return;
 	}
@@ -255,10 +258,8 @@ void TabMealWidget::mealTabChanged(int tab) {
 // 	spin_scouts->setEnabled(true);
 // 	spin_leaders->setEnabled(true);
 // 	spin_others->setEnabled(true);
-	push_edit_s->setEnabled(true);
-	push_edit_l->setEnabled(true);
-	push_edit_o->setEnabled(true);
-	widget_spins->setVisible(true);
+
+	toggleSpinWidget(true);
 
 	int i = tab;//tab_meals->currentIndex();PR(i);
 	int mid = ((MealFoodList *)tab_meals->widget(i))->proxyModel()->key();
@@ -326,6 +327,7 @@ void TabMealWidget::doUpdate() {
 
 	QModelIndex i = list_days->currentIndex();
 	db->CachedMealDay()->select();
+	db->CachedMeal()->select();
 	list_days->setCurrentIndex(i);
 }
 
@@ -379,5 +381,13 @@ void TabMealWidget::checkForDirty() {
 
 // 	push_update->setEnabled(false);
 }
+
+void TabMealWidget::toggleSpinWidget(bool state) {
+	push_edit_s->setEnabled(state);
+	push_edit_l->setEnabled(state);
+	push_edit_o->setEnabled(state);
+	widget_spins->setVisible(state);
+}
+
 
 #include "TabMealWidget.moc"

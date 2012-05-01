@@ -51,6 +51,8 @@ public slots:
 	void convertToEmpty();
 	void convertToHeader();
 
+	void invalidate();
+
 protected slots:
 	void validateBatchAdd();
 	void validateAdd();

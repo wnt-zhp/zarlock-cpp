@@ -69,7 +69,12 @@ owner(item), tv(NULL)
 	closeB->setMaximumSize(32, 32);
 	closeB->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
 	closeB->setIconSize(QSize(16,16));
-	
+
+	addB->setFlat(true);
+	updateB->setFlat(true);
+	removeB->setFlat(true);
+	closeB->setFlat(true);
+
 	qty->setMaximumSize(128, 32);
 	qty->setMaximum(9999);
 	qty_label->setMaximumSize(128, 32);
@@ -85,6 +90,12 @@ owner(item), tv(NULL)
 // 	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenItems()));
 
 // 	convertToEmpty();
+
+	connect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
+
+	addB->setEnabled(false);
+
+	invalidate();
 
 	render();
 }
@@ -103,7 +114,7 @@ void MealFoodListItemDataWidget::render() {FII();
 	updateB->setVisible(!editable);
 	removeB->setVisible(!empty);
 	closeB->setVisible(editable and !empty);
-	
+
 	qty->setVisible(editable);
 	qty_label->setVisible(!editable);
 	qty->setSuffix(tr(" of %1").arg(qty->maximum()));
@@ -153,11 +164,10 @@ void MealFoodListItemDataWidget::validateBatchAdd() {
 		return;
 
 	update();
-// 	validateAdd();
 }
 
 void MealFoodListItemDataWidget::validateAdd() {
-	if (qty->value() && batch->currentIndex() >= 0) {
+	if ((qty->value() != 0) && batch->currentIndex() >= 0) {
 		addB->setEnabled(true);
 	} else {
 		addB->setEnabled(false);
@@ -166,8 +176,7 @@ void MealFoodListItemDataWidget::validateAdd() {
 
 void MealFoodListItemDataWidget::convertToEmpty() {
 	batch_row = -1;
-	proxy->setItemNum(&batch_row);
-	proxy->invalidate();
+	invalidate();
 
 	batch->setCurrentIndex(-1);
 
@@ -213,6 +222,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 				dist_row = db->CachedDistributor()->rowCount()-1;
 				setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 				mfl->insertEmptySlot();
+				invalidate();
 			} else
 				return;
 		} else {
@@ -220,7 +230,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 			int old_qty = p->index(l.at(ans).row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
 			if (db->updateDistributorRecord(update_row, bidx.data().toUInt(), old_qty + quantity*100, d, d,
 				DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
-					mfl->populateModel();
+				invalidate();
 			} else
 				return;
 		}
@@ -245,10 +255,9 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	if (empty)
 		return;
 
-	prepareView();
+	invalidate();
 
-	proxy->setItemNum(&batch_row);
-	proxy->invalidate();
+	prepareView();
 
 	batch->setCurrentIndex(proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row());
 
@@ -284,7 +293,7 @@ void MealFoodListItemDataWidget::buttonRemove() {
  */
 void MealFoodListItemDataWidget::setWidgetData(int did) {
 	dist_id = did;
-	
+
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
 	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
 	
@@ -311,8 +320,7 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 	editable = false;
 	empty = false;
 
-	proxy->setItemNum(&batch_row);
-	proxy->invalidate();
+	invalidate();
 	batch->setCurrentIndex(proxy->mapFromSource(btm->index(batch_row, BatchTableModel::HSpec)).row());
 
 	update();
@@ -324,16 +332,15 @@ bool MealFoodListItemDataWidget::isEmpty() {
 }
 
 void MealFoodListItemDataWidget::deleteView() {
-	if (tv)
-		delete tv;
+	delete tv;
 	tv = NULL;
 }
 
 void MealFoodListItemDataWidget::prepareView() {
 	FII();
 
-	if (!tv)
-		tv = new BatchTableView;
+	delete tv;
+	tv = new BatchTableView;
 
 	tv->verticalHeader()->setDefaultSectionSize(20);
 	tv->horizontalHeader()->setVisible(true);
@@ -493,6 +500,11 @@ void MealFoodListItemDataWidget::convertToHeader() {
 	
 	batch->setVisible(false);
 	batch_label->setVisible(true);
+}
+
+void MealFoodListItemDataWidget::invalidate() {
+	proxy->setItemNum(&batch_row);
+	proxy->invalidate();
 }
 
 #include "MealFoodListItemDataWidget.moc"
