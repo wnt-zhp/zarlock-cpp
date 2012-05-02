@@ -121,6 +121,8 @@ void preparePallete() {
 
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
+bool static_build = STATIC_BUILD;
+PR(static_build);
 	qInstallMsgHandler(myMessageOutput);
 	QApplication app(argc, argv, QApplication::GuiClient);
 
@@ -130,10 +132,12 @@ TD
 		"Check your installation and try to run again.\n"
 		"Click Close to exit.");
 
-	QString resource_splash = PREFIX SHARE "/resources/splash.rcc";
+	if (!static_build) {
+	QString resource_splash = SHARE "/resources/splash.rcc";
 	if (!QResource::registerResource(resource_splash)) {
 		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_splash), QMessageBox::Close);
 		exit(EXIT_FAILURE);
+	}
 	}
 
 	QPixmap splash_pixmap(":/resources/splash/splash.png");
@@ -165,27 +169,30 @@ TD
 	splash->showMessage(QObject::tr("Loading translations"));
 
 	QTranslator myappTranslator;
-	myappTranslator.load("zarlok_" % QLocale::system().name(), PREFIX SHARE "/translations/");
+	myappTranslator.load("zarlok_" % QLocale::system().name(), SHARE "/translations/");
 	app.installTranslator(&myappTranslator);
 
 	splash->showMessage(QObject::tr("Loading resources"));
 
-	QString resource_database = PREFIX SHARE "/resources/database.rcc";
+	if (!static_build) {
+
+	QString resource_database = SHARE "/resources/database.rcc";
 	if (!QResource::registerResource(resource_database)) {
 		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_database), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
-	QString resource_reports = PREFIX SHARE "/resources/reports.rcc";
+	QString resource_reports = SHARE "/resources/reports.rcc";
 	if (!QResource::registerResource(resource_reports)) {
 		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_reports), QMessageBox::Close);
 		exit(EXIT_FAILURE);
 	}
 
-	QString resource_icons = PREFIX SHARE "/resources/icons.rcc";
+	QString resource_icons = SHARE "/resources/icons.rcc";
 	if (!QResource::registerResource(resource_icons)) {
 		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_icons), QMessageBox::Close);
 		exit(EXIT_FAILURE);
+	}
 	}
 
 	splash->showMessage(QObject::tr("Loading settings"));

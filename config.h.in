@@ -2,7 +2,14 @@
 #define __CONFIG_H__
 
 #define PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define SHARE "/share/@CMAKE_PROJECT_NAME@"
+
+#ifdef BUILD_STATIC
+#	define STATIC_BUILD true;
+#	define SHARE ":"
+#else
+#	define STATIC_BUILD false;
+#	define SHARE "@CMAKE_INSTALL_PREFIX@/share/@CMAKE_PROJECT_NAME@"
+#endif /* BUILD_STATIC */
 
 #define ZARLOK_HOME			"/.zarlok/"
 #define ZARLOK_DB			"/db/"

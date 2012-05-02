@@ -14,34 +14,7 @@ find_package(Qt4 REQUIRED)
 # QT4_ADD_BINRESOURCES(outfiles inputfile ... )
 # Oryginal QT4_ADD_RESOURCES Macro modified
 # by me for special purpose
-macro (QT4_ADD_BINRESOURCES outfiles )
-  QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
-
-  FOREACH (it ${rcc_files})
-    GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
-    GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
-    GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
-    SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/${outfilename}.rcc)
-    #  parse file for dependencies 
-    #  all files are absolute paths or relative to the location of the qrc file
-    FILE(READ "${infile}" _RC_FILE_CONTENTS)
-    STRING(REGEX MATCHALL "<file[^<]+" _RC_FILES "${_RC_FILE_CONTENTS}")
-    SET(_RC_DEPENDS)
-    FOREACH(_RC_FILE ${_RC_FILES})
-      STRING(REGEX REPLACE "^<file[^>]*>" "" _RC_FILE "${_RC_FILE}")
-      IF(NOT IS_ABSOLUTE "${_RC_FILE}")
-        SET(_RC_FILE "${rc_path}/${_RC_FILE}")
-      ENDIF(NOT IS_ABSOLUTE "${_RC_FILE}")
-      SET(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
-    ENDFOREACH(_RC_FILE)
-    ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-      COMMAND ${QT_RCC_EXECUTABLE}
-      ARGS ${rcc_options} -binary -name ${outfilename} -o ${outfile} ${infile}
-      MAIN_DEPENDENCY ${infile}
-      DEPENDS ${_RC_DEPENDS})
-    SET(${outfiles} ${${outfiles}} ${outfile})
-  ENDFOREACH (it)
-endmacro (QT4_ADD_BINRESOURCES)
+include (macros/user_macros.txt)
 
 if( UNIX AND NOT APPLE )
 	if( NOT DESKTOP_ENTRY )
@@ -74,6 +47,10 @@ ELSE( MINGW )
 	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} crunchico.rc)
 ENDIF( MINGW )
 
+if (BUILD_STATIC)
+	add_definitions(-DBUILD_STATIC)
+endif (BUILD_STATIC)
+
 configure_file(config.h.in config.h @ONLY)
 # set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
 
@@ -99,14 +76,15 @@ set(zarlok_dialogs_FORMS
 									src/ui/CampSettingsDialog.ui
 )
 
+# resources
+
 set(zarlok_db_RESOURCES src/database.qrc)
-set(zarlok_db_RESOURCES_RCC database.rcc)
 set(zarlok_reports_RESOURCES src/reports.qrc)
-set(zarlok_reports_RESOURCES_RCC reports.rcc)
 set(zarlok_icons_RESOURCES src/icons.qrc)
-set(zarlok_icons_RESOURCES_RCC icons.rcc)
 set(zarlok_splash_RESOURCES src/splash.qrc)
-set(zarlok_splash_RESOURCES_RCC splash.rcc)
+set(zarlok_translations_RESOURCES src/translations.qrc)
+
+# sources
 
 set(zarlok_src_gui_views_SRCS
 									src/gui/views/AbstractTableView.cpp
@@ -197,29 +175,93 @@ set(zarlok_TS ${TS_FILES})
 # translations
 
 option (UPDATE_TRANSLATIONS "Update source translation translations/*.ts files (WARNING: make clean will delete the source .ts files! Danger!)")
+
 if (UPDATE_TRANSLATIONS)
   qt4_create_translation(QM_FILES ${zarlok_SRCS} ${zarlok_TS})
 else (UPDATE_TRANSLATIONS)
   qt4_add_translation(QM_FILES ${zarlok_TS})
 endif (UPDATE_TRANSLATIONS) 
 
-# set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
+
+# set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
 qt4_automoc(${zarlok_SRCS})
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS} ${zarlok_dialogs_FORMS})
-qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
-qt4_add_binresources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES} OPTIONS -binary)
-qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTIONS -binary)
-qt4_add_binresources(zarlok_splash_RESOURCES_RCC ${zarlok_splash_RESOURCES} OPTIONS -binary)
+
+if (rcc_files)
+	unset (rcc_files)
+endif (rcc_files)
+
+MESSAGE(STATUS RCCFILES=|${rcc_files}|)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
-add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
-	${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
-	${zarlok_splash_RESOURCES_RCC}
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/*.tpl )
+IF (NOT BUILD_STATIC)
+	set(zarlok_db_RESOURCES_RCC database.rcc)
+	set(zarlok_reports_RESOURCES_RCC reports.rcc)
+	set(zarlok_icons_RESOURCES_RCC icons.rcc)
+	set(zarlok_splash_RESOURCES_RCC splash.rcc)
 
-add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
+	qt4_add_binresources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES} OPTIONS -binary)
+	qt4_add_binresources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES} OPTIONS -binary)
+	qt4_add_binresources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES} OPTIONS -binary)
+	qt4_add_binresources(zarlok_splash_RESOURCES_RCC ${zarlok_splash_RESOURCES} OPTIONS -binary)
+
+	add_custom_target(resources ALL DEPENDS ${zarlok_db_RESOURCES_RCC}
+		${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
+		${zarlok_splash_RESOURCES_RCC} )
+
+	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} AAA.cc ${QM} CCC.cc ${rcc_files} BBB.cc)
+
+ELSE (NOT BUILD_STATIC)
+
+# 	set(zarlok_translations_RESOURCES_RCC translations.rcc)
+
+	qt4_add_resources(zarlok_db_RESOURCES_RCC ${zarlok_db_RESOURCES})
+	qt4_add_resources(zarlok_reports_RESOURCES_RCC ${zarlok_reports_RESOURCES})
+	qt4_add_resources(zarlok_icons_RESOURCES_RCC ${zarlok_icons_RESOURCES})
+	qt4_add_resources(zarlok_splash_RESOURCES_RCC ${zarlok_splash_RESOURCES})
+# 	qt4_add_resources(zarlok_translations_RESOURCES_RCC ${zarlok_translations_RESOURCES})
+
+	SET( trans_file translations )
+	SET( trans_qminfile ${QM_FILES})
+	SET( trans_qmoutfile ${CMAKE_CURRENT_BINARY_DIR}/src/translations/ )
+
+	SET( trans_srcfile ${CMAKE_CURRENT_SOURCE_DIR}/src/${trans_file}.qrc)
+	SET( trans_infile ${CMAKE_CURRENT_BINARY_DIR}/src/${trans_file}.qrc)
+	SET( trans_outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${trans_file}.cxx)
+
+	# Copy the QM file to the output directory
+	ADD_CUSTOM_COMMAND(
+		OUTPUT ${trans_qmoutfile}
+		COMMAND cp -v ${trans_qminfile} ${trans_qmoutfile}
+		MAIN_DEPENDENCY ${trans_qminfile}
+		)
+
+	# Copy the QRC file to the output directory
+	ADD_CUSTOM_COMMAND(
+		OUTPUT ${trans_infile}
+		COMMAND ${CMAKE_COMMAND} -E copy ${trans_srcfile} ${trans_infile}
+		MAIN_DEPENDENCY ${trans_srcfile}
+		)
+
+	# Run the resource compiler (rcc_options should already be set)
+	ADD_CUSTOM_COMMAND(
+		OUTPUT ${trans_outfile}
+		COMMAND ${QT_RCC_EXECUTABLE}
+		ARGS ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
+		MAIN_DEPENDENCY ${trans_infile} ${trans_qmoutfile}
+		DEPENDS ${trans_infile} ${trans_qmoutfile}
+		)
+
+	SET( rcc_files ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC} ${zarlok_splash_RESOURCES_RCC} ${trans_outfile} )
+
+	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} AAA.cc CCC.cc ${rcc_files} BBB.cc)
+
+ENDIF (NOT BUILD_STATIC)
+
+MESSAGE(STATUS RCCFILES=|${rcc_files}|)
+
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
 
 # installation
@@ -237,6 +279,8 @@ install(FILES
 
 ENDIF ( UNIX AND NOT APPLE )
 
+IF (NOT BUILD_STATIC)
+
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
 				${CMAKE_CURRENT_BINARY_DIR}/reports.rcc
@@ -250,6 +294,7 @@ install(FILES
 				DESTINATION share/${CMAKE_PROJECT_NAME}/translations
 )
 
+ENDIF (NOT BUILD_STATIC)
 # if(UNIX AND NOT APPLE)
 # 	install( FILES ${APP_ICON} DESTINATION share/icons )
 # 	install( FILES qtm.1.gz DESTINATION ${MANPAGE_DIRECTORY} )
@@ -260,6 +305,8 @@ install(TARGETS zarlok DESTINATION bin)
 # messages
 MESSAGE(STATUS "<<< Configuration >>>
 Project:	${CMAKE_PROJECT_NAME}
+
+Static build	${BUILD_STATIC}
 
 Build type      ${CMAKE_BUILD_TYPE}
 Install path    ${CMAKE_INSTALL_PREFIX}
