@@ -256,7 +256,7 @@ ELSE (NOT BUILD_STATIC)
 
 	SET( rcc_files ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC} ${zarlok_splash_RESOURCES_RCC} ${trans_outfile} )
 
-	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} AAA.cc CCC.cc ${rcc_files} BBB.cc)
+	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${rcc_files})
 
 ENDIF (NOT BUILD_STATIC)
 
