@@ -233,9 +233,14 @@ ELSE (NOT BUILD_STATIC)
 
 	# Copy the QM file to the output directory
 	ADD_CUSTOM_COMMAND(
-		OUTPUT ${trans_qmoutfile}
-		COMMAND cp -v ${trans_qminfile} ${trans_qmoutfile}
-		MAIN_DEPENDENCY ${trans_qminfile}
+		OUTPUT QMDIR
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${trans_qmoutfile}
+		)
+
+	ADD_CUSTOM_COMMAND(
+		OUTPUT QMCOPY
+		COMMAND ${CMAKE_COMMAND} -E copy ${trans_qminfile} ${trans_qmoutfile}
+		MAIN_DEPENDENCY ${trans_qminfile} QMDIR
 		)
 
 	# Copy the QRC file to the output directory
@@ -251,7 +256,7 @@ ELSE (NOT BUILD_STATIC)
 		COMMAND ${QT_RCC_EXECUTABLE}
 		ARGS ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
 		MAIN_DEPENDENCY ${trans_infile} ${trans_qmoutfile}
-		DEPENDS ${trans_infile} ${trans_qmoutfile}
+		DEPENDS ${trans_infile} QMCOPY
 		)
 
 	SET( rcc_files ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC} ${zarlok_splash_RESOURCES_RCC} ${trans_outfile} )
