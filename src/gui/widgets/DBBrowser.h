@@ -35,7 +35,7 @@ public:
 
 public slots:
 	void databaseSelected(QListWidgetItem * item);
-	void newDatabaseCreator(bool autoopen = true);
+	QString newDatabaseCreator(bool autoopen = true);
 
 	void openZarlock(const QString & dbname);
 	void closeZarlock();

@@ -193,8 +193,6 @@ if (rcc_files)
 	unset (rcc_files)
 endif (rcc_files)
 
-MESSAGE(STATUS RCCFILES=|${rcc_files}|)
-
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
 IF (NOT BUILD_STATIC)
 	set(zarlok_db_RESOURCES_RCC database.rcc)
@@ -211,7 +209,7 @@ IF (NOT BUILD_STATIC)
 		${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
 		${zarlok_splash_RESOURCES_RCC} )
 
-	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM} ${rcc_files})
+	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
 
 ELSE (NOT BUILD_STATIC)
 
@@ -233,21 +231,21 @@ ELSE (NOT BUILD_STATIC)
 
 	# Copy the QM file to the output directory
 	ADD_CUSTOM_COMMAND(
-		OUTPUT QMDIR
+		OUTPUT ${trans_qmoutfile}
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${trans_qmoutfile}
 		)
 
 	ADD_CUSTOM_COMMAND(
 		OUTPUT QMCOPY
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_qminfile} ${trans_qmoutfile}
-		MAIN_DEPENDENCY ${trans_qminfile} QMDIR
+		MAIN_DEPENDENCY ${trans_qminfile} ${trans_qmoutfile}
 		)
 
 	# Copy the QRC file to the output directory
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_infile}
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_srcfile} ${trans_infile}
-		MAIN_DEPENDENCY ${trans_srcfile}
+		MAIN_DEPENDENCY ${trans_srcfile} QMCOPY
 		)
 
 	# Run the resource compiler (rcc_options should already be set)
@@ -256,7 +254,7 @@ ELSE (NOT BUILD_STATIC)
 		COMMAND ${QT_RCC_EXECUTABLE}
 		ARGS ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
 		MAIN_DEPENDENCY ${trans_infile} ${trans_qmoutfile}
-		DEPENDS ${trans_infile} QMCOPY
+		DEPENDS ${trans_infile}
 		)
 
 	SET( rcc_files ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC} ${zarlok_splash_RESOURCES_RCC} ${trans_outfile} )
@@ -264,8 +262,6 @@ ELSE (NOT BUILD_STATIC)
 	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${rcc_files})
 
 ENDIF (NOT BUILD_STATIC)
-
-MESSAGE(STATUS RCCFILES=|${rcc_files}|)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
 

@@ -150,7 +150,11 @@ void DBBrowser::goBrowser() {
 			openZarlock(recentDB);
 		} else {
 			PR("First run! Welcome to żarłok.");
-			newDatabaseCreator();
+			QString newdb = newDatabaseCreator();
+			if (!newdb.isNull())
+				openZarlock(newdb);
+			else
+				this->setVisible(true);
 		}
 	}
 }
@@ -245,7 +249,7 @@ void DBBrowser::refreshList(int sort, int order) {
 	}
 }
 
-void DBBrowser::newDatabaseCreator(bool autoopen) {
+QString DBBrowser::newDatabaseCreator(bool autoopen) {
 	bool wasOK = false;
 	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"), QLineEdit::Normal, "", &wasOK);
 
@@ -254,8 +258,11 @@ void DBBrowser::newDatabaseCreator(bool autoopen) {
 // 		openZarlock(dbname);
 		Database::Instance()->create_database(dbname);
 		refreshList();
-	} else
-		this->setVisible(true);
+
+		return dbname;
+	}
+
+	return QString();
 }
 
 #include "DBBrowser.moc"
