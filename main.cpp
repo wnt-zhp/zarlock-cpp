@@ -124,7 +124,20 @@ TD
 bool static_build = STATIC_BUILD;
 PR(static_build);
 	qInstallMsgHandler(myMessageOutput);
+
+	qDebug() << "Runtime app: " << argv[0];
+
 	QApplication app(argc, argv, QApplication::GuiClient);
+
+#ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
+
+#elif defined _WIN32 /* _Win32 is usually defined by compilers targeting 32 or 64 bit Windows systems */
+	app.addLibraryPath(app.applicationDirPath() % "/plugins");
+#endif
+
+	qDebug() << "Plugins path: " << app.libraryPaths();
+	qDebug() << app.applicationFilePath();
+	qDebug() << app.applicationDirPath();
 
 	const QString resWarnMsgTitle = QObject::tr("Cannot find resources");
 	const QString resWarnMsg = QObject::tr(
