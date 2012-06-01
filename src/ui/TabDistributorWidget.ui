@@ -30,7 +30,7 @@
    <item row="2" column="0">
     <widget class="QWidget" name="widget_add_distributor" native="true"/>
    </item>
-   <item row="0" column="0">
+   <item row="0" column="0" colspan="2">
     <layout class="QHBoxLayout" name="MainLayout">
      <item>
       <widget class="TextInput" name="edit_filter_batch">
@@ -50,20 +50,6 @@
       <widget class="QCheckBox" name="cb_hidemeals">
        <property name="text">
         <string>Hide meal distributions</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line_5">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="tools">
-       <property name="text">
-        <string>...</string>
        </property>
       </widget>
      </item>

@@ -43,7 +43,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 	connect(model_dist, SIGNAL(rowInserted(int)), this, SLOT(markSourceRowActive(int)));
 
 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
-	connect(table_dist, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(QVector<int>&, bool)));
+	connect(table_dist, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(const QVector<int>&, bool)));
 
 	cb_hidemeals->setChecked(true);
 

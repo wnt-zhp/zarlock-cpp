@@ -245,9 +245,7 @@ bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& dd
 	if (!q.next())
 		return false;
 
-	beginInsertRows(QModelIndex(), n, n);
 	pushRow(q);
-	endInsertRows();
 
 	return true;
 }

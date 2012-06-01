@@ -13,6 +13,8 @@
 
 #include <QFileDialog>
 #include <QToolBar>
+#include <QDesktopServices>
+#include <QProgressDialog>
 
 #include "CampSettingsDialog.h"
 // public members
@@ -30,12 +32,22 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
 
+	toolbar = addToolBar(tr("Main"));
+	dbtoolbar = addToolBar(tr("Database"));
+
 	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), this);
 	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
 // 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
 	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
 	actionSwitchDB = new QAction(QIcon(":/resources/icons/system-switch-user.png"), tr("Switch Database"), this);
 	actionConfigDB = new QAction(QIcon(":/resources/icons/configure.png"), tr("Configure"), this);
+
+// 	actionSyncDB = new QAction(tr("Sync database"), this);
+	actionCreateSMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create SM reports"), this);
+	actionCreateKMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create KM reports"), this);
+	actionCreateZZrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create ZZ reports"), this);
+	actionBrowseReports = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
+	
 
 	actionQuit->setShortcuts(QKeySequence::Quit);
 	actionAbout->setShortcut(QKeySequence::HelpContents);
@@ -44,7 +56,6 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	actionAbout->setMenuRole(QAction::AboutRole);
 
-	toolbar = addToolBar(tr("Main"));
 	toolbar->setObjectName("toolbar");
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	toolbar->setIconSize(QSize(64, 64));
@@ -57,23 +68,36 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	toolbar->setFloatable(false);
 	toolbar->setMovable(false);
 
-	dbtoolbar = addToolBar(tr("Database"));
 	dbtoolbar->setWindowTitle("Database1");
 	dbtoolbar->setAccessibleName("Database2");
 	dbtoolbar->setAccessibleDescription("Database3");
 	dbtoolbar->setObjectName("dbtoolbar");
-	dbtoolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	dbtoolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon/*ToolButtonTextUnderIcon*/);
 	dbtoolbar->setIconSize(QSize(64, 64));
 	dbiw = new DBItemWidget();
 
 // 	dbiw->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 	dbiw->resize(QSize(64, 300));
 
+	tools = new QToolButton(dbtoolbar);
+// 	tools->setIcon(QIcon(":/resources/icons/configure.png"));
+	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
+	tools->setText(tr("Tools"));
+	tools->setToolButtonStyle(Qt::ToolButtonTextUnderIcon/*ToolButtonTextBesideIcon*/);
+	tools->setPopupMode(QToolButton::InstantPopup);
+
 	dbtoolbar->addWidget(dbiw);
-	dbtoolbar->addAction(actionConfigDB);
+	dbtoolbar->addWidget(tools);
 	dbtoolbar->addAction(actionSwitchDB);
 	dbtoolbar->setFloatable(false);
 	dbtoolbar->setMovable(false);
+
+	tools->addAction(actionConfigDB);
+// 	tools->addAction(actionSyncDB);
+	tools->addAction(actionCreateKMrep);
+	tools->addAction(actionCreateSMrep);
+	tools->addAction(actionCreateZZrep);
+	tools->addAction(actionBrowseReports);
 
 	tpw = new TabProductsWidget();
 	tbw = new TabBatchWidget();
@@ -108,6 +132,13 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
+
+// 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
+	connect(actionCreateSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
+	connect(actionCreateKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
+
+	connect(actionCreateZZrep, SIGNAL(triggered(bool)), this, SLOT(doCreateZZReports()));
+	connect(actionBrowseReports, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 
@@ -240,6 +271,42 @@ void zarlok::about() {
 void zarlok::db2update() {
 	statusbar->showMessage(tr("You need to save your database!"));
 	actionSaveDB->setEnabled(true);
+}
+
+void zarlok::doCreateSMreports() {
+	DBReports::printSMReport();
+}
+
+void zarlok::doCreateKMreports() {
+	DBReports::printKMReport();
+}
+
+void zarlok::doCreateZZReports() {
+	QString fn;
+	int num = db->CachedMealDay()->rowCount();
+	
+	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
+	progress.setMinimumDuration(0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setValue(0);
+	
+	for (int i = 0; i < num; ++i) {
+		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+		
+		progress.setValue(i);
+		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
+		if (progress.wasCanceled())
+			break;
+		
+		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
+	}
+	progress.setValue(num);
+}
+
+void zarlok::doBrowseReports() {
+	
+	// 	QDesktopServices::openUrl(QUrl("file:///home"));
+	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase()));
 }
 
 #include "zarlok.moc"

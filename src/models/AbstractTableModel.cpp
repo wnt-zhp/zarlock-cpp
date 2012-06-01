@@ -126,8 +126,10 @@ bool AbstractTableModel::selectRow(int row) {
 }
 
 void AbstractTableModel::clearRecords() {
+	beginRemoveRows(QModelIndex(), 0, records.size()-1);
 	qDeleteAll(records.begin(), records.end());
 	records.clear();
+	endRemoveRows();
 }
 
 QVariant AbstractTableModel::prepareDate(const QVariant & v) {
@@ -192,6 +194,12 @@ QVariant AbstractTableModel::headerData(int section, Qt::Orientation orientation
 	return QAbstractTableModel::headerData(section, orientation, role);
 }
 
+/** Wstaw wiersze (QSqlTableModel API)
+ * @param row numer wiersza
+ * @param count ilość wierszy
+ * @param parent model
+ * @return status operacji
+ */
 bool AbstractTableModel::insertRows(int row, int count, const QModelIndex& parent) {
 	beginInsertRows(parent, row, row + count - 1);
 	for (int c = 0; c < count; ++c) {
@@ -204,6 +212,12 @@ bool AbstractTableModel::insertRows(int row, int count, const QModelIndex& paren
 	return true;
 }
 
+/** Usuń wiersze (QSqlTableModel API)
+ * @param row numer wiersza
+ * @param count ilość wierszy
+ * @param parent model
+ * @return status operacji
+ */
 bool AbstractTableModel::removeRows(int row, int count, const QModelIndex& parent) {
 	beginRemoveRows(parent, row, row+count);
 
@@ -294,7 +308,9 @@ bool AbstractTableModel::removeRecord(int row) {
 
 bool AbstractTableModel::pushRow(const QSqlQuery& q, bool emit_signal) {
 	d_record * r = new d_record(this);
+	beginInsertRows(QModelIndex(), records.size(), records.size());
 	records.push_back(r);
+	endInsertRows();
 
 	return fillRow(q, records.count()-1, emit_signal);
 }
@@ -309,6 +325,14 @@ int AbstractTableModel::getRowById(int id) throw (int) {
 	throw id;
 
 	return 0;
+}
+
+QModelIndex AbstractTableModel::getIndexById(int id, int column){
+	return this->index(this->getRowById(id), column);
+}
+
+QModelIndex AbstractTableModel::getIndexByRow(int row, int column) {
+	return this->index(row, column);
 }
 
 AbstractTableModel::viter AbstractTableModel::find(AbstractTableModel::viter begin, AbstractTableModel::viter end, const QVariant & val) const {

@@ -24,6 +24,7 @@
 
 #include <QHeaderView>
 #include <QMessageBox>
+#include <QApplication>
 
 /**
  * @brief Standardowy konstruktor, żaden szał.
@@ -36,11 +37,18 @@ AbstractTableView::AbstractTableView(QWidget * parent) : QTableView(parent) {
 	CI();
 
 	// Popup menu dla akcji usuwania rekordu z bazy.
-	removeRec = new QAction(tr("&Remove record"), this);
+	removeRec = new QAction(QApplication::style()->standardIcon(QStyle::SP_TrashIcon), tr("&Remove record"), this);
 	removeRec->setShortcut(QKeySequence::Delete);
 	removeRec->setToolTip(tr("Remove record from database"));
 
+	editRec = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Edit record"), this);
+	editRec->setToolTip(tr("Edit record"));
+
 	//  Łączymy akcję kliknięcia w menu "Remove" z funkcją (slotem), która to wykona.
+	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord()));
+	connect(editRec, SIGNAL(triggered()), this, SLOT(editRecord()));
+	pmenu_del.addAction(editRec);
+
 	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
 	pmenu_del.addAction(removeRec);
 
@@ -128,6 +136,19 @@ void AbstractTableView::removeRecord() {
 
 	emit removeRecordRequested(v, true);
 }
+
+void AbstractTableView::editRecord() {
+	QModelIndexList l = selectedIndexes();
+	
+	QVector<int> v;
+	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
+		if ((*it).column() == 0)
+			v.push_back((*it).data(Qt::EditRole).toInt());
+	}
+	
+	emit editRecordRequested(v);
+}
+
 
 void AbstractTableView::addRecord() {
 	emit addRecordRequested(true);

@@ -38,16 +38,12 @@ public:
 	TabBatchWidget(QWidget * parent = NULL);
 	virtual ~TabBatchWidget();
 
-public slots:
-	virtual void doCreateSMreports();
-	virtual void doCreateKMreports();
-
 private:
 	void activateUi(bool activate = true);
 
 private slots:
 	void addBatchRecord(bool newrec = true);
-	void editRecord(const QModelIndex & idx);
+	void editRecord(const QVector<int> & ids);
 	void setFilter();
 	void setFilterString(const QString & string);
 
@@ -58,10 +54,6 @@ private:
 	QSqlRelationalDelegate * model_batch_delegate;
 
 	BatchRecordWidget * brw;
-
-	QAction * syncdb;
-	QAction * createSMrep;
-	QAction * createKMrep;
 
 	DimmingWidget * dwbox;
 };

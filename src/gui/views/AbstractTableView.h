@@ -44,18 +44,20 @@ public:
 
 signals:
 	void addRecordRequested(bool);
-	bool removeRecordRequested(QVector<int> & rows, bool ask);
+	void editRecordRequested(const QVector<int> & ids);
+	bool removeRecordRequested(const QVector<int> & ids, bool ask);
 
 private slots:
 	virtual void removeRecord();
 	virtual void addRecord();
+	virtual void editRecord();
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent* );
 
 private:
 	QMenu pmenu_del, pmenu_add;
-	QAction * removeRec, * addRec;
+	QAction * removeRec, * addRec, * editRec;
 };
 
 #endif // ABSTRACTTABLEVIEW_H

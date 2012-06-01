@@ -71,25 +71,11 @@
      <widget class="QWidget" name="verticalLayoutWidget_2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1">
          <item>
           <widget class="QLabel" name="label_data">
            <property name="text">
             <string notr="true">@Data</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line_tools">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="tools">
-           <property name="text">
-            <string>...</string>
            </property>
           </widget>
          </item>
@@ -234,7 +220,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>list_days</tabstop>
-  <tabstop>tools</tabstop>
   <tabstop>tab_meals</tabstop>
  </tabstops>
  <resources/>

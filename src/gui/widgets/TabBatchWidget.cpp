@@ -62,28 +62,10 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 
-	syncdb = new QAction(tr("Sync database"), this);
-	createSMrep = new QAction(tr("Create SM reports"), this);
-	createKMrep = new QAction(tr("Create KM reports"), this);
-// 	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
-
-	tools->setPopupMode(QToolButton::InstantPopup);
-	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
-	tools->setText(tr("Tools"));
-	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
-	tools->addAction(syncdb);
-	tools->addAction(createSMrep);
-	tools->addAction(createKMrep);
-
-// 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
-	connect(createSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
-	connect(createKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
-
 	connect(model_batch, SIGNAL(rowInserted(int)), table_batch, SLOT(selectRow(int)));
 
-	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
-	connect(table_batch, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(QVector<int>&, bool)));
+	connect(table_batch, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
+	connect(table_batch, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(const QVector<int>&, bool)));
 
 	dwbox = new DimmingWidget(this);
 	
@@ -151,11 +133,13 @@ void TabBatchWidget::addBatchRecord(bool newrec) {
 	}
 }
 
-void TabBatchWidget::editRecord(const QModelIndex& idx) {PR(__func__);
-	brw->prepareUpdate(idx);
-	widget_add_batch->setVisible(true);
-	dwbox->go();
-	dwbox->setEventTransparent(true);
+void TabBatchWidget::editRecord(const QVector<int>& ids) {
+	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
+		brw->prepareUpdate(db->CachedBatch()->getIndexById(*it));
+		widget_add_batch->setVisible(true);
+		dwbox->go();
+		dwbox->setEventTransparent(true);
+	}
 }
 
 void TabBatchWidget::setFilter() {
@@ -170,14 +154,6 @@ void TabBatchWidget::setFilterString(const QString& string) {
 	proxy_model->setFilterWildcard(f);
 	proxy_model->setFilterKeyColumn(BatchTableModel::HSpec);
 	proxy_model->setFilterRole(Qt::UserRole);
-}
-
-void TabBatchWidget::doCreateSMreports() {
-	DBReports::printSMReport();
-}
-
-void TabBatchWidget::doCreateKMreports() {
-	DBReports::printKMReport();
 }
 
 #include "TabBatchWidget.moc"

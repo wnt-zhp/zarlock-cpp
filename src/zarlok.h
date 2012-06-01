@@ -45,6 +45,12 @@ private slots:
 // 	void tabChanged(int index);
 	void db2update();
 
+	virtual void doCreateSMreports();
+	virtual void doCreateKMreports();
+	virtual void doCreateZZReports();
+	virtual void doBrowseReports();
+	
+
 private:
 	Database * db;
 
@@ -55,6 +61,7 @@ private:
 
 	QToolBar * toolbar;
 	QToolBar * dbtoolbar;
+	QToolButton * tools;
 
 	QAction * actionQuit;
 	QAction * actionAbout;
@@ -63,6 +70,13 @@ private:
 
 	QAction * actionSwitchDB;
 	QAction * actionConfigDB;
+
+	QAction * actionSyncDB;
+	QAction * actionCreateSMrep;
+	QAction * actionCreateKMrep;
+	QAction * actionCreateZZrep;
+	QAction * actionBrowseReports;
+
 	DBItemWidget * dbiw;
 
 	DimmingMessage * dw;

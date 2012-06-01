@@ -278,15 +278,12 @@ bool BatchTableModel::addRecord(int pid, const QString& spec, int price, const Q
 	query.replace(":table:", table);
 
 	q.prepare(query);
-	q.exec();
+	status = q.exec();
 
-	int n = records.count();
 	if (!q.next())
 		return false;
 
-	beginInsertRows(QModelIndex(), n, n);
 	pushRow(q);
-	endInsertRows();
 
 	return true;
 }

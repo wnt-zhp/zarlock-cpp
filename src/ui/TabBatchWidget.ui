@@ -90,13 +90,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="tools">
-       <property name="text">
-        <string>...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QToolButton" name="button_add_batch">
        <property name="text">
         <string>Add batc&amp;h</string>
@@ -142,7 +135,6 @@
   <tabstop>cb_aexpired</tabstop>
   <tabstop>cb_nexpired</tabstop>
   <tabstop>cb_hideempty</tabstop>
-  <tabstop>tools</tabstop>
   <tabstop>button_add_batch</tabstop>
   <tabstop>table_batch</tabstop>
  </tabstops>

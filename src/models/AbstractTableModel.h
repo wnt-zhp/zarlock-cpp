@@ -64,6 +64,8 @@ public:
 	virtual bool selectColumn(int column);
 
 	virtual int getRowById(int id) throw (int);
+	virtual QModelIndex getIndexById(int id, int column = 0);
+	virtual QModelIndex getIndexByRow(int row, int column = 0);
 
 public:
 	enum Headers {HId = 0, DummyHeadersSize };

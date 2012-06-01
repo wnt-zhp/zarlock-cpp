@@ -675,7 +675,7 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 	return status;
 }
 
-bool Database::removeProductsRecord(QVector<int> & ids, bool /*askForConfirmation*/) {
+bool Database::removeProductsRecord(const QVector<int> & ids, bool /*askForConfirmation*/) {
 	bool status = false;
 	QString details;
 
@@ -751,7 +751,7 @@ bool Database::updateBatchRecord(int row, int pid, const QString& spec, int pric
 	return status;
 }
 
-bool Database::removeBatchRecord(QVector<int> & ids, bool askForConfirmation) {
+bool Database::removeBatchRecord(const QVector<int> & ids, bool askForConfirmation) {
 	bool status = false;
 	QString details;
 
@@ -770,7 +770,7 @@ bool Database::removeBatchRecord(QVector<int> & ids, bool askForConfirmation) {
 		return false;
 
 	for (int i = 0; i < counter; ++i) {
-		status = model_batch->removeRow(model_distributor->getRowById(ids.at(i)));
+		status = model_batch->removeRow(model_batch->getRowById(ids.at(i)));
 	}
 
 	return status;
@@ -835,7 +835,7 @@ bool Database::updateDistributorRecord(int row, int bid, int qty, const QDate & 
 	return status;
 }
 
-bool Database::removeDistributorRecord(QVector<int> & ids, bool askForConfirmation) {
+bool Database::removeDistributorRecord(const QVector<int> & ids, bool askForConfirmation) {
 	bool status = true;
 	QString details;
 

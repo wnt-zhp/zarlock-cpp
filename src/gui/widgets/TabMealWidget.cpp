@@ -27,8 +27,6 @@
 
 #include <QPushButton>
 #include <QToolButton>
-#include <QDesktopServices>
-#include <QProgressDialog>
 #include <QInputDialog>
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
@@ -67,25 +65,6 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	connect(tab_meals, SIGNAL(currentChanged(int)), this, SLOT(mealTabChanged(int)));
 // 	connect(tab_meals, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(mealTabChanged(int)));
-
-	createPDF = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create && view PDF report"), this);
-	createPDFAll = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create all PDF reports"), this);
-	browsePDF = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
-
-	tools->setPopupMode(QToolButton::InstantPopup);
-	tools->setIcon(QIcon(":/resources/icons/tools-wizard.png"));
-	tools->setText(tr("Tools"));
-	tools->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
-	tools->addAction(createPDF);
-	tools->addAction(createPDFAll);
-	tools->addAction(browsePDF);
-
-	createPDF->setEnabled(false);
-
-	connect(createPDF, SIGNAL(triggered(bool)), this, SLOT(doPrepareReport()));
-	connect(createPDFAll, SIGNAL(triggered(bool)), this, SLOT(doPrepareReports()));
-	connect(browsePDF, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
 	mm = MealManager::Instance();
 	connect(list_days, SIGNAL(removeRecordRequested(QVector<int>&,bool)), mm, SLOT(removeMealDayRecord(QVector<int>&,bool)));
@@ -210,7 +189,6 @@ void TabMealWidget::selectDay(const QModelIndex& idx) {
 	QDate sd = db->CachedMealDay()->index(idx.row(), MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
 
 	label_data->setText(QObject::tr("Selected day: <b>%1</b>").arg(sd.toString(Qt::DefaultLocaleLongDate)));
-	createPDF->setEnabled(true);
 }
 
 void TabMealWidget::validateSpins() {
@@ -329,40 +307,6 @@ void TabMealWidget::doUpdate() {
 	db->CachedMealDay()->select();
 	db->CachedMeal()->select();
 	list_days->setCurrentIndex(i);
-}
-
-void TabMealWidget::doPrepareReport() {
-	QString fn;
-	DBReports::printDailyMealReport(seldate, &fn);
-	QDesktopServices::openUrl(QUrl("file://" % fn));
-}
-
-void TabMealWidget::doPrepareReports() {
-	QString fn;
-	int num = db->CachedMealDay()->rowCount();
-
-	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
-	progress.setMinimumDuration(0);
-	progress.setWindowModality(Qt::WindowModal);
-	progress.setValue(0);
-
-	for (int i = 0; i < num; ++i) {
-		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-
-		progress.setValue(i);
-		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
-		if (progress.wasCanceled())
-			break;
-
-		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
-	}
-	progress.setValue(num);
-}
-
-void TabMealWidget::doBrowseReports() {
-
-// 	QDesktopServices::openUrl(QUrl("file:///home"));
-	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase()));
 }
 
 void TabMealWidget::checkForDirty() {

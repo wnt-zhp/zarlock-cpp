@@ -45,7 +45,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	connect(table_products, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterBatches()));
 	connect(table_batchbyid, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterDistributions()));
 
-	connect(table_products, SIGNAL(removeRecordRequested(QVector<int> &, bool)), Database::Instance(), SLOT(removeProductsRecord(QVector<int> &, bool)));
+	connect(table_products, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeProductsRecord(const QVector<int> &, bool)));
 
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);

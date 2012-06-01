@@ -229,33 +229,30 @@ ELSE (NOT BUILD_STATIC)
 	SET( trans_infile ${CMAKE_CURRENT_BINARY_DIR}/src/${trans_file}.qrc)
 	SET( trans_outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${trans_file}.cxx)
 
-	# Copy the QM file to the output directory
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_qmoutfile}
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${trans_qmoutfile}
-		)
-
-	ADD_CUSTOM_COMMAND(
-		OUTPUT QMCOPY
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_qminfile} ${trans_qmoutfile}
-		MAIN_DEPENDENCY ${trans_qminfile} ${trans_qmoutfile}
-		)
+		MAIN_DEPENDENCY ${trans_qminfile}
+# 		DEPENDS ${trans_qmoutfile}
+	)
 
 	# Copy the QRC file to the output directory
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_infile}
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_srcfile} ${trans_infile}
-		MAIN_DEPENDENCY ${trans_srcfile} QMCOPY
-		)
+		MAIN_DEPENDENCY ${trans_srcfile}
+		DEPENDS ${trans_srcfile} ${trans_qmoutfile}
+	)
 
 	# Run the resource compiler (rcc_options should already be set)
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_outfile}
 		COMMAND ${QT_RCC_EXECUTABLE}
 		ARGS ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
-		MAIN_DEPENDENCY ${trans_infile} ${trans_qmoutfile}
-		DEPENDS ${trans_infile}
-		)
+		MAIN_DEPENDENCY ${trans_infile}
+# 		DEPENDS ${trans_infile}
+	)
 
 	SET( rcc_files ${zarlok_db_RESOURCES_RCC} ${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC} ${zarlok_splash_RESOURCES_RCC} ${trans_outfile} )
 

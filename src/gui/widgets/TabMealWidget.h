@@ -47,10 +47,6 @@ private slots:
 	void doUpdate();
 	void mealTabChanged(int tab);
 
-	void doPrepareReport();
-	void doPrepareReports();
-	void doBrowseReports();
-
 	void toggleSpinWidget(bool state);
 
 private:
@@ -67,10 +63,6 @@ private:
 	DistributorTableModel * model_dist;
 	QDataWidgetMapper * wmap;
 	QString seldate;
-
-	QAction * createPDF;
-	QAction * createPDFAll;
-	QAction * browsePDF;
 
 	bool lock;
 	int current_meal_row;

@@ -102,9 +102,9 @@ private:
 	bool execQueryFromFile(const QString & resource);
 
 public slots:
-	virtual bool removeProductsRecord(QVector<int> & ids, bool askForConfirmation = true);
-	virtual bool removeBatchRecord(QVector<int> & ids, bool askForConfirmation = true);
-	virtual bool removeDistributorRecord(QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeProductsRecord(const QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeBatchRecord(const QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeDistributorRecord(const QVector<int> & ids, bool askForConfirmation = true);
 
 private slots:
 	bool rebuild_models();
