@@ -61,21 +61,39 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="BatchTableView" name="table_batchbyid">
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
+      <widget class="QGroupBox" name="groupBox_batch">
+       <property name="title">
+        <string>Batch</string>
        </property>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>20</number>
-       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="BatchTableView" name="table_batchbyid">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>20</number>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
-      <widget class="DistributorTableView" name="table_distributorbyid">
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
+      <widget class="QGroupBox" name="groupBox_distributions">
+       <property name="title">
+        <string>Distributions</string>
        </property>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>20</number>
-       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="DistributorTableView" name="table_distributorbyid">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>20</number>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>
