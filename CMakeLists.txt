@@ -184,6 +184,13 @@ endif (UPDATE_TRANSLATIONS)
 
 add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
 
+find_program(git_exe git)
+
+if (git_exe)
+	execute_process (COMMAND git describe OUTPUT_VARIABLE info_GITREVNUM ERROR_VARIABLE info_GITREVNUM_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
+	add_definitions(-DGITREVNUM=\"${info_GITREVNUM}\")
+endif (git_exe)
+
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
 qt4_automoc(${zarlok_SRCS})

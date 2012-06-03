@@ -173,7 +173,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
-	QString ofile = dbsavepath.absolutePath() % QString("/") % date % QString("_dailymeal.pdf");
+	QString ofile = dbsavepath.absolutePath() % QString("/") % QString("ZZ_") % date % QString(".pdf");
 // 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 

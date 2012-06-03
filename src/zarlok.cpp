@@ -19,6 +19,9 @@
 #include "CampSettingsDialog.h"
 // public members
 
+#ifndef GITREVNUM
+#define GITREVNUM	"unknown"
+#endif
 /**
  * @brief Główny konstruktor klasy Zarlok. Klasa Zarlok jest główną klasą,
  * odpowiada za wyświetlanie głównego formularza (jest pochodną klasy
@@ -30,7 +33,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL), dw(NULL) {
 	CI();
 	setupUi(this);
-	this->setWindowTitle(tr("Zarlok by Rafal Lalik --- build: ").append(__TIMESTAMP__));
+	this->setWindowTitle(tr("Zarlok (WNT) --- build: " GITREVNUM )/*.append("GITREVNUM")*/);
 
 	toolbar = addToolBar(tr("Main"));
 	dbtoolbar = addToolBar(tr("Database"));
@@ -306,7 +309,9 @@ void zarlok::doCreateZZReports() {
 void zarlok::doBrowseReports() {
 	
 	// 	QDesktopServices::openUrl(QUrl("file:///home"));
-	QDesktopServices::openUrl(QUrl("file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase()));
+	QString reportsdir = "file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase();
+	PR(reportsdir.toStdString());
+	QDesktopServices::openUrl(QUrl(reportsdir));
 }
 
 #include "zarlok.moc"
