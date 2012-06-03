@@ -40,6 +40,7 @@ private:
 
 private slots:
 	void editRecord(const QModelIndex & idx);
+	void editRecord(const QVector<int> & ids);
 
 	void setFilter();
 	void setFilterString(const QString & string);

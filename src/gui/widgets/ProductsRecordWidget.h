@@ -17,38 +17,45 @@
 */
 
 
-#ifndef ADDPRODUCTSRECORDWIDGET_H
-#define ADDPRODUCTSRECORDWIDGET_H
+#ifndef PRODUCTSRECORDWIDGET_H
+#define PRODUCTSRECORDWIDGET_H
 
-#include "ui_AddProductsRecordWidget.h"
+#include "ui_ProductsRecordWidget.h"
 
 #include <QCompleter>
 
-class AddProductsRecordWidget : public QWidget, public Ui::APRWidget {
+class ProductsRecordWidget : public QWidget, public Ui::PRWidget {
 Q_OBJECT
 public:
-	AddProductsRecordWidget(QWidget * parent = NULL);
-	virtual ~AddProductsRecordWidget();
+	ProductsRecordWidget(QWidget * parent = NULL);
+	virtual ~ProductsRecordWidget();
 
-    virtual void setVisible(bool visible);
+	virtual void setVisible(bool visible);
 
 signals:
 	void canceled(bool);
 
 public slots:
 	void update_model();
+	void prepareInsert(bool visible);
+	void prepareUpdate(const QModelIndex & idx);
 
 private slots:
-	void insert_record();
-	void insert_record_and_exit();
-	void clear_form();
-	void cancel_form();
+	void insertRecord();
+	void insertRecordExit();
+	void clearForm();
+	void cancelForm();
 	void validateAdd();
 
 private:
 	QCompleter * completer_name;
 	QCompleter * completer_unit;
 	QCompleter * completer_expiry;
+
+	int idToUpdate;
+	QString button_label_insert;
+	QString button_label_insert_and_exit;
+	QString button_label_exit;
 };
 
-#endif // ADDPRODUCTSRECORDWIDGET_H
+#endif // PRODUCTSRECORDWIDGET_H

@@ -42,7 +42,7 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
-	void addBatchRecord(bool newrec = true);
+	void addRecord(bool newrec = true);
 	void editRecord(const QVector<int> & ids);
 	void setFilter();
 	void setFilterString(const QString & string);

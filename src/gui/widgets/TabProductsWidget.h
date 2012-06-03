@@ -24,11 +24,13 @@
 
 #include "Database.h"
 #include "ProductsTableModel.h"
-#include "AddProductsRecordWidget.h"
+#include "ProductsRecordWidget.h"
 
 #include <QCompleter>
 #include <BatchTableModelProxyP.h>
 #include <DistributorTableModelProxyP.h>
+
+#include "DimmingWidget.h"
 
 class TabProductsWidget : public QWidget, public Ui::TabProductsWidget {
 Q_OBJECT
@@ -43,10 +45,13 @@ private slots:
 	void setFilter();
 	void setFilterString(const QString & string);
 
-	void add_prod_record(bool newrec = true);
-	void edit_record(const QModelIndex & idx);
+// 	void add_prod_record(bool newrec = true);
 	void doFilterBatches();
 	void doFilterDistributions();
+
+	void addRecord(bool newrec = true);
+	void editRecord(const QVector<int> & ids);
+	void editRecord(const QModelIndex & idx);
 
 private:
 	Database * db;
@@ -55,9 +60,10 @@ private:
 	QSortFilterProxyModel * proxy_model_batch;
 	QSortFilterProxyModel * proxy_model_distributor;
 
-	AddProductsRecordWidget * aprw;
+	ProductsRecordWidget * prw;
 	QVariant pid;
-	public slots:
+
+	DimmingWidget * dwbox;
 };
 
 #endif // TABPRODUCTSWIDGET_H

@@ -59,7 +59,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gu
 set(zarlok_FORMS
 									src/ui/MainWindow.ui
 									src/ui/DatabaseBrowser.ui
-									src/ui/AddProductsRecordWidget.ui
+									src/ui/ProductsRecordWidget.ui
 									src/ui/BatchRecordWidget.ui
 									src/ui/AddDistributorRecordWidget.ui
 )
@@ -104,7 +104,7 @@ set(zarlok_src_gui_inputs_SRCS
 									src/gui/inputs/TextInput.cpp
 )
 set(zarlok_src_gui_widgets_SRCS
-									src/gui/widgets/AddProductsRecordWidget.cpp
+									src/gui/widgets/ProductsRecordWidget.cpp
 									src/gui/widgets/BatchRecordWidget.cpp
 									src/gui/widgets/AddDistributorRecordWidget.cpp
 									src/gui/widgets/DBBrowser.cpp
@@ -189,6 +189,8 @@ find_program(git_exe git)
 if (git_exe)
 	execute_process (COMMAND git describe OUTPUT_VARIABLE info_GITREVNUM ERROR_VARIABLE info_GITREVNUM_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
 	add_definitions(-DGITREVNUM=\"${info_GITREVNUM}\")
+else (git_exe)
+	MESSAGE(WARNING "Git not found!")
 endif (git_exe)
 
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")

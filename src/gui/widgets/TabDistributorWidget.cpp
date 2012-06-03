@@ -42,7 +42,8 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 	connect(model_dist, SIGNAL(rowInserted(int)), this, SLOT(markSourceRowActive(int)));
 
-	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+	connect(table_dist, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
 	connect(table_dist, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(const QVector<int>&, bool)));
 
 	cb_hidemeals->setChecked(true);
@@ -96,6 +97,12 @@ void TabDistributorWidget::setFilterString(const QString& string) {
 	proxy_model->setFilterKeyColumn(DistributorTableModel::HBatchId);
 
 	setFilter();
+}
+
+void TabDistributorWidget::editRecord(const QVector< int >& ids) {
+	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
+		editRecord(db->CachedDistributor()->getIndexById(*it));
+	}
 }
 
 void TabDistributorWidget::editRecord(const QModelIndex& idx) {

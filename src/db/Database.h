@@ -66,8 +66,9 @@ public:
 	void updateBatchWordList();
 	void updateDistributorWordList();
 
-	virtual bool addProductsRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
-	virtual bool updateProductsRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
+	virtual bool addProductRecord(const QString& name, const QString& unit, const QString & expiry, const QString & notes);
+	virtual bool updateProductRecord(int pid, const QString& name, const QString& unit, const QString & expiry, const QString & notes);
+	virtual bool getProductRecord(int row, int & pid, QString& name, QString& unit, QString & expiry, QString & notes);
 
 	virtual bool addBatchRecord(int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
 	virtual bool updateBatchRecord(int row, int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes);
@@ -102,7 +103,7 @@ private:
 	bool execQueryFromFile(const QString & resource);
 
 public slots:
-	virtual bool removeProductsRecord(const QVector<int> & ids, bool askForConfirmation = true);
+	virtual bool removeProductRecord(const QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeBatchRecord(const QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeDistributorRecord(const QVector<int> & ids, bool askForConfirmation = true);
 

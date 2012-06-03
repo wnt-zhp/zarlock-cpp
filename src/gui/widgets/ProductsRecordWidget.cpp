@@ -17,61 +17,115 @@
 */
 
 #include "globals.h"
-#include "AddProductsRecordWidget.h"
+#include "ProductsRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
 
-AddProductsRecordWidget::AddProductsRecordWidget(QWidget * parent) : Ui::APRWidget(),
+ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : Ui::PRWidget(),
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {
 	setupUi(parent);
 
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
-	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insert_record()));
-	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insert_record_and_exit()));
-	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
+	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordExit()));
+	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancelForm()));
 
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
 	connect(Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
+
+	button_label_insert = action_addnext->text();
+	button_label_insert_and_exit = action_addexit->text();
+	button_label_exit = action_addexit->text();
 }
 
-AddProductsRecordWidget::~AddProductsRecordWidget() {
-	FPR(__func__);
+ProductsRecordWidget::~ProductsRecordWidget() {
+	FI();
 	if (completer_name) delete completer_name;
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;
 }
 
-void AddProductsRecordWidget::setVisible(bool visible) {
+void ProductsRecordWidget::setVisible(bool visible) {
 	edit_name->setFocus();
     QWidget::setVisible(visible);
 }
 
-void AddProductsRecordWidget::insert_record() {
-	Database::Instance()->addProductsRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)");
-	clear_form();
+void ProductsRecordWidget::insertRecord() {
+	Database * db = Database::Instance();
+
+	if (idToUpdate >= 0) {
+		ProductsTableModel * ptm = db->CachedProducts();
+		QModelIndexList pl = ptm->match(ptm->index(0, ProductsTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
+		if (pl.size() != 1)
+			return;
+
+		if (db->updateProductRecord(pl.at(0).row(), edit_name->text(), edit_unit->text(), edit_expiry->text(), ":)")) {
+			idToUpdate = -1;
+			clearForm();
+		}
+	} else {
+		if (db->addProductRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)")) {
+			clearForm();
+		}
+	}
 }
 
-void AddProductsRecordWidget::insert_record_and_exit() {
-	insert_record();
-	cancel_form();
+void ProductsRecordWidget::insertRecordExit() {
+	insertRecord();
+	cancelForm();
 }
 
-void AddProductsRecordWidget::clear_form() {
+void ProductsRecordWidget::prepareInsert(bool visible) {
+	action_addexit->setText(button_label_insert_and_exit);
+	// 	action_addnext->setText(tr("Insert record and add next"));
+	action_addnext->show();
+	idToUpdate = -1;
+	if (visible) {
+		clearForm();
+	}
+}
+
+void ProductsRecordWidget::prepareUpdate(const QModelIndex& idx) {
+	int pid;
+	QString name, unit, expiry, notes;
+
+	clearForm();
+
+	Database * db = Database::Instance();
+
+	ProductsTableModel * ptm = db->CachedProducts();
+	QModelIndexList pl = ptm->match(ptm->index(0, BatchTableModel::HId), Qt::EditRole, idx.model()->index(idx.row(), ProductsTableModel::HId).data(Qt::EditRole), -1, Qt::MatchExactly);
+	if (pl.size() != 1)
+		return;
+	idToUpdate = pl.at(0).data(Qt::EditRole).toInt();
+	db->getProductRecord(pl.at(0).row(), pid, name, unit, expiry, notes);
+
+	edit_name->setRaw(name);
+	edit_unit->setRaw(unit);
+	edit_expiry->setRaw(expiry);
+// 	edit_notes->setRaw(notes);
+
+	action_addexit->setText(tr("Update record"));
+	action_addnext->hide();
+}
+
+
+void ProductsRecordWidget::clearForm() {
 	edit_name->clear();
 	edit_unit->clear();
 	edit_expiry->clear();
 }
 
-void AddProductsRecordWidget::cancel_form() {
+void ProductsRecordWidget::cancelForm() {
 	emit canceled(false);
 }
 
-void AddProductsRecordWidget::validateAdd() {
+void ProductsRecordWidget::validateAdd() {
 	if (edit_name->ok() and edit_unit->ok() and edit_expiry->ok()) {
 		action_addnext->setEnabled(true);
 		action_addexit->setEnabled(true);
@@ -81,7 +135,7 @@ void AddProductsRecordWidget::validateAdd() {
 	}
 }
 
-void AddProductsRecordWidget::update_model() {
+void ProductsRecordWidget::update_model() {
 	if (completer_name) delete completer_name;
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;
@@ -99,4 +153,4 @@ void AddProductsRecordWidget::update_model() {
 	edit_expiry->setCompleter(completer_expiry);
 }
 
-#include "AddProductsRecordWidget.moc"
+#include "ProductsRecordWidget.moc"

@@ -48,10 +48,10 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	list_messages->setVisible(false);
 
-	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addBatchRecord(bool)));
+	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
 	connect(brw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(brw, SIGNAL(canceled(bool)), this, SLOT(addBatchRecord(bool)));
+	connect(brw, SIGNAL(canceled(bool)), this, SLOT(addRecord(bool)));
 
 	connect(cb_expired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
@@ -77,7 +77,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 }
 
 TabBatchWidget::~TabBatchWidget() {
-	FPR(__func__);
+	FI();
 	activateUi(false);
 // 	if (model_batch_delegate) delete model_batch_delegate;
 	if (proxy_model) delete proxy_model;
@@ -111,7 +111,7 @@ void TabBatchWidget::activateUi(bool activate) {
 	}
 }
 
-void TabBatchWidget::addBatchRecord(bool newrec) {
+void TabBatchWidget::addRecord(bool newrec) {
 // 	DimmingMessage * mbox = new DimmingMessage(this);
 // 	mbox->setOverlay(true, true);
 // 	mbox->setMessage("My message for you");

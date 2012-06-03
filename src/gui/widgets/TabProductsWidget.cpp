@@ -30,22 +30,25 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	setupUi(this);
 
 	widget_add_products->setVisible(false);
-	aprw = new AddProductsRecordWidget(widget_add_products);
+	prw = new ProductsRecordWidget(widget_add_products);
 
 	table_batchbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	table_distributorbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	activateUi(true);
 
+	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
-	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(add_prod_record(bool)));
-	connect(aprw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
+	connect(prw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
+	connect(prw, SIGNAL(canceled(bool)), this, SLOT(addRecord(bool)));
+
 // 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 
 	connect(table_products, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterBatches()));
 	connect(table_batchbyid, SIGNAL(activated(QModelIndex)), this, SLOT(doFilterDistributions()));
 
-	connect(table_products, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeProductsRecord(const QVector<int> &, bool)));
+	connect(table_products, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
+	connect(table_products, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeProductRecord(const QVector<int> &, bool)));
 
 	table_products->setAlternatingRowColors(true);
 	table_distributorbyid->setAlternatingRowColors(true);
@@ -55,6 +58,12 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	splitter_H->restoreState(globals::appSettings->value("splitterHoriz", QByteArray()).toByteArray());
 	splitter_V->restoreState(globals::appSettings->value("splitterVert", QByteArray()).toByteArray());
 	globals::appSettings->endGroup();
+
+	dwbox = new DimmingWidget(this);
+	
+	dwbox->setOverlay(true, true);
+	dwbox->setWidget(widget_add_products);
+	dwbox->setOverlayOpacity(100);
 }
 
 TabProductsWidget::~TabProductsWidget() {
@@ -66,7 +75,7 @@ TabProductsWidget::~TabProductsWidget() {
 	globals::appSettings->endGroup();
 
 	activateUi(false);
-	if (aprw) delete aprw;
+	if (prw) delete prw;
 }
 
 void TabProductsWidget::setFilter() {
@@ -106,7 +115,7 @@ void TabProductsWidget::activateUi(bool activate) {
 			table_products->setModel(proxy_model);
 			table_products->show();
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
-			aprw->update_model();
+			prw->update_model();
 		}
 
 		// batch proxy
@@ -124,22 +133,28 @@ void TabProductsWidget::activateUi(bool activate) {
 	}
 }
 
-void TabProductsWidget::add_prod_record(bool newrec) {
+void TabProductsWidget::addRecord(bool newrec) {
 	if (newrec) {
-// 		table_products->setVisible(false);
-		widget_add_products->setVisible(true);
+		prw->prepareInsert(newrec);
+
+		dwbox->go(true);
 	} else {
-// 		table_products->setVisible(true);
-		widget_add_products->setVisible(false);
+		dwbox->og();
+		dwbox->setEventTransparent(false);
 	}
 }
 
-void TabProductsWidget::edit_record(const QModelIndex& idx) {
-	if (model_prod->isDirty(idx)) {
-		table_products->setEditTriggers(QAbstractItemView::DoubleClicked);
-	} else {
-		table_products->setEditTriggers(QAbstractItemView::NoEditTriggers);
+void TabProductsWidget::editRecor-d(const QVector< int >& ids) {
+	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
+		editRecord(db->CachedProducts()->match(db->CachedProducts()->index(0, ProductsTableModel::HId), Qt::EditRole, *it, 1, Qt::MatchExactly).at(0));
 	}
+}
+
+void TabProductsWidget::editRecord(const QModelIndex& idx) {
+	prw->prepareUpdate(idx);
+	widget_add_products->setVisible(true);
+	dwbox->go();
+	dwbox->setEventTransparent(true);
 }
 
 void TabProductsWidget::doFilterBatches() {

@@ -634,7 +634,7 @@ void Database::updateDistributorWordList() {
 	emit distributorWordListUpdated();
 }
 
-bool Database::addProductsRecord(const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
+bool Database::addProductRecord(const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
 	bool status = true;
 
 	model_products->autoSubmit(false);
@@ -658,14 +658,14 @@ bool Database::addProductsRecord(const QString& name, const QString& unit, const
 	return status;
 }
 
-bool Database::updateProductsRecord(int pid, const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
+bool Database::updateProductRecord(int pid, const QString& name, const QString& unit, const QString& expiry, const QString & notes) {
 	bool status = true;
 
 	model_products->autoSubmit(false);
 	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HName), name);
 	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HUnit), unit);
 	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HExpire), expiry);
-	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HName), notes);
+	status &= model_products->setData(model_products->index(pid, ProductsTableModel::HNotes), notes);
 	model_products->autoSubmit(true);
 
 	if (!status) {
@@ -680,7 +680,7 @@ bool Database::updateProductsRecord(int pid, const QString& name, const QString&
 	return status;
 }
 
-bool Database::removeProductsRecord(const QVector<int> & ids, bool /*askForConfirmation*/) {
+bool Database::removeProductRecord(const QVector<int> & ids, bool /*askForConfirmation*/) {
 	bool status = false;
 	QString details;
 
@@ -716,6 +716,16 @@ bool Database::removeProductsRecord(const QVector<int> & ids, bool /*askForConfi
 	}
 
 	return status;
+}
+
+bool Database::getProductRecord(int row, int& pid, QString& name, QString& unit, QString& expiry, QString& notes) {
+	pid			= model_products->index(row, ProductsTableModel::HId).data(Qt::EditRole).toUInt();
+	name		= model_products->index(row, ProductsTableModel::HName).data(Qt::EditRole).toString();
+	unit		= model_products->index(row, ProductsTableModel::HUnit).data(Qt::EditRole).toString();
+	expiry		= model_products->index(row, ProductsTableModel::HExpire).data(Qt::EditRole).toString();
+	notes		= model_products->index(row, ProductsTableModel::HNotes).data(Qt::EditRole).toString();
+
+	return true;
 }
 
 bool Database::addBatchRecord(int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
