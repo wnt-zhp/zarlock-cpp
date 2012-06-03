@@ -53,6 +53,7 @@ public:
 	virtual void mealDayDefauls(int mealDayId);
 
 public slots:
+	void reinit();
 	virtual bool removeMealDayRecord(QVector<int> & ids, bool askForConfirmation = true);
 
 signals:

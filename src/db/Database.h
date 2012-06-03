@@ -116,6 +116,8 @@ signals:
 	void batchWordListUpdated();
 	void distributorWordListUpdated();
 
+	void modelsRebuild();
+
 public:
 	static const int plist_size;
 	static const int blist_size;

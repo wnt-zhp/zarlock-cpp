@@ -131,8 +131,9 @@ void MealDaysTableView::removeRecord() {
 	QVector<int> v;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
 		if ((*it).column() == MealDayTableModel::HMealDate)
-			v.push_back((*it).row());
-	}PR(v.size());
+			v.push_back(it->model()->index(it->row(), MealDayTableModel::HId).data(Qt::EditRole).toInt());
+	}
+// 	PR(v.size());
 	emit removeRecordRequested(v, true);
 }
 

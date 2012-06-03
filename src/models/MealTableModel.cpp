@@ -49,18 +49,6 @@ MealTableModel::~MealTableModel() {
  * QString, QColor QIcon,itp.
  **/
 QVariant MealTableModel::data(const QModelIndex & idx, int role) const {
-	if (role == Qt::BackgroundRole) {
-		QDate d = QSqlTableModel::data(idx, Qt::DisplayRole).toDate();
-		Database * db = Database::Instance();
-		if ((d > db->cs()->campDateBegin) and (d < db->cs()->campDateEnd))
-			return Qt::yellow;
-	}
-
-// 	if (role == Qt::DecorationRole and idx.column() == HAvgCosts) {
-// 		if (Database::Instance().CachedMeal()->index(idx.row(), MealTableModel::HDirty).data().toBool())
-// 			return dirtyIcon;
-// 	}
-
 	if (role == Qt::DisplayRole or role == Qt::StatusTipRole)
 		return display(idx, role);
 

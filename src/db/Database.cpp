@@ -34,6 +34,7 @@
 
 #include "Database.h"
 #include "DataParser.h"
+#include "MealManager.h"
 #include "globals.h"
 #include "config.h"
 
@@ -79,6 +80,8 @@ Database::Database() : QObject(), camp(NULL),
 {
 	CI();
 	db = QSqlDatabase::addDatabase("QSQLITE");
+
+	connect(this, SIGNAL(modelsRebuild()), MealManager::Instance(), SLOT(reinit()));
 }
 
 Database::Database(const Database & /*db*/) : QObject() {
@@ -88,7 +91,7 @@ Database::Database(const Database & /*db*/) : QObject() {
 Database::~Database() {
 	DI();
 	close_database();
-// 	QSqlDatabase::removeDatabase("QSQLITE");
+	db.removeDatabase("QSQLITE");
 }
 
 QSqlDriver* Database::driver() const {
@@ -302,6 +305,8 @@ bool Database::rebuild_models() {
 	updateProductsWordList();
 	updateBatchWordList();
 	updateDistributorWordList();
+
+	emit modelsRebuild();
 
 	return true;
 }

@@ -84,6 +84,8 @@ TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::I
 
 	mealTabChanged(-1);
 	toggleSpinWidget(false);
+
+	action_insert->setDisabled(true);
 }
 
 TabMealWidget::~TabMealWidget() {
