@@ -144,7 +144,7 @@ void TabProductsWidget::addRecord(bool newrec) {
 	}
 }
 
-void TabProductsWidget::editRecor-d(const QVector< int >& ids) {
+void TabProductsWidget::editRecord(const QVector< int >& ids) {
 	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
 		editRecord(db->CachedProducts()->match(db->CachedProducts()->index(0, ProductsTableModel::HId), Qt::EditRole, *it, 1, Qt::MatchExactly).at(0));
 	}
