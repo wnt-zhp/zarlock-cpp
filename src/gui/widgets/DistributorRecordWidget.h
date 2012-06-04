@@ -17,33 +17,29 @@
 */
 
 
-#ifndef ADDDISTRIBUTERECORDWIDGET_H
-#define ADDDISTRIBUTERECORDWIDGET_H
+#ifndef DISTRIBUTERECORDWIDGET_H
+#define DISTRIBUTERECORDWIDGET_H
 
 #include <QCompleter>
 #include <QProxyModel>
 
-#include "ui_AddDistributorRecordWidget.h"
+#include "ui_DistributorRecordWidget.h"
 #include "BatchTableModelProxy.h"
+#include "AbstractRecordWidget.h"
 
-class AddDistributorRecordWidget : public QWidget, public Ui::ADRWidget {
+class DistributorRecordWidget : public AbstractRecordWidget, public Ui::DRWidget {
 Q_OBJECT
 public:
-	AddDistributorRecordWidget(QWidget * parent = NULL);
-	virtual ~AddDistributorRecordWidget();
-
-signals:
-	void canceled(bool);
+	DistributorRecordWidget(QWidget * parent = NULL);
+	virtual ~DistributorRecordWidget();
 
 public slots:
 	void update_model();
-	void prepareInsert(bool visible);
 	void prepareUpdate(const QModelIndex & idx);
 
 private slots:
-	bool insertRecord();
+	void insertRecord();
 	void clearForm();
-	void cancelForm();
 	void validateAdd();
 
 private:
@@ -55,11 +51,11 @@ private:
 	BatchTableModelProxy * pproxy;
 	QCheckBox * hideempty;
 
-	const QModelIndex * indexToUpdate;
-	QModelIndex copyOfIndexToUpdate;
-	QModelIndex sourceIndex;
+// 	const QModelIndex * indexToUpdate;
+// 	QModelIndex copyOfIndexToUpdate;
+// 	QModelIndex sourceIndex;
 	int sourceRowToUpdate;
 	int disttype;
 };
 
-#endif // ADDDISTRIBUTERECORDWIDGET_H
+#endif // DISTRIBUTERECORDWIDGET_H

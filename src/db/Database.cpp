@@ -878,9 +878,9 @@ bool Database::getDistributorRecord(int row, int& bid, int& qty, QDate& distdate
 	qty			= model_distributor->index(row, DistributorTableModel::HQty).data(Qt::EditRole).toUInt();
 	distdate	= model_distributor->index(row, DistributorTableModel::HDistDate).data(Qt::EditRole).toDate();
 	entrydate	= model_distributor->index(row, DistributorTableModel::HEntryDate).data(Qt::EditRole).toDate();
-	disttype	= (DistributorTableModel::Reasons)model_distributor->index(row, DistributorTableModel::HDistType).data(Qt::EditRole).toInt();
-	dt_a	= model_distributor->index(row, DistributorTableModel::HDistTypeA).data(Qt::EditRole).toString();
-	dt_b	= model_distributor->index(row, DistributorTableModel::HDistTypeB).data(Qt::EditRole).toString();
+	disttype	= model_distributor->index(row, DistributorTableModel::HDistType).data(Qt::EditRole).toInt();
+	dt_a		= model_distributor->index(row, DistributorTableModel::HDistTypeA).data(Qt::EditRole).toString();
+	dt_b		= model_distributor->index(row, DistributorTableModel::HDistTypeB).data(Qt::EditRole).toString();
 
 	return true;
 }

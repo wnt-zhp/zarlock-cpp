@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ADRWidget</class>
- <widget class="QWidget" name="ADRWidget">
+ <class>DRWidget</class>
+ <widget class="QWidget" name="DRWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>522</width>
-    <height>155</height>
+    <width>750</width>
+    <height>154</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Distribute new product</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -110,12 +107,19 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="action_add">
+      <widget class="QPushButton" name="action_addnext">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>&amp;Add</string>
+        <string>&amp;Insert</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="action_addexit">
+       <property name="text">
+        <string>Insert and &amp;Exit</string>
        </property>
       </widget>
      </item>
@@ -126,20 +130,27 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="action_cancel">
+       <property name="text">
+        <string>&amp;Cancel</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DateInput</class>
-   <extends>QLineEdit</extends>
-   <header>DateInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>TextInput</class>
    <extends>QLineEdit</extends>
    <header>TextInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DateInput</class>
+   <extends>QLineEdit</extends>
+   <header>DateInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -148,7 +159,7 @@
   <tabstop>spin_qty</tabstop>
   <tabstop>edit_reason_a</tabstop>
   <tabstop>edit_reason_b</tabstop>
-  <tabstop>action_add</tabstop>
+  <tabstop>action_addnext</tabstop>
   <tabstop>action_clear</tabstop>
  </tabstops>
  <resources/>

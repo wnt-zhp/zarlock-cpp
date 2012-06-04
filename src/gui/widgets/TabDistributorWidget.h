@@ -23,8 +23,10 @@
 #include "ui_TabDistributorWidget.h"
 #include "DistributorTableModelProxy.h"
 
+#include "DimmingWidget.h"
+
 class DistributorTableModel;
-class AddDistributorRecordWidget;
+class DistributorRecordWidget;
 
 class TabDistributorWidget : public QWidget, public Ui::TabDistributorWidget {
 Q_OBJECT
@@ -39,6 +41,8 @@ private:
 	void activateUi(bool activate = true);
 
 private slots:
+	void addRecord(bool newrec = true);
+
 	void editRecord(const QModelIndex & idx);
 	void editRecord(const QVector<int> & ids);
 
@@ -51,7 +55,9 @@ private:
 
 	DistributorTableModelProxy * proxy_model;
 
-	AddDistributorRecordWidget * adrw;
+	DistributorRecordWidget * drw;
+
+	DimmingWidget * dwbox;
 };
 
 #endif // TABDISTRIBUTORWIDGET_H

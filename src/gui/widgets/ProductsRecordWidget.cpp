@@ -21,16 +21,26 @@
 #include "Database.h"
 #include "DataParser.h"
 
-ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : Ui::PRWidget(),
+ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::PRWidget(),
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {
 	setupUi(parent);
+
+	button_label_insert_and_next = action_addnext->text();
+	button_label_insert_and_exit = action_addexit->text();
+	button_label_close = action_cancel->text();
+	
+	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
+	action_cancel->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
-	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordExit()));
-	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancelForm()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
+	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(closeForm()));
+	connect(action_clear, SIGNAL(clicked(bool)), this,  SLOT(clearForm()));
 
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
@@ -38,9 +48,9 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : Ui::PRWidget(),
 
 	connect(Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
 
-	button_label_insert = action_addnext->text();
+	button_label_insert_and_next = action_addnext->text();
 	button_label_insert_and_exit = action_addexit->text();
-	button_label_exit = action_addexit->text();
+	button_label_close = action_addexit->text();
 }
 
 ProductsRecordWidget::~ProductsRecordWidget() {
@@ -65,28 +75,13 @@ void ProductsRecordWidget::insertRecord() {
 			return;
 
 		if (db->updateProductRecord(pl.at(0).row(), edit_name->text(), edit_unit->text(), edit_expiry->text(), ":)")) {
-			idToUpdate = -1;
+			idToUpdate = 0;
 			clearForm();
 		}
 	} else {
 		if (db->addProductRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)")) {
 			clearForm();
 		}
-	}
-}
-
-void ProductsRecordWidget::insertRecordExit() {
-	insertRecord();
-	cancelForm();
-}
-
-void ProductsRecordWidget::prepareInsert(bool visible) {
-	action_addexit->setText(button_label_insert_and_exit);
-	// 	action_addnext->setText(tr("Insert record and add next"));
-	action_addnext->show();
-	idToUpdate = -1;
-	if (visible) {
-		clearForm();
 	}
 }
 
@@ -119,10 +114,6 @@ void ProductsRecordWidget::clearForm() {
 	edit_name->clear();
 	edit_unit->clear();
 	edit_expiry->clear();
-}
-
-void ProductsRecordWidget::cancelForm() {
-	emit canceled(false);
 }
 
 void ProductsRecordWidget::validateAdd() {

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>395</width>
-    <height>162</height>
+    <width>750</width>
+    <height>147</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -64,14 +64,21 @@
         <item>
          <widget class="QPushButton" name="action_addnext">
           <property name="text">
-           <string>&amp;Save and Add next</string>
+           <string>&amp;Insert</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="action_addexit">
           <property name="text">
-           <string>Save and &amp;Exit</string>
+           <string>Insert and &amp;Exit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="action_clear">
+          <property name="text">
+           <string>C&amp;lear</string>
           </property>
          </widget>
         </item>

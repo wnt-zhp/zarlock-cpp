@@ -2,69 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="pl_PL">
 <context>
-    <name>ADRWidget</name>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="20"/>
-        <source>Add new record</source>
-        <translation>Dodaj nowy rekord</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="82"/>
-        <source>Product</source>
-        <translation>Produkt</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="54"/>
-        <source>Quantity</source>
-        <translation>Ilość</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="14"/>
-        <source>Distribute new product</source>
-        <translation>Wydaj nową partię produktu</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="47"/>
-        <source>Optional</source>
-        <translation>Opcjonalny</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="75"/>
-        <source>Reason</source>
-        <translation>Powód</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="61"/>
-        <source>Date</source>
-        <translation>Data wydania</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="96"/>
-        <source>distribute date</source>
-        <translation>data wydania</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="68"/>
-        <source>reason</source>
-        <translation>przyczyna wydania</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="89"/>
-        <source>additional reason</source>
-        <translation>dodatkowy opis</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="118"/>
-        <source>&amp;Add</source>
-        <translation>&amp;Dodaj</translation>
-    </message>
-    <message>
-        <location filename="../ui/AddDistributorRecordWidget.ui" line="125"/>
-        <source>C&amp;lear</source>
-        <translation>&amp;Wyczyść</translation>
-    </message>
-</context>
-<context>
     <name>AFRWidget</name>
     <message>
         <location filename="../ui/AddFoodRecordWidget.ui" line="14"/>
@@ -131,6 +68,14 @@
     </message>
 </context>
 <context>
+    <name>AbstractRecordWidget</name>
+    <message>
+        <location filename="../gui/widgets/AbstractRecordWidget.cpp" line="29"/>
+        <source>Update record</source>
+        <translation>Zmień</translation>
+    </message>
+</context>
+<context>
     <name>AbstractTableView</name>
     <message>
         <location filename="../gui/views/AbstractTableView.cpp" line="40"/>
@@ -161,29 +106,6 @@
         <location filename="../gui/views/AbstractTableView.cpp" line="58"/>
         <source>Add record to database</source>
         <translation>Dodaj rekord do bazy danych</translation>
-    </message>
-</context>
-<context>
-    <name>AddDistributorRecordWidget</name>
-    <message>
-        <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="130"/>
-        <source>x %1</source>
-        <translation>x %1</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="131"/>
-        <source> of %1</source>
-        <translation> z %1</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="185"/>
-        <source>Insert record and exit</source>
-        <translation>Doda rekord i zamknij</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/AddDistributorRecordWidget.cpp" line="234"/>
-        <source>Update record and exit</source>
-        <translation>Zmień rekord i zamknij</translation>
     </message>
 </context>
 <context>
@@ -285,6 +207,11 @@
     </message>
     <message>
         <location filename="../ui/BatchRecordWidget.ui" line="189"/>
+        <source>C&amp;lear</source>
+        <translation>&amp;Wyczyść</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="196"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -292,7 +219,7 @@
 <context>
     <name>BatchRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="267"/>
+        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="256"/>
         <source>Update record</source>
         <translation>Zmień</translation>
     </message>
@@ -556,6 +483,74 @@
     </message>
 </context>
 <context>
+    <name>DRWidget</name>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="17"/>
+        <source>Add new record</source>
+        <translation>Dodaj nowy rekord</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="44"/>
+        <source>Optional</source>
+        <translation>Opcjonalny</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="51"/>
+        <source>Quantity</source>
+        <translation>Ilość</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="58"/>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="65"/>
+        <source>reason</source>
+        <translation>przyczyna wydania</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="72"/>
+        <source>Reason</source>
+        <translation>Powód</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="79"/>
+        <source>Product</source>
+        <translation>Produkt</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="86"/>
+        <source>additional reason</source>
+        <translation>dodatkowy opis</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="93"/>
+        <source>distribute date</source>
+        <translation>data wydania</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="115"/>
+        <source>&amp;Insert</source>
+        <translation>&amp;Dodaj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="122"/>
+        <source>Insert and &amp;Exit</source>
+        <translation>Dodaj i &amp;wyjdź</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="129"/>
+        <source>C&amp;lear</source>
+        <translation>&amp;Wyczyść</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="136"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Anuluj</translation>
+    </message>
+</context>
+<context>
     <name>Database</name>
     <message>
         <location filename="../db/Database.cpp" line="117"/>
@@ -684,6 +679,24 @@ Wciśnij Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/DateInput.cpp" line="56"/>
         <source>To obtain correct expiry date, set registration date first</source>
         <translation>Wprowadź datę wpisu aby dostać datę ważności</translation>
+    </message>
+</context>
+<context>
+    <name>DistributorRecordWidget</name>
+    <message>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="135"/>
+        <source>x %1</source>
+        <translation>x %1</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="136"/>
+        <source> of %1</source>
+        <translation> z %1</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="229"/>
+        <source>Update record and exit</source>
+        <translation>Zmień rekord i zamknij</translation>
     </message>
 </context>
 <context>
@@ -1080,16 +1093,21 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/ProductsRecordWidget.ui" line="67"/>
-        <source>&amp;Save and Add next</source>
-        <translation>&amp;Zapisz i dodaj kolejny</translation>
+        <source>&amp;Insert</source>
+        <translation>&amp;Dodaj</translation>
     </message>
     <message>
         <location filename="../ui/ProductsRecordWidget.ui" line="74"/>
-        <source>Save and &amp;Exit</source>
-        <translation>Zapisz i &amp;wyjdź</translation>
+        <source>Insert and &amp;Exit</source>
+        <translation>Dodaj i &amp;wyjdź</translation>
     </message>
     <message>
         <location filename="../ui/ProductsRecordWidget.ui" line="81"/>
+        <source>C&amp;lear</source>
+        <translation>&amp;Wyczyść</translation>
+    </message>
+    <message>
+        <location filename="../ui/ProductsRecordWidget.ui" line="88"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -1113,7 +1131,7 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>ProductsRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/ProductsRecordWidget.cpp" line="113"/>
+        <location filename="../gui/widgets/ProductsRecordWidget.cpp" line="107"/>
         <source>Update record</source>
         <translation>Zmień</translation>
     </message>
@@ -1387,6 +1405,11 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../ui/TabDistributorWidget.ui" line="52"/>
         <source>Hide meal distributions</source>
         <translation>Ukryń wydania na posiłki</translation>
+    </message>
+    <message>
+        <location filename="../ui/TabDistributorWidget.ui" line="66"/>
+        <source>Add &amp;distribution</source>
+        <translation>&amp;Dodaj  wydanie</translation>
     </message>
 </context>
 <context>

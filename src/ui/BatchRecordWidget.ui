@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>747</width>
-    <height>182</height>
+    <width>750</width>
+    <height>178</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -184,6 +184,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="action_clear">
+       <property name="text">
+        <string>C&amp;lear</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="action_cancel">
        <property name="text">
         <string>&amp;Cancel</string>
@@ -196,24 +203,24 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DateInput</class>
-   <extends>QLineEdit</extends>
-   <header>DateInput.h</header>
-  </customwidget>
-  <customwidget>
    <class>TextInput</class>
    <extends>QLineEdit</extends>
    <header>TextInput.h</header>
   </customwidget>
   <customwidget>
-   <class>PriceInput</class>
+   <class>DateInput</class>
    <extends>QLineEdit</extends>
-   <header>PriceInput.h</header>
+   <header>DateInput.h</header>
   </customwidget>
   <customwidget>
    <class>UnitInput</class>
    <extends>QLineEdit</extends>
    <header>UnitInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PriceInput</class>
+   <extends>QLineEdit</extends>
+   <header>PriceInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

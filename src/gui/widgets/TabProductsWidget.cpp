@@ -21,6 +21,9 @@
 #include "Database.h"
 #include "DataParser.h"
 
+#include "ProductsTableModel.h"
+#include "ProductsRecordWidget.h"
+
 #include <QStringBuilder>
 
 TabProductsWidget::TabProductsWidget(QWidget *) :
@@ -39,8 +42,8 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
-	connect(prw, SIGNAL(canceled(bool)), button_add_prod, SLOT(setChecked(bool)));
-	connect(prw, SIGNAL(canceled(bool)), this, SLOT(addRecord(bool)));
+	connect(prw, SIGNAL(closed(bool)), button_add_prod, SLOT(setChecked(bool)));
+	connect(prw, SIGNAL(closed(bool)), this, SLOT(addRecord(bool)));
 
 // 	connect(table_products, SIGNAL(recordsFilter(QString)), this, SLOT(set_filter(QString)));
 

@@ -23,6 +23,8 @@
 #include "DataParser.h"
 #include "DBReports.h"
 
+#include "BatchRecordWidget.h"
+
 TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(Database::Instance()),
 	model_batch(NULL), proxy_model(NULL)/*, model_batch_delegate(NULL)*/ {
 
@@ -49,9 +51,14 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	list_messages->setVisible(false);
 
 	connect(button_add_batch, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
+	connect(brw, SIGNAL(closed(bool)), button_add_batch, SLOT(setChecked(bool)));
+	connect(brw, SIGNAL(closed(bool)), this, SLOT(addRecord(bool)));
+
 	connect(table_batch, SIGNAL(addRecordRequested(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(brw, SIGNAL(canceled(bool)), button_add_batch, SLOT(setChecked(bool)));
-	connect(brw, SIGNAL(canceled(bool)), this, SLOT(addRecord(bool)));
+	connect(table_batch, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
+	connect(table_batch, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(const QVector<int>&, bool)));
+
+	connect(model_batch, SIGNAL(rowInserted(int)), table_batch, SLOT(selectRow(int)));
 
 	connect(cb_expired, SIGNAL(clicked()), this, SLOT(setFilter()));
 	connect(cb_aexpired, SIGNAL(clicked()), this, SLOT(setFilter()));
@@ -61,11 +68,6 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
 
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
-
-	connect(model_batch, SIGNAL(rowInserted(int)), table_batch, SLOT(selectRow(int)));
-
-	connect(table_batch, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
-	connect(table_batch, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeBatchRecord(const QVector<int>&, bool)));
 
 	dwbox = new DimmingWidget(this);
 	

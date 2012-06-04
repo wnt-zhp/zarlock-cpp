@@ -17,41 +17,41 @@
 */
 
 
-#ifndef BATCHRECORDWIDGET_H
-#define BATCHRECORDWIDGET_H
+#ifndef ABSTRACTRECORDWIDGET_H
+#define ABSTRACTRECORDWIDGET_H
 
 #include <QCompleter>
 #include <QSortFilterProxyModel>
+#include <QWidget>
+#include <QPushButton>
 
-#include "ui_BatchRecordWidget.h"
-#include "AbstractRecordWidget.h"
-
-class BatchRecordWidget : public AbstractRecordWidget, public Ui::BRWidget {
+class AbstractRecordWidget : public QWidget {
 Q_OBJECT
 public:
-	BatchRecordWidget(QWidget * parent = NULL);
-	virtual ~BatchRecordWidget();
+	AbstractRecordWidget(QWidget * parent = NULL);
+	virtual ~AbstractRecordWidget();
+
+signals:
+	void closed(bool);
 
 public slots:
-	void update_model();
-	void prepareUpdate(const QModelIndex & idx);
+	virtual void update_model();
+	virtual void prepareInsert(bool visible);
+	virtual void prepareUpdate(const QModelIndex & idx);
 
-private slots:
-	void insertRecord();
-	void clearForm();
-	void validateAdd();
-	void validateCB(int i);
+protected slots:
+	virtual void insertRecord() = 0;
+	virtual void insertRecordAndExit();
+	virtual void closeForm();
+	virtual void clearForm();
 
-private:
-	QCompleter * completer_spec;
-	QCompleter * completer_qty;
-	QCompleter * completer_unit;
-	QCompleter * completer_price;
-	QCompleter * completer_invoice;
-	QCompleter * completer_book;
-	QCompleter * completer_expiry;
-
-	QSortFilterProxyModel * pproxy;
+protected:
+	int idToUpdate;
+	QString button_label_insert_and_next;
+	QString button_label_insert_and_exit;
+	QString button_label_close;
+	QString button_label_clear;
+	QString button_label_update;
 };
 
-#endif // BATCHRECORDWIDGET_H
+#endif // ABSTRACTRECORDWIDGET_H

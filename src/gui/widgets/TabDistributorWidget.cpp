@@ -21,7 +21,7 @@
 #include "Database.h"
 #include "DataParser.h"
 
-#include "AddDistributorRecordWidget.h"
+#include "DistributorRecordWidget.h"
 
 #include <QtSql>
 
@@ -32,29 +32,43 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 	setupUi(this);
 
 	widget_add_distributor->setVisible(true);
-	adrw = new AddDistributorRecordWidget(widget_add_distributor);
+	drw = new DistributorRecordWidget(widget_add_distributor);
 
 	activateUi(true);
 
-	connect(db, SIGNAL(dbSaved()), adrw, SLOT(update_model()));
-	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
-	connect(cb_hidemeals, SIGNAL(stateChanged(int)), this, SLOT(setFilter()));
+// 	connect(db, SIGNAL(dbSaved()), drw, SLOT(update_model()));
+
+	connect(button_add_distribution, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
+	connect(drw, SIGNAL(closed(bool)), button_add_distribution, SLOT(setChecked(bool)));
+	connect(drw, SIGNAL(closed(bool)), this, SLOT(addRecord(bool)));
+
+// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
+	connect(table_dist, SIGNAL(addRecordRequested(bool)), button_add_distribution, SLOT(setChecked(bool)));
+	connect(table_dist, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
+	connect(table_dist, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(const QVector<int>&, bool)));
 
 	connect(model_dist, SIGNAL(rowInserted(int)), this, SLOT(markSourceRowActive(int)));
 
-// 	connect(table_dist, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editRecord(QModelIndex)));
-	connect(table_dist, SIGNAL(editRecordRequested(const QVector<int> &)), this, SLOT(editRecord(const QVector<int> &)));
-	connect(table_dist, SIGNAL(removeRecordRequested(const QVector<int> &, bool)), Database::Instance(), SLOT(removeDistributorRecord(const QVector<int>&, bool)));
+	connect(cb_hidemeals, SIGNAL(stateChanged(int)), this, SLOT(setFilter()));
+
+	connect(edit_filter_batch, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
+
 
 	cb_hidemeals->setChecked(true);
 
 // 	table_dist->setPalette(globals::item_palette);
+
+	dwbox = new DimmingWidget(this);
+	
+	dwbox->setOverlay(true, true);
+	dwbox->setWidget(widget_add_distributor);
+	dwbox->setOverlayOpacity(100);
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
 	DI();
 	activateUi(false);
-	delete adrw;
+	delete drw;
 }
 
 /**
@@ -79,7 +93,7 @@ void TabDistributorWidget::activateUi(bool activate) {
 			proxy_model->setSourceModel(model_dist);
 			table_dist->setModel(proxy_model);
 			table_dist->show();
-			adrw->update_model();
+			drw->update_model();
 		}
 	}
 }
@@ -99,14 +113,32 @@ void TabDistributorWidget::setFilterString(const QString& string) {
 	setFilter();
 }
 
+void TabDistributorWidget::addRecord(bool newrec) {
+	if (newrec) {
+		drw->prepareInsert(newrec);
+		// 		widget_add_batch->setVisible(newrec);
+		dwbox->go(true);
+	} else {
+		dwbox->og();
+		dwbox->setEventTransparent(false);
+		// 		widget_add_batch->setVisible(newrec);
+	}
+}
+
 void TabDistributorWidget::editRecord(const QVector< int >& ids) {
 	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
-		editRecord(db->CachedDistributor()->getIndexById(*it));
+		drw->prepareUpdate(db->CachedDistributor()->getIndexById(*it));
+		widget_add_distributor->setVisible(true);
+		dwbox->go();
+		dwbox->setEventTransparent(true);
 	}
 }
 
 void TabDistributorWidget::editRecord(const QModelIndex& idx) {
-	adrw->prepareUpdate(proxy_model->mapToSource(idx));
+	drw->prepareUpdate(proxy_model->mapToSource(idx));
+	widget_add_distributor->setVisible(true);
+	dwbox->go();
+	dwbox->setEventTransparent(true);
 }
 
 void TabDistributorWidget::markSourceRowActive(int row) {

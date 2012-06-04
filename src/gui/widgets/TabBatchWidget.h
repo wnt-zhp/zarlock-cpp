@@ -24,13 +24,14 @@
 
 #include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
-#include "BatchRecordWidget.h"
 
 #include <QtSql>
 #include <QCompleter>
 
 #include "DimmingWidget.h"
 // #include "DimmingMessage.h"
+
+class BatchRecordWidget;
 
 class TabBatchWidget : public QWidget, public Ui::TabBatchWidget {
 Q_OBJECT

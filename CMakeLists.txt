@@ -61,7 +61,7 @@ set(zarlok_FORMS
 									src/ui/DatabaseBrowser.ui
 									src/ui/ProductsRecordWidget.ui
 									src/ui/BatchRecordWidget.ui
-									src/ui/AddDistributorRecordWidget.ui
+									src/ui/DistributorRecordWidget.ui
 )
 set(zarlok_widget_FORMS
 									src/ui/DBItem.ui
@@ -104,9 +104,10 @@ set(zarlok_src_gui_inputs_SRCS
 									src/gui/inputs/TextInput.cpp
 )
 set(zarlok_src_gui_widgets_SRCS
+									src/gui/widgets/AbstractRecordWidget.cpp
 									src/gui/widgets/ProductsRecordWidget.cpp
 									src/gui/widgets/BatchRecordWidget.cpp
-									src/gui/widgets/AddDistributorRecordWidget.cpp
+									src/gui/widgets/DistributorRecordWidget.cpp
 									src/gui/widgets/DBBrowser.cpp
 									src/gui/widgets/DBItemWidget.cpp
 									src/gui/widgets/TabProductsWidget.cpp

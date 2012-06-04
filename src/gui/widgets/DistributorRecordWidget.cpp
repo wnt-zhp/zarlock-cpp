@@ -17,24 +17,30 @@
 */
 
 #include "globals.h"
-#include "AddDistributorRecordWidget.h"
+#include "DistributorRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
 
-AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::ADRWidget(),
+DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::DRWidget(),
 	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL),
-	pproxy(NULL), hideempty(NULL), indexToUpdate(NULL), disttype(0) {
+	pproxy(NULL), hideempty(NULL), disttype(0) {
 	setupUi(parent);
 
-	hideempty = new QCheckBox;
-	hideempty->setChecked(true);
+	button_label_insert_and_next = action_addnext->text();
+	button_label_insert_and_exit = action_addexit->text();
+	button_label_close = action_cancel->text();
 
-	action_add->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
+	action_cancel->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 
-	connect(action_add, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
+	action_cancel->setShortcut(Qt::Key_Escape);
+
+	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
+	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
+	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(closeForm()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clearForm()));
-// 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(cancel_form()));
 
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
@@ -51,12 +57,15 @@ AddDistributorRecordWidget::AddDistributorRecordWidget(QWidget * parent) : Ui::A
 	// TODO: do it better
 	combo_products->setStyleSheet("color: black;");
 
+	hideempty = new QCheckBox;
+	hideempty->setChecked(true);
+
 	pproxy = new BatchTableModelProxy(hideempty);
 	pproxy->setExtendedSpec(true);
 	update_model();
 }
 
-AddDistributorRecordWidget::~AddDistributorRecordWidget() {
+DistributorRecordWidget::~DistributorRecordWidget() {
 	FPR(__func__);
 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
@@ -66,7 +75,7 @@ AddDistributorRecordWidget::~AddDistributorRecordWidget() {
 	delete hideempty;
 }
 
-bool AddDistributorRecordWidget::insertRecord() {
+void DistributorRecordWidget::insertRecord() {
 	Database * db = Database::Instance();
 
 	int idx = combo_products->currentIndex();
@@ -74,30 +83,31 @@ bool AddDistributorRecordWidget::insertRecord() {
 
 	QDate df;
 	if (!DataParser::date(edit_date->text(), df))
-		return false;
+		return;
 
-	if (indexToUpdate) {
-		if (db->updateDistributorRecord(copyOfIndexToUpdate.row(), batch_id, spin_qty->value()*100, df, QDate::currentDate(),
-			disttype, edit_reason_a->text(), edit_reason_b->text())) {
-				indexToUpdate = NULL;
-				prepareInsert(true);
-				edit_date->setFocus();
-			}
+	if (idToUpdate >= 0) {
+		DistributorTableModel * dtm = db->CachedDistributor();
+		QModelIndexList dl = dtm->match(dtm->index(0, DistributorTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
+		if (dl.size() != 1)
+			return;
+		if (db->updateDistributorRecord(dl.at(0).row(), batch_id, spin_qty->value()*100, df, QDate::currentDate(),
+			disttype, edit_reason_a->text(), edit_reason_b->text()))
+		{
+			idToUpdate = 0;
+			clearForm();
+			edit_date->setFocus();
+		}
 	} else {
 		if (db->addDistributorRecord(batch_id, spin_qty->value()*100, df, QDate::currentDate(),
-			disttype, edit_reason_a->text(), edit_reason_b->text())) {
-				prepareInsert(true);
-				edit_date->setFocus();
-			}
+			disttype, edit_reason_a->text(), edit_reason_b->text()))
+		{
+			clearForm();
+			edit_date->setFocus();
+		}
 	}
-
-// 	update_model();
-
-	combo_products->setFocus();
-	return true;
 }
 
-void AddDistributorRecordWidget::clearForm() {
+void DistributorRecordWidget::clearForm() {
 	spin_qty->setValue(0.0);
 	spin_qty->setSuffix("");
 	edit_date->clear();
@@ -105,12 +115,7 @@ void AddDistributorRecordWidget::clearForm() {
 	edit_reason_b->clear();
 }
 
-void AddDistributorRecordWidget::cancelForm() {
-	prepareInsert(true);
-	emit canceled(false);
-}
-
-void AddDistributorRecordWidget::validateAdd() {
+void DistributorRecordWidget::validateAdd() {
 	QModelIndex idx = pproxy->mapToSource(pproxy->index(combo_products->currentIndex(), 0));
 
 	Database * db = Database::Instance();
@@ -121,8 +126,8 @@ void AddDistributorRecordWidget::validateAdd() {
 	QString qunit = db->CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
 // 	if (indexToUpdate and (idx.row() == copyOfIndexToUpdate.row())) {
-	if (indexToUpdate and (idx.row() == sourceRowToUpdate)) {
-		fake = indexToUpdate->model()->index(indexToUpdate->row(), DistributorTableModel::HQty).data(DistributorTableModel::RRaw).toUInt();
+	if (idToUpdate and (idx.row() == sourceRowToUpdate)) {
+		fake = db->CachedDistributor()->getIndexById(idToUpdate, DistributorTableModel::HQty).data(DistributorTableModel::RRaw).toUInt();
 	}
 
 	unsigned int totalmax = qtytotal - qtyused + fake;
@@ -143,13 +148,13 @@ void AddDistributorRecordWidget::validateAdd() {
 	edit_reason_b->setEnabled(is_date_ok);
 
 	if ((spin_qty->value() > 0.0) and is_date_ok and edit_reason_a->ok()) {
-		action_add->setEnabled(true);
+		action_addnext->setEnabled(true);
 	} else {
-		action_add->setEnabled(false);
+		action_addnext->setEnabled(false);
 	}
 }
 
-void AddDistributorRecordWidget::update_model() {
+void DistributorRecordWidget::update_model() {
 	Database * db = Database::Instance();
 
 	pproxy->setSourceModel(db->CachedBatch());
@@ -181,16 +186,7 @@ void AddDistributorRecordWidget::update_model() {
 	edit_reason_b->setCompleter(completer_reason2);
 }
 
-void AddDistributorRecordWidget::prepareInsert(bool visible) {
-	action_add->setText(tr("Insert record and exit"));
-	indexToUpdate = NULL;
-	if (visible) {
-	} else {
-		clearForm();
-	}
-}
-
-void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
+void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	int bid;
 	int qty;
 
@@ -201,17 +197,16 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	clearForm();
 	update_model();
 
-	copyOfIndexToUpdate = idx;
-	indexToUpdate = &copyOfIndexToUpdate;	// save index to update
-
 	Database * db = Database::Instance();
 
 	BatchTableModel * bm = db->CachedBatch();
 
-	QModelIndex sidx = idx.model()->index(idx.row(), DistributorTableModel::HBatchId);	// source index for proxy fpr column HBatchID
+	QModelIndex sidx = idx.model()->index(idx.row(), DistributorTableModel::HBatchId);
+
+	idToUpdate = sidx.model()->index(sidx.row(), DistributorTableModel::HId).data(Qt::EditRole).toUInt();
 
 	// Find batch record index for selected distributor index
-	QModelIndexList batchl = bm->match(bm->index(0, BatchTableModel::HId), Qt::DisplayRole, sidx.data(DistributorTableModel::RRaw).toUInt());
+	QModelIndexList batchl = bm->match(bm->index(0, BatchTableModel::HId), Qt::DisplayRole, sidx.data(DistributorTableModel::RRaw).toUInt(), -1, Qt::MatchExactly);
 
 	if (batchl.size() != 1)
 		return;
@@ -231,8 +226,11 @@ void AddDistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);
 	
-	action_add->setText(tr("Update record and exit"));
+	action_addnext->setText(tr("Update record and exit"));
 	validateAdd();								// revalidate proxy model
+
+	action_addexit->setText(tr("Update record"));
+	action_addnext->hide();
 }
 
-#include "AddDistributorRecordWidget.moc"
+#include "DistributorRecordWidget.moc"

@@ -21,10 +21,11 @@
 #define PRODUCTSRECORDWIDGET_H
 
 #include "ui_ProductsRecordWidget.h"
+#include "AbstractRecordWidget.h"
 
 #include <QCompleter>
 
-class ProductsRecordWidget : public QWidget, public Ui::PRWidget {
+class ProductsRecordWidget : public AbstractRecordWidget, public Ui::PRWidget {
 Q_OBJECT
 public:
 	ProductsRecordWidget(QWidget * parent = NULL);
@@ -32,30 +33,19 @@ public:
 
 	virtual void setVisible(bool visible);
 
-signals:
-	void canceled(bool);
-
 public slots:
 	void update_model();
-	void prepareInsert(bool visible);
 	void prepareUpdate(const QModelIndex & idx);
 
 private slots:
 	void insertRecord();
-	void insertRecordExit();
 	void clearForm();
-	void cancelForm();
 	void validateAdd();
 
 private:
 	QCompleter * completer_name;
 	QCompleter * completer_unit;
 	QCompleter * completer_expiry;
-
-	int idToUpdate;
-	QString button_label_insert;
-	QString button_label_insert_and_exit;
-	QString button_label_exit;
 };
 
 #endif // PRODUCTSRECORDWIDGET_H

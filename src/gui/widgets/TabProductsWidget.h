@@ -24,13 +24,14 @@
 
 #include "Database.h"
 #include "ProductsTableModel.h"
-#include "ProductsRecordWidget.h"
 
 #include <QCompleter>
 #include <BatchTableModelProxyP.h>
 #include <DistributorTableModelProxyP.h>
 
 #include "DimmingWidget.h"
+
+class ProductsRecordWidget;
 
 class TabProductsWidget : public QWidget, public Ui::TabProductsWidget {
 Q_OBJECT
