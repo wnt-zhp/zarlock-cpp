@@ -227,7 +227,7 @@ IF (NOT BUILD_STATIC)
 		${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
 		${zarlok_splash_RESOURCES_RCC} )
 
-	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${QM})
+	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_FORMS_HEADERS} ${zarlok_SRCS} ${QM})
 
 ELSE (NOT BUILD_STATIC)
 
