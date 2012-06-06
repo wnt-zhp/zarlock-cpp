@@ -285,7 +285,7 @@ add_custom_command(TARGET zarlok POST_BUILD
 if ( MINGW )
 
 MESSAGE(STATUS "Inno Setup Compiler : " ${iscc_exe})
-find_program(iscc_exe iscc)
+find_program(iscc_exe iscc PATHS ${ISCC_BINARY_DIR} ENV PATH)
 
 MESSAGE(STATUS "Inno Setup Compiler : " ${iscc_exe})
 if (NOT iscc_exe STREQUAL iscc_exe-NOTFOUND)
@@ -294,7 +294,7 @@ else (NOT iscc_exe STREQUAL iscc_exe-NOTFOUND)
 	MESSAGE(FATAL_ERROR "iscc not found!")
 endif (NOT iscc_exe STREQUAL iscc_exe-NOTFOUND)
 
-find_path(MINGW_BINARY_DIR mingwm10.dll REQUIRED)
+find_path(MINGW_BINARY_DIR mingwm10.dll  PATHS ${MINGW_BINARY_DIR} ENV PATH)
 
 if (NOT MINGW_BINARY_DIR STREQUAL MINGW_BINARY_DIR-NOTFOUND)
 	MESSAGE(STATUS "MinGW Binaries : " ${MINGW_BINARY_DIR})
