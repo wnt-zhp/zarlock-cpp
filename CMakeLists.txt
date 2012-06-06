@@ -42,9 +42,9 @@ IF( MINGW )
 		COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR}
 			-i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
 			-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
-	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
+	SET(appicon_SOURCES ${appicon_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
 ELSE( MINGW )
-	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} crunchico.rc)
+	SET(appicon_SOURCES ${appicon_SOURCES} appico.rc)
 ENDIF( MINGW )
 
 if (BUILD_STATIC)
@@ -203,14 +203,15 @@ configure_file(config.h.in config.h @ONLY)
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS} ${zarlok_dialogs_FORMS})
-qt4_automoc(${zarlok_SRCS})
+qt4_wrap_cpp(${zarlok_SRCS})
+# qt4_automoc(${zarlok_SRCS})
 
 if (rcc_files)
 	unset (rcc_files)
 endif (rcc_files)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
-IF (NOT BUILD_STATIC)
+IF (NOT MINGW)
 	add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
 
 	set(zarlok_db_RESOURCES_RCC database.rcc)
@@ -227,9 +228,9 @@ IF (NOT BUILD_STATIC)
 		${zarlok_reports_RESOURCES_RCC} ${zarlok_icons_RESOURCES_RCC}
 		${zarlok_splash_RESOURCES_RCC} )
 
-	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_FORMS_HEADERS} ${zarlok_SRCS} ${QM})
+	add_executable(zarlok ${zarlok_FORMS_HEADERS} ${zarlok_SRCS} ${QM})
 
-ELSE (NOT BUILD_STATIC)
+ELSE (NOT MINGW)
 
 # 	set(zarlok_translations_RESOURCES_RCC translations.rcc)
 
@@ -276,7 +277,7 @@ ELSE (NOT BUILD_STATIC)
 
 	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${rcc_files})
 
-ENDIF (NOT BUILD_STATIC)
+ENDIF (NOT MINGW)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
 
@@ -322,7 +323,7 @@ install(FILES
 
 ENDIF ( UNIX AND NOT APPLE )
 
-IF (NOT BUILD_STATIC)
+IF (NOT MINGW)
 
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
@@ -337,7 +338,7 @@ install(FILES
 				DESTINATION share/${CMAKE_PROJECT_NAME}/translations
 )
 
-ENDIF (NOT BUILD_STATIC)
+ENDIF (NOT MINGW)
 # if(UNIX AND NOT APPLE)
 # 	install( FILES ${APP_ICON} DESTINATION share/icons )
 # 	install( FILES qtm.1.gz DESTINATION ${MANPAGE_DIRECTORY} )

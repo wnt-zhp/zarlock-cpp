@@ -97,7 +97,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 
 		if (reply_string != "no update") {
 			QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
-			tr("Updates of Zarlok is available. Tu finish upgrade process this zarlok session must be closed (will be handled automaticly).Do you want download and install updates?"),
+			tr("Updates of Zarlok is available. To finish upgrade process this zarlok session must be closed (will be handled automaticly). Do you want download and install updates?"),
 			   QMessageBox::Yes | QMessageBox::No);
 			
 			int ret = mbox.exec();
@@ -113,6 +113,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 		QObject::disconnect(replyDownloadRequest, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
 
 		download_progress.setMaximum(0);
+		download_progress.hide();
 
 		QFile localFile(downloaded_filename);
 		if (!localFile.open(QIODevice::WriteOnly))
@@ -123,7 +124,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 		QProcess myProcess;
 		// Start the QProcess instance.
 		myProcess.startDetached(downloaded_filename);
-// 		exit(0);
+		exit(0);
 	}
 	// Some http error received
 
