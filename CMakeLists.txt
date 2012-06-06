@@ -180,8 +180,6 @@ else (UPDATE_TRANSLATIONS)
   qt4_add_translation(QM_FILES ${zarlok_TS})
 endif (UPDATE_TRANSLATIONS) 
 
-add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
-
 find_program(git_exe git)
 
 if (git_exe)
@@ -211,6 +209,8 @@ endif (rcc_files)
 
 # add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
 IF (NOT BUILD_STATIC)
+	add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
+
 	set(zarlok_db_RESOURCES_RCC database.rcc)
 	set(zarlok_reports_RESOURCES_RCC reports.rcc)
 	set(zarlok_icons_RESOURCES_RCC icons.rcc)
@@ -294,7 +294,7 @@ endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
 add_custom_command(OUTPUT iss_file
 					COMMAND ${CMAKE_COMMAND} ARGS -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
-					COMMAND ${CMAKE_COMMAND} ARGS -D QT_BINARY_DIR=${QT_BINARY_DIR} -D CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+					COMMAND ${CMAKE_COMMAND} ARGS -D QT_BINARY_DIR=${QT_BINARY_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
 					COMMAND ${iscc_exe} ARGS zarlok_installer.iss
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 					MAIN_DEPENDENCY config.h

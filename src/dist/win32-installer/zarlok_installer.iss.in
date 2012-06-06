@@ -22,9 +22,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\Zarlok
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=@CMAKE_CURRENT_SOURCE_DIR@\src\dist\win32-installer\gpl-3.0.txt
-;InfoBeforeFile=@CMAKE_CURRENT_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
-;InfoAfterFile=@CMAKE_CURRENT_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
+LicenseFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\gpl-3.0.txt
+;InfoBeforeFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
+;InfoAfterFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
 OutputDir=zarlok-@DIST_VERSION@-installer
 OutputBaseFilename=dist
 Compression=lzma
@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "@CMAKE_CURRENT_BINARY_DIR@\zarlok.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@ZARLOK_SOURCE_DIR@\zarlok.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -46,7 +46,7 @@ Source: "@QT_BINARY_DIR@\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\plugins\sqldrivers\qsqlite4.dll"; DestDir: "{app}\plugins\sqldrivers\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "@CMAKE_CURRENT_SOURCE_DIR@\src\dist\win32-installer\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
