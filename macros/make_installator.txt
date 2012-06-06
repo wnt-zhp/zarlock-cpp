@@ -8,5 +8,5 @@ else (NOT MINGW_BINARY_DIR STREQUAL "MINGW_BINARY_DIR-NOTFOUND")
 	MESSAGE(FATAL_ERROR "MinGW binaries not found!")
 endif (NOT MINGW_BINARY_DIR STREQUAL "MINGW_BINARY_DIR-NOTFOUND")
 
-file (READ build_version_number.txt DIST_VERSION)
+file (STRINGS build_version_number.txt DIST_VERSION)
 configure_file(zarlok_installer.iss.in zarlok_installer.iss)
