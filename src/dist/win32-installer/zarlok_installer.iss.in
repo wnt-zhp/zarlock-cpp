@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "@CMAKE_CURRENT_BUILD_DIR@\zarlok.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@CMAKE_CURRENT_BINARY_DIR@\zarlok.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@MINGW_BINARY_DIR@\mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversion
