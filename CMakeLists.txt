@@ -294,7 +294,7 @@ endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
 add_custom_command(OUTPUT iss_file
 					COMMAND ${CMAKE_COMMAND} ARGS -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
-					COMMAND ${CMAKE_COMMAND} ARGS -D QT_BINARY_DIR=${QT_BINARY_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+					COMMAND ${CMAKE_COMMAND} ARGS -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
 					COMMAND ${iscc_exe} ARGS zarlok_installer.iss
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 					MAIN_DEPENDENCY config.h
