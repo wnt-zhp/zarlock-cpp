@@ -51,7 +51,7 @@ if (BUILD_STATIC)
 	add_definitions(-DBUILD_STATIC)
 endif (BUILD_STATIC)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/items src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/misc src/ui src/gui src/gui/widgets src/gui/items src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS
 									src/ui/MainWindow.ui
@@ -146,10 +146,12 @@ set(zarlok_src_db_SRCS
 									src/db/CampProperties.cpp
 									src/db/MealManager.cpp
 )
+
 set(zarlok_src_misc_SRCS
-									src/EventFilter.cpp
-									src/Logger.cpp
-									src/DataParser.cpp
+									src/misc/ApplicationUpdater.cpp
+									src/misc/EventFilter.cpp
+									src/misc/Logger.cpp
+									src/misc/DataParser.cpp
 									src/zarlok.cpp
 									main.cpp
 )
@@ -276,7 +278,7 @@ ELSE (NOT BUILD_STATIC)
 
 ENDIF (NOT BUILD_STATIC)
 
-target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
+target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
 
 add_custom_command(TARGET zarlok POST_BUILD
                    COMMAND zarlok --version > ${CMAKE_CURRENT_BINARY_DIR}/build_version_number.txt

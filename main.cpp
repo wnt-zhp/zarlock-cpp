@@ -7,6 +7,7 @@
 #include "config.h"
 #include "globals.h"
 #include "DBBrowser.h"
+#include "ApplicationUpdater.h"
 
 namespace globals {
 	QPalette palette_ok;
@@ -208,16 +209,15 @@ TD
 	QApplication app(argc, argv, QApplication::GuiClient);
 	configure(argc, argv);
 
+	ApplicationUpdater updater;
+	updater.checkForUpdates();
+
 	bool static_build = STATIC_BUILD;
 	PR(static_build);
 
 	qDebug() << "Runtime app: " << argv[0];
 // 	qDebug() << ZARLOK_VERSION;
 	PR(ZARLOK_VERSION);
-
-
-
-
 
 #ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
 
