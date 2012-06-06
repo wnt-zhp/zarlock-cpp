@@ -19,9 +19,6 @@
 #include "CampSettingsDialog.h"
 // public members
 
-#ifndef GITREVNUM
-#define GITREVNUM	"unknown"
-#endif
 /**
  * @brief Główny konstruktor klasy Zarlok. Klasa Zarlok jest główną klasą,
  * odpowiada za wyświetlanie głównego formularza (jest pochodną klasy
@@ -33,7 +30,8 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL), dw(NULL) {
 	CI();
 	setupUi(this);
-	this->setWindowTitle(tr("Zarlok (WNT) --- build: " GITREVNUM )/*.append("GITREVNUM")*/);
+	this->setWindowTitle(tr("Zarlok (WNT)"));
+	this->statusBar()->showMessage(tr("Zarlok (WNT) | build: " RELEASE_REVNUM " | version: " ZARLOK_VERSION));
 
 	toolbar = addToolBar(tr("Main"));
 	dbtoolbar = addToolBar(tr("Database"));

@@ -17,7 +17,6 @@
 */
 
 #include "globals.h"
-#include "config.h"
 #include "Database.h"
 #include "DataParser.h"
 #include "TabMealWidget.h"
