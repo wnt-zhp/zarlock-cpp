@@ -202,8 +202,8 @@ configure_file(config.h.in config.h @ONLY)
 
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
-qt4_automoc(${zarlok_SRCS})
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS} ${zarlok_dialogs_FORMS})
+qt4_automoc(${zarlok_SRCS})
 
 if (rcc_files)
 	unset (rcc_files)
