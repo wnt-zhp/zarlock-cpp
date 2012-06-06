@@ -1,7 +1,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
-
 #include <QSplashScreen>
+
+#include <getopt.h>
 
 #include "config.h"
 #include "globals.h"
@@ -33,6 +34,7 @@ namespace globals {
 	QSettings * appSettings = NULL;
 
 	bool verbose_flag[VerboseLevel::VDummy] = { false, false };
+	bool show_browser = false;
 }
 
 // enum QtMsgType { QtInfoMsg, QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtSystemMsg };
@@ -119,15 +121,103 @@ void preparePallete() {
 	globals::item_nexpired_palette.setColor(QPalette::AlternateBase, globals::item_nexpired_altbase);
 }
 
+void configure(int argc, char* argv[]) {
+	int c;
+	
+	while (1)
+	{
+		static struct option long_options[] =
+		{
+			/* These options set a flag. */
+			{"version", no_argument,       0, 'V'},
+			{"verbose", no_argument,       0, 'v'},
+			{"vverbose", no_argument,       0, 'w'},
+			{"quiet",   no_argument,       0, 'q'},
+			/* These options don't set a flag.
+			 *        We distinguish them by their indices. */
+			{"browser",  no_argument,       0, 'b'},
+			{0, 0, 0, 0}
+		};
+		/* getopt_long stores the option index here. */
+		int option_index = 0;
+		
+		c = getopt_long (argc, argv, "bvwq", 
+						 long_options, &option_index);
+		
+		/* Detect the end of the options. */
+		if (c == -1)
+			break;
+		
+		switch (c)
+		{
+			case 0:
+				/* If this option set a flag, do nothing else now. */
+				if (long_options[option_index].flag != 0)
+					break;
+				printf ("option %s", long_options[option_index].name);
+				if (optarg)
+					printf (" with arg %s", optarg);
+				printf ("\n");
+				break;
+			case 'b':PR(c);
+			globals::show_browser = true;
+			// 				puts ("option -b\n");
+			break;
+			case 'v':
+				globals::verbose_flag[0] = true;
+				break;
+			case 'w':
+				globals::verbose_flag[1] = true;
+				break;
+			case 'q':
+				globals::verbose_flag[0] = false;
+				break;
+			case 'V':
+				std::cout << ZARLOK_VERSION << std::endl;
+				exit(EXIT_SUCCESS);
+			case '?':
+				/* getopt_long already printed an error message. */
+				break;
+			default:
+				abort ();
+		}
+	}
+	
+	/* Instead of reporting ‘--verbose’
+	 * and ‘--brief’ as they are encountered,
+	 * we report the final status resulting from them. */
+	// 	if (verbose_flag)
+	// 		puts ("verbose flag is set");
+	
+	/* Print any remaining command line arguments (not options). */
+	// 	if (optind < argc) {
+		// 		printf ("non-option ARGV-elements: ");
+		// 		while (optind < argc)
+		// 			printf ("%s ", argv[optind++]);
+		// 		putchar ('\n');
+		// 	}
+		
+		// 	for (int i = 0; i < argc; ++i)
+		// 		PR(argv[i]);
+}
+
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
-bool static_build = STATIC_BUILD;
-PR(static_build);
 	qInstallMsgHandler(myMessageOutput);
 
-	qDebug() << "Runtime app: " << argv[0];
-
 	QApplication app(argc, argv, QApplication::GuiClient);
+	configure(argc, argv);
+
+	bool static_build = STATIC_BUILD;
+	PR(static_build);
+
+	qDebug() << "Runtime app: " << argv[0];
+// 	qDebug() << ZARLOK_VERSION;
+	PR(ZARLOK_VERSION);
+
+
+
+
 
 #ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
 
@@ -220,8 +310,6 @@ PR(static_build);
 	DBBrowser dbb;
 
 	splash->showMessage(QObject::tr("Running application"));
-
-	dbb.configure(argc, argv);
 
 	qInfo(globals::VLevel1, "Zarlok is started at %s", qPrintable(QDateTime::currentDateTime().toString(Qt::TextDate)));
 

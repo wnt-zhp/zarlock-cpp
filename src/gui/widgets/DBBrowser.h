@@ -31,7 +31,6 @@ public:
     virtual ~DBBrowser();
 
 	virtual void goBrowser();
-	virtual void configure(int argc, char * argv[]);
 
 public slots:
 	void databaseSelected(QListWidgetItem * item);
@@ -55,8 +54,6 @@ private:
 // 	QString dbname, dbfile;
 // 	Database & db;
 	zarlok * z;
-
-	bool show_browser;
 };
 
 #endif // DBBROWSER_H

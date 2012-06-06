@@ -51,9 +51,6 @@ if (BUILD_STATIC)
 	add_definitions(-DBUILD_STATIC)
 endif (BUILD_STATIC)
 
-configure_file(config.h.in config.h @ONLY)
-# set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
-
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/ui src/gui src/gui/widgets src/gui/items src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
 
 set(zarlok_FORMS
@@ -189,11 +186,19 @@ find_program(git_exe git)
 
 if (git_exe)
 	execute_process (COMMAND git describe OUTPUT_VARIABLE info_GITREVNUM ERROR_VARIABLE info_GITREVNUM_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
-	add_definitions(-DGITREVNUM=\"${info_GITREVNUM}\")
+	execute_process (COMMAND git show -s --format="%ct" OUTPUT_VARIABLE info_GITBUILDDATE ERROR_VARIABLE info_GITBUILDDATE_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
+	STRING(REPLACE "\"" "" info_GITBUILDDATE ${info_GITBUILDDATE})
+# 	add_definitions(-DGITREVNUM=\"${info_GITREVNUM}\")
 	MESSAGE(STATUS "Build number : " ${info_GITREVNUM})
+	MESSAGE(STATUS "Build date (UNIX format) : " ${info_GITBUILDDATE})
 else (git_exe)
 	MESSAGE(WARNING "Git not found!")
+	set (info_GITREVNUM "unknown")
+	set (info_GITBUILDDATE "unknown") 
 endif (git_exe)
+
+configure_file(config.h.in config.h @ONLY)
+# set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
 
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
@@ -273,7 +278,33 @@ ENDIF (NOT BUILD_STATIC)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QT_LIBRARY})
 
-# installation
+add_custom_command(TARGET zarlok POST_BUILD
+                   COMMAND zarlok --version > ${CMAKE_CURRENT_BINARY_DIR}/build_version_number.txt
+                   VERBATIM)
+
+if ( MINGW )
+
+find_program(iscc_exe iscc)
+
+if (iscc_exe)
+	MESSAGE(STATUS "Inno Setup Compiler : " ${iscc_exe})
+else (iscc_exe)
+	MESSAGE(FATAL "iscc not found!")
+endif (iscc_exe)
+
+add_custom_command(OUTPUT iss_file
+					COMMAND ${CMAKE_COMMAND} ARGS -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
+					COMMAND ${CMAKE_COMMAND} ARGS -D QT_LIBRARY_DIR=${QT_LIBRARY_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+					COMMAND ${iscc_exe} ARGS zarlok_installer.iss
+					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+					MAIN_DEPENDENCY config.h
+					VERBATIM
+)
+
+add_custom_target(installer DEPENDS zarlok iss_file)
+
+endif ( MINGW )
+
 if ( UNIX AND NOT APPLE )
 
 install(FILES

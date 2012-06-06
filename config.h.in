@@ -15,5 +15,19 @@
 #define ZARLOK_DB			"/db/"
 #define ZARLOK_REPORTS		"/reports/"
 
-#define DB_EXT ".db"
+#define DB_EXT 				".db"
+
+#define	RELEASE_NUMBER		"3.1.0"
+
+#define RELEASE_TYPE		"dev"
+//#define RELEASE_TYPE		"alpha"
+//#define RELEASE_TYPE		"beta"
+//#define RELEASE_TYPE		"rc"
+//#define RELEASE_TYPE		"p"
+
+#define RELEASE_REVNUM		"@info_GITREVNUM@"
+#define RELEASE_BUILDDATE	"@info_GITBUILDDATE@"
+
+#define ZARLOK_VERSION		RELEASE_NUMBER "-" RELEASE_TYPE "-" RELEASE_BUILDDATE
+
 #endif /*__CONFIG_H__*/

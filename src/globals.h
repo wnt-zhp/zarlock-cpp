@@ -54,6 +54,7 @@ namespace globals {
 
 	enum VerboseLevel { VLevel1, VLevel2, VDummy };
 	extern bool verbose_flag[VDummy];
+	extern bool show_browser;
 }
 
 void qInfo(globals::VerboseLevel lvl, const char *msg, ...);
