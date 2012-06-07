@@ -158,11 +158,15 @@ set(zarlok_src_misc_SRCS
 
 configure_file(config/config.h.in config.h @ONLY)
 
-add_custom_command(OUTPUT version.h
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.h
 					DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/config/version.h.in
 					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_version_config.txt
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+# add_custom_target(vfb DEPENDS version.h SOURCES VersionFileBuilder.cpp version.h)
+add_executable(vfb VersionFileBuilder.cpp version.h)
+# add_dependencies(vfb version.h)
 
 set(zarlok_INCS config.h version.h)
 
@@ -203,9 +207,6 @@ qt4_automoc(${zarlok_SRCS})
 if (rcc_files)
 	unset (rcc_files)
 endif (rcc_files)
-
-add_executable(vfb VersionFileBuilder.cpp version.h)
-add_dependencies(vfb version.h)
 
 IF (NOT MINGW)
 	add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
@@ -309,6 +310,7 @@ if ( UNIX AND NOT APPLE )
 	add_custom_target(distprepare
 					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
 					COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
+					DEPENDS version.h
 )
 endif ( UNIX AND NOT APPLE )
 
@@ -352,7 +354,7 @@ ENDIF (NOT MINGW)
 
 
 add_custom_target(version_number
-					COMMAND vfb
+# 					COMMAND vfb
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 

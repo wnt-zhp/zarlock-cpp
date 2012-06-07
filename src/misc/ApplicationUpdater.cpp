@@ -40,18 +40,18 @@ ApplicationUpdater::ApplicationUpdater(QObject * parent) : QObject(parent), repl
 	QObject::connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedRequest(QNetworkReply*)));
 // 	QObject::connect(replyDownloadRequest, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
 
-	QMessageBox mbox;
-	mbox.setWindowTitle(tr("Updates available"));
-	mbox.setTextFormat(Qt::RichText);
-	mbox.setText(tr("Updates of Zarlok is available.<br><br>You can download it for from here:<br>"
-					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
-					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
-					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
-					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
-					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
-					 "http://www.test.com"  "/"  "file.exe"  ""));
-	
-	mbox.exec();
+// 	QMessageBox mbox;
+// 	mbox.setWindowTitle(tr("Updates available"));
+// 	mbox.setTextFormat(Qt::RichText);
+// 	mbox.setText(tr("Updates of Zarlok is available.<br><br>You can download it for from here:<br>"
+// 					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+// 					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
+// 					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+// 					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
+// 					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+// 					 "http://www.test.com"  "/"  "file.exe"  ""));
+// 	
+// 	mbox.exec();
 }
 
 ApplicationUpdater::~ApplicationUpdater()  {
@@ -130,17 +130,20 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 			}
 #endif /* WIN32 */
 #ifdef __unix__
-// 			QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
-// 				 tr("Updates of Zarlok is available.\n\nYou can download it for from here:\n"
-// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DDEB] % "\">" %
-// 				 url_download_values[DURL] % "/" % url_download_values[DDEB] % "\n" %
-// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DRPM] % "\">" %
-// 				 url_download_values[DURL] % "/" % url_download_values[DRPM] % "\n" %
-// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DTBZ2] % "\">" %
-// 				 url_download_values[DURL] % "/" % url_download_values[DTBZ2] % "\n"),
-// 				 QMessageBox::Ok);
+			QString msgtext = tr(
+				"Updates of Zarlok is available.<br /><br />You can download it for from here:<br />"
+				"<a href='%1/%2'>%1/%2</a><br />"
+				"<a href='%1/%2'>%1/%3</a><br />"
+				"<a href='%1/%4'>%1/%4</a><br />")
+				.arg(url_download_values[DURL])
+				.arg(url_download_values[DDEB])
+				.arg(url_download_values[DRPM])
+				.arg(url_download_values[DTBZ2]);
 
-// 				 int ret = mbox.exec();
+			QMessageBox mbox(QMessageBox::Information, tr("Updates available"), msgtext, QMessageBox::Ok);
+			mbox.setTextFormat(Qt::RichText);
+
+			int ret = mbox.exec();
 #endif /* __unix__ */
 		}
 	}
