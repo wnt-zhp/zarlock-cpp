@@ -25,6 +25,7 @@
 #include <QFile>
 #include <qprocess.h>
 #include <QMessageBox>
+#include <QStringBuilder>
 
 ApplicationUpdater::ApplicationUpdater(QObject * parent) : QObject(parent), replyUpdateCheckRequest(NULL), replyDownloadRequest(NULL) {
 	nam = new QNetworkAccessManager(this);
