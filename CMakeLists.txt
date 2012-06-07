@@ -250,15 +250,14 @@ ELSE (NOT MINGW)
 		COMMAND ${CMAKE_COMMAND} -E make_directory ${trans_qmoutfile}
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_qminfile} ${trans_qmoutfile}
 		MAIN_DEPENDENCY ${trans_qminfile}
-# 		DEPENDS ${trans_qmoutfile}
 	)
 
 	# Copy the QRC file to the output directory
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_infile}
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_srcfile} ${trans_infile}
-		MAIN_DEPENDENCY ${trans_srcfile}
-		DEPENDS ${trans_srcfile} ${trans_qmoutfile}
+		MAIN_DEPENDENCY ${trans_qmoutfile}
+		DEPENDS ${trans_srcfile}
 	)
 
 	# Run the resource compiler (rcc_options should already be set)
@@ -365,8 +364,8 @@ install(TARGETS zarlok DESTINATION bin)
 
 # messages
 MESSAGE(STATUS "<<< Configuration >>>
-Project:	${CMAKE_PROJECT_NAME}
-Generator:	${CMAKE_GENERATOR}
+Project:		${CMAKE_PROJECT_NAME}
+Generator:		${CMAKE_GENERATOR}
 
 Static build	${BUILD_STATIC}
 

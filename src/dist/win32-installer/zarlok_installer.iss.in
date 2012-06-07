@@ -45,6 +45,7 @@ Source: "@MINGW_BINARY_DIR@\mingwm10.dll"; DestDir: "{app}"; Flags: ignoreversio
 Source: "@QT_BINARY_DIR@\QtCore4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@QT_BINARY_DIR@\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_PLUGINS_DIR@\sqldrivers\qsqlite4.dll"; DestDir: "{app}\plugins\sqldrivers\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "@ZARLOK_SOURCE_DIR@\src\dist\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
