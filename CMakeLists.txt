@@ -289,25 +289,27 @@ else (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 	MESSAGE(FATAL_ERROR "iscc not found!")
 endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
-add_custom_command(OUTPUT iss_file
-					COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
-					COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
-					COMMAND ${iscc_exe} zarlok_installer.iss
-					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-					MAIN_DEPENDENCY version.h
-					COMMENT "Preparing Inno Setup script file"
+add_custom_target(distprepare
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
+	COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+	COMMAND ${iscc_exe} zarlok_installer.iss
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	DEPENDS version.h
+	COMMENT "Preparing Inno Setup script file"
 )
 
-add_custom_target(package DEPENDS iss_file)
+add_dependencies(distprepare vfb)
+# add_custom_target(package DEPENDS iss_file)
 
 endif ( MINGW )
 
 if ( UNIX AND NOT APPLE )
 
 add_custom_target(distprepare
-				COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
-				COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
-				DEPENDS version.h
+	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
+	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
+	DEPENDS version.h
+	COMMENT "Preparing CPack files"
 )
 
 add_dependencies(distprepare vfb)
