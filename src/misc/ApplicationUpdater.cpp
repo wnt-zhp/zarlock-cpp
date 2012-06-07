@@ -115,7 +115,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 			for (int i = 0; i < dwvalues.size(); ++i)
 				url_download_values[i] = dwvalues[i];
 
-#ifdef WIN32
+#ifdef _WIN32
 			QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
 			tr("Updates of Zarlok is available.\n\n"
 				"To finish upgrade process this zarlok session must be closed (this will be handled automaticly).\n\n"
@@ -128,7 +128,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 				this->downloadUpdates(url_download_values[DURL] % "/" % url_download_values[DWIN]);
 				
 			}
-#endif /* WIN32 */
+#endif /* _WIN32 */
 #ifdef __unix__
 			QString msgtext = tr(
 				"Updates of Zarlok is available.<br /><br />You can download it for from here:<br />"

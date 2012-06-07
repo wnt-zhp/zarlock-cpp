@@ -3,7 +3,7 @@
 
 #define PREFIX "@CMAKE_INSTALL_PREFIX@"
 
-#ifdef WIN32
+#ifdef _WIN32
 #	define STATIC_BUILD true;
 #	define SHARE ":"
 #elif __unix__

@@ -279,10 +279,6 @@ add_dependencies(zarlok vfb)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
 
-add_custom_command(TARGET zarlok POST_BUILD
-                   COMMAND zarlok --version > ${CMAKE_CURRENT_BINARY_DIR}/build_version_number.txt
-                   VERBATIM)
-
 if ( MINGW )
 
 find_program(iscc_exe iscc PATHS ${ISCC_BINARY_DIR} ENV PATH)
