@@ -1,6 +1,7 @@
 #include "zarlok.h"
 #include "globals.h"
 #include "config.h"
+#include "version.h"
 
 #include "DBReports.h"
 
@@ -31,7 +32,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	CI();
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok (WNT)"));
-	this->statusBar()->showMessage(tr("Zarlok (WNT) | build: " RELEASE_REVNUM " | version: " ZARLOK_VERSION));
+	this->statusBar()->showMessage(tr("Zarlok (WNT) | build: " RELEASE_GITTAG " | version: " ZARLOK_VERSION));
 
 	toolbar = addToolBar(tr("Main"));
 	dbtoolbar = addToolBar(tr("Database"));

@@ -1,0 +1,20 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#define PREFIX "@CMAKE_INSTALL_PREFIX@"
+
+#ifdef WIN32
+#	define STATIC_BUILD true;
+#	define SHARE ":"
+#elif __unix__
+#	define STATIC_BUILD false;
+#	define SHARE "@CMAKE_INSTALL_PREFIX@/share/@CMAKE_PROJECT_NAME@"
+#endif /* UNIX */
+
+#define ZARLOK_HOME			"/.zarlok/"
+#define ZARLOK_DB			"/db/"
+#define ZARLOK_REPORTS		"/reports/"
+
+#define DB_EXT 				".db"
+
+#endif /*__CONFIG_H__*/

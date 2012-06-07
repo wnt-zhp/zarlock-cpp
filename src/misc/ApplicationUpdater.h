@@ -50,6 +50,12 @@ private:
 	QString downloaded_filename;
 
 	QProgressDialog download_progress;
+
+	enum DWCodes { DURL, DWIN, DDEB, DRPM, DTBZ2, DDUMMY };
+	QString url_download_values[DDUMMY];
+// 	QString url_download_win;
+// 	QString url_download_deb;
+// 	QString url_download_rpm;
 };
 
 #endif // APPLICATIONUPDATER_H

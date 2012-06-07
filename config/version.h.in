@@ -1,0 +1,27 @@
+#ifndef __ZARLOK_VERSION_H__
+#define __ZARLOK_VERSION_H__
+
+// VERSION from defines (for now not used)
+#define	RELEASE_NUMBER		"3.1.0"
+
+#define RELEASE_TYPE		"dev"
+//#define RELEASE_TYPE		"alpha"
+//#define RELEASE_TYPE		"beta"
+//#define RELEASE_TYPE		"rc"
+//#define RELEASE_TYPE		"p"
+
+#define	RELEASE_TIMESTAMP	"@gitinfo_COMMITDATE@"
+
+#define RELEASE_GITTAG		"@gitinfo_TAGDESC@"
+
+
+#define ZARLOK_VERSION		RELEASE_NUMBER "-" RELEASE_TYPE "-" RELEASE_TIMESTAMP
+
+// VERSION from git
+//#define GIT_TAG_DESC			"@gitinfo_TAGDESC@"
+//#define GIT_TAG_NAME			"@gitinfo_TAGNAME@"
+//#define GIT_COMMIT_DATE			"@gitinfo_COMMITDATE@"
+
+//#define ZARLOK_VERSION			GIT_TAG_NAME "-" GIT_COMMIT_DATE
+
+#endif /*__ZARLOK_VERSION_H__*/

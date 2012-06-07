@@ -156,7 +156,16 @@ set(zarlok_src_misc_SRCS
 									main.cpp
 )
 
-set(zarlok_INCS config.h)
+configure_file(config/config.h.in config.h @ONLY)
+
+add_custom_command(OUTPUT version.h
+					DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/config/version.h.in
+					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_version_config.txt
+					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+set(zarlok_INCS config.h version.h)
+
 set(zarlok_SRCS
 									${zarlok_INCS}
 									${zarlok_src_gui_inputs_SRCS}
@@ -172,6 +181,7 @@ set(zarlok_SRCS
 file (GLOB TS_FILES src/translations/zarlok_*.ts)
 set(zarlok_TS ${TS_FILES})
 
+# 
 # translations
 
 option (UPDATE_TRANSLATIONS "Update source translation translations/*.ts files (WARNING: make clean will delete the source .ts files! Danger!)")
@@ -182,35 +192,21 @@ else (UPDATE_TRANSLATIONS)
   qt4_add_translation(QM_FILES ${zarlok_TS})
 endif (UPDATE_TRANSLATIONS) 
 
-find_program(git_exe git)
-
-if (git_exe)
-	execute_process (COMMAND git describe OUTPUT_VARIABLE info_GITREVNUM ERROR_VARIABLE info_GITREVNUM_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
-	execute_process (COMMAND git show -s --format="%ct" OUTPUT_VARIABLE info_GITBUILDDATE ERROR_VARIABLE info_GITBUILDDATE_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
-	STRING(REPLACE "\"" "" info_GITBUILDDATE ${info_GITBUILDDATE})
-# 	add_definitions(-DGITREVNUM=\"${info_GITREVNUM}\")
-	MESSAGE(STATUS "Build number : " ${info_GITREVNUM})
-	MESSAGE(STATUS "Build date (UNIX format) : " ${info_GITBUILDDATE})
-else (git_exe)
-	MESSAGE(WARNING "Git not found!")
-	set (info_GITREVNUM "unknown")
-	set (info_GITBUILDDATE "unknown") 
-endif (git_exe)
-
-configure_file(config.h.in config.h @ONLY)
 # set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES config.h)
 
 # set(QT_LRELEASE_EXECUTABLE "${QT_LRELEASE_EXECUTABLE} -removeidentical -markuntranslated \"TODO:\"")
 
 qt4_wrap_ui(zarlok_FORMS_HEADERS ${zarlok_FORMS} ${zarlok_widget_FORMS} ${zarlok_dialogs_FORMS})
-qt4_wrap_cpp(${zarlok_SRCS})
-# qt4_automoc(${zarlok_SRCS})
+# qt4_wrap_cpp(${zarlok_SRCS})
+qt4_automoc(${zarlok_SRCS})
 
 if (rcc_files)
 	unset (rcc_files)
 endif (rcc_files)
 
-# add_custom_target(config.h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/CMakeCache.txt)
+add_executable(vfb VersionFileBuilder.cpp version.h)
+add_dependencies(vfb version.h)
+
 IF (NOT MINGW)
 	add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
 
@@ -267,8 +263,7 @@ ELSE (NOT MINGW)
 	# Run the resource compiler (rcc_options should already be set)
 	ADD_CUSTOM_COMMAND(
 		OUTPUT ${trans_outfile}
-		COMMAND ${QT_RCC_EXECUTABLE}
-		ARGS ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
+		COMMAND ${QT_RCC_EXECUTABLE} ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
 		MAIN_DEPENDENCY ${trans_infile}
 # 		DEPENDS ${trans_infile}
 	)
@@ -278,6 +273,8 @@ ELSE (NOT MINGW)
 	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${rcc_files})
 
 ENDIF (NOT MINGW)
+
+add_dependencies(zarlok vfb)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
 
@@ -296,18 +293,26 @@ else (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
 add_custom_command(OUTPUT iss_file
-					COMMAND ${CMAKE_COMMAND} ARGS -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
-					COMMAND ${CMAKE_COMMAND} ARGS -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
-					COMMAND ${iscc_exe} ARGS zarlok_installer.iss
+					COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
+					COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+					COMMAND ${iscc_exe} zarlok_installer.iss
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-					MAIN_DEPENDENCY config.h
-					DEPENDS zarlok
-					VERBATIM
+					MAIN_DEPENDENCY zarlok
+					COMMENT "Preparing Inno Setup script file"
 )
 
-add_custom_target(installer DEPENDS iss_file)
+add_custom_target(package DEPENDS iss_file)
 
 endif ( MINGW )
+
+if ( UNIX AND NOT APPLE )
+	add_custom_target(distprepare
+					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
+					COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
+)
+endif ( UNIX AND NOT APPLE )
+
+add_dependencies(distprepare vfb)
 
 if ( UNIX AND NOT APPLE )
 
@@ -344,13 +349,26 @@ ENDIF (NOT MINGW)
 # 	install( FILES qtm.1.gz DESTINATION ${MANPAGE_DIRECTORY} )
 # endif(UNIX AND NOT APPLE)
 
+
+
+add_custom_target(version_number
+					COMMAND vfb
+					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+add_dependencies(zarlok version_number distprepare)
+
 install(TARGETS zarlok DESTINATION bin)
 
 # messages
 MESSAGE(STATUS "<<< Configuration >>>
 Project:	${CMAKE_PROJECT_NAME}
+Generator:	${CMAKE_GENERATOR}
 
 Static build	${BUILD_STATIC}
+
+Source dir		${CMAKE_CURRENT_SOURCE_DIR}
+Build dir		${CMAKE_CURRENT_BINARY_DIR}
 
 Build type      ${CMAKE_BUILD_TYPE}
 Install path    ${CMAKE_INSTALL_PREFIX}

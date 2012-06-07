@@ -1,0 +1,6 @@
+find_program (vfb_exe vfb)
+MESSAGE (STATUS "VFB: " ${vfb_exe})
+
+execute_process (COMMAND ${vfb_exe} OUTPUT_VARIABLE RELEASE_VERSION ERROR_VARIABLE RELEASE_VERSION_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+configure_file(${ZARLOK_SOURCE_DIR}/macros/macro_cpack_configuration.txt.in macro_cpack_configuration.txt @ONLY)

@@ -5,6 +5,7 @@
 #include <getopt.h>
 
 #include "config.h"
+#include "version.h"
 #include "globals.h"
 #include "DBBrowser.h"
 #include "ApplicationUpdater.h"
@@ -175,6 +176,7 @@ void configure(int argc, char* argv[]) {
 				break;
 			case 'V':
 				std::cout << ZARLOK_VERSION << std::endl;
+// 				std::cout << ZARLOK_VERSION << " --- " << QDateTime::currentDateTime().toString().toStdString() << std::endl;
 				exit(EXIT_SUCCESS);
 			case '?':
 				/* getopt_long already printed an error message. */

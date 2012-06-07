@@ -18,6 +18,7 @@
 
 #include "globals.h"
 #include "config.h"
+#include "version.h"
 
 #include "ApplicationUpdater.h"
 
@@ -38,6 +39,19 @@ ApplicationUpdater::ApplicationUpdater(QObject * parent) : QObject(parent), repl
 
 	QObject::connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedRequest(QNetworkReply*)));
 // 	QObject::connect(replyDownloadRequest, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
+
+	QMessageBox mbox;
+	mbox.setWindowTitle(tr("Updates available"));
+	mbox.setTextFormat(Qt::RichText);
+	mbox.setText(tr("Updates of Zarlok is available.<br><br>You can download it for from here:<br>"
+					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
+					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+					 "http://www.test.com"  "/"  "file.exe"  "<br>" 
+					 "<a href='http://"  "www.test.com"  "/"  "file.exe"  "'>" 
+					 "http://www.test.com"  "/"  "file.exe"  ""));
+	
+	mbox.exec();
 }
 
 ApplicationUpdater::~ApplicationUpdater()  {
@@ -96,16 +110,38 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 		PR(reply_string.toStdString());
 
 		if (reply_string != "no update") {
+
+			QStringList dwvalues = reply_string.split('|', QString::KeepEmptyParts);
+			for (int i = 0; i < dwvalues.size(); ++i)
+				url_download_values[i] = dwvalues[i];
+
+#ifdef WIN32
 			QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
-			tr("Updates of Zarlok is available. To finish upgrade process this zarlok session must be closed (will be handled automaticly). Do you want download and install updates?"),
+			tr("Updates of Zarlok is available.\n\n"
+				"To finish upgrade process this zarlok session must be closed (this will be handled automaticly).\n\n"
+				"Do you want download and install updates?"),
 			   QMessageBox::Yes | QMessageBox::No);
 			
 			int ret = mbox.exec();
 			
 			if (ret == QMessageBox::Yes) {
-				this->downloadUpdates(reply_string);
+				this->downloadUpdates(url_download_values[DURL] % "/" % url_download_values[DWIN]);
 				
 			}
+#endif /* WIN32 */
+#ifdef __unix__
+// 			QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
+// 				 tr("Updates of Zarlok is available.\n\nYou can download it for from here:\n"
+// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DDEB] % "\">" %
+// 				 url_download_values[DURL] % "/" % url_download_values[DDEB] % "\n" %
+// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DRPM] % "\">" %
+// 				 url_download_values[DURL] % "/" % url_download_values[DRPM] % "\n" %
+// 				 "<a href=\"" % url_download_values[DURL] % "/" % url_download_values[DTBZ2] % "\">" %
+// 				 url_download_values[DURL] % "/" % url_download_values[DTBZ2] % "\n"),
+// 				 QMessageBox::Ok);
+
+// 				 int ret = mbox.exec();
+#endif /* __unix__ */
 		}
 	}
 	else
