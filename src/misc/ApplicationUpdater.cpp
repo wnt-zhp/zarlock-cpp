@@ -59,7 +59,7 @@ ApplicationUpdater::~ApplicationUpdater()  {
 }
 
 void ApplicationUpdater::checkForUpdates() {
-	QUrl url("http://www-linux.gsi.de/~rlalik/zarlok_update.php");
+	QUrl url("http://zarlok.zhp.pl/zarlok_update.php");
 	url.addQueryItem("version", ZARLOK_VERSION);
 // 	PR(url.toString().toStdString());
 	replyUpdateCheckRequest = nam->get(QNetworkRequest(url));
