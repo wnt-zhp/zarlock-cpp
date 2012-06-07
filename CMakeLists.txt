@@ -297,7 +297,7 @@ add_custom_target(distprepare
 	COMMENT "Preparing Inno Setup script file"
 )
 
-add_dependencies(distprepare vfb)
+add_dependencies(distprepare zarlok)
 # add_custom_target(package DEPENDS iss_file)
 
 endif ( MINGW )
