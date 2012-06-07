@@ -299,8 +299,7 @@ add_custom_target(distprepare
 
 add_dependencies(zarlok version_number)
 add_dependencies(distprepare zarlok)
-# add_custom_target(package DEPENDS iss_file)
-
+add_custom_target(package DEPENDS distprepare)
 
 endif ( MINGW )
 
