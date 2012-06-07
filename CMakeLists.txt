@@ -294,7 +294,7 @@ add_custom_command(OUTPUT iss_file
 					COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
 					COMMAND ${iscc_exe} zarlok_installer.iss
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-					MAIN_DEPENDENCY zarlok
+					MAIN_DEPENDENCY version.h
 					COMMENT "Preparing Inno Setup script file"
 )
 
@@ -353,7 +353,7 @@ ENDIF (NOT MINGW)
 
 
 add_custom_target(version_number
-# 					COMMAND vfb
+					COMMAND vfb
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 

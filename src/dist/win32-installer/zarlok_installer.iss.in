@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "¯ar³ok"
-#define MyAppVersion "@DIST_VERSION@"
+#define MyAppVersion "@RELEASE_VERSION@"
 #define MyAppPublisher "WNT GK ZHP"
 #define MyAppURL "http://www.wnt.zhp.pl/index.php?id=3&p=17"
 #define MyAppExeName "zarlok.exe"
@@ -26,7 +26,7 @@ LicenseFile=@ZARLOK_SOURCE_DIR@\src\dist\gpl-3.0.txt
 ;InfoBeforeFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
 ;InfoAfterFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
 OutputDir=installer
-OutputBaseFilename=zarlok-@DIST_VERSION@-installer
+OutputBaseFilename=zarlok-@RELEASE_VERSION@-installer
 Compression=lzma
 SolidCompression=yes
 

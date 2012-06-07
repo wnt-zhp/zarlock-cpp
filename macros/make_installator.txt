@@ -8,5 +8,10 @@ else (NOT MINGW_BINARY_DIR STREQUAL "MINGW_BINARY_DIR-NOTFOUND")
 	MESSAGE(FATAL_ERROR "MinGW binaries not found!")
 endif (NOT MINGW_BINARY_DIR STREQUAL "MINGW_BINARY_DIR-NOTFOUND")
 
-file (STRINGS build_version_number.txt DIST_VERSION)
+ind_program (vfb_exe vfb)
+MESSAGE (STATUS "VFB: " ${vfb_exe})
+
+execute_process (COMMAND ${vfb_exe} OUTPUT_VARIABLE RELEASE_VERSION ERROR_VARIABLE RELEASE_VERSION_ERROR OUTPUT_STRIP_TRAILING_WHITESPACE)
+MESSAGE (STATUS ${RELEASE_VERSION})
+
 configure_file(zarlok_installer.iss.in zarlok_installer.iss)
