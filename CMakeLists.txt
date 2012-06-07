@@ -297,8 +297,10 @@ add_custom_target(distprepare
 	COMMENT "Preparing Inno Setup script file"
 )
 
+add_dependencies(zarlok version_number)
 add_dependencies(distprepare zarlok)
 # add_custom_target(package DEPENDS iss_file)
+
 
 endif ( MINGW )
 
@@ -312,6 +314,7 @@ add_custom_target(distprepare
 )
 
 add_dependencies(distprepare vfb)
+add_dependencies(zarlok version_number distprepare)
 
 endif ( UNIX AND NOT APPLE )
 
@@ -357,8 +360,6 @@ add_custom_target(version_number
 					COMMAND vfb
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
-
-add_dependencies(zarlok version_number distprepare)
 
 install(TARGETS zarlok DESTINATION bin)
 
