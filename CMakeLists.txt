@@ -307,14 +307,17 @@ add_custom_target(package DEPENDS iss_file)
 endif ( MINGW )
 
 if ( UNIX AND NOT APPLE )
-	add_custom_target(distprepare
-					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
-					COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
-					DEPENDS version.h
+
+add_custom_target(distprepare
+				COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
+				COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
+				DEPENDS version.h
 )
-endif ( UNIX AND NOT APPLE )
 
 add_dependencies(distprepare vfb)
+
+endif ( UNIX AND NOT APPLE )
+
 
 if ( UNIX AND NOT APPLE )
 
