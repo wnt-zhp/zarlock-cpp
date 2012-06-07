@@ -288,7 +288,7 @@ else (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 	MESSAGE(FATAL_ERROR "iscc not found!")
 endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
-add_custom_target(distprepare
+add_custom_target(package
 	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
 	COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
 	COMMAND ${iscc_exe} zarlok_installer.iss
@@ -298,8 +298,7 @@ add_custom_target(distprepare
 )
 
 add_dependencies(zarlok version_number)
-add_dependencies(distprepare zarlok)
-add_custom_target(package DEPENDS distprepare)
+add_dependencies(package zarlok)
 
 endif ( MINGW )
 
