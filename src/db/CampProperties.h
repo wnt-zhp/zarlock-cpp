@@ -23,6 +23,7 @@
 
 #include <QDate>
 #include <QString>
+#include <QVector>
 
 struct CampProperties {
 	bool isCorrect;				// is camp set correct
@@ -53,7 +54,12 @@ struct CampProperties {
 						Hdummy
 	};
 
+#if QT_VERSION >= 0x040800
 	static const QVector<QString> dbsetkeys;
+#else
+	CampProperties();
+	QVector<QString> dbsetkeys;
+#endif /* QT_VERSION >= 0x040800 */
 
 	void writeCampSettings();
 	void readCampSettings();
