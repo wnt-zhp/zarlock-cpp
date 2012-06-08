@@ -47,15 +47,23 @@ void MealManager::Destroy() {
 	}
 }
 
-MealManager::MealManager() : QObject(), db(NULL), model_mealday(NULL), model_meal(NULL)
-{
+MealManager::MealManager() : QObject(), db(NULL), model_mealday(NULL), model_meal(NULL) {
+	CI();
+#if QT_VERSION >= 0x040800
 	defMealsNames = {
 		QObject::tr("Breakfast"), QObject::tr("Brunch"),
 		QObject::tr("Lunch"), QObject::tr("Tea"),
 		QObject::tr("Diner"), QObject::tr("Other")
 	};
-
-	CI();
+#else
+	defMealsNames.reserve(6);
+	defMealsNames.pushBack(QObject::tr("Breakfast"));
+	defMealsNames.pushBack(QObject::tr("Brunch"));
+	defMealsNames.pushBack(QObject::tr("Lunch"));
+	defMealsNames.pushBack(QObject::tr("Tea"));
+	defMealsNames.pushBack(QObject::tr("Diner"));
+	defMealsNames.pushBack(QObject::tr("Other"));
+#endif /* QT_VERSION >= 0x040800 */
 }
 
 MealManager::MealManager(const MealManager & /*db*/) : QObject() {
