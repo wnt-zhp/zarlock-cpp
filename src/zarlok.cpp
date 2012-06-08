@@ -1,3 +1,22 @@
+/*
+    This file is part of Zarlok.
+
+    Copyright (C) 2012  Rafał Lalik <rafal.lalik@zhp.net.pl>
+
+    Zarlok is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Zarlok is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "zarlok.h"
 #include "globals.h"
 #include "config.h"
@@ -38,7 +57,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar = addToolBar(tr("Database"));
 
 	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), this);
-	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
+// 	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
 // 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
 	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
 	actionSwitchDB = new QAction(QIcon(":/resources/icons/system-switch-user.png"), tr("Switch Database"), this);
@@ -49,14 +68,24 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	actionCreateKMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create KM reports"), this);
 	actionCreateZZrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create ZZ reports"), this);
 	actionBrowseReports = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
-	
+
+// 	QKeySequence::StandardKey key = QKeySequence::HelpContents;
+// 
+// 	PR(QKeySequence::keyBindings(key).size());
+// 	for (int i = 0; i < QKeySequence::keyBindings(key).size(); ++i)
+// 		PR(QString(QKeySequence::keyBindings(key).at(i)).toStdString());
 
 	actionQuit->setShortcuts(QKeySequence::Quit);
 	actionAbout->setShortcut(QKeySequence::HelpContents);
 	actionSwitchDB->setShortcuts(QKeySequence::Replace);
-	actionConfigDB->setShortcut(QKeySequence::Preferences);
+	actionConfigDB->setShortcut(Qt::CTRL+Qt::Key_F5);
 
 	actionAbout->setMenuRole(QAction::AboutRole);
+
+	actionCreateSMrep->setShortcut(Qt::Key_F2);
+	actionCreateKMrep->setShortcut(Qt::Key_F3);
+	actionCreateZZrep->setShortcut(Qt::Key_F4);
+	actionBrowseReports->setShortcut(Qt::Key_F5);
 
 	toolbar->setObjectName("toolbar");
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -96,8 +125,8 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	tools->addAction(actionConfigDB);
 // 	tools->addAction(actionSyncDB);
-	tools->addAction(actionCreateKMrep);
 	tools->addAction(actionCreateSMrep);
+	tools->addAction(actionCreateKMrep);
 	tools->addAction(actionCreateZZrep);
 	tools->addAction(actionBrowseReports);
 
@@ -133,7 +162,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
 
 	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
-	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
+// 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
 // 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
 	connect(actionCreateSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
@@ -265,9 +294,53 @@ void zarlok::updateAppTitle() {
 
 void zarlok::about() {
 //	QLabel infoLabel->setText(tr("Invoked <b>Help|About</b>"));
-	QMessageBox::about(this, tr("About Menu"),
-		tr("The <b>Menu</b> example shows how to create "
-		"menu-bar menus and context menus."));
+	QMessageBox::about(this, tr("About Zarlok"),
+		tr(
+			"Zarlok %1\n"
+			"\n"
+			"Copyright (c) 2012\n"
+			"Wydzial Nowych Technologii\n"
+			"Glowna Kwatera Zwiazku Harcerstwa Polskiego\n"
+			"\n"
+			"Project manager: Jacek Bzdak < jacek.bzdak@wnt.zhp.pl >\n"
+			"Programer: Rafal Lalik < rafal.lalik@zhp.net.pl >\n"
+			"\n"
+			"Find us: " "http://wnt.zhp.pl/index.php?id=3&p=17"
+			"\n"
+			"\n"
+			"\n"
+			"License:\n"
+			"------------------------------------------------------------------"
+			"-----------------------------------------------\n"
+		).arg(ZARLOK_VERSION) % tr(
+			"Copyright (C) 2012  Rafal Lalik <rafal.lalik@zhp.net.pl>\n"
+			"\n"
+			"Zarlok is free software: you can redistribute it and/or modify\n"
+			"it under the terms of the GNU General Public License as published by\n"
+			"the Free Software Foundation, either version 3 of the License, or\n"
+			"(at your option) any later version.\n"
+			"\n"
+			"Zarlok is distributed in the hope that it will be useful,\n"
+			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			"GNU General Public License for more details.\n"
+			"\n"
+			"You should have received a copy of the GNU General Public License\n"
+			"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+		)
+	);
+
+// 	tr("Zarlok " ZARLOK_VERSION "\n"
+// 	"\n"
+// 	"Copyleft (c) 2012\n"
+// 	"Wydział Nowych Technologi\n"
+// 	"Główna Kwatera Związku Harcerstwa Polskiego\n"
+// 	"\n"
+// 	"Project manager: Jacek Bzdak < jbzdak@zhp.net.pl >\n"
+// 	"Programer: Rafal Lalik < rafal.lalik@zhp.net.pl >\n"
+// 	"\n"
+// 	"Find us: " "http://wnt.zhp.pl/index.php?id=3&p=17"
+// 	)
 }
 
 void zarlok::db2update() {
