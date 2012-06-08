@@ -62,7 +62,12 @@ ApplicationUpdater::~ApplicationUpdater()  {
 void ApplicationUpdater::checkForUpdates() {
 	QUrl url("http://zarlok.zhp.pl/zarlok_update.php");
 	url.addQueryItem("version", ZARLOK_VERSION);
-// 	PR(url.toString().toStdString());
+#if defined(__unix__)
+	url.addQueryItem("OS", "UNIX");
+#elif defined(__WIN32)
+	url.addQueryItem("OS", "WIN32");
+#endif
+
 	replyUpdateCheckRequest = nam->get(QNetworkRequest(url));
 	// NOTE: Store QNetworkReply pointer (maybe into caller). 
 	// When this HTTP request is finished you will receive this same 
