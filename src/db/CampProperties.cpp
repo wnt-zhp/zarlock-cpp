@@ -35,7 +35,7 @@ const QVector<QString> CampProperties::dbsetkeys = QVector<QString>({
 
 #else
 
-void CampProperties::CampProperties() {
+CampProperties::CampProperties() {
 	dbsetkeys.reserve(Hdummy);
 	dbsetkeys[0] = "IsDatabaseCorrect";
 	dbsetkeys[1] = "CampName";
