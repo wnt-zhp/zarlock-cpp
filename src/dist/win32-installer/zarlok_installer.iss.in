@@ -26,7 +26,7 @@ LicenseFile=@ZARLOK_SOURCE_DIR@\src\dist\gpl-3.0.txt
 ;InfoBeforeFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
 ;InfoAfterFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
 OutputDir=installer
-OutputBaseFilename=zarlok-@RELEASE_VERSION@-installer
+OutputBaseFilename=zarlok-@RELEASE_VERSION@-Win32
 Compression=lzma
 SolidCompression=yes
 

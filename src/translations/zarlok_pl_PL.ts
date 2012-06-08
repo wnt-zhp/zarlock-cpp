@@ -1667,7 +1667,7 @@ Find us: http://wnt.zhp.pl/index.php?id=3&amp;p=17
 License:
 -----------------------------------------------------------------------------------------------------------------
 </source>
-        <translation type="unfinished">Żarłok %1
+        <translation>Żarłok %1
 
 Copyright (c) 2012
 Wydział Nowych Technologii
