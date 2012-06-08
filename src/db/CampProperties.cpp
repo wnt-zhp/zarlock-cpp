@@ -37,18 +37,18 @@ const QVector<QString> CampProperties::dbsetkeys = QVector<QString>({
 
 CampProperties::CampProperties() {
 	dbsetkeys.reserve(Hdummy);
-	dbsetkeys[0] = "IsDatabaseCorrect";
-	dbsetkeys[1] = "CampName";
-	dbsetkeys[2] = "CampPlace";
-	dbsetkeys[3] = "CampOrg";
-	dbsetkeys[4] = "CampDateBegin";
-	dbsetkeys[5] = "CampDateEnd";
-	dbsetkeys[6] = "ScoutsNo";
-	dbsetkeys[7] = "LeadersNo";
-	dbsetkeys[8] = "AvgCosts";
-	dbsetkeys[9] = "CampLeader";
-	dbsetkeys[10] = "CampQuarter";
-	dbsetkeys[11] = "CampOthers";
+	dbsetkeys.push_back("IsDatabaseCorrect");
+	dbsetkeys.push_back("CampName");
+	dbsetkeys.push_back("CampPlace");
+	dbsetkeys.push_back("CampOrg");
+	dbsetkeys.push_back("CampDateBegin");
+	dbsetkeys.push_back("CampDateEnd");
+	dbsetkeys.push_back("ScoutsNo");
+	dbsetkeys.push_back("LeadersNo");
+	dbsetkeys.push_back("AvgCosts");
+	dbsetkeys.push_back("CampLeader");
+	dbsetkeys.push_back("CampQuarter");
+	dbsetkeys.push_back("CampOthers");
 }
 
 #endif /* QT_VERSION >= 0x040800 */
