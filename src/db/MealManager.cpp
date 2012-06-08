@@ -57,12 +57,12 @@ MealManager::MealManager() : QObject(), db(NULL), model_mealday(NULL), model_mea
 	};
 #else
 	defMealsNames.reserve(6);
-	defMealsNames.pushBack(QObject::tr("Breakfast"));
-	defMealsNames.pushBack(QObject::tr("Brunch"));
-	defMealsNames.pushBack(QObject::tr("Lunch"));
-	defMealsNames.pushBack(QObject::tr("Tea"));
-	defMealsNames.pushBack(QObject::tr("Diner"));
-	defMealsNames.pushBack(QObject::tr("Other"));
+	defMealsNames.push_back(QObject::tr("Breakfast"));
+	defMealsNames.push_back(QObject::tr("Brunch"));
+	defMealsNames.push_back(QObject::tr("Lunch"));
+	defMealsNames.push_back(QObject::tr("Tea"));
+	defMealsNames.push_back(QObject::tr("Diner"));
+	defMealsNames.push_back(QObject::tr("Other"));
 #endif /* QT_VERSION >= 0x040800 */
 }
 
