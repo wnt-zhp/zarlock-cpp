@@ -164,8 +164,15 @@ void BatchRecordWidget::validateCB(int i) {
 void BatchRecordWidget::validateAdd() {
 // 	PR(combo_products->currentIndex());
 
+	int uprice = 0;
+	if (edit_price->ok()) {
+		double netto, vat;
+		DataParser::price(edit_price->text(), netto, vat);
+		uprice = int(netto*(100+vat));
+	}
+
 	if (edit_spec->ok() and edit_unit->ok() and
-		edit_book->ok() and edit_price->ok() and
+		edit_book->ok() and (uprice > 0) and
 		(spin_qty->value() > 0) and edit_invoice->ok() and
 		(
 			(edit_expiry->ok() and (edit_book->date().daysTo(edit_expiry->date()) >= 0))
