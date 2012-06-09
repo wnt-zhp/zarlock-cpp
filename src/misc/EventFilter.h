@@ -23,20 +23,26 @@
 
 #include <QObject>
 #include <QVector>
+#include <QEvent>
 
 class EventFilter : public QObject {
 Q_OBJECT
 public:
-	// virtual bool event(QEvent* );
+	explicit EventFilter(QObject* parent = 0);
+
+	void setEmitObjects(bool emit_objects);
+
 	virtual bool eventFilter(QObject* , QEvent* );
 
-// 	virtual void addMonitoredObjects(QObject * obj);
+	virtual void registerFilter(QEvent::Type type);
 
 signals:
-	void resized();
+	void eventFiltered(QObject *, QEvent *);
+	void eventFiltered(QEvent *);
 
 private:
-// 	QVector<QObject *> array;
+	bool emit_objects;
+	QVector<QEvent::Type> events_filter;
 };
 
 #endif // EVENTFILTER_H

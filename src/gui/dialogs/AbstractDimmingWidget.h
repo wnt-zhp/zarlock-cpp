@@ -27,7 +27,8 @@
 #include <QTimeLine>
 #include <QDate>
 #include <qcoreevent.h>
-#include "EventFilter.h"
+
+class EventFilter;
 
 class AbstractDimmingWidget : public QWidget {
 Q_OBJECT
@@ -70,6 +71,7 @@ private:
 private slots:
 	void finalize();
 	void parentResizeEvent();
+	void eventCaptured(QEvent * evt);
 
 protected slots:
 	void setOverlayStyle(int opacity);

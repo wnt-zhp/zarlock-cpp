@@ -1,35 +1,21 @@
 /*
- *    This file is part of Zarlok.
+    This file is part of Zarlok.
 
- *    Copyright (C) 2012  Rafał Lalik <rafal.lalik@zhp.net.pl>
- * 
- *    Zarlok is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- * 
- *    Zarlok is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- * 
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    Copyright (C) 2012  Rafał Lalik <rafal.lalik@zhp.net.pl>
 
-#include "iostream"
+    Zarlok is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-#include "time.h"
+    Zarlok is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-#include "globals.h"
-
-#include "MealFoodListItemDataWidget.h"
-#include "MealFoodList.h"
-#include "MealTabWidget.h"
-
-#include "BatchTableView.h"
-
-#include "Database.h"
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include <QStringBuilder>
 #include <QStyledItemDelegate>
@@ -38,18 +24,45 @@
 #include <QScrollArea>
 #include <QScrollBar>
 
+#include "globals.h"
+
+#include "Database.h"
+
+#include "MealFoodListItemDataWidget.h"
+#include "MealFoodList.h"
+#include "MealTabWidget.h"
+
+#include "BatchTableView.h"
+#include "MealFoodList.h"
+#include "BatchTableModelProxy.h"
+#include "Database.h"
+
+#include "EventFilter.h"
+#include "TextInput.h"
+
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWidgetItem * item, Qt::WindowFlags f):
 QWidget(parent, f), empty(true), editable(true), lock(true),
 batch_row(-1), dist_id(-1), dist_row(-1),
-owner(item), tv(NULL)
+owner(item), tv(NULL), evf(NULL), ledit(NULL)
 {
 	CII();
-	
+
 	mfl = (MealFoodList *)parent;
 	setupUi(this);
-	
+
+	filter_string.reserve(100);
+	evf = new EventFilter;
+
+	evf->registerFilter(QEvent::KeyPress);
+	evf->registerFilter(QEvent::Show);
+	evf->registerFilter(QEvent::Hide);
+	batch->installEventFilter(evf);
+	connect(evf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
+
+	ledit = new TextInput(this);
+	ledit->setVisible(false);
 	proxy = ((MealTabWidget *)(mfl->parent()->parent()))->getBatchProxyModel();
-	
+
 	batch->setModel(proxy);
 	batch->setModelColumn(BatchTableModel::HSpec);
 	
@@ -87,6 +100,9 @@ owner(item), tv(NULL)
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
 	connect(closeB, SIGNAL(clicked(bool)), this, SLOT(buttonClose()));
+
+	
+// 	connect(batch, SIGNAL(), this, SLOT(validateBatchAdd()));
 
 // 	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenItems()));
 
@@ -342,6 +358,7 @@ void MealFoodListItemDataWidget::prepareView() {
 
 	delete tv;
 	tv = new BatchTableView;
+	tv->installEventFilter(evf);
 
 	tv->verticalHeader()->setDefaultSectionSize(20);
 	tv->horizontalHeader()->setVisible(true);
@@ -506,6 +523,61 @@ void MealFoodListItemDataWidget::convertToHeader() {
 void MealFoodListItemDataWidget::invalidate() {
 	proxy->setItemNum(&batch_row);
 	proxy->invalidate();
+}
+
+void MealFoodListItemDataWidget::eventCaptured(QEvent * evt) {
+	if (evt->type() == QEvent::KeyPress) {
+		QKeyEvent * kevt = (QKeyEvent *)evt;
+		int key = kevt->key();
+
+		switch (key) {
+			case Qt::Key_Escape:
+				filter_string.clear();
+				break;
+			case Qt::Key_Enter:
+				break;
+			case Qt::Key_Backspace:
+				filter_string.remove(filter_string.size()-1,1);
+				break;
+			default:
+				if (key < 0xffff) {
+					filter_string.append(kevt->text());
+				}
+		}
+
+		this->setFilterString(filter_string);
+	} else
+	if (evt->type() == QEvent::Show) {
+// 		ledit->show();
+// 		this->setFilterString(QString());
+	}
+	if (evt->type() == QEvent::Hide) {
+		ledit->hide();
+		this->setFilterString(QString());
+	}
+}
+
+void MealFoodListItemDataWidget::setFilter() {
+	this->invalidate();
+// 	table_batch->setModel(proxy_model);
+}
+
+void MealFoodListItemDataWidget::setFilterString(const QString& string) {
+	ledit->setText(string);
+// PR(string.toStdString());
+	if (string.size() > 0) {
+		ledit->show();
+	}
+// 	else {
+// 		ledit->hide();
+// 	}
+
+	QString f = string;
+	f.replace(' ', '*');
+	// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::Wildcard));
+	proxy->setFilterWildcard(f);
+	proxy->setFilterKeyColumn(BatchTableModel::HSpec);
+	proxy->setFilterRole(Qt::UserRole);
 }
 
 #include "MealFoodListItemDataWidget.moc"

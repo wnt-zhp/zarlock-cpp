@@ -20,31 +20,36 @@
 
 #include "EventFilter.h"
 #include <qcoreevent.h>
+#include <QContextMenuEvent>
 
 #include "globals.h"
 
-// bool EventFilter::event(QEvent* )
-// {
-// return QObject::event();
-// }
-
-bool EventFilter::eventFilter(QObject * obj, QEvent * event) {
-	if (event->type() == QEvent::Resize) {
-// 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-// 		qDebug("Ate key press %d", keyEvent->key());
-
-// 		QVector<QObject *>::iterator f = qFind(array, obj);
-		emit resized();
-
-		return true;
-	} else {
-		// standard event processing
-		return QObject::eventFilter(obj, event);
-	}
+EventFilter::EventFilter(QObject* parent): QObject(parent), emit_objects(false) {
 }
 
-// EventFilter::addMonitoredObjects(QObject * obj) {
-// 	array.push_back(obj);
-// }
+void EventFilter::setEmitObjects(bool emit_objects) {
+	this->emit_objects = emit_objects;
+}
+
+void EventFilter::registerFilter(QEvent::Type type) {
+	events_filter.push_back(type);
+}
+
+bool EventFilter::eventFilter(QObject * obj, QEvent * event) {
+// 	PR(event->type());
+	for (QVector<QEvent::Type>::iterator it = events_filter.begin(); it != events_filter.end(); ++it) {
+		if (event->type() == *it) {
+			if (emit_objects)
+				emit eventFiltered(obj, event);
+			else
+				emit eventFiltered(event);
+
+			return true;
+		}
+	}
+
+	// standard event processing
+	return QObject::eventFilter(obj, event);
+}
 
 #include "EventFilter.moc"

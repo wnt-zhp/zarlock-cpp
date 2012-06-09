@@ -19,8 +19,10 @@
 
 #include "globals.h"
 
-#include "AbstractDimmingWidget.h"
 #include <QContextMenuEvent>
+
+#include "AbstractDimmingWidget.h"
+#include "EventFilter.h"
 
 AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f),
 	duration(2000), overlay(ov), parent_widget(parent), init_finished(false),
@@ -57,11 +59,15 @@ AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::
 
 	evfilter = new EventFilter;
 	parent_widget->installEventFilter(evfilter);
+	evfilter->registerFilter(QEvent::Resize);
 
-	connect(evfilter, SIGNAL(resized()), this, SLOT(parentResizeEvent()));
+	connect(evfilter, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
 }
 
 AbstractDimmingWidget::~AbstractDimmingWidget() {
+	disconnect(evfilter, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
+	parent_widget->removeEventFilter(evfilter);
+
 	delete sceneX;
 	delete sceneY;
 	delete sceneF;
@@ -388,6 +394,12 @@ void AbstractDimmingWidget::parentResizeEvent() {
 		}
 	}
 }
+
+void AbstractDimmingWidget::eventCaptured(QEvent* evt) {
+	if (evt->type() == QEvent::Resize)
+		parentResizeEvent();
+}
+
 
 void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
 	if (this->isVisible())

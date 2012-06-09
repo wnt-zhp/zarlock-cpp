@@ -21,12 +21,14 @@
 #ifndef MEALFOODLISTITEMDATAWIDGET_H
 #define MEALFOODLISTITEMDATAWIDGET_H
 
-#include <QDataWidgetMapper>
-
 #include "ui_MealFoodListItemDataWidget.h"
-#include "MealFoodList.h"
-#include "BatchTableModelProxy.h"
-#include "BatchTableView.h"
+
+class QListWidgetItem;
+class MealFoodList;
+class BatchTableModelProxy;
+class BatchTableView;
+class EventFilter;
+class TextInput;
 
 class MealFoodListItemDataWidget : public QWidget, public Ui::MealFoodListItemDataWidget {
 Q_OBJECT
@@ -58,6 +60,10 @@ protected slots:
 	void validateBatchAdd();
 	void validateAdd();
 
+	void eventCaptured(QEvent * evt);
+	void setFilter();
+	void setFilterString(const QString & string);
+
 signals:
 	void itemRemoved(QListWidgetItem * item);
 
@@ -78,6 +84,10 @@ private:
 	QListWidgetItem * owner;
 	BatchTableModelProxy * proxy;
 	BatchTableView * tv;
+
+	EventFilter * evf;
+	QString filter_string;
+	TextInput * ledit;
 };
 
 #endif // MEALFOODLISTITEMDATAWIDGET_H
