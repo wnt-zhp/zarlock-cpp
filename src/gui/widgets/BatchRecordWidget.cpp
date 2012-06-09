@@ -126,6 +126,7 @@ void BatchRecordWidget::insertRecord() {
 }
 
 void BatchRecordWidget::clearForm() {
+	combo_products->setCurrentIndex(-1);
 	edit_spec->clear();
 // 	combo_spec->clear();
 	edit_expiry->clear();
@@ -145,10 +146,15 @@ void BatchRecordWidget::validateCB(int i) {
 	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
 	QString defunit = ptm->index(i, ProductsTableModel::HUnit).data().toString();
 
-	if (edit_expiry->text(true).isEmpty()) {
+// 	if (edit_expiry->text(true).isEmpty())
+	{
 		edit_expiry->setRaw(defexp);
 // 		edit_expiry->doRefresh();
+	}
+// 	if (edit_unit->text(true).isEmpty())
+	{
 		edit_unit->setRaw(defunit);
+// 		edit_unit->verify();
 // 		edit_unit->doRefresh();
 	}
 

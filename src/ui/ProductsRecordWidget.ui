@@ -119,6 +119,8 @@
   <tabstop>edit_expiry</tabstop>
   <tabstop>action_addnext</tabstop>
   <tabstop>action_addexit</tabstop>
+  <tabstop>action_clear</tabstop>
+  <tabstop>action_cancel</tabstop>
  </tabstops>
  <resources/>
  <connections/>

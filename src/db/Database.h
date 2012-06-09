@@ -54,6 +54,7 @@ public:
 
 	bool open_database(const QString& dbname, bool autoupgrade = true);
 	bool create_database(const QString& dbname);
+	bool delete_database(const QString& dbname);
 	bool close_database();
 	void save_database();
 

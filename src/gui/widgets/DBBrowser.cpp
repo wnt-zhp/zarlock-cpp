@@ -31,9 +31,14 @@ DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL) {
 
 	this->setVisible(false);
 	setupUi(this);
-	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(databaseSelected(QListWidgetItem *)));
+
+	connect(dbb_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(databaseSelected(QListWidgetItem *)));
+	connect(dbb_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(openZarlock()));
+
 	connect(dbb_new, SIGNAL(clicked(bool)), this, SLOT(newDatabaseCreator()));
 	connect(dbb_quit, SIGNAL(clicked(bool)), this, SLOT(close()));
+	connect(dbb_load, SIGNAL(clicked(bool)), this, SLOT(openZarlock()));
+	connect(dbb_delete, SIGNAL(clicked(bool)), this, SLOT(deleteDatabase()));
 
 	dbb_delete->setEnabled(false);
 
@@ -80,6 +85,7 @@ void DBBrowser::goBrowser() {
 
 void DBBrowser::openZarlock(const QString & dbname) {
 	if (Database::Instance()->open_database(dbname)) {
+		dbb_load->setEnabled(false);
 		this->setVisible(false);
 
 		globals::appSettings->beginGroup("Database");
@@ -94,6 +100,14 @@ void DBBrowser::openZarlock(const QString & dbname) {
 	}
 }
 
+void DBBrowser::openZarlock() {
+	QListWidgetItem * item = dbb_list->currentItem();
+	if (item) {
+		QString dbname = item->data(Qt::UserRole).toString();
+		openZarlock(dbname);
+	}
+}
+
 void DBBrowser::closeZarlock() {
 	FI();
 
@@ -105,13 +119,37 @@ void DBBrowser::closeZarlock() {
 	}
 	this->setVisible(true);
 	Database::Destroy();
+
+	QListWidgetItem * item = dbb_list->currentItem();
+	if (item)
+		dbb_load->setEnabled(true);
 }
 
-// openZarlock();
+void DBBrowser::deleteDatabase() {
+	QListWidgetItem * item = dbb_list->currentItem();
+	if (item) {
+		QString dbname = item->data(Qt::UserRole).toString();
+		int ret = QMessageBox::question(
+			this,
+			tr("Database removing"),
+			tr("Are you sure to delete database %1?").arg(dbname),
+			QMessageBox::Yes, QMessageBox::No);
+
+		if (ret == QMessageBox::Yes) {
+			Database::Instance()->delete_database(dbname);
+			refreshList();
+		}
+	}
+}
+
 		
 void DBBrowser::databaseSelected(QListWidgetItem * item) {
-	QString dbname = item->data(Qt::UserRole).toString();
-	openZarlock(dbname);
+// 	QString dbname = item->data(Qt::UserRole).toString();
+// 	openZarlock(dbname);
+	if (item) {
+		dbb_load->setEnabled(true);
+		dbb_delete->setEnabled(true);
+	}
 }
 
 void DBBrowser::refreshList(int sort, int order) {

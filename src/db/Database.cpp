@@ -232,6 +232,29 @@ bool Database::create_database(const QString& dbname) {
 	return createDBFile(dbname);
 }
 
+bool Database::delete_database(const QString& dbname) {
+	if (dbname.isEmpty()) {
+		return false;
+	}
+
+	QString dbfilenoext = fileFromDBName(dbname);
+	QString datafile = dbfilenoext % dbfilext;
+	QString infofile = dbfilenoext % infofilext;
+
+	QFile fdatafile(datafile);
+
+	if (fdatafile.exists()) {
+		fdatafile.remove();
+	}
+
+	QFile finfofile(infofile);
+	
+	if (finfofile.exists()) {
+		finfofile.remove();
+	}
+}
+
+
 /**
  * @brief ...
  *
