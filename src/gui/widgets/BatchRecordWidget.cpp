@@ -167,7 +167,11 @@ void BatchRecordWidget::validateAdd() {
 	if (edit_spec->ok() and edit_unit->ok() and
 		edit_book->ok() and edit_price->ok() and
 		(spin_qty->value() > 0) and edit_invoice->ok() and
-		(edit_expiry->ok() or check_inf->isChecked())) {
+		(
+			(edit_expiry->ok() and (edit_book->date().daysTo(edit_expiry->date()) >= 0))
+			or
+			check_inf->isChecked()
+		)) {
 		action_addnext->setEnabled(true);
 		action_addexit->setEnabled(true);
 	} else {
