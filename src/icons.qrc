@@ -16,5 +16,7 @@
 	<file>resources/icons/tools-wizard.png</file>
 	<file>resources/icons/edit-clear-locationbar-rtl.png</file>
 	<file>resources/icons/view-resource-calendar.png</file>
+	<file>resources/images/gnu_logo.png</file>
+	<file>resources/images/gpl_3_logo.png</file>
 </qresource>
 </RCC>

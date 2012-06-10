@@ -70,6 +70,7 @@ set(zarlok_widget_FORMS
 									src/ui/MealTabInsertWidget.ui
 )
 set(zarlok_dialogs_FORMS
+									src/ui/AboutDialog.ui
 									src/ui/CampSettingsDialog.ui
 )
 
@@ -118,6 +119,7 @@ set(zarlok_src_gui_widgets_SRCS
 )
 
 set(zarlok_src_gui_dialogs_SRCS
+									src/gui/dialogs/AboutDialog.cpp
 									src/gui/dialogs/CampSettingsDialog.cpp
 									src/gui/dialogs/AbstractDimmingWidget.cpp
 									src/gui/dialogs/DimmingMessage.cpp

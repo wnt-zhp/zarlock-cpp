@@ -234,7 +234,7 @@ TD
 	updater.checkForUpdates();
 
 	bool static_build = STATIC_BUILD;
-	PR(static_build);
+// 	PR(static_build);
 
 	qDebug() << "Runtime app: " << argv[0];
 // 	qDebug() << ZARLOK_VERSION;

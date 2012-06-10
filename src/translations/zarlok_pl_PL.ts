@@ -68,6 +68,81 @@
     </message>
 </context>
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <location filename="../ui/AboutDialog.ui" line="14"/>
+        <source>About</source>
+        <translation>O programie</translation>
+    </message>
+    <message>
+        <location filename="../ui/AboutDialog.ui" line="147"/>
+        <source>License</source>
+        <translation>Licencja</translation>
+    </message>
+    <message>
+        <location filename="../ui/AboutDialog.ui" line="194"/>
+        <source>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="29"/>
+        <source>Zarlok</source>
+        <translation>Żarłok</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="30"/>
+        <source>version %1</source>
+        <translation>wersja %1</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="31"/>
+        <source>Project manager:	Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
+Maintainer:		Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</source>
+        <translation>Szef projektu:		Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
+Główny programista:	Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="35"/>
+        <source>Zarlok is the food resource management application.</source>
+        <translation>Żarłok jest programem zarządzania żywnością na obozie harcerskim.</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="38"/>
+        <source>Wydzial Nowych Technologii
+Glowna Kwatera Zwiazku Harcerstwa Polskiego
+</source>
+        <translation>Wydział Nowych Technologii
+Główna Kwatera Związku Harcerstwa Polskiego</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="42"/>
+        <source>Find us &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation>Znjadź nas na &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="47"/>
+        <source>Copyright (C) 2012  Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;
+
+Zarlok is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Zarlok is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</source>
+        <translation>Copyright (C) 2012  Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;
+
+Żarłok jest wolnym oprogramowaniem; możesz go rozprowadzać dalej i/lub modyfikować na warunkach Powszechnej Licencji Publicznej GNU, wydanej przez Fundację Wolnego Oprogramowania - według wersji 3 tej Licencji lub (według twojego wyboru) którejś z późniejszych wersji.
+
+Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyślnej gwarancji PRZYDATNOŚCI HANDLOWEJ albo PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ. W celu uzyskania bliższych informacji sięgnij do Powszechnej Licencji Publicznej GNU.
+
+Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechnej Licencji Publicznej GNU (GNU General Public License); jeśli nie, zobacz &lt;http://www.gnu.org/licenses/&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="65"/>
+        <source>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
+    </message>
+</context>
+<context>
     <name>AbstractRecordWidget</name>
     <message>
         <location filename="../gui/widgets/AbstractRecordWidget.cpp" line="30"/>
@@ -116,13 +191,13 @@
         <translation>Pobieranie aktualizacji...</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="121"/>
-        <location filename="../misc/ApplicationUpdater.cpp" line="145"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="126"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="150"/>
         <source>Updates available</source>
         <translation>Aktualizacje dostępne</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="122"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="127"/>
         <source>Updates of Zarlok is available.
 
 To finish upgrade process this zarlok session must be closed (this will be handled automaticly).
@@ -135,7 +210,7 @@ Do you want download and install updates?</source>
 Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="135"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="140"/>
         <source>Updates of Zarlok is available.&lt;br /&gt;&lt;br /&gt;You can download it for from here:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</source>
         <translation>Aktualizacja Żarloka jest dostępna.&lt;br /&gt;&lt;br /&gt;Może je pobrać stąd:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</translation>
     </message>
@@ -251,7 +326,7 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
 <context>
     <name>BatchRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="252"/>
+        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="269"/>
         <source>Update record</source>
         <translation>Zmień</translation>
     </message>
@@ -496,12 +571,22 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
 <context>
     <name>DBBrowser</name>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="134"/>
+        <source>Database removing</source>
+        <translation>Usuwanie bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="135"/>
+        <source>Are you sure to delete database %1?</source>
+        <translation>Jesteś pewien aby usunąć bazę danych %1?</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="211"/>
         <source>Create new database</source>
         <translation>Stwórz nową bazę danych dla obozu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="173"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="211"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
     </message>
@@ -632,12 +717,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="518"/>
+        <location filename="../db/Database.cpp" line="541"/>
         <source>Updating database...</source>
         <translation>Aktualizacja bazy danych...</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="518"/>
+        <location filename="../db/Database.cpp" line="541"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -647,27 +732,27 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="374"/>
+        <location filename="../db/Database.cpp" line="397"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="397"/>
+        <location filename="../db/Database.cpp" line="420"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="398"/>
+        <location filename="../db/Database.cpp" line="421"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="429"/>
+        <location filename="../db/Database.cpp" line="452"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="430"/>
+        <location filename="../db/Database.cpp" line="453"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -809,16 +894,6 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
-    <name>MealDayListItemDataWidget</name>
-    <message>
-        <location filename="../gui/items/MealDayListItemDataWidget.cpp" line="108"/>
-        <location filename="../gui/items/MealDayListItemDataWidget.cpp" line="111"/>
-        <location filename="../gui/items/MealDayListItemDataWidget.cpp" line="187"/>
-        <source> of %1</source>
-        <translation> z %1</translation>
-    </message>
-</context>
-<context>
     <name>MealDayTableModel</name>
     <message>
         <location filename="../models/MealDayTableModel.cpp" line="101"/>
@@ -880,7 +955,7 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="450"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="467"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
@@ -892,14 +967,14 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="452"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="469"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="451"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="468"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
@@ -924,34 +999,34 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="121"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="152"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="318"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="137"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="168"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="334"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="365"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="382"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="366"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="383"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="396"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="413"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="449"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="466"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="482"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
@@ -1262,9 +1337,9 @@ Click Close to exit.</source>
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="279"/>
-        <location filename="../db/Database.cpp" line="297"/>
         <location filename="../db/Database.cpp" line="302"/>
+        <location filename="../db/Database.cpp" line="320"/>
+        <location filename="../db/Database.cpp" line="325"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
@@ -1342,32 +1417,38 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Dzień: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="53"/>
+        <location filename="../db/MealManager.cpp" line="54"/>
+        <location filename="../db/MealManager.cpp" line="60"/>
         <source>Breakfast</source>
         <translation>Śniadanie</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="53"/>
+        <location filename="../db/MealManager.cpp" line="54"/>
+        <location filename="../db/MealManager.cpp" line="61"/>
         <source>Brunch</source>
         <translation>Drugie śniadanie</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="54"/>
+        <location filename="../db/MealManager.cpp" line="55"/>
+        <location filename="../db/MealManager.cpp" line="62"/>
         <source>Lunch</source>
         <translation>Obiad</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="54"/>
+        <location filename="../db/MealManager.cpp" line="55"/>
+        <location filename="../db/MealManager.cpp" line="63"/>
         <source>Tea</source>
         <translation>Podwieczorek</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="55"/>
+        <location filename="../db/MealManager.cpp" line="56"/>
+        <location filename="../db/MealManager.cpp" line="64"/>
         <source>Diner</source>
         <translation>Kolacja</translation>
     </message>
     <message>
-        <location filename="../db/MealManager.cpp" line="55"/>
+        <location filename="../db/MealManager.cpp" line="56"/>
+        <location filename="../db/MealManager.cpp" line="65"/>
         <source>Other</source>
         <translation>Inny</translation>
     </message>
@@ -1377,7 +1458,7 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../gui/views/TableDelegates.cpp" line="65"/>
         <source>%1</source>
-        <translation type="unfinished">%1</translation>
+        <translation>%1</translation>
     </message>
 </context>
 <context>
@@ -1556,183 +1637,112 @@ Wybierz Zamknij aby wyjść.</translation>
 <context>
     <name>zarlok</name>
     <message>
-        <location filename="../zarlok.cpp" line="59"/>
+        <location filename="../zarlok.cpp" line="60"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="62"/>
+        <location filename="../zarlok.cpp" line="63"/>
         <source>About</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="63"/>
+        <location filename="../zarlok.cpp" line="64"/>
         <source>Switch Database</source>
         <translation>Zmień bazę</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="64"/>
+        <location filename="../zarlok.cpp" line="65"/>
         <source>Configure</source>
         <translation>Konfiguruj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="56"/>
+        <location filename="../zarlok.cpp" line="57"/>
         <source>Main</source>
         <translation>Główny</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="53"/>
+        <location filename="../zarlok.cpp" line="54"/>
         <source>Zarlok (WNT)</source>
         <translation>Żarłok (WNT)</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="54"/>
+        <location filename="../zarlok.cpp" line="55"/>
         <source>Zarlok (WNT) | build: </source>
         <translation>ŻArłok (WNR) | build: </translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="57"/>
+        <location filename="../zarlok.cpp" line="58"/>
         <source>Database</source>
         <translation>Baza danych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="67"/>
+        <location filename="../zarlok.cpp" line="68"/>
         <source>Create SM reports</source>
         <translation>Utwórz raport Stanu Magazynu</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="68"/>
+        <location filename="../zarlok.cpp" line="69"/>
         <source>Create KM reports</source>
         <translation>Utwórz raport Kartotek Magazynowych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="69"/>
+        <location filename="../zarlok.cpp" line="70"/>
         <source>Create ZZ reports</source>
         <translation>Utwórz raport Zapotrzebowania Żywieniowego</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="70"/>
+        <location filename="../zarlok.cpp" line="71"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="116"/>
+        <location filename="../zarlok.cpp" line="117"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="138"/>
+        <location filename="../zarlok.cpp" line="139"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="139"/>
+        <location filename="../zarlok.cpp" line="140"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="140"/>
+        <location filename="../zarlok.cpp" line="141"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="141"/>
+        <location filename="../zarlok.cpp" line="142"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="230"/>
+        <location filename="../zarlok.cpp" line="231"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="297"/>
-        <source>About Zarlok</source>
-        <translation>O Żarłoku</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="298"/>
-        <source>Zarlok %1
-
-Copyright (c) 2012
-Wydzial Nowych Technologii
-Glowna Kwatera Zwiazku Harcerstwa Polskiego
-
-Project manager: Jacek Bzdak &lt; jacek.bzdak@wnt.zhp.pl &gt;
-Programer: Rafal Lalik &lt; rafal.lalik@zhp.net.pl &gt;
-
-Find us: http://wnt.zhp.pl/index.php?id=3&amp;p=17
-
-
-License:
------------------------------------------------------------------------------------------------------------------
-</source>
-        <translation>Żarłok %1
-
-Copyright (c) 2012
-Wydział Nowych Technologii
-Główna Kwatera Związku Harcerstwa Polskiego
-
-Kierownik projektu: Jacek Bzdak &lt; jbzdak@zhp.net.pl &gt;
-Główny programista: Rafał Lalik &lt; rafal.lalik@zhp.net.pl &gt;
-
-Znajdź nas: http://wnt.zhp.pl/index.php?id=3&amp;p=17
-
-
-Licencja programu:
-------------------------------------------------------------------------------------------------------------------------
-</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="315"/>
-        <source>Copyright (C) 2012  Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;
-
-Zarlok is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Zarlok is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</source>
-        <translation>Copyright (C) 2012  Rafał Lalik &lt;rafal.lalik@zhp.net.pl&gt;
-
-Żarłok jest wolnym oprogramowaniem; możesz go rozprowadzać dalej
-i/lub modyfikować na warunkach Powszechnej Licencji Publicznej GNU,
-wydanej przez Fundację Wolnego Oprogramowania - według wersji 3 tej
-Licencji lub (według twojego wyboru) którejś z późniejszych wersji.
-
-Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on
-użyteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyślnej
-gwarancji PRZYDATNOŚCI HANDLOWEJ albo PRZYDATNOŚCI DO OKREŚLONYCH
-ZASTOSOWAŃ. W celu uzyskania bliższych informacji sięgnij do
-Powszechnej Licencji Publicznej GNU.
-
-Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz
-Powszechnej Licencji Publicznej GNU (GNU General Public License).
-Jeśli nie, zobacz &lt;http://www.gnu.org/licenses/&gt;.</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="347"/>
+        <location filename="../zarlok.cpp" line="351"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="363"/>
+        <location filename="../zarlok.cpp" line="367"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="363"/>
+        <location filename="../zarlok.cpp" line="367"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="372"/>
+        <location filename="../zarlok.cpp" line="376"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

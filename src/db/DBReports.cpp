@@ -364,6 +364,11 @@ void DBReports::printKMReport(QString * reportsdir) {
 		out.setRealNumberNotation(QTextStream::FixedNotation);
 		out.setRealNumberPrecision(2);
 		out.setLocale(QLocale(QLocale::C));
+#if defined(__unix__)
+		out.setCodec("UTF-8");
+#elif defined(_WIN32)
+		out.setCodec("Windows-1250");
+#endif
 
 // 		std::cout << "=================== " << ofile.toStdString() << std::endl;
 
@@ -617,9 +622,14 @@ void DBReports::printSMReport(QString * reportsdir) {
 		QTextStream out(&file);
 		out.setRealNumberNotation(QTextStream::FixedNotation);
 		out.setRealNumberPrecision(2);
+#if defined(__unix__)
+		out.setCodec("UTF-8");
+#elif defined(_WIN32)
+		out.setCodec("Windows-1250");
+#endif
 
 		out << QString::fromUtf8("Stan magazynów na dzień;")
-			<< QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toStdString().c_str()) << endl;
+			<< QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toUtf8()) << endl;
 
 		batches_new.clear();
 		batches_removed.clear();

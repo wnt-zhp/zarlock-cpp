@@ -37,6 +37,7 @@
 #include <QProgressDialog>
 
 #include "CampSettingsDialog.h"
+#include "AboutDialog.h"
 // public members
 
 /**
@@ -294,42 +295,44 @@ void zarlok::updateAppTitle() {
 
 void zarlok::about() {
 //	QLabel infoLabel->setText(tr("Invoked <b>Help|About</b>"));
-	QMessageBox::about(this, tr("About Zarlok"),
-		tr(
-			"Zarlok %1\n"
-			"\n"
-			"Copyright (c) 2012\n"
-			"Wydzial Nowych Technologii\n"
-			"Glowna Kwatera Zwiazku Harcerstwa Polskiego\n"
-			"\n"
-			"Project manager: Jacek Bzdak < jacek.bzdak@wnt.zhp.pl >\n"
-			"Programer: Rafal Lalik < rafal.lalik@zhp.net.pl >\n"
-			"\n"
-			"Find us: " "http://wnt.zhp.pl/index.php?id=3&p=17"
-			"\n"
-			"\n"
-			"\n"
-			"License:\n"
-			"------------------------------------------------------------------"
-			"-----------------------------------------------\n"
-		).arg(ZARLOK_VERSION) % tr(
-			"Copyright (C) 2012  Rafal Lalik <rafal.lalik@zhp.net.pl>\n"
-			"\n"
-			"Zarlok is free software: you can redistribute it and/or modify\n"
-			"it under the terms of the GNU General Public License as published by\n"
-			"the Free Software Foundation, either version 3 of the License, or\n"
-			"(at your option) any later version.\n"
-			"\n"
-			"Zarlok is distributed in the hope that it will be useful,\n"
-			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-			"GNU General Public License for more details.\n"
-			"\n"
-			"You should have received a copy of the GNU General Public License\n"
-			"along with this program.  If not, see <http://www.gnu.org/licenses/>."
-		)
-	);
+// 	QMessageBox::about(this, tr("About Zarlok"),
+// 		tr(
+// 			"Zarlok %1\n"
+// 			"\n"
+// 			"Copyright (c) 2012\n"
+// 			"Wydzial Nowych Technologii\n"
+// 			"Glowna Kwatera Zwiazku Harcerstwa Polskiego\n"
+// 			"\n"
+// 			"Project manager: Jacek Bzdak < jacek.bzdak@wnt.zhp.pl >\n"
+// 			"Programer: Rafal Lalik < rafal.lalik@zhp.net.pl >\n"
+// 			"\n"
+// 			"Find us: " "http://wnt.zhp.pl/index.php?id=3&p=17"
+// 			"\n"
+// 			"\n"
+// 			"\n"
+// 			"License:\n"
+// 			"------------------------------------------------------------------"
+// 			"-----------------------------------------------\n"
+// 		).arg(ZARLOK_VERSION) % tr(
+// 			"Copyright (C) 2012  Rafal Lalik <rafal.lalik@zhp.net.pl>\n"
+// 			"\n"
+// 			"Zarlok is free software: you can redistribute it and/or modify\n"
+// 			"it under the terms of the GNU General Public License as published by\n"
+// 			"the Free Software Foundation, either version 3 of the License, or\n"
+// 			"(at your option) any later version.\n"
+// 			"\n"
+// 			"Zarlok is distributed in the hope that it will be useful,\n"
+// 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+// 			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+// 			"GNU General Public License for more details.\n"
+// 			"\n"
+// 			"You should have received a copy of the GNU General Public License\n"
+// 			"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+// 		)
+// 	);
 
+	AboutDialog adlg;
+	adlg.exec();
 // 	tr("Zarlok " ZARLOK_VERSION "\n"
 // 	"\n"
 // 	"Copyleft (c) 2012\n"
