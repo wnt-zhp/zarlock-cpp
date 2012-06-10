@@ -11,3 +11,5 @@ endif ( UNIX AND NOT APPLE )
 if ( MINGW )
 configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationWin.cmake.in CPackConfigurationWin.cmake @ONLY)
 endif ( MINGW )
+
+MESSAGE (STATUS "CPack configure script prepared")
