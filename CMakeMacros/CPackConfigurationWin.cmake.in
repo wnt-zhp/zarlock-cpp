@@ -18,8 +18,7 @@ SET(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_CURRENT_BINARY_DIR};zarlok;ALL;/")
 #SET(PACKAGE_ARCHITECTURE "amd64")
 
 SET(CPACK_GENERATOR NSIS)
-SET(CPACK_PACKAGE_VENDOR "Wydział Nowych Technologi, Główna Kwatera Związku
-Harcerstwa Polskiego")
+SET(CPACK_PACKAGE_VENDOR "Wydział Nowych Technologi, Główna Kwatera Związku Harcerstwa Polskiego")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Zarlok is the food resource management application.")
 SET(CPACK_PACKAGE_NAME "zarlok")
 SET(CPACK_PACKAGE_VERSION "@RELEASE_VERSION@")
