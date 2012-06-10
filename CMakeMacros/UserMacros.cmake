@@ -32,21 +32,19 @@ macro (QT4_ADD_BINRESOURCES outfiles )
 	ENDFOREACH (it)
 endmacro (QT4_ADD_BINRESOURCES)
 
-# macro (MAKE_ICON iconfile)
-# 	QT4_EXTRACT_OPTIONS(rc_file rc_option ${ARGN})
-# 
-# 	FOREACH (it ${rc_file})
-# 
-# 	IF( MINGW )
-# 		set( APP_ICON appicon.o )
-# 		set( APP_ICON_RC src/appicon.rc )
-# 	# resource compilation for MinGW
-# 	ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON}
-# 		COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR}
-# 			-i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
-# 			-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
-# 	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
-# ELSE( MINGW )
-# 	SET(speedcrunch_SOURCES ${speedcrunch_SOURCES} crunchico.rc)
-# ENDIF ( MINGW )
-# endmacro (MAKE_ICON)
+if (UNIX AND NOT APPLE)
+	set(APP_ICON ${CMAKE_PROJECT_NAME}.png)
+	configure_file(misc/${CMAKE_PROJECT_NAME}.desktop.in ${CMAKE_PROJECT_NAME}.desktop)
+elseif( WIN32 )
+	set( APP_ICON appicon.o )
+	set( APP_ICON_RC src/appicon.rc )
+	# resource compilation for MinGW
+	ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON}
+		COMMAND windres.exe -I${CMAKE_CURRENT_SOURCE_DIR}
+			-i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
+			-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
+endif ()
+
+if (BUILD_STATIC)
+	add_definitions(-DBUILD_STATIC)
+endif (BUILD_STATIC)

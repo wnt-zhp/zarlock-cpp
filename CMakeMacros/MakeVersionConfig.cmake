@@ -21,4 +21,4 @@ else (git_exe)
 	set (gitinfo_TAGDESC "unknown") 
 endif (git_exe)
 
-configure_file(${ZARLOK_SOURCE_DIR}/config/version.h.in version.h @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/config/version.h.in version.h @ONLY)
