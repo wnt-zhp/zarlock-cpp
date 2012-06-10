@@ -32,6 +32,7 @@
 #include "DBItemWidget.h"
 #include "DimmingMessage.h"
 
+class SettingsDialog;
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
 public:
@@ -60,6 +61,7 @@ private slots:
 	void printDailyReport();
 
 	void about();
+	void settings();
 
 // 	void tabChanged(int index);
 	void db2update();
@@ -83,7 +85,9 @@ private:
 	QToolButton * tools;
 
 	QAction * actionQuit;
+	QAction * actionSettings;
 	QAction * actionAbout;
+
 	QAction * actionPrintReport;
 	QAction * actionSaveDB;
 
@@ -99,6 +103,8 @@ private:
 	DBItemWidget * dbiw;
 
 	DimmingMessage * dw;
+
+	SettingsDialog * appsettings;
 };
 
 #endif // zarlok_H

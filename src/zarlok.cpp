@@ -38,6 +38,7 @@
 
 #include "CampSettingsDialog.h"
 #include "AboutDialog.h"
+#include "SettingsDialog.h"
 // public members
 
 /**
@@ -48,7 +49,8 @@
  * @param parent QMainWindow
  **/
 zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
-					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL), dw(NULL) {
+					tpw(NULL), tbw(NULL), tdw(NULL), tmw(NULL), dw(NULL),
+					appsettings(NULL) {
 	CI();
 	setupUi(this);
 	this->setWindowTitle(tr("Zarlok (WNT)"));
@@ -58,6 +60,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar = addToolBar(tr("Database"));
 
 	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), this);
+	actionSettings = new QAction(QIcon(":/resources/icons/preferences-system.png"), tr("Settings"), this);
 // 	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
 // 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
 	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
@@ -77,22 +80,27 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 // 		PR(QString(QKeySequence::keyBindings(key).at(i)).toStdString());
 
 	actionQuit->setShortcuts(QKeySequence::Quit);
+	actionSettings->setShortcuts(QKeySequence::Preferences);
 	actionAbout->setShortcut(QKeySequence::HelpContents);
+
 	actionSwitchDB->setShortcuts(QKeySequence::Replace);
 	actionConfigDB->setShortcut(Qt::CTRL+Qt::Key_F5);
-
-	actionAbout->setMenuRole(QAction::AboutRole);
 
 	actionCreateSMrep->setShortcut(Qt::Key_F2);
 	actionCreateKMrep->setShortcut(Qt::Key_F3);
 	actionCreateZZrep->setShortcut(Qt::Key_F4);
 	actionBrowseReports->setShortcut(Qt::Key_F5);
 
+	actionAbout->setMenuRole(QAction::AboutRole);
+	actionSettings->setMenuRole(QAction::PreferencesRole);
+
 	toolbar->setObjectName("toolbar");
 	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	toolbar->setIconSize(QSize(64, 64));
 
 	toolbar->addAction(actionQuit);
+	toolbar->addSeparator();
+	toolbar->addAction(actionSettings);
 // 	toolbar->addAction(actionPrintReport);
 // 	toolbar->addSeparator();
 // 	toolbar->addSeparator();
@@ -156,19 +164,17 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 // 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
 
 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(doExitZarlok()));
+	connect(actionSettings, SIGNAL(triggered(bool)), this, SLOT(settings()));
+	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 
+	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
 	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doSwitchDB()));
 
-// 	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
-	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
-
-	connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
 // 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
 // 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
-	connect(actionCreateSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 	connect(actionCreateKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
-
+	connect(actionCreateSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
 	connect(actionCreateZZrep, SIGNAL(triggered(bool)), this, SLOT(doCreateZZReports()));
 	connect(actionBrowseReports, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
@@ -183,10 +189,13 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 // 	updateAppTitle();
 
 	setAttribute(Qt::WA_DeleteOnClose);
+
+	appsettings = new SettingsDialog;
 }
 
 zarlok::~zarlok() {
 	DI();
+	delete appsettings;
 	while (MainTab->count())
 		MainTab->removeTab(0);
 	/*if (tmw)*/ delete tmw;/* tmw = NULL;*/
@@ -344,6 +353,10 @@ void zarlok::about() {
 // 	"\n"
 // 	"Find us: " "http://wnt.zhp.pl/index.php?id=3&p=17"
 // 	)
+}
+
+void zarlok::settings() {
+	appsettings->exec();
 }
 
 void zarlok::db2update() {
