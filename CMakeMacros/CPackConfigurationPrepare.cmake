@@ -9,5 +9,5 @@ configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationLinux.cmake.in
 endif ( UNIX AND NOT APPLE )
 
 if ( MINGW )
-configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationWindows.cmake.in CPackConfigurationWindows.cmake @ONLY)
+configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationWin.cmake.in CPackConfigurationWin.cmake @ONLY)
 endif ( MINGW )

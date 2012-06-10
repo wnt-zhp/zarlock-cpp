@@ -311,7 +311,7 @@ add_custom_target(distprepare
 	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
 	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationLinux.cmake
 	DEPENDS version.h
-	COMMENT "Preparing CPack files"
+	COMMENT "Preparing CPack files for GNU/Linux"
 )
 endif ( UNIX AND NOT APPLE )
 
@@ -320,7 +320,7 @@ add_custom_target(distprepare
 	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
 	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationWin.cmake
 	DEPENDS version.h
-	COMMENT "Preparing CPack files"
+	COMMENT "Preparing CPack files for Windows"
 )
 endif ( MINGW )
 
