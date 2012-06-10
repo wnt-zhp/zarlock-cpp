@@ -27,7 +27,7 @@ SET(CPACK_PACKAGE_CONTACT "Rafal Lalik <Rafal.Lalik@zhp.net.pl>")
 SET(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/gpl-3.0.txt)
 
 # deb
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS "qt (>= 4.8.0)")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.10), libstdc++6 (>= 4.4.0), libqtcore4 (>= 4:4.8.0), libqtgui4 (>= 4:4.8.0), libqt4-network (>= 4:4.8.0), libqt4-sql-sqlite (>= 4:4.8.0)")
 SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 
 #rpm
