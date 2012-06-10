@@ -309,7 +309,7 @@ endif ( WIN32 )
 if ( UNIX AND NOT APPLE )
 add_custom_target(distprepare
 	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
-	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationLinux.cmake
+	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationLinux.cmake
 	DEPENDS version.h
 	COMMENT "Preparing CPack files for GNU/Linux"
 )
@@ -318,7 +318,7 @@ endif ( UNIX AND NOT APPLE )
 if ( WIN32 )
 add_custom_target(distprepare
 	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
-	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationWin.cmake
+	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationWin.cmake
 	DEPENDS version.h
 	COMMENT "Preparing CPack files for Windows"
 )
@@ -327,6 +327,7 @@ endif ( WIN32 )
 add_dependencies(distprepare vfb)
 add_dependencies(zarlok version_number distprepare)
 
+MESSAGE (STATUS "System name: " ${CMAKE_SYSTEM_NAME})
 
 if ( UNIX AND NOT APPLE )
 
@@ -377,6 +378,7 @@ MESSAGE(STATUS "<<< Configuration >>>
 Project:		${CMAKE_PROJECT_NAME}
 Generator:		${CMAKE_GENERATOR}
 
+System name:	${CMAKE_SYSTEM_NAME}
 Static build	${BUILD_STATIC}
 
 Source dir		${CMAKE_CURRENT_SOURCE_DIR}
