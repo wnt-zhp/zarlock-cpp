@@ -34,7 +34,7 @@ if( UNIX AND NOT APPLE )
 	set( APP_ICON ${CMAKE_PROJECT_NAME}.png )
 endif( UNIX AND NOT APPLE )
 
-IF( MINGW )
+IF( WIN32 )
 	set( APP_ICON appicon.o )
 	set( APP_ICON_RC src/appicon.rc )
 	# resource compilation for MinGW
@@ -43,9 +43,9 @@ IF( MINGW )
 			-i${CMAKE_CURRENT_SOURCE_DIR}/${APP_ICON_RC}
 			-o ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON} )
 	SET(appicon_SOURCES ${appicon_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${APP_ICON})
-ELSE( MINGW )
+ELSE( WIN32 )
 	SET(appicon_SOURCES ${appicon_SOURCES} appico.rc)
-ENDIF( MINGW )
+ENDIF( WIN32 )
 
 if (BUILD_STATIC)
 	add_definitions(-DBUILD_STATIC)
@@ -212,7 +212,7 @@ if (rcc_files)
 	unset (rcc_files)
 endif (rcc_files)
 
-IF (NOT MINGW)
+IF (NOT WIN32)
 	add_custom_target(translations_target ALL DEPENDS ${QM_FILES})
 
 	set(zarlok_db_RESOURCES_RCC database.rcc)
@@ -231,7 +231,7 @@ IF (NOT MINGW)
 
 	add_executable(zarlok ${zarlok_FORMS_HEADERS} ${zarlok_SRCS} ${QM})
 
-ELSE (NOT MINGW)
+ELSE (NOT WIN32)
 
 # 	set(zarlok_translations_RESOURCES_RCC translations.rcc)
 
@@ -276,13 +276,13 @@ ELSE (NOT MINGW)
 
 	add_executable(zarlok WIN32 ${APP_ICON} ${zarlok_SRCS} ${zarlok_FORMS_HEADERS} ${rcc_files})
 
-ENDIF (NOT MINGW)
+ENDIF (NOT WIN32)
 
 add_dependencies(zarlok vfb)
 
 target_link_libraries(zarlok ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
 
-if ( MINGW )
+if ( WIN32 )
 
 find_program(iscc_exe iscc PATHS ${ISCC_BINARY_DIR} ENV PATH)
 
@@ -304,7 +304,7 @@ add_custom_target(isspackage
 add_dependencies(zarlok version_number)
 add_dependencies(isspackage zarlok)
 
-endif ( MINGW )
+endif ( WIN32 )
 
 if ( UNIX AND NOT APPLE )
 add_custom_target(distprepare
@@ -315,14 +315,14 @@ add_custom_target(distprepare
 )
 endif ( UNIX AND NOT APPLE )
 
-if ( MINGW )
+if ( WIN32 )
 add_custom_target(distprepare
 	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
 	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationWin.cmake
 	DEPENDS version.h
 	COMMENT "Preparing CPack files for Windows"
 )
-endif ( MINGW )
+endif ( WIN32 )
 
 add_dependencies(distprepare vfb)
 add_dependencies(zarlok version_number distprepare)
@@ -342,7 +342,7 @@ install(FILES
 
 ENDIF ( UNIX AND NOT APPLE )
 
-IF (NOT MINGW)
+IF (NOT WIN32)
 
 install(FILES
 				${CMAKE_CURRENT_BINARY_DIR}/database.rcc
@@ -357,7 +357,7 @@ install(FILES
 				DESTINATION share/${CMAKE_PROJECT_NAME}/translations
 )
 
-ENDIF (NOT MINGW)
+ENDIF (NOT WIN32)
 # if(UNIX AND NOT APPLE)
 # 	install( FILES ${APP_ICON} DESTINATION share/icons )
 # 	install( FILES qtm.1.gz DESTINATION ${MANPAGE_DIRECTORY} )

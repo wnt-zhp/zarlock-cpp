@@ -6,10 +6,10 @@ MESSAGE (STATUS ${RELEASE_VERSION})
 
 if ( UNIX AND NOT APPLE )
 configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationLinux.cmake.in CPackConfigurationLinux.cmake @ONLY)
+MESSAGE (STATUS "CPack configure script prepared for GNU/Linux")
 endif ( UNIX AND NOT APPLE )
 
-if ( MINGW )
+if ( WIN32 )
 configure_file(${ZARLOK_SOURCE_DIR}/CMakeMacros/CPackConfigurationWin.cmake.in CPackConfigurationWin.cmake @ONLY)
-endif ( MINGW )
-
-MESSAGE (STATUS "CPack configure script prepared")
+MESSAGE (STATUS "CPack configure script prepared for WIN32")
+endif ( WIN32 )
