@@ -14,7 +14,7 @@ find_package(Qt4 REQUIRED)
 # QT4_ADD_BINRESOURCES(outfiles inputfile ... )
 # Oryginal QT4_ADD_RESOURCES Macro modified
 # by me for special purpose
-include (macros/user_macros.txt)
+include (CMakeMacros/UserMacros.cmake)
 
 if( UNIX AND NOT APPLE )
 	if( NOT DESKTOP_ENTRY )
@@ -164,7 +164,7 @@ configure_file(config/config.h.in config.h @ONLY)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.h
 					DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/config/version.h.in
-					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_version_config.txt
+					COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/MakeVersionConfig.cmake
 					WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -292,9 +292,9 @@ else (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 	MESSAGE(FATAL_ERROR "iscc not found!")
 endif (NOT iscc_exe STREQUAL "iscc_exe-NOTFOUND")
 
-add_custom_target(package
+add_custom_target(isspackage
 	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/src/dist/win32-installer/zarlok_installer.iss.in zarlok_installer.iss.in
-	COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_installator.txt
+	COMMAND ${CMAKE_COMMAND} -D QT_BINARY_DIR=${QT_BINARY_DIR} -D QT_PLUGINS_DIR=${QT_PLUGINS_DIR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/MakeInstallator.cmake
 	COMMAND ${iscc_exe} zarlok_installer.iss
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 	DEPENDS version.h
@@ -302,23 +302,30 @@ add_custom_target(package
 )
 
 add_dependencies(zarlok version_number)
-add_dependencies(package zarlok)
+add_dependencies(isspackage zarlok)
 
 endif ( MINGW )
 
 if ( UNIX AND NOT APPLE )
-
 add_custom_target(distprepare
-	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/macros/make_cpack_configuration.txt
-	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P macro_cpack_configuration.txt
+	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
+	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationLinux.cmake
 	DEPENDS version.h
 	COMMENT "Preparing CPack files"
 )
+endif ( UNIX AND NOT APPLE )
+
+if ( MINGW )
+add_custom_target(distprepare
+	COMMAND ${CMAKE_COMMAND} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeMacros/CPackConfigurationPrepare.cmake
+	COMMAND ${CMAKE_COMMAND} -D CMAKE_GENERATOR=${CMAKE_GENERATOR} -D ZARLOK_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -P CPackConfigurationLinux.cmake
+	DEPENDS version.h
+	COMMENT "Preparing CPack files"
+)
+endif ( MINGW )
 
 add_dependencies(distprepare vfb)
 add_dependencies(zarlok version_number distprepare)
-
-endif ( UNIX AND NOT APPLE )
 
 
 if ( UNIX AND NOT APPLE )
