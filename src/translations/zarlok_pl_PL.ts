@@ -103,7 +103,7 @@ Główny programista:	Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</translation>
     </message>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="35"/>
-        <source>Zarlok is the food resource management application.</source>
+        <source>The Zarlok is the food resource management application.</source>
         <translation>Żarłok jest programem zarządzania żywnością na obozie harcerskim.</translation>
     </message>
     <message>

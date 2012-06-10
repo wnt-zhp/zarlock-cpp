@@ -33,7 +33,7 @@ AboutDialog::AboutDialog(QDialog * /*parent*/) : Ui::AboutDialog() {
 		"Maintainer:\t\tRafal Lalik <rafal.lalik@zhp.net.pl>"
 	));
 	label_info->setText(tr(
-		"Zarlok is the food resource management application."
+		"The Zarlok is the food resource management application."
 	));
 	label_wnt_info->setText(tr(
 		"Wydzial Nowych Technologii\n"
