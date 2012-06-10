@@ -21,23 +21,23 @@ set(PROJECT_DOMAIN_SECOND "zhp")
 set(PROJECT_DOMAIN_THIRD "zhp")
 set(PROJECT_DOMAIN "${PROJECT_DOMAIN_FIRST}.${PROJECT_DOMAIN_SECOND}.${PROJECT_DOMAIN_THIRD}")
 
-if(UNIX AND NOT APPLE)
+if ( UNIX AND NOT APPLE )
 	string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
 	set(BIN_INSTALL_DIR "bin")
 	set(DOC_INSTALL_DIR "share/doc/${PROJECT_NAME_LOWERCASE}/")
 	set(SHARE_INSTALL_DIR "share/${PROJECT_NAME_LOWERCASE}/")
-else()
+else ()
 	set(BIN_INSTALL_DIR ".")
 	set(DOC_INSTALL_DIR ".")
 	set(SHARE_INSTALL_DIR ".")
-endif()
+endif ()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR APPLE)
+if ( CMAKE_COMPILER_IS_GNUCXX OR APPLE )
 	add_definitions(-Wall -Wextra)
-	if(CMAKE_BUILD_RELEASE)
+	if ( CMAKE_BUILD_RELEASE )
 		add_definitions(-Werror)
-	endif()
-endif()
+	endif ()
+endif ()
 
 add_definitions(-DPROJECT_VERSION=\"${PROJECT_VERSION}\")
 
@@ -45,7 +45,21 @@ set (CMAKE_CXX_FLAGS "-O2 -pipe -W -DQT_GUI_LIB -std=c++0x")
 
 include (CMakeMacros/UserMacros.cmake)
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} src src/misc src/ui src/gui src/gui/widgets src/gui/items src/gui/dialogs src/gui/views src/gui/inputs src/gui/validators src/db src/models)
+include_directories(
+		${QT_INCLUDES}
+		${CMAKE_CURRENT_BINARY_DIR}
+		src
+		src/misc
+		src/ui
+		src/gui
+		src/gui/widgets
+		src/gui/items
+		src/gui/dialogs
+		src/gui/views
+		src/gui/inputs
+		src/gui/validators
+		src/db src/models
+)
 
 ####################################################
 # FORMS
@@ -144,6 +158,7 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/misc/Logger.cpp
 		src/misc/DataParser.cpp
 		src/${CMAKE_PROJECT_NAME}.cpp
+
 		main.cpp
 )
 
@@ -182,8 +197,8 @@ endif (UPDATE_TRANSLATIONS)
 # GENERATE MOC and UI
 ####################################################
 qt4_wrap_ui(${CMAKE_PROJECT_NAME}_FORMS_HEADERS ${${CMAKE_PROJECT_NAME}_FORMS})
-qt4_wrap_cpp(${${CMAKE_PROJECT_NAME}_INCS} ${${CMAKE_PROJECT_NAME}_SRCS})
-qt4_automoc(${${CMAKE_PROJECT_NAME}_INCS} ${${CMAKE_PROJECT_NAME}_SRCS})
+qt4_wrap_cpp(${${CMAKE_PROJECT_NAME}_MOC_INCS} ${${CMAKE_PROJECT_NAME}_SRCS})
+qt4_automoc(${${CMAKE_PROJECT_NAME}_MOC_SRCS} ${${CMAKE_PROJECT_NAME}_SRCS})
 
 message(STATUS "QM files" ${QM_FILES})
 ##################
@@ -268,10 +283,26 @@ endif ()
 # TARGETS
 ####################################################
 add_executable(vfb VersionFileBuilder.cpp version.h)
-add_executable(zarlok WIN32 MACOSX_BUNDLE ${APP_ICON} ${${CMAKE_PROJECT_NAME}_SRCS} ${${CMAKE_PROJECT_NAME}_FORMS_HEADERS} ${RCC_SRCS})
+
+add_executable(zarlok WIN32 MACOSX_BUNDLE
+		${APP_ICON}
+		${${CMAKE_PROJECT_NAME}_SRCS}
+		${${CMAKE_PROJECT_NAME}_FORMS_HEADERS}
+		${${CMAKE_PROJECT_NAME}_MOC_SRCS}
+		${${CMAKE_PROJECT_NAME}_MOC_INCS}
+		${RCC_SRCS}
+)
+
 add_dependencies(zarlok vfb)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QT_LIBRARY})
+target_link_libraries(
+		${CMAKE_PROJECT_NAME}
+		${QT_QTCORE_LIBRARY}
+		${QT_QTGUI_LIBRARY}
+		${QT_QTSQL_LIBRARY}
+		${QT_QTNETWORK_LIBRARY}
+		${QT_QT_LIBRARY}
+)
 
 add_custom_target(version_number COMMAND vfb WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -305,14 +336,24 @@ endif ( UNIX OR APPLE )
 if ( APPLE OR WIN32 )
 
     include(DeployQt4)
-    install_qt4_executable(${CMAKE_PROJECT_NAME} "qsqlite")
+    fixup_qt4_executable(${CMAKE_PROJECT_NAME}
+			"qsqlite"
+			"qtcore"
+			"qtgui"
+			"qtsql"
+			"qtnetwork"
+	)
 
 elseif ( UNIX )
 
-	install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)
+	install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${BIN_INSTALL_DIR})
 
 endif()
 
+install(FILES
+		COPYING README NEWS
+		DESTINATION ${DOC_INSTALL_DIR}
+)
 ####################################################
 # Inno Setup Installator
 ####################################################
@@ -373,7 +414,9 @@ endif ( WIN32 )
 add_dependencies(distprepare vfb)
 add_dependencies(${CMAKE_PROJECT_NAME} version_number distprepare)
 
-# messages
+####################################################
+# SUMMARY
+####################################################
 MESSAGE(STATUS "<<< Configuration >>>
 Project:		${CMAKE_PROJECT_NAME}
 Generator:		${CMAKE_GENERATOR}
