@@ -338,10 +338,7 @@ if ( APPLE OR WIN32 )
     include(DeployQt4)
     fixup_qt4_executable(${CMAKE_PROJECT_NAME}
 			"qsqlite"
-			"qtcore"
-			"qtgui"
-			"qtsql"
-			"qtnetwork"
+			"qtcore4 qtgui4 qtsql4 qtnetwork4"
 	)
 
 elseif ( UNIX )
