@@ -17,7 +17,7 @@ SET(CPACK_TOPLEVEL_TAG "Linux")
 
 SET(PACKAGE_ARCHITECTURE "amd64")
 
-SET(CPACK_GENERATOR RPM DEB TBZ2)
+SET(CPACK_GENERATOR NSIS)
 SET(CPACK_PACKAGE_VENDOR "Wydział Nowych Technologi, Główna Kwatera Związku
 Harcerstwa Polskiego")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Zarlok is the food resource management application.")
