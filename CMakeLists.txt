@@ -347,7 +347,7 @@ endif ()
 if ( APPLE OR WIN32 )
 
     include(DeployQt4)
-    fixup_qt4_executable(${EXECUTABLE}
+    install_qt4_executable(${EXECUTABLE}
 			"qsqlite"
 			""
 			""
