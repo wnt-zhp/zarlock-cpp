@@ -22,9 +22,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\Zarlok
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=@ZARLOK_SOURCE_DIR@\src\dist\gpl-3.0.txt
-;InfoBeforeFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
-;InfoAfterFile=@ZARLOK_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
+LicenseFile=@PROJECT_SOURCE_DIR@\COPYING
+;InfoBeforeFile=@PROJECT_SOURCE_DIR@\src\dist\win32-installer\preinfo.txt
+;InfoAfterFile=@PROJECT_SOURCE_DIR@\src\dist\win32-installer\postinfo.txt
 OutputDir=installer
 OutputBaseFilename=zarlok-@RELEASE_VERSION@-Win32
 Compression=lzma
@@ -47,7 +47,10 @@ Source: "@QT_BINARY_DIR@\QtGui4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_PLUGINS_DIR@\sqldrivers\qsqlite4.dll"; DestDir: "{app}\plugins\sqldrivers\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "@ZARLOK_SOURCE_DIR@\src\dist\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "@PROJECT_SOURCE_DIR@\src\dist\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\COPYING"; DestDir: "{app}\COPYING.txt"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\README"; DestDir: "{app}\README.txt"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\NEWS"; DestDir: "{app}\NEWS.txt"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
