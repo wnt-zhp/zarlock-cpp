@@ -360,10 +360,9 @@ elseif ( UNIX )
 
 endif()
 
-install(FILES
-		COPYING README NEWS
-		DESTINATION ${DOC_INSTALL_DIR}
-)
+install(FILES COPYING.txt DESTINATION ${DOC_INSTALL_DIR} RENAME COPYING)
+install(FILES README.txt DESTINATION ${DOC_INSTALL_DIR} RENAME README)
+install(FILES NEWS.txt DESTINATION ${DOC_INSTALL_DIR} RENAME NEWS)
 ####################################################
 # Inno Setup Installator
 ####################################################

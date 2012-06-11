@@ -48,9 +48,9 @@ Source: "@QT_BINARY_DIR@\QtSql4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_BINARY_DIR@\QtNetwork4.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "@QT_PLUGINS_DIR@\sqldrivers\qsqlite4.dll"; DestDir: "{app}\plugins\sqldrivers\"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: "@PROJECT_SOURCE_DIR@\src\dist\gpl-3.0.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "@PROJECT_SOURCE_DIR@\COPYING"; DestDir: "{app}\COPYING.txt"; Flags: ignoreversion
-Source: "@PROJECT_SOURCE_DIR@\README"; DestDir: "{app}\README.txt"; Flags: ignoreversion
-Source: "@PROJECT_SOURCE_DIR@\NEWS"; DestDir: "{app}\NEWS.txt"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\COPYING.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\README.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@PROJECT_SOURCE_DIR@\NEWS.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
