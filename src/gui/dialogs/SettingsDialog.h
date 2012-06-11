@@ -21,25 +21,11 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <QDate>
-#include <QString>
-#include <QVector>
+// #include <QDate>
+// #include <QString>
+// #include <QVector>
 
-struct ProgramSettings {
-	bool isCorrect;				// is camp set correct
-	QString campName;			// camp name
-	QString campPlace;			// camp place
-	QString campOrg;			// camp organizator
-	QDate campDateBegin;		// camp begin date
-	QDate campDateEnd;			// camp end date
-	int scoutsNo;				// amount of scoutsNo
-	int leadersNo;				// amount of leaders
-	double avgCosts;			// average meal costs per day
-	QString campLeader;			// leader's name
-	QString campQuarter;		// quartermaster's name
-	QString campOthers;			// others
-};
-
+#include "ProgramSettings.h"
 #include "ui_SettingsDialog.h"
 
 class SettingsDialog : public QDialog, public Ui::SettingsDialog {
@@ -48,8 +34,13 @@ public:
 	SettingsDialog(QDialog * parent = NULL);
 	virtual ~SettingsDialog();
 
+public slots:
+	virtual int exec();
+
 private:
 	ProgramSettings * progset;
+
+	static QSettings appSettings;
 };
 
 #endif /* SETTINGSDIALOG_H */

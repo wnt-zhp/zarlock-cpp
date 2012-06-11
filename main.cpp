@@ -28,6 +28,7 @@
 #include "globals.h"
 #include "DBBrowser.h"
 #include "ApplicationUpdater.h"
+#include "ProgramSettings.h"
 
 namespace globals {
 	QPalette palette_ok;
@@ -230,8 +231,16 @@ TD
 	QApplication app(argc, argv, QApplication::GuiClient);
 	configure(argc, argv);
 
+	QDir dir(QDir::homePath() + QString(ZARLOK_HOME));
+
+	QFile fsettings(QDir::homePath() + QString(ZARLOK_HOME) + QString("zarlok.cfg"));
+	globals::appSettings = new QSettings(fsettings.fileName(), QSettings::IniFormat);
+
+	ProgramSettings * ps = ProgramSettings::Instance();
+
 	ApplicationUpdater updater;
-	updater.checkForUpdates();
+	if (ProgramSettings::Instance()->doUpdateCheck)
+		updater.checkForUpdates();
 
 	bool static_build = STATIC_BUILD;
 // 	PR(static_build);
@@ -321,11 +330,6 @@ TD
 
 	splash->showMessage(QObject::tr("Loading settings"));
 
-	QDir dir(QDir::homePath() + QString(ZARLOK_HOME));
-
-	QFile fsettings(QDir::homePath() + QString(ZARLOK_HOME) + QString("zarlok.cfg"));
-	globals::appSettings = new QSettings(fsettings.fileName(), QSettings::IniFormat);
-
 	splash->showMessage(QObject::tr("Starting database browser"));
 
 	DBBrowser dbb;
@@ -339,5 +343,9 @@ TD
 
 	splash->finish(&dbb);
 
-	return app.exec();
+	int retval = app.exec();
+
+	ps->Destroy();
+
+	return retval;
 }

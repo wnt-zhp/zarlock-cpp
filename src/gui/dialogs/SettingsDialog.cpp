@@ -26,10 +26,27 @@
 
 SettingsDialog::SettingsDialog(QDialog * /*parent*/) : Ui::SettingsDialog() {
 	setupUi(this);
+	progset = ProgramSettings::Instance();
 }
 
 SettingsDialog::~SettingsDialog() {
 	DII();
 }
+
+int SettingsDialog::exec() {
+	progset->loadSettings();
+	cb_adv_updatecheck->setChecked(progset->doUpdateCheck);
+
+	int ret = QDialog::exec();
+
+	if (!ret)
+		return ret;
+
+	progset->doUpdateCheck = cb_adv_updatecheck->isChecked();
+	progset->saveSettings();
+
+	return ret;
+}
+
 
 #include "SettingsDialog.moc"

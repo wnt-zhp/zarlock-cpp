@@ -157,7 +157,9 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/misc/EventFilter.cpp
 		src/misc/Logger.cpp
 		src/misc/DataParser.cpp
-		src/${CMAKE_PROJECT_NAME}.cpp
+		src/misc/ProgramSettings.cpp
+
+		src/zarlok.cpp
 
 		main.cpp
 )
