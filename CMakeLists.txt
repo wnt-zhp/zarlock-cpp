@@ -333,12 +333,25 @@ if ( UNIX OR APPLE )
 
 endif ( UNIX OR APPLE )
 
+set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${BIN_INSTALL_DIR}")
+include(InstallRequiredSystemLibraries)
+
+if ( APPLE )
+    set(EXECUTABLE "${CMAKE_PROJECT_NAME}.app")
+elseif ( WIN32 )
+    set(EXECUTABLE "${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+else ()
+    set(EXECUTABLE "${BIN_INSTALL_DIR}/${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+endif ()
+
 if ( APPLE OR WIN32 )
 
     include(DeployQt4)
-    fixup_qt4_executable(${CMAKE_PROJECT_NAME}
+    fixup_qt4_executable(${EXECUTABLE}
 			"qsqlite"
-			"qtcore4 qtgui4 qtsql4 qtnetwork4"
+			""
+			""
+			""
 	)
 
 elseif ( UNIX )
