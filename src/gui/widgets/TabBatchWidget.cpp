@@ -22,7 +22,6 @@
 #include <DimmingMessage.h>
 #include "Database.h"
 #include "DataParser.h"
-#include "DBReports.h"
 
 #include "BatchRecordWidget.h"
 

@@ -86,11 +86,12 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	actionSwitchDB->setShortcuts(QKeySequence::Replace);
 	actionConfigDB->setShortcut(Qt::CTRL+Qt::Key_F5);
 
-	actionCreateSMrep->setShortcut(Qt::Key_F2);
-	actionCreateKMrep->setShortcut(Qt::Key_F3);
+	actionCreateKMrep->setShortcut(Qt::Key_F2);
+	actionCreateSMrep->setShortcut(Qt::Key_F3);
 	actionCreateZZrep->setShortcut(Qt::Key_F4);
 	actionBrowseReports->setShortcut(Qt::Key_F5);
 
+	actionQuit->setMenuRole(QAction::QuitRole);
 	actionAbout->setMenuRole(QAction::AboutRole);
 	actionSettings->setMenuRole(QAction::PreferencesRole);
 
@@ -134,8 +135,8 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	tools->addAction(actionConfigDB);
 // 	tools->addAction(actionSyncDB);
-	tools->addAction(actionCreateSMrep);
 	tools->addAction(actionCreateKMrep);
+	tools->addAction(actionCreateSMrep);
 	tools->addAction(actionCreateZZrep);
 	tools->addAction(actionBrowseReports);
 

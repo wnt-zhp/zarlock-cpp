@@ -80,14 +80,14 @@
         <translation>Licencja</translation>
     </message>
     <message>
-        <location filename="../ui/AboutDialog.ui" line="194"/>
+        <location filename="../ui/AboutDialog.ui" line="204"/>
         <source>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="29"/>
         <source>Zarlok</source>
-        <translation>Żarłok</translation>
+        <translation type="unfinished">Żarłok</translation>
     </message>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="30"/>
@@ -99,7 +99,7 @@
         <source>Project manager:	Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
 Maintainer:		Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</source>
         <translation>Szef projektu:		Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
-Główny programista:	Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</translation>
+Główny programista:	Rafał Lalik &lt;rafal.lalik@zhp.net.pl&gt;</translation>
     </message>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="35"/>
@@ -117,7 +117,7 @@ Główna Kwatera Związku Harcerstwa Polskiego</translation>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="42"/>
         <source>Find us &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation>Znjadź nas na &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
+        <translation>Znajdź nas na &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../gui/dialogs/AboutDialog.cpp" line="47"/>
@@ -137,7 +137,7 @@ Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny -
 Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechnej Licencji Publicznej GNU (GNU General Public License); jeśli nie, zobacz &lt;http://www.gnu.org/licenses/&gt;.</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="65"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="66"/>
         <source>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
@@ -1279,16 +1279,16 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../main.cpp" line="253"/>
-        <location filename="../db/DBReports.cpp" line="71"/>
-        <location filename="../db/DBReports.cpp" line="81"/>
-        <location filename="../db/DBReports.cpp" line="142"/>
-        <location filename="../db/DBReports.cpp" line="152"/>
+        <location filename="../../main.cpp" line="262"/>
+        <location filename="../db/DBReports.cpp" line="76"/>
+        <location filename="../db/DBReports.cpp" line="86"/>
+        <location filename="../db/DBReports.cpp" line="147"/>
+        <location filename="../db/DBReports.cpp" line="157"/>
         <source>Cannot find resources</source>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="254"/>
+        <location filename="../../main.cpp" line="263"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
@@ -1297,44 +1297,67 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="271"/>
+        <location filename="../../main.cpp" line="280"/>
         <source>Preparing palletes</source>
         <translation>Przygotowanie kolorów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="293"/>
+        <location filename="../../main.cpp" line="302"/>
         <source>Loading translations</source>
         <translation>Ładowanie tłumaczeń</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="299"/>
+        <location filename="../../main.cpp" line="308"/>
         <source>Loading resources</source>
         <translation>Ładowanie zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="322"/>
+        <location filename="../../main.cpp" line="331"/>
         <source>Loading settings</source>
         <translation>Ładowanie ustawień</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="329"/>
+        <location filename="../../main.cpp" line="333"/>
         <source>Starting database browser</source>
         <translation>Start menadżera baz danych</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="333"/>
+        <location filename="../../main.cpp" line="337"/>
         <source>Running application</source>
         <translation>Uruchamianie programu</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="74"/>
-        <location filename="../db/DBReports.cpp" line="84"/>
-        <location filename="../db/DBReports.cpp" line="145"/>
-        <location filename="../db/DBReports.cpp" line="155"/>
+        <location filename="../db/DBReports.cpp" line="79"/>
+        <location filename="../db/DBReports.cpp" line="89"/>
+        <location filename="../db/DBReports.cpp" line="150"/>
+        <location filename="../db/DBReports.cpp" line="160"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
         <translation>Sprawdź instalację programu i uruchom ponownie.
 Wybierz Zamknij aby wyjść.</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="300"/>
+        <source>@Article name:@%1 %2 %3@price:@%4
+
+</source>
+        <translation>@Nazwa produktu:@%1 %2 %3@cena:@%4
+
+</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="301"/>
+        <source>No.@Date@Serial number@Income@@Outcome@@Balance@
+</source>
+        <translation>Lp.@Data@Symbol i nr. dowodu@Przychód@@Rozchód@@Saldo@
+</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="302"/>
+        <source>@@@quantity@value@quantity@value@quantity@value
+</source>
+        <translation>@@@ilość@wartość@ilość@wartość@ilość@wartość
+</translation>
     </message>
     <message>
         <location filename="../db/Database.cpp" line="302"/>
@@ -1344,10 +1367,10 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Błąd bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="72"/>
-        <location filename="../db/DBReports.cpp" line="82"/>
-        <location filename="../db/DBReports.cpp" line="143"/>
-        <location filename="../db/DBReports.cpp" line="153"/>
+        <location filename="../db/DBReports.cpp" line="77"/>
+        <location filename="../db/DBReports.cpp" line="87"/>
+        <location filename="../db/DBReports.cpp" line="148"/>
+        <location filename="../db/DBReports.cpp" line="158"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>
@@ -1407,12 +1430,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Wszystkie posiłki przypisane do tego dnia zostaną usuniete. Jesteś pewien?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="113"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="112"/>
         <source>No day selected yet</source>
         <translation>Nie wybrano żadnego dnia</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="193"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="192"/>
         <source>Selected day: &lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Dzień: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
@@ -1467,6 +1490,134 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/QtyInput.cpp" line="26"/>
         <source>quantity</source>
         <translation>ilość</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialog</name>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="14"/>
+        <source>Program settings</source>
+        <translation>Ustawienia programu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="27"/>
+        <source>View</source>
+        <translation>Widok</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="33"/>
+        <source>Table font</source>
+        <translation>Font tabeli</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="39"/>
+        <source>Font family</source>
+        <translation>Rodzina fontu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="49"/>
+        <source>Font size</source>
+        <translation>Rozmiar fontu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="59"/>
+        <source>Font color</source>
+        <translation>Kolor fontu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="76"/>
+        <source>Colors</source>
+        <translation>Kolroy</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="82"/>
+        <source>Even table row color</source>
+        <translation>Parzysty wiersz tabeli</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="89"/>
+        <source>Normal</source>
+        <translation>Normalny</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="99"/>
+        <source>Expiring</source>
+        <translation>Tracący ważność</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="109"/>
+        <source>Valid</source>
+        <translation>Przydatne do spożycia</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="119"/>
+        <source>Expired</source>
+        <translation>Przeterminowane</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="129"/>
+        <source>Odd table row color</source>
+        <translation>Nieparzysty wiersz tabeli</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="209"/>
+        <source>Reports</source>
+        <translation>Raporty</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="215"/>
+        <source>Export format</source>
+        <translation>Format eksportu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="224"/>
+        <source>SM Reports</source>
+        <translation>Raporty SM</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="237"/>
+        <source>ZZ Reports</source>
+        <translation>Raporty ZZ</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="244"/>
+        <source>KM Reports</source>
+        <translation>Raporty KM</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="254"/>
+        <source>Format properties</source>
+        <translation>Ustawienia formatu</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="264"/>
+        <source>CSV</source>
+        <translation>CSV</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="273"/>
+        <source>File encoding</source>
+        <translation>Kodowanie plików</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="280"/>
+        <source>Separator</source>
+        <translation>Separator</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="294"/>
+        <source>PDF</source>
+        <translation>PDF</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="319"/>
+        <source>Advanced</source>
+        <translation>Zaawansowane</translation>
+    </message>
+    <message>
+        <location filename="../ui/SettingsDialog.ui" line="328"/>
+        <source>Check for updates on startup</source>
+        <translation>Sprawdzaj aktualizacje przy starcie</translation>
     </message>
 </context>
 <context>
@@ -1551,13 +1702,13 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="128"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="263"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="262"/>
         <source>Scouts</source>
         <translation>Harcerzy</translation>
     </message>
     <message>
         <location filename="../ui/TabMealWidget.ui" line="155"/>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="269"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="268"/>
         <source>Leaders</source>
         <translation>Kadry</translation>
     </message>
@@ -1567,17 +1718,17 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Pozostali</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="39"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="38"/>
         <source>Select meal to activate this section</source>
         <translation>Wybierz posiłek do aktywacji</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="275"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="274"/>
         <source>Others</source>
         <translation>Inni</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/TabMealWidget.cpp" line="283"/>
+        <location filename="../gui/widgets/TabMealWidget.cpp" line="282"/>
         <source>Give number of persons for meal:</source>
         <translation>Podaj numer osób na posiłek:</translation>
     </message>
@@ -1637,112 +1788,117 @@ Wybierz Zamknij aby wyjść.</translation>
 <context>
     <name>zarlok</name>
     <message>
-        <location filename="../zarlok.cpp" line="60"/>
+        <location filename="../zarlok.cpp" line="62"/>
         <source>Exit</source>
         <translation>Wyjdź</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="63"/>
+        <location filename="../zarlok.cpp" line="66"/>
         <source>About</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="64"/>
+        <location filename="../zarlok.cpp" line="67"/>
         <source>Switch Database</source>
         <translation>Zmień bazę</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="65"/>
+        <location filename="../zarlok.cpp" line="68"/>
         <source>Configure</source>
         <translation>Konfiguruj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="57"/>
+        <location filename="../zarlok.cpp" line="59"/>
         <source>Main</source>
         <translation>Główny</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="54"/>
+        <location filename="../zarlok.cpp" line="56"/>
         <source>Zarlok (WNT)</source>
         <translation>Żarłok (WNT)</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="55"/>
+        <location filename="../zarlok.cpp" line="57"/>
         <source>Zarlok (WNT) | build: </source>
         <translation>ŻArłok (WNR) | build: </translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="58"/>
+        <location filename="../zarlok.cpp" line="60"/>
         <source>Database</source>
         <translation>Baza danych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="68"/>
+        <location filename="../zarlok.cpp" line="63"/>
+        <source>Settings</source>
+        <translation>Ustawienia</translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="71"/>
         <source>Create SM reports</source>
         <translation>Utwórz raport Stanu Magazynu</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="69"/>
+        <location filename="../zarlok.cpp" line="72"/>
         <source>Create KM reports</source>
         <translation>Utwórz raport Kartotek Magazynowych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="70"/>
+        <location filename="../zarlok.cpp" line="73"/>
         <source>Create ZZ reports</source>
         <translation>Utwórz raport Zapotrzebowania Żywieniowego</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="71"/>
+        <location filename="../zarlok.cpp" line="74"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="117"/>
+        <location filename="../zarlok.cpp" line="126"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="139"/>
+        <location filename="../zarlok.cpp" line="148"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="140"/>
+        <location filename="../zarlok.cpp" line="149"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="141"/>
+        <location filename="../zarlok.cpp" line="150"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="142"/>
+        <location filename="../zarlok.cpp" line="151"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="231"/>
+        <location filename="../zarlok.cpp" line="241"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="351"/>
+        <location filename="../zarlok.cpp" line="364"/>
         <source>You need to save your database!</source>
         <translation>Musisz zapisać swoją bazę danych!</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="367"/>
+        <location filename="../zarlok.cpp" line="380"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="367"/>
+        <location filename="../zarlok.cpp" line="380"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="376"/>
+        <location filename="../zarlok.cpp" line="389"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

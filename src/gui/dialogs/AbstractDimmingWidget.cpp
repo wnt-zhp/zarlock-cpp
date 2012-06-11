@@ -134,7 +134,7 @@ QTimeLine * AbstractDimmingWidget::animate(QTimeLine * start_after) {
 
 QTimeLine * AbstractDimmingWidget::animate() {
 	overlay->resize(parent_widget->size());
-	qDebug() << parent_widget->size();
+// 	qDebug() << parent_widget->size();
 	// Stop all running animations
 	sceneX->stop();
 	sceneY->stop();

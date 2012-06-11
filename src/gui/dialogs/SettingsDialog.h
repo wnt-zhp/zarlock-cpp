@@ -40,6 +40,14 @@ public slots:
 private:
 	ProgramSettings * progset;
 
+	static const QStringList exportFormatsNames;
+	static const QStringList exportFormatsCodes;
+
+	enum EncodingCode {UTF8, CP1250, ISO88592};
+	static const QStringList encodingNames;
+	static const QStringList encodingCodes;
+	static const QStringList separatorCodes;
+
 	static QSettings appSettings;
 };
 

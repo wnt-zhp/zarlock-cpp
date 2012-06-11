@@ -19,14 +19,6 @@
 
 #include <cstdio>
 
-#include "DBReports.h"
-
-#include "globals.h"
-#include "config.h"
-
-#include "DataParser.h"
-#include "Database.h"
-
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
@@ -39,6 +31,17 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <qsqlrecord.h>
+#include <QTextCodec>
+
+#include "DBReports.h"
+
+#include "globals.h"
+#include "config.h"
+
+#include "DataParser.h"
+#include "Database.h"
+
+#include "ProgramSettings.h"
 
 struct KMDB_entry {
 	int bid;
@@ -66,6 +69,8 @@ struct KMDB {
 };
 
 void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
+	ProgramSettings * progset = ProgramSettings::Instance();
+
 	QFile batch_tpl(":/resources/report_batch.tpl");
 	if (!batch_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
@@ -289,6 +294,17 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 }
 
 void DBReports::printKMReport(QString * reportsdir) {
+	ProgramSettings * progset = ProgramSettings::Instance();
+
+	QString entry1_tmpl = QString::fromUtf8("@KARTOTEKA MAGAZYNOWA\n@ILOŚCIOWO-WARTOŚCIOWA\n@\n").replace("@", progset->csv_separator);
+	QString entry2_tmpl = QObject::tr("@Article name:@%1 %2 %3@price:@%4\n\n").replace("@", progset->csv_separator);
+	QString entry3_tmpl = QObject::tr("No.@Date@Serial number@Income@@Outcome@@Balance@\n").replace("@", progset->csv_separator);
+	QString entry4_tmpl = QObject::tr("@@@quantity@value@quantity@value@quantity@value\n").replace("@", progset->csv_separator);
+	QString entry5_tmpl = QString("1@2@3@4@5@6@7@8@9").replace("@", progset->csv_separator);
+	QString entry6_tmpl = QString("\n%1@%2@%3@%4@%5@@@%6@%7").replace("@", progset->csv_separator);
+	QString entry7_tmpl = QString("\n%1@%2@%3@@@%4@%5@%6@%7").replace("@", progset->csv_separator);
+
+
 	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance()->openedDatabase());
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
@@ -360,15 +376,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 			continue;
 		}
 
-		QTextStream out(&file);
-		out.setRealNumberNotation(QTextStream::FixedNotation);
-		out.setRealNumberPrecision(2);
-		out.setLocale(QLocale(QLocale::C));
-#if defined(__unix__)
-		out.setCodec("UTF-8");
-#elif defined(_WIN32)
-		out.setCodec("Windows-1250");
-#endif
+		QString outs;
 
 // 		std::cout << "=================== " << ofile.toStdString() << std::endl;
 
@@ -396,23 +404,16 @@ void DBReports::printKMReport(QString * reportsdir) {
 		bool bisempty = false;
 		bool disempty = false;
 
-// 		std::cout << ";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n";
-		out << QString::fromUtf8(";KARTOTEKA MAGAZYNOWA\n;ILOŚCIOWO-WARTOŚCIOWA\n;\n");
-
-// 		std::printf(";Nazwa towaru:;%s %s %s;cena:;%s;\n\n",
-// 					kmm_iter->name.trimmed().toStdString().c_str(), kmm_iter->spec.trimmed().toStdString().c_str(),
-// 					kmm_iter->unit.trimmed().toStdString().c_str(), kmm_iter->price_s.toStdString().c_str());
-
-		out << ";Nazwa towaru:;" << QString::fromUtf8(kmm_iter->name.trimmed().toStdString().c_str()) << " "
-			<< QString::fromUtf8(kmm_iter->spec.trimmed().toStdString().c_str()) << " "
-			<< QString::fromUtf8(kmm_iter->unit.trimmed().toStdString().c_str())
-			<< ";cena:;" << kmm_iter->price_s.toStdString().c_str() << endl << endl;
-
-// 		std::printf("Lp.,Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
-// 		std::cout << "1;2;3;4;5;6;7;8;9\n";
-
-		out << QString::fromUtf8("Lp.;Data;Symbol i nr. dowodu;Przychód;;Rozchód;;Stan;\n;;;ilość;wartość;ilość;wartość;ilość;wartość\n");
-		out << "1;2;3;4;5;6;7;8;9";
+		outs =
+				entry1_tmpl %
+				entry2_tmpl
+					.arg(QString::fromUtf8(kmm_iter->name.trimmed().toStdString().c_str()))
+					.arg(QString::fromUtf8(kmm_iter->spec.trimmed().toStdString().c_str()))
+					.arg(QString::fromUtf8(kmm_iter->unit.trimmed().toStdString().c_str()))
+					.arg(kmm_iter->price_s.toStdString().c_str()) %
+				entry3_tmpl %
+				entry4_tmpl %
+				entry5_tmpl;
 
 		// browse over all batch and distributor entries (sorted by time)
 		while (!bisempty or !disempty) {/*PR(kmm_iter->id);PR(bisempty);PR(disempty);*/
@@ -437,17 +438,16 @@ void DBReports::printKMReport(QString * reportsdir) {
 				tot_qty += kmm_iter->batches[kmm_iteridx].qty;
 				tot_price += kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price;
 
-//				std::cout << "B: " << gidx << ";" << kmm_iter->batches[kmm_iteridx].date.toStdString() << ";"
-//						<< kmm_iter->batches[kmm_iteridx].invoice.toStdString() << ";"
-//						<< kmm_iter->batches[kmm_iteridx].qty << ";" << kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price << ";;;"
-//						<< tot_qty/100 << ";" << tot_price/100 << "\n";
+				QString entry = entry6_tmpl
+					.arg(gidx)
+					.arg(kmm_iter->batches[kmm_iteridx].date.toString(Qt::ISODate).toStdString().c_str())
+					.arg(QString::fromUtf8(kmm_iter->batches[kmm_iteridx].invoice.toStdString().c_str()))
+					.arg(double(kmm_iter->batches[kmm_iteridx].qty)/100)
+					.arg(double(kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price)/10000)
+					.arg(double(tot_qty)/100)
+					.arg(double(tot_price)/10000);
 
-				out << "\n" << gidx << ";" << kmm_iter->batches[kmm_iteridx].date.toString(Qt::ISODate).toStdString().c_str() << ";"
-					<< QString::fromUtf8(kmm_iter->batches[kmm_iteridx].invoice.toStdString().c_str()) << ";"
-					<< double(kmm_iter->batches[kmm_iteridx].qty)/100 << ";"
-					<< double(kmm_iter->batches[kmm_iteridx].qty * kmm_iter->price)/10000 << ";;;"
-					<< double(tot_qty)/100 << ";" << double(tot_price)/10000;
-
+				outs.append(entry);
 				++gidx;
 
 				// if no more batches mark as empty
@@ -484,22 +484,38 @@ void DBReports::printKMReport(QString * reportsdir) {
 				
 				tot_qty -= qty;
 				tot_price -= qty * kmm_iter->price;
-				
-// 				std::cout << "D: " <<  gidx << "," << dd.toStdString() << "," << reas.toStdString() << ",,,"
-// 							<< qty << "," << qty * kmm_iter->price << ","
-// 							<< tot_qty << "," << tot_price << "\n";
-				
-				out << "\n" << gidx << ";" << dd.toString(Qt::ISODate).toStdString().c_str() << ";" << QString::fromUtf8(reas.toStdString().c_str()) << ";;;"
-				<< double(qty)/100 << ";" << double(qty * kmm_iter->price)/10000 << ";"
-				<< double(tot_qty)/100 << ";" << double(tot_price)/10000;
 
+				QString entry = entry7_tmpl
+					.arg(gidx)
+					.arg(dd.toString(Qt::ISODate).toStdString().c_str())
+					.arg(QString::fromUtf8(reas.toStdString().c_str()))
+					.arg(double(qty)/100)
+					.arg(double(qty * kmm_iter->price)/10000)
+					.arg(double(tot_qty)/100)
+					.arg(double(tot_price)/10000);
+
+				outs.append(entry);
 				++gidx;
 			}
 		}
+
+		QTextStream out(&file);
+		out.setRealNumberNotation(QTextStream::FixedNotation);
+		out.setRealNumberPrecision(2);
+		out.setLocale(QLocale(QLocale::C));
+		
+		out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
+
+		out << outs;
 	}
 }
 
 void DBReports::printSMReport(QString * reportsdir) {
+	ProgramSettings * progset = ProgramSettings::Instance();
+
+	QString entry1_tmpl = QString::fromUtf8("Stan magazynów na dzień@%1\n\n").replace("@", progset->csv_separator);
+	QString entry2_tmpl = QString("%1@%2@%3\n").replace("@", progset->csv_separator);
+
 	QDate b_min, b_max, d_min, d_max;
 
 	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % Database::Instance()->openedDatabase());
@@ -619,17 +635,9 @@ void DBReports::printSMReport(QString * reportsdir) {
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 			return;
 
-		QTextStream out(&file);
-		out.setRealNumberNotation(QTextStream::FixedNotation);
-		out.setRealNumberPrecision(2);
-#if defined(__unix__)
-		out.setCodec("UTF-8");
-#elif defined(_WIN32)
-		out.setCodec("Windows-1250");
-#endif
-
-		out << QString::fromUtf8("Stan magazynów na dzień;")
-			<< QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toUtf8()) << endl;
+		QString outs;
+		outs = entry1_tmpl
+			.arg(QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toUtf8()));
 
 		batches_new.clear();
 		batches_removed.clear();
@@ -726,9 +734,23 @@ void DBReports::printSMReport(QString * reportsdir) {
 			int idx = kmm_iter.value();
 			if (batches_in_stock_num[idx] > 0.0) {
 // 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]/100);
-				out << QString::fromUtf8(bnames[idx].toStdString().c_str()) << ";" << QString::fromUtf8(bunits[idx].toStdString().c_str()) << ";" << batches_in_stock_num[idx]/100 << endl;
+				QString entry = entry2_tmpl
+					.arg(QString::fromUtf8(bnames[idx].toStdString().c_str()))
+					.arg(QString::fromUtf8(bunits[idx].toStdString().c_str()))
+					.arg(batches_in_stock_num[idx]/100);
+
+				outs.append(entry);
 			}
 		}
+
+		QTextStream out(&file);
+		out.setRealNumberNotation(QTextStream::FixedNotation);
+		out.setRealNumberPrecision(2);
+		out.setLocale(QLocale(QLocale::C));
+		
+		out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
+		
+		out << outs;
 	}
 
 	if (q.driver()->hasFeature(QSqlDriver::Transactions))
@@ -757,5 +779,3 @@ void DBReports::subVectors(QVector< double >& target, const QVector< double >& s
 	for (int i = 0; i < ss; ++i)
 		target[i] -= source.at(i);
 }
-
-// #include "DBReports.moc"

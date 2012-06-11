@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>550</height>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,9 @@
       <widget class="QLabel" name="label_icon">
        <property name="text">
         <string notr="true">ICON</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -122,6 +125,9 @@
        <property name="text">
         <string notr="true">WNT ICON</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
       </widget>
      </item>
     </layout>
@@ -184,7 +190,7 @@
          <item>
           <widget class="QLabel" name="label_gnu_icon">
            <property name="text">
-            <string>GNU ICON</string>
+            <string notr="true">GNU ICON</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -195,6 +201,9 @@
           <widget class="QLabel" name="label_gpl_icon">
            <property name="text">
             <string notr="true">GPL ICON</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>

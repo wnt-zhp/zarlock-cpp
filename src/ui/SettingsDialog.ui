@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tab_settings">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -212,61 +212,38 @@
        <item>
         <widget class="QGroupBox" name="groupBox_export">
          <property name="title">
-          <string>Export</string>
+          <string>Export format</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_report_format">
-            <property name="text">
-             <string>Export format</string>
-            </property>
-           </widget>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="cb_ZZ_format"/>
           </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_report_encoding">
-            <property name="text">
-             <string>File encoding</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_SM_reports">
             <property name="text">
              <string>SM Reports</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_KM_reports">
-            <property name="text">
-             <string>KM Reports</string>
-            </property>
-           </widget>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="cb_SM_format"/>
           </item>
-          <item row="3" column="0">
+          <item row="0" column="1">
+           <widget class="QComboBox" name="cb_KM_format"/>
+          </item>
+          <item row="2" column="0">
            <widget class="QLabel" name="label_ZZ_reports">
             <property name="text">
              <string>ZZ Reports</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="cb_KM_format"/>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="cb_SM_format"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="cb_ZZ_format"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QComboBox" name="cb_KM_encoding"/>
-          </item>
-          <item row="2" column="2">
-           <widget class="QComboBox" name="cb_SM_encoding"/>
-          </item>
-          <item row="3" column="2">
-           <widget class="QComboBox" name="cb_ZZ_encoding"/>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_KM_reports">
+            <property name="text">
+             <string>KM Reports</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -287,15 +264,28 @@
               <string>CSV</string>
              </attribute>
              <layout class="QFormLayout" name="formLayout_2">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
               <item row="0" column="0">
-               <widget class="QLabel" name="tab_format_csv_separator">
+               <widget class="QLabel" name="label_format_csv_encoding">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>File encoding</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="1" column="0">
+               <widget class="QLabel" name="tab_format_csv_separator">
+                <property name="text">
+                 <string>Separator</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
                <widget class="QComboBox" name="cb_format_csv_separator"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="cb_format_csv_encoding"/>
               </item>
              </layout>
             </widget>

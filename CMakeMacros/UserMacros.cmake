@@ -33,7 +33,7 @@ macro (QT4_ADD_BINRESOURCES outfiles )
 endmacro (QT4_ADD_BINRESOURCES)
 
 if (UNIX AND NOT APPLE)
-	set(APP_ICON ${CMAKE_PROJECT_NAME}.png)
+	set(APP_ICON src/resources/${CMAKE_PROJECT_NAME}.png)
 	configure_file(misc/${CMAKE_PROJECT_NAME}.desktop.in ${CMAKE_PROJECT_NAME}.desktop)
 elseif( WIN32 )
 	set( APP_ICON appicon.o )

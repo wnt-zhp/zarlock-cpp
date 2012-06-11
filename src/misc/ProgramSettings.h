@@ -22,6 +22,7 @@
 #define PROGRAMSETTING_H
 
 #include <QObject>
+#include <QVariant>
 
 class ProgramSettings : public QObject {
 Q_OBJECT
@@ -42,6 +43,30 @@ private:
 
 public:
 	bool doUpdateCheck;			// Check for updates on startup
+
+	enum ExportFormats { CSV, PDF }
+		KMExportFormat,							// Report export format for KM
+		SMExportFormat,							// Report export format for SM
+		ZZExportFormat;							// Report export format for ZZ
+
+		QString csv_encoding;
+		QString csv_separator;
+
+// 	union UExportFormatSettings {
+// 		ExportFormatCSV csv;
+// 		ExportFormatPDF pdf;
+// 		UExportFormatSettings() {}
+// 		~UExportFormatSettings() {}
+// 	}
+// 		uKMExpSett,								// Selected format settings
+// 		uSMExpSett,								// Selected format settings
+// 		uZZExpSett;								// Selected format settings
+
+	QVariant
+		uKMExpSett,								// Selected format settings
+		uSMExpSett,								// Selected format settings
+		uZZExpSett;								// Selected format settings
+
 // 	QString campName;			// camp name
 // 	QString campPlace;			// camp place
 // 	QString campOrg;			// camp organizator

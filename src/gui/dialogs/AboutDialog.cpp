@@ -26,6 +26,7 @@
 AboutDialog::AboutDialog(QDialog * /*parent*/) : Ui::AboutDialog() {
 	setupUi(this);
 
+	label_icon->setPixmap(QPixmap(":/resources/zarlok.png"));
 	label_program->setText(tr("Zarlok"));
 	label_version->setText(tr("version %1").arg(ZARLOK_VERSION));
 	label_authors->setText(tr(
@@ -35,6 +36,8 @@ AboutDialog::AboutDialog(QDialog * /*parent*/) : Ui::AboutDialog() {
 	label_info->setText(tr(
 		"The Zarlok is the food resource management application."
 	));
+
+	label_wnt_icon->setPixmap(QPixmap(":/resources/images/wnt_logo.png"));
 	label_wnt_info->setText(tr(
 		"Wydzial Nowych Technologii\n"
 		"Glowna Kwatera Zwiazku Harcerstwa Polskiego\n"

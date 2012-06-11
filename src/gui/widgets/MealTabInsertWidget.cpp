@@ -21,7 +21,6 @@
 #include "MealTabInsertWidget.h"
 #include "Database.h"
 #include "DataParser.h"
-#include "DBReports.h"
 #include "MealManager.h"
 
 MealTabInsertWidget::MealTabInsertWidget(QWidget * /*parent*/) : Ui::MealTabInsertWidget(), db(Database::Instance()) {

@@ -22,7 +22,6 @@
 #include "DataParser.h"
 #include "TabMealWidget.h"
 #include "TableDelegates.h"
-#include "DBReports.h"
 #include "MealManager.h"
 
 #include <QPushButton>

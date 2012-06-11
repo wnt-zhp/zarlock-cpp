@@ -63,18 +63,28 @@ ProgramSettings::ProgramSettings(const ProgramSettings& ) : QObject() {
 void ProgramSettings::loadSettings() {
 	globals::appSettings->beginGroup("Preferences");
 	doUpdateCheck		= globals::appSettings->value("doUpdateCheck", true).toBool();
-	// 	resize			(globals::appSettings->value("size", QSize(860, 620)).toSize());
-	// 	move			(globals::appSettings->value("pos", QPoint(200, 200)).toPoint());
-	// 	restoreState	(globals::appSettings->value("state").toByteArray());
+
+	KMExportFormat		= (ExportFormats)globals::appSettings->value("KMExportFormat", CSV).toInt();
+	SMExportFormat		= (ExportFormats)globals::appSettings->value("KMExportFormat", CSV).toInt();
+	ZZExportFormat		= (ExportFormats)globals::appSettings->value("KMExportFormat", PDF).toInt();
+
+#if defined(_WIN32)
+	csv_encoding		= globals::appSettings->value("CSVEncoding", "Windows-1250").toString();
+#elif defined(__unix__)
+	csv_encoding		= globals::appSettings->value("CSVEncoding", "UTF-8").toString();
+#endif
+	csv_separator		= globals::appSettings->value("CSVSeparator", ";").toString();
+
 	globals::appSettings->endGroup();
 }
 
 void ProgramSettings::saveSettings() {
 	globals::appSettings->beginGroup("Preferences");
 	globals::appSettings->setValue("doUpdateCheck", this->doUpdateCheck);
-	// 	globals::appSettings->setValue("size", size());
-	// 	globals::appSettings->setValue("pos", pos());
-	// 	globals::appSettings->setValue("state", saveState());
+
+	globals::appSettings->setValue("CSVEncoding", csv_encoding);
+	globals::appSettings->setValue("CSVSeparator", csv_separator);	
+
 	globals::appSettings->endGroup();
 
 	emit settingsUpdated();
