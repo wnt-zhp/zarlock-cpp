@@ -224,6 +224,59 @@ void configure(int argc, char* argv[]) {
 		// 		PR(argv[i]);
 }
 
+void doFirstRunMessage() {
+	globals::appSettings->beginGroup("Misc");
+	QString recentVersion = (globals::appSettings->value("recentRunVersion", QString()).toString());
+
+	// if you don't want update status right now, comment out next line and use later code from lines below
+// 	if (recentVersion != ZARLOK_VERSION)
+// 		globals::appSettings->setValue("recentRunVersion", ZARLOK_VERSION);
+
+	globals::appSettings->endGroup();
+
+/* Snippet to use:
+
+	globals::appSettings->beginGroup("Misc");
+	globals::appSettings->setValue("recentRunVersion", ZARLOK_VERSION);
+	globals::appSettings->endGroup();
+
+*/
+
+	// place your code to execute
+
+	if (recentVersion.isNull()) {
+		QMessageBox mbox;
+		mbox.setIcon(QMessageBox::Information);
+		mbox.setWindowTitle(QObject::tr("Startup information"));
+		mbox.setText(QObject::tr("You are using development version of the Zarlok. "
+				"We strongly recommend you to register to our mailing list "
+				"to retrieve always fresh information about Zarlok. "
+				"Just send e-mail to address "
+				"<a href='mailto:%1?subject='[Newsletter registration]''>%1</a>").arg("zarlok@zhp.net.pl"));
+		mbox.addButton(QObject::tr("Remind me later"), QMessageBox::RejectRole);
+		mbox.addButton(QObject::tr("Ok"), QMessageBox::AcceptRole);
+
+		mbox.setTextFormat(Qt::RichText);
+
+		QLabel * label = qobject_cast<QLabel *>(mbox.layout()->itemAt(1)->widget());
+		if (label)
+			label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+
+		int ret = mbox.exec();
+		PR(ret);
+		PR(QMessageBox::Ok);
+		PR(QMessageBox::Rejected);
+		if (ret == QMessageBox::Ok) {
+			globals::appSettings->beginGroup("Misc");
+			globals::appSettings->setValue("recentRunVersion", ZARLOK_VERSION);
+			globals::appSettings->endGroup();
+		}
+	}
+
+	// end of your code
+	return;
+}
+
 int main(int argc, char ** argv/*, char ** env*/) {
 TD
 	qInstallMsgHandler(myMessageOutput);
@@ -331,6 +384,8 @@ TD
 	splash->showMessage(QObject::tr("Loading settings"));
 
 	splash->showMessage(QObject::tr("Starting database browser"));
+
+	doFirstRunMessage();
 
 	DBBrowser dbb;
 

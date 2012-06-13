@@ -23,8 +23,6 @@
 
 #include "ui_AboutDialog.h"
 
-#include "AboutDialog.h"
-
 class AboutDialog : public QDialog, public Ui::AboutDialog {
 Q_OBJECT
 public:

@@ -75,39 +75,39 @@
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../ui/AboutDialog.ui" line="147"/>
+        <location filename="../ui/AboutDialog.ui" line="153"/>
         <source>License</source>
         <translation>Licencja</translation>
     </message>
     <message>
-        <location filename="../ui/AboutDialog.ui" line="204"/>
+        <location filename="../ui/AboutDialog.ui" line="213"/>
         <source>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;http://www.gnu.org/licenses/gpl.html&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="29"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="30"/>
         <source>Zarlok</source>
-        <translation type="unfinished">Żarłok</translation>
+        <translation>Żarłok</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="30"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="31"/>
         <source>version %1</source>
         <translation>wersja %1</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="31"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="32"/>
         <source>Project manager:	Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
 Maintainer:		Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;</source>
         <translation>Szef projektu:		Jacek Bzdak &lt;jacek.bzdak@wnt.zhp.pl&gt;
 Główny programista:	Rafał Lalik &lt;rafal.lalik@zhp.net.pl&gt;</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="35"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="36"/>
         <source>The Zarlok is the food resource management application.</source>
         <translation>Żarłok jest programem zarządzania żywnością na obozie harcerskim.</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="38"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="41"/>
         <source>Wydzial Nowych Technologii
 Glowna Kwatera Zwiazku Harcerstwa Polskiego
 </source>
@@ -115,12 +115,12 @@ Glowna Kwatera Zwiazku Harcerstwa Polskiego
 Główna Kwatera Związku Harcerstwa Polskiego</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="42"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="45"/>
         <source>Find us &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
         <translation>Znajdź nas na &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="47"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="50"/>
         <source>Copyright (C) 2012  Rafal Lalik &lt;rafal.lalik@zhp.net.pl&gt;
 
 Zarlok is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -137,7 +137,7 @@ Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny -
 Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechnej Licencji Publicznej GNU (GNU General Public License); jeśli nie, zobacz &lt;http://www.gnu.org/licenses/&gt;.</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/AboutDialog.cpp" line="66"/>
+        <location filename="../gui/dialogs/AboutDialog.cpp" line="69"/>
         <source>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</translation>
     </message>
@@ -1279,7 +1279,27 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../main.cpp" line="262"/>
+        <location filename="../../main.cpp" line="250"/>
+        <source>Startup information</source>
+        <translation>Informacje startowe</translation>
+    </message>
+    <message>
+        <location filename="../../main.cpp" line="251"/>
+        <source>You are using development version of the Zarlok. We strongly recommend you to register to our mailing list to retrieve always fresh information about Zarlok. Just send e-mail to address &lt;a href=&apos;mailto:%1?subject=&apos;[Newsletter registration]&apos;&apos;&gt;%1&lt;/a&gt;</source>
+        <translation>Używasz niestabilnej wersji Żarłoka. Zachęcamy Cię do zapisania się na naszą listę mailingową abyś zawsze otrzymywał świeże i ważne informacje o Żarłoku. Po prostu wyślij do nas maila na adres &lt;a href=&apos;mailto:%1?subject=&apos;[Rejestracja]&apos;&apos;&gt;%1&lt;/a&gt;  </translation>
+    </message>
+    <message>
+        <location filename="../../main.cpp" line="256"/>
+        <source>Remind me later</source>
+        <translation>Przypomnij mi później</translation>
+    </message>
+    <message>
+        <location filename="../../main.cpp" line="257"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="../../main.cpp" line="317"/>
         <location filename="../db/DBReports.cpp" line="76"/>
         <location filename="../db/DBReports.cpp" line="86"/>
         <location filename="../db/DBReports.cpp" line="147"/>
@@ -1288,7 +1308,7 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="263"/>
+        <location filename="../../main.cpp" line="318"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
@@ -1297,32 +1317,32 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="280"/>
+        <location filename="../../main.cpp" line="335"/>
         <source>Preparing palletes</source>
         <translation>Przygotowanie kolorów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="302"/>
+        <location filename="../../main.cpp" line="357"/>
         <source>Loading translations</source>
         <translation>Ładowanie tłumaczeń</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="308"/>
+        <location filename="../../main.cpp" line="363"/>
         <source>Loading resources</source>
         <translation>Ładowanie zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="331"/>
+        <location filename="../../main.cpp" line="386"/>
         <source>Loading settings</source>
         <translation>Ładowanie ustawień</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="333"/>
+        <location filename="../../main.cpp" line="388"/>
         <source>Starting database browser</source>
         <translation>Start menadżera baz danych</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="337"/>
+        <location filename="../../main.cpp" line="392"/>
         <source>Running application</source>
         <translation>Uruchamianie programu</translation>
     </message>
