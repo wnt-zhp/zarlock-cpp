@@ -396,7 +396,7 @@ void zarlok::doCreateZZReports() {
 }
 
 void zarlok::doBrowseReports() {
-#if define (_WIN32)
+#if defined (_WIN32)
 	QString reportsdir = "file:///" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase();
 #else
 	QString reportsdir = "file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase();

@@ -94,12 +94,6 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	QTextStream batch_tstream(&batch_tpl);
 	QTextStream sheet_tstream(&sheet_css);
 
-	batch_tstream.setRealNumberNotation(QTextStream::FixedNotation);
-	batch_tstream.setRealNumberPrecision(2);
-	batch_tstream.setLocale(QLocale(QLocale::C));
-		
-	batch_tstream.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
-
 	// Prepare printer
 	QPrinter printer(QPrinter::HighResolution);
 	printer.setPaperSize(QPrinter::A4);
@@ -170,6 +164,12 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 
 	QTextStream dailymeal_tstream(&dailymeal_tpl);
 	QTextStream sheet_tstream(&sheet_css);
+
+	dailymeal_tstream.setRealNumberNotation(QTextStream::FixedNotation);
+	dailymeal_tstream.setRealNumberPrecision(2);
+	dailymeal_tstream.setLocale(QLocale(QLocale::C));
+
+	dailymeal_tstream.setCodec(QTextCodec::codecForName("UTF-8"));
 
 	// Prepare printer
 	QPrinter printer(QPrinter::HighResolution);
