@@ -263,9 +263,6 @@ void doFirstRunMessage() {
 			label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
 
 		int ret = mbox.exec();
-		PR(ret);
-		PR(QMessageBox::Ok);
-		PR(QMessageBox::Rejected);
 		if (ret == QMessageBox::Ok) {
 			globals::appSettings->beginGroup("Misc");
 			globals::appSettings->setValue("recentRunVersion", ZARLOK_VERSION);

@@ -396,11 +396,14 @@ void zarlok::doCreateZZReports() {
 }
 
 void zarlok::doBrowseReports() {
-	
-	// 	QDesktopServices::openUrl(QUrl("file:///home"));
+#if define (_WIN32)
+	QString reportsdir = "file:///" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase();
+#else
 	QString reportsdir = "file://" % QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase();
+#endif
+
 	PR(reportsdir.toStdString());
-	QDesktopServices::openUrl(QUrl(reportsdir));
+	QDesktopServices::openUrl(QUrl(reportsdir, QUrl::TolerantMode));
 }
 
 #include "zarlok.moc"

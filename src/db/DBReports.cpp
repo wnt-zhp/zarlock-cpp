@@ -94,6 +94,12 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	QTextStream batch_tstream(&batch_tpl);
 	QTextStream sheet_tstream(&sheet_css);
 
+	batch_tstream.setRealNumberNotation(QTextStream::FixedNotation);
+	batch_tstream.setRealNumberPrecision(2);
+	batch_tstream.setLocale(QLocale(QLocale::C));
+		
+	batch_tstream.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
+
 	// Prepare printer
 	QPrinter printer(QPrinter::HighResolution);
 	printer.setPaperSize(QPrinter::A4);

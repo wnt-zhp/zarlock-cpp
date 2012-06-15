@@ -101,6 +101,7 @@ void ApplicationUpdater::finishedRequest(QNetworkReply* reply) {
 	// no error received?
 	if (reply->error() != QNetworkReply::NoError) {
 			// handle errors here
+			return;
 	}
 
 	if (reply == replyUpdateCheckRequest) {
