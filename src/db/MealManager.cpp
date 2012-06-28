@@ -85,8 +85,9 @@ int MealManager::insertMeal(int mealdayid, MealManager::MealKind mk) {
 }
 
 int MealManager::insertMeal(int mealdayid, MealManager::MealKind mk, const QString& name) throw (int) {
+	Database * db = Database::Instance();
 // 	PR(mealdayid);
-	if (addMealRecord(mealdayid, mk, name, 0, 0, 0, 0, "")) {
+	if (addMealRecord(mealdayid, mk, name, db->cs()->scoutsNo, db->cs()->leadersNo, 0, 0, "")) {
 
 		int mid = model_meal->index(model_meal->rowCount()-1, MealTableModel::HId).data(Qt::EditRole).toInt();
 

@@ -191,13 +191,13 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Pobieranie aktualizacji...</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="126"/>
-        <location filename="../misc/ApplicationUpdater.cpp" line="150"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="127"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="151"/>
         <source>Updates available</source>
         <translation>Aktualizacje dostępne</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="127"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="128"/>
         <source>Updates of Zarlok is available.
 
 To finish upgrade process this zarlok session must be closed (this will be handled automaticly).
@@ -210,7 +210,7 @@ Do you want download and install updates?</source>
 Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="140"/>
+        <location filename="../misc/ApplicationUpdater.cpp" line="141"/>
         <source>Updates of Zarlok is available.&lt;br /&gt;&lt;br /&gt;You can download it for from here:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</source>
         <translation>Aktualizacja Żarloka jest dostępna.&lt;br /&gt;&lt;br /&gt;Może je pobrać stąd:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</translation>
     </message>
@@ -1299,16 +1299,16 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="317"/>
-        <location filename="../db/DBReports.cpp" line="76"/>
-        <location filename="../db/DBReports.cpp" line="86"/>
-        <location filename="../db/DBReports.cpp" line="147"/>
-        <location filename="../db/DBReports.cpp" line="157"/>
+        <location filename="../../main.cpp" line="312"/>
+        <location filename="../db/DBReports.cpp" line="75"/>
+        <location filename="../db/DBReports.cpp" line="85"/>
+        <location filename="../db/DBReports.cpp" line="146"/>
+        <location filename="../db/DBReports.cpp" line="156"/>
         <source>Cannot find resources</source>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="318"/>
+        <location filename="../../main.cpp" line="313"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
@@ -1317,47 +1317,47 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="335"/>
+        <location filename="../../main.cpp" line="330"/>
         <source>Preparing palletes</source>
         <translation>Przygotowanie kolorów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="357"/>
+        <location filename="../../main.cpp" line="352"/>
         <source>Loading translations</source>
         <translation>Ładowanie tłumaczeń</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="363"/>
+        <location filename="../../main.cpp" line="358"/>
         <source>Loading resources</source>
         <translation>Ładowanie zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="386"/>
+        <location filename="../../main.cpp" line="381"/>
         <source>Loading settings</source>
         <translation>Ładowanie ustawień</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="388"/>
+        <location filename="../../main.cpp" line="383"/>
         <source>Starting database browser</source>
         <translation>Start menadżera baz danych</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="392"/>
+        <location filename="../../main.cpp" line="389"/>
         <source>Running application</source>
         <translation>Uruchamianie programu</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="79"/>
-        <location filename="../db/DBReports.cpp" line="89"/>
-        <location filename="../db/DBReports.cpp" line="150"/>
-        <location filename="../db/DBReports.cpp" line="160"/>
+        <location filename="../db/DBReports.cpp" line="78"/>
+        <location filename="../db/DBReports.cpp" line="88"/>
+        <location filename="../db/DBReports.cpp" line="149"/>
+        <location filename="../db/DBReports.cpp" line="159"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
         <translation>Sprawdź instalację programu i uruchom ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="300"/>
+        <location filename="../db/DBReports.cpp" line="305"/>
         <source>@Article name:@%1 %2 %3@price:@%4
 
 </source>
@@ -1366,14 +1366,14 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="301"/>
+        <location filename="../db/DBReports.cpp" line="306"/>
         <source>No.@Date@Serial number@Income@@Outcome@@Balance@
 </source>
         <translation>Lp.@Data@Symbol i nr. dowodu@Przychód@@Rozchód@@Saldo@
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="302"/>
+        <location filename="../db/DBReports.cpp" line="307"/>
         <source>@@@quantity@value@quantity@value@quantity@value
 </source>
         <translation>@@@ilość@wartość@ilość@wartość@ilość@wartość
@@ -1387,10 +1387,10 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Błąd bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="77"/>
-        <location filename="../db/DBReports.cpp" line="87"/>
-        <location filename="../db/DBReports.cpp" line="148"/>
-        <location filename="../db/DBReports.cpp" line="158"/>
+        <location filename="../db/DBReports.cpp" line="76"/>
+        <location filename="../db/DBReports.cpp" line="86"/>
+        <location filename="../db/DBReports.cpp" line="147"/>
+        <location filename="../db/DBReports.cpp" line="157"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>

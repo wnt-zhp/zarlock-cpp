@@ -69,7 +69,6 @@ struct KMDB {
 };
 
 void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
-	ProgramSettings * progset = ProgramSettings::Instance();
 
 	QFile batch_tpl(":/resources/report_batch.tpl");
 	if (!batch_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
