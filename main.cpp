@@ -82,8 +82,7 @@ void qInfo(globals::VerboseLevel lvl, const char *msg, ...) {
 	}
 }
 
-void myMessageOutput(QtMsgType type, const char *msg)
-{
+void myMessageOutput(QtMsgType type, const char *msg) {
 	switch (type) {
 		case QtDebugMsg:
 			fprintf(stderr, "++DEBUG: %s\n", msg);
@@ -263,7 +262,7 @@ void doFirstRunMessage() {
 			label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
 
 		int ret = mbox.exec();
-		if (ret == QMessageBox::Ok) {
+		if (ret == QMessageBox::Accepted) {
 			globals::appSettings->beginGroup("Misc");
 			globals::appSettings->setValue("recentRunVersion", ZARLOK_VERSION);
 			globals::appSettings->endGroup();
