@@ -32,6 +32,12 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	period_start->calendarWidget()->setFirstDayOfWeek(Qt::Monday);
 	period_stop->calendarWidget()->setFirstDayOfWeek(Qt::Monday);
 
+	period_start->setWrapping(true);
+// 	period_start->setAccelerated(true);
+
+	period_stop->setWrapping(true);
+// 	period_stop->setAccelerated(true);
+
 	edit_name->setText(camp->campName);
 	edit_place->setText(camp->campPlace);
 	edit_org->setText(camp->campOrg);
@@ -46,10 +52,8 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 		period_start->setDate(camp->campDateBegin);
 		period_stop->setDate(camp->campDateEnd);
 	} else {
-		period_start->setMaximumDate(QDate::currentDate());
-		period_stop->setMinimumDate(QDate::currentDate());
-		period_start->setDate(QDate::currentDate());
 		period_stop->setDate(QDate::currentDate());
+		period_start->setDate(QDate::currentDate());
 	}
 
 	connect(edit_name, SIGNAL(textChanged(QString)), this, SLOT(verify()));
@@ -60,19 +64,39 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(spin_avgcosts, SIGNAL(valueChanged(double)), this, SLOT(verify()));
-	connect(period_start, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
-	connect(period_stop, SIGNAL(dateChanged(QDate)), this, SLOT(verifyDate()));
+	connect(period_start, SIGNAL(editingFinished()), this, SLOT(verifyStartDate()));
+	connect(period_stop, SIGNAL(editingFinished()), this, SLOT(verifyStopDate()));
 
-	verifyDate();
+	verifyStartDate();
 }
 
 CampSettingsDialog::~CampSettingsDialog() {
-	FPR(__func__);
+	DII();
 }
 
-void CampSettingsDialog::verifyDate() {
-	period_start->setMaximumDate(period_stop->date());
-	period_stop->setMinimumDate(period_start->date());
+void CampSettingsDialog::verifyStartDate() {
+	QDate stadate = period_start->date();
+	QDate stodate = period_stop->date();
+
+	if (stadate.daysTo(stodate) < 0) {
+		stodate = stadate;
+		period_stop->setDate(stodate);
+	}
+
+	int days = period_start->date().daysTo(period_stop->date())+1;
+	label_days->setText(QString("= ") % tr("%n days", "", days));
+
+	verify();
+}
+
+void CampSettingsDialog::verifyStopDate() {
+	QDate stadate = period_start->date();
+	QDate stodate = period_stop->date();
+
+	if (stadate.daysTo(stodate) < 0) {
+		stadate = stodate;
+		period_start->setDate(stadate);
+	}
 
 	int days = period_start->date().daysTo(period_stop->date())+1;
 	label_days->setText(QString("= ") % tr("%n days", "", days));

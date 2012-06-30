@@ -57,9 +57,10 @@ struct CampProperties {
 #if QT_VERSION >= 0x040800
 	static const QVector<QString> dbsetkeys;
 #else
-	CampProperties();
 	QVector<QString> dbsetkeys;
 #endif /* QT_VERSION >= 0x040800 */
+
+	CampProperties();
 
 	void writeCampSettings();
 	void readCampSettings();

@@ -33,9 +33,15 @@ const QVector<QString> CampProperties::dbsetkeys = QVector<QString>({
 		"AvgCosts", "CampLeader", "CampQuarter", "CampOthers"
 });
 
+CampProperties::CampProperties() {
+	resetCampSettings();
+}
+
 #else
 
 CampProperties::CampProperties() {
+	resetCampSettings();
+
 	dbsetkeys.reserve(Hdummy);
 	dbsetkeys.push_back("IsDatabaseCorrect");
 	dbsetkeys.push_back("CampName");
@@ -72,6 +78,7 @@ void CampProperties::writeCampSettings() {
 }
 
 void CampProperties::readCampSettings() {
+	resetCampSettings();
 	QSqlQuery csq;
 	csq.exec("SELECT * FROM settings;");
 	while(csq.next()) {

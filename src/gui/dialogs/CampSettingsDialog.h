@@ -36,7 +36,8 @@ private:
 
 private slots:
 	void verify();
-	void verifyDate();
+	void verifyStartDate();
+	void verifyStopDate();
 
 private:
 	CampProperties * camp;
