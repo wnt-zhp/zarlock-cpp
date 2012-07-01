@@ -82,6 +82,7 @@ set(${CMAKE_PROJECT_NAME}_FORMS
 		src/ui/AboutDialog.ui
 		src/ui/CampSettingsDialog.ui
 		src/ui/SettingsDialog.ui
+		src/ui/DBExportDialog.ui
 )
 
 ####################################################
@@ -132,6 +133,7 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/gui/dialogs/DimmingMessage.cpp
 		src/gui/dialogs/DimmingWidget.cpp
 		src/gui/dialogs/SettingsDialog.cpp
+		src/gui/dialogs/DBExportDialog.cpp
 
 		src/gui/items/MealFoodListItemDataWidget.cpp
 

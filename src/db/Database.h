@@ -92,6 +92,7 @@ public:
 
 	inline CampProperties * cs() { return camp; };
 	inline const QString & openedDatabase() { return opened_db; }
+	QString fileFromDBName(const QString & dbname, bool fullpath = true, bool adddbext = false);
 
 private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
@@ -99,7 +100,6 @@ private:
 
 	bool createDBStructure(const QString& dbfile);
 
-	QString fileFromDBName(const QString & dbname, bool fullpath = true);
 
 	bool doDBUpgrade(unsigned int version);
 	bool execQueryFromFile(const QString & resource);

@@ -252,6 +252,8 @@ bool Database::delete_database(const QString& dbname) {
 	if (finfofile.exists()) {
 		finfofile.remove();
 	}
+
+	return false;
 }
 
 
@@ -374,9 +376,12 @@ bool Database::execQueryFromFile(const QString& resource) {
 	return true;
 }
 
-QString Database::fileFromDBName(const QString& dbname, bool fullpath) {
+QString Database::fileFromDBName(const QString& dbname, bool fullpath, bool adddbext) {
 	QString safename = dbname;
 	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
+
+	if (adddbext)
+		safename.append(dbfilext);
 
 	if (fullpath)
 		return QDir::homePath() % QString(ZARLOK_HOME ZARLOK_DB) % safename;

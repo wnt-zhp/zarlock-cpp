@@ -39,7 +39,7 @@
 #include "CampSettingsDialog.h"
 #include "AboutDialog.h"
 #include "SettingsDialog.h"
-// public members
+#include "DBExportDialog.h"
 
 /**
  * @brief Główny konstruktor klasy Zarlok. Klasa Zarlok jest główną klasą,
@@ -62,10 +62,12 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	actionQuit = new QAction(QIcon(":/resources/icons/application-exit.png"), tr("Exit"), this);
 	actionSettings = new QAction(QIcon(":/resources/icons/preferences-system.png"), tr("Settings"), this);
 // 	actionPrintReport = new QAction(QIcon(":/resources/icons/printer.png"), tr("Print Report DB"), this);
-// 	actionSaveDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Save DB"), this);
+
 	actionAbout = new QAction(QIcon(":/resources/icons/system-help.png"), tr("About"), this);
+
 	actionSwitchDB = new QAction(QIcon(":/resources/icons/system-switch-user.png"), tr("Switch Database"), this);
 	actionConfigDB = new QAction(QIcon(":/resources/icons/configure.png"), tr("Configure"), this);
+	actionExportDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Export DB"), this);
 
 // 	actionSyncDB = new QAction(tr("Sync database"), this);
 	actionCreateSMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create SM reports"), this);
@@ -85,6 +87,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	actionSwitchDB->setShortcuts(QKeySequence::Replace);
 	actionConfigDB->setShortcut(Qt::CTRL+Qt::Key_F5);
+	actionExportDB->setShortcut(Qt::CTRL+Qt::Key_E);
 
 	actionCreateKMrep->setShortcut(Qt::Key_F2);
 	actionCreateSMrep->setShortcut(Qt::Key_F3);
@@ -130,6 +133,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	dbtoolbar->addWidget(dbiw);
 	dbtoolbar->addWidget(tools);
 	dbtoolbar->addAction(actionSwitchDB);
+// 	dbtoolbar->addAction(actionExportDB);
 	dbtoolbar->setFloatable(false);
 	dbtoolbar->setMovable(false);
 
@@ -139,6 +143,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	tools->addAction(actionCreateSMrep);
 	tools->addAction(actionCreateZZrep);
 	tools->addAction(actionBrowseReports);
+	tools->addAction(actionExportDB);
 
 	tpw = new TabProductsWidget();
 	tbw = new TabBatchWidget();
@@ -156,9 +161,6 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 //	MainTab->setTabShape(QTabWidget::Triangular);
 //	MainTab->setTabPosition(QTabWidget::North);
 
-// 	connect(&db, SIGNAL(databaseDirty()), this, SLOT(db2update()));
-// 	connect(actionSaveDB, SIGNAL(triggered(bool)), this, SLOT(saveDB()));
-
 // 	connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 // 	connect(this, SIGNAL(destroyed(QObject*)), this, SLOT(doExitZarlok()));
 
@@ -170,6 +172,7 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	connect(actionConfigDB, SIGNAL(triggered(bool)), this, SLOT(doCampSettings()));
 	connect(actionSwitchDB, SIGNAL(triggered(bool)), this, SLOT(doSwitchDB()));
+	connect(actionExportDB, SIGNAL(triggered(bool)), this, SLOT(doExportDB()));
 
 // 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
@@ -213,6 +216,12 @@ zarlok::~zarlok() {
 void zarlok::doSwitchDB() {
 	writeSettings();
 	emit switchDB();
+}
+
+void zarlok::doExportDB() {
+	DBExportDialog dbexpdial;
+
+	dbexpdial.exec();
 }
 
 void zarlok::doExitZarlok() {
@@ -358,11 +367,6 @@ void zarlok::about() {
 
 void zarlok::settings() {
 	appsettings->exec();
-}
-
-void zarlok::db2update() {
-	statusbar->showMessage(tr("You need to save your database!"));
-	actionSaveDB->setEnabled(true);
 }
 
 void zarlok::doCreateSMreports() {

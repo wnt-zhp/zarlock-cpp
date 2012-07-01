@@ -551,7 +551,8 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
         <translation>Pozostali</translation>
     </message>
     <message numerus="yes">
-        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="78"/>
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="87"/>
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="102"/>
         <source>%n days</source>
         <translation>
             <numerusform>%n dzień</numerusform>
@@ -589,6 +590,130 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
         <location filename="../gui/widgets/DBBrowser.cpp" line="211"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
+    </message>
+</context>
+<context>
+    <name>DBExportDialog</name>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="14"/>
+        <source>Database Export Dialog</source>
+        <translation>Okno eksportu bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="23"/>
+        <source>Export directory</source>
+        <translation>Katalog docelowy</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="30"/>
+        <source>Export filename</source>
+        <translation>Nazwa pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="37"/>
+        <source>Filename for exported database file/archive (doesn&apos;t include file extension)</source>
+        <translation>Nazwa pliku/archiwum dla eksportowanej bazy danych (nie zawiera rozszerzenia pliku)</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="40"/>
+        <source>export filename</source>
+        <translation>nazwa pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="47"/>
+        <source>Archive format</source>
+        <translation>Format archiwum</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="54"/>
+        <source>Archive format for exported database file.</source>
+        <translation>Rodzaj archiwum dla eksportowanej bazy.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="61"/>
+        <source>Export .info file</source>
+        <translation>Eksportuj plik .info</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="68"/>
+        <source>Export INFO file together with database file. This option is available only if database is exported to archive.</source>
+        <translation>Ekspotuje INFO wspólnie z bazą danych. Ta opcja jest dostępna tylko gdy baza ekposrtowana jest do archiwum.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="78"/>
+        <source>Output filename</source>
+        <translation>nazwa pliku wyjściowego</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="85"/>
+        <source>Displays final export file name.</source>
+        <translation>Wyświetla nazwę docelową pliku.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="91"/>
+        <source>output full filename</source>
+        <translation>wyjściowa nazwa pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="100"/>
+        <source>Export database to given file</source>
+        <translation>Eksportuj bazę do podanego pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="103"/>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="110"/>
+        <source>Reset to default settings</source>
+        <translation>Ustaw domyślne</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="113"/>
+        <source>&amp;Reset</source>
+        <translation>&amp;Domyślne</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="120"/>
+        <source>Cancel export and back to program</source>
+        <translation>Anuluj i powróć do programu</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="123"/>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Anuluj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="137"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="164"/>
+        <source>File exists</source>
+        <translation>Plik istnieje</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="164"/>
+        <source>File %1 exists. Do you want overwrite it?</source>
+        <translation>Plik %1 istnieje. Czy chcesz go nadpisać?</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="167"/>
+        <source>File remove</source>
+        <translation>Usuń plik</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="167"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="178"/>
+        <source>Unable to overwrite file %1. Export aborted.</source>
+        <translation>Nie można nadpisać pliku %1. Eksport przerwany.</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="178"/>
+        <source>File copy</source>
+        <translation>Kopiuj plik</translation>
     </message>
 </context>
 <context>
@@ -717,12 +842,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="541"/>
+        <location filename="../db/Database.cpp" line="546"/>
         <source>Updating database...</source>
         <translation>Aktualizacja bazy danych...</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="541"/>
+        <location filename="../db/Database.cpp" line="546"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -732,27 +857,27 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="397"/>
+        <location filename="../db/Database.cpp" line="402"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="420"/>
+        <location filename="../db/Database.cpp" line="425"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="421"/>
+        <location filename="../db/Database.cpp" line="426"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="452"/>
+        <location filename="../db/Database.cpp" line="457"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="453"/>
+        <location filename="../db/Database.cpp" line="458"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -1279,27 +1404,27 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../main.cpp" line="250"/>
+        <location filename="../../main.cpp" line="249"/>
         <source>Startup information</source>
         <translation>Informacje startowe</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="251"/>
+        <location filename="../../main.cpp" line="250"/>
         <source>You are using development version of the Zarlok. We strongly recommend you to register to our mailing list to retrieve always fresh information about Zarlok. Just send e-mail to address &lt;a href=&apos;mailto:%1?subject=&apos;[Newsletter registration]&apos;&apos;&gt;%1&lt;/a&gt;</source>
         <translation>Używasz niestabilnej wersji Żarłoka. Zachęcamy Cię do zapisania się na naszą listę mailingową abyś zawsze otrzymywał świeże i ważne informacje o Żarłoku. Po prostu wyślij do nas maila na adres &lt;a href=&apos;mailto:%1?subject=&apos;[Rejestracja]&apos;&apos;&gt;%1&lt;/a&gt;  </translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="256"/>
+        <location filename="../../main.cpp" line="255"/>
         <source>Remind me later</source>
         <translation>Przypomnij mi później</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="257"/>
+        <location filename="../../main.cpp" line="256"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="312"/>
+        <location filename="../../main.cpp" line="311"/>
         <location filename="../db/DBReports.cpp" line="75"/>
         <location filename="../db/DBReports.cpp" line="85"/>
         <location filename="../db/DBReports.cpp" line="146"/>
@@ -1308,7 +1433,7 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="313"/>
+        <location filename="../../main.cpp" line="312"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
@@ -1317,32 +1442,32 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="330"/>
+        <location filename="../../main.cpp" line="329"/>
         <source>Preparing palletes</source>
         <translation>Przygotowanie kolorów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="352"/>
+        <location filename="../../main.cpp" line="351"/>
         <source>Loading translations</source>
         <translation>Ładowanie tłumaczeń</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="358"/>
+        <location filename="../../main.cpp" line="357"/>
         <source>Loading resources</source>
         <translation>Ładowanie zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="381"/>
+        <location filename="../../main.cpp" line="380"/>
         <source>Loading settings</source>
         <translation>Ładowanie ustawień</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="383"/>
+        <location filename="../../main.cpp" line="382"/>
         <source>Starting database browser</source>
         <translation>Start menadżera baz danych</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="389"/>
+        <location filename="../../main.cpp" line="388"/>
         <source>Running application</source>
         <translation>Uruchamianie programu</translation>
     </message>
@@ -1380,9 +1505,9 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="302"/>
-        <location filename="../db/Database.cpp" line="320"/>
-        <location filename="../db/Database.cpp" line="325"/>
+        <location filename="../db/Database.cpp" line="304"/>
+        <location filename="../db/Database.cpp" line="322"/>
+        <location filename="../db/Database.cpp" line="327"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
@@ -1818,12 +1943,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="67"/>
+        <location filename="../zarlok.cpp" line="68"/>
         <source>Switch Database</source>
         <translation>Zmień bazę</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="68"/>
+        <location filename="../zarlok.cpp" line="69"/>
         <source>Configure</source>
         <translation>Konfiguruj</translation>
     </message>
@@ -1853,72 +1978,72 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="71"/>
+        <location filename="../zarlok.cpp" line="70"/>
+        <source>Export DB</source>
+        <translation>Eksportuj bazę danych</translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="73"/>
         <source>Create SM reports</source>
         <translation>Utwórz raport Stanu Magazynu</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="72"/>
+        <location filename="../zarlok.cpp" line="74"/>
         <source>Create KM reports</source>
         <translation>Utwórz raport Kartotek Magazynowych</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="73"/>
+        <location filename="../zarlok.cpp" line="75"/>
         <source>Create ZZ reports</source>
         <translation>Utwórz raport Zapotrzebowania Żywieniowego</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="74"/>
+        <location filename="../zarlok.cpp" line="76"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="126"/>
+        <location filename="../zarlok.cpp" line="129"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="148"/>
+        <location filename="../zarlok.cpp" line="153"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="149"/>
+        <location filename="../zarlok.cpp" line="154"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="150"/>
+        <location filename="../zarlok.cpp" line="155"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="151"/>
+        <location filename="../zarlok.cpp" line="156"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="241"/>
+        <location filename="../zarlok.cpp" line="250"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="364"/>
-        <source>You need to save your database!</source>
-        <translation>Musisz zapisać swoją bazę danych!</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="380"/>
+        <location filename="../zarlok.cpp" line="384"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="380"/>
+        <location filename="../zarlok.cpp" line="384"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="389"/>
+        <location filename="../zarlok.cpp" line="393"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

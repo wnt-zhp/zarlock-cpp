@@ -54,23 +54,23 @@ signals:
 	void switchDB();
 
 private slots:
-	void doSwitchDB();
-	void doExitZarlok();
+	virtual void doExitZarlok();
+	virtual void about();
+	virtual void settings();
+
+	virtual void doSwitchDB();
+	virtual void doExportDB();
+
 	bool doCampSettings();
 
-	void printDailyReport();
-
-	void about();
-	void settings();
+	virtual void printDailyReport();
 
 // 	void tabChanged(int index);
-	void db2update();
 
 	virtual void doCreateSMreports();
 	virtual void doCreateKMreports();
 	virtual void doCreateZZReports();
 	virtual void doBrowseReports();
-	
 
 private:
 	Database * db;
@@ -89,7 +89,7 @@ private:
 	QAction * actionAbout;
 
 	QAction * actionPrintReport;
-	QAction * actionSaveDB;
+	QAction * actionExportDB;
 
 	QAction * actionSwitchDB;
 	QAction * actionConfigDB;

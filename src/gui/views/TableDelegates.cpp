@@ -75,7 +75,7 @@ void QtyDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, c
 }
 
 void QtyOfAllDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-	int progress = index.data().toInt();
+// 	int progress = index.data().toInt();
 
 	QString str = index.data(Qt::DisplayRole).toString().trimmed();
 	QString qtystr = str.left(str.indexOf(' '));
