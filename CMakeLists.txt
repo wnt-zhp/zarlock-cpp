@@ -50,6 +50,7 @@ include_directories(
 		${CMAKE_CURRENT_BINARY_DIR}
 		src
 		src/misc
+		src/misc/net
 		src/ui
 		src/gui
 		src/gui/widgets
@@ -155,11 +156,16 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/db/CampProperties.cpp
 		src/db/MealManager.cpp
 
-		src/misc/ApplicationUpdater.cpp
 		src/misc/EventFilter.cpp
 		src/misc/Logger.cpp
 		src/misc/DataParser.cpp
 		src/misc/ProgramSettings.cpp
+
+		src/misc/net/NetworkServicesManager.cpp
+		src/misc/net/AbstractNetworkService.cpp
+		src/misc/net/UpdateCheckService.cpp
+		src/misc/net/UpdateDownloadService.cpp
+		src/misc/net/FeedService.cpp
 
 		src/zarlok.cpp
 

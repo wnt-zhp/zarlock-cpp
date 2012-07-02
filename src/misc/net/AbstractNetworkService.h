@@ -18,8 +18,8 @@
 */
 
 
-#ifndef APPLICATIONUPDATER_H
-#define APPLICATIONUPDATER_H
+#ifndef ABSTRACTNETWORKSERVICE_H
+#define ABSTRACTNETWORKSERVICE_H
 
 #include <QNetworkAccessManager>
 #include <QUrl>
@@ -28,35 +28,29 @@
 #include <QString>
 #include <QProgressDialog>
 
-class ApplicationUpdater : public QObject {
+class AbstractNetworkService : public QObject {
 Q_OBJECT
 public:
-	ApplicationUpdater(QObject * parent = NULL);
-	virtual ~ApplicationUpdater();
+	AbstractNetworkService(QNetworkAccessManager & netmanager, QObject * parent = NULL);
+	virtual ~AbstractNetworkService();
 
 public slots:
-	void checkForUpdates();
-	void downloadUpdates(const QString & download_url);
+	virtual void sendRequest(const QUrl & url);
+	virtual void sendRequest(const QString & url);
 
-private slots:
-	void finishedRequest(QNetworkReply*);
-	void downloadProgress(qint64, qint64);
+protected slots:
+	virtual void requestFinished() = 0;
+
+	virtual void error(QNetworkReply::NetworkError);
+	virtual void metaDataChanged();
+
+protected:
+	QNetworkReply * reply;
 
 private:
-	QNetworkAccessManager* nam;
+	QNetworkAccessManager & nam;
 
-	QNetworkReply * replyUpdateCheckRequest;
-	QNetworkReply * replyDownloadRequest;
-
-	QString downloaded_filename;
-
-	QProgressDialog download_progress;
-
-	enum DWCodes { DURL, DWIN, DDEB, DRPM, DTBZ2, DDUMMY };
-	QString url_download_values[DDUMMY];
-// 	QString url_download_win;
-// 	QString url_download_deb;
-// 	QString url_download_rpm;
+	QString request;
 };
 
-#endif // APPLICATIONUPDATER_H
+#endif // ABSTRACTNETWORKSERVICE_H

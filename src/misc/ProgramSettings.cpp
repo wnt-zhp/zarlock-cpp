@@ -36,8 +36,8 @@ ProgramSettings * ProgramSettings::pset = NULL;
  **/
 ProgramSettings * ProgramSettings::Instance() {
 	if (!pset) {
-		pset = new ProgramSettings;
 		FI();
+		pset = new ProgramSettings;
 		std::cout << "++ Create ProgramSettings instance\n";
 	}
 
@@ -50,6 +50,7 @@ void ProgramSettings::Destroy() {
 }
 
 ProgramSettings::~ProgramSettings() {
+	DI();
 	saveSettings();
 }
 

@@ -27,7 +27,8 @@
 #include "version.h"
 #include "globals.h"
 #include "DBBrowser.h"
-#include "ApplicationUpdater.h"
+#include "NetworkServicesManager.h"
+#include <AbstractNetworkService.h>
 #include "ProgramSettings.h"
 
 namespace globals {
@@ -144,11 +145,9 @@ void preparePallete() {
 
 void configure(int argc, char* argv[]) {
 	int c;
-	
-	while (1)
-	{
-		static struct option long_options[] =
-		{
+
+	while (true) {
+		static struct option long_options[] = {
 			/* These options set a flag. */
 			{"version", no_argument,       0, 'V'},
 			{"verbose", no_argument,       0, 'v'},
@@ -161,16 +160,15 @@ void configure(int argc, char* argv[]) {
 		};
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		
-		c = getopt_long (argc, argv, "bvwq", 
+
+		c = getopt_long (argc, argv, "Vvwqb", 
 						 long_options, &option_index);
-		
+
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
 		
-		switch (c)
-		{
+		switch (c) {
 			case 0:
 				/* If this option set a flag, do nothing else now. */
 				if (long_options[option_index].flag != 0)
@@ -180,10 +178,10 @@ void configure(int argc, char* argv[]) {
 					printf (" with arg %s", optarg);
 				printf ("\n");
 				break;
-			case 'b':PR(c);
-			globals::show_browser = true;
+			case 'b':
+				globals::show_browser = true;
 			// 				puts ("option -b\n");
-			break;
+				break;
 			case 'v':
 				globals::verbose_flag[0] = true;
 				break;
@@ -201,16 +199,16 @@ void configure(int argc, char* argv[]) {
 				/* getopt_long already printed an error message. */
 				break;
 			default:
-				abort ();
+				abort();
 		}
 	}
-	
+
 	/* Instead of reporting ‘--verbose’
 	 * and ‘--brief’ as they are encountered,
 	 * we report the final status resulting from them. */
 	// 	if (verbose_flag)
 	// 		puts ("verbose flag is set");
-	
+
 	/* Print any remaining command line arguments (not options). */
 	// 	if (optind < argc) {
 		// 		printf ("non-option ARGV-elements: ");
@@ -218,7 +216,7 @@ void configure(int argc, char* argv[]) {
 		// 			printf ("%s ", argv[optind++]);
 		// 		putchar ('\n');
 		// 	}
-		
+	
 		// 	for (int i = 0; i < argc; ++i)
 		// 		PR(argv[i]);
 }
@@ -274,7 +272,6 @@ void doFirstRunMessage() {
 }
 
 int main(int argc, char ** argv/*, char ** env*/) {
-TD
 	qInstallMsgHandler(myMessageOutput);
 
 	QApplication app(argc, argv, QApplication::GuiClient);
@@ -287,16 +284,16 @@ TD
 
 	ProgramSettings * ps = ProgramSettings::Instance();
 
-	ApplicationUpdater updater;
-	if (ProgramSettings::Instance()->doUpdateCheck)
-		updater.checkForUpdates();
+	NetworkServicesManager netmanager;
+	if (ProgramSettings::Instance()->doUpdateCheck) {
+		netmanager.checkForUpdates();
+		netmanager.getFeed();
+
+	}
 
 	bool static_build = STATIC_BUILD;
-// 	PR(static_build);
 
-	qDebug() << "Runtime app: " << argv[0];
-// 	qDebug() << ZARLOK_VERSION;
-	PR(ZARLOK_VERSION);
+	qDebug() << "Runtime app:" << argv[0] << ZARLOK_VERSION;
 
 #ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
 
@@ -315,11 +312,11 @@ TD
 		"Click Close to exit.");
 
 	if (!static_build) {
-	QString resource_splash = SHARE "/resources/splash.rcc";
-	if (!QResource::registerResource(resource_splash)) {
-		QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_splash), QMessageBox::Close);
-		exit(EXIT_FAILURE);
-	}
+		QString resource_splash = SHARE "/resources/splash.rcc";
+		if (!QResource::registerResource(resource_splash)) {
+			QMessageBox::critical(0, resWarnMsgTitle, resWarnMsg.arg(resource_splash), QMessageBox::Close);
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	QPixmap splash_pixmap(":/resources/splash/splash.png");
@@ -391,9 +388,7 @@ TD
 
 // 	dbb.show();
 	dbb.goBrowser();
-
 	splash->finish(&dbb);
-
 	int retval = app.exec();
 
 	ps->Destroy();
