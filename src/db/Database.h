@@ -109,8 +109,7 @@ public slots:
 	virtual bool removeBatchRecord(const QVector<int> & ids, bool askForConfirmation = true);
 	virtual bool removeDistributorRecord(const QVector<int> & ids, bool askForConfirmation = true);
 
-private slots:
-	bool rebuild_models();
+	virtual bool rebuild_models();
 
 signals:
 	void databaseDirty();

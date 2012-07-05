@@ -37,23 +37,39 @@ public:
 
 public slots:
 	virtual int exec();
-	virtual void reset();
+	virtual void resetExportForm();
+	virtual void resetImportForm();
 
 private slots:
-	virtual void validateFormatSelection(int index);
-	virtual void validateForm();
-	virtual void selectDirectory();
+	virtual void validateExportForm();
+	virtual void validateImportForm();
+
+	virtual void selectExportDirectory();
+	virtual void selectImportFile();
 
 	virtual void doExport();
+	virtual void doImport();
 
 private:
-	static const QStringList exportArchNames;
-	static const QStringList exportArchCodes;
-	static const QStringList exportArchExts;
+	void convertToCharArray(int number, char * array, int size);
+	void convertFromCharArray(int & number, char * array, int size);
+
+	void uncompressImportFile();
+
+private:
+	static const QString exportArchName;
+	static const QString exportArchExt;
 
 	static QSettings appSettings;
 
 	QCompleter * dircompleter;
+
+	// import fields
+	char has_info;
+	int size_iname, size_inname;
+	int size_idata, size_indata;
+	QByteArray iname, inname;
+	QByteArray idata, indata;
 };
 
 #endif /* DBEXPORTDIALOG_H */

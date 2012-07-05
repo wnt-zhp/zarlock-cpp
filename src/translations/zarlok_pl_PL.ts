@@ -184,38 +184,6 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
 </context>
 <context>
-    <name>ApplicationUpdater</name>
-    <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="35"/>
-        <source>Downloading...</source>
-        <translation>Pobieranie aktualizacji...</translation>
-    </message>
-    <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="127"/>
-        <location filename="../misc/ApplicationUpdater.cpp" line="151"/>
-        <source>Updates available</source>
-        <translation>Aktualizacje dostępne</translation>
-    </message>
-    <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="128"/>
-        <source>Updates of Zarlok is available.
-
-To finish upgrade process this zarlok session must be closed (this will be handled automaticly).
-
-Do you want download and install updates?</source>
-        <translation>Aktualizacja Żarłoka jest dostępna.
-
-Żeby dokończyć proces aktualizacji ten program musi zostać zamknięty (Zostanie to dokonane automatycznie).
-
-Czy chcesz pobrać i zainstalować aktualizcje?</translation>
-    </message>
-    <message>
-        <location filename="../misc/ApplicationUpdater.cpp" line="141"/>
-        <source>Updates of Zarlok is available.&lt;br /&gt;&lt;br /&gt;You can download it for from here:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</source>
-        <translation>Aktualizacja Żarloka jest dostępna.&lt;br /&gt;&lt;br /&gt;Może je pobrać stąd:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</translation>
-    </message>
-</context>
-<context>
     <name>BRWidget</name>
     <message>
         <location filename="../ui/BatchRecordWidget.ui" line="17"/>
@@ -601,119 +569,178 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
         <location filename="../ui/DBExportDialog.ui" line="23"/>
+        <source>E&amp;xit</source>
+        <translation>&amp;Wyjdź</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="30"/>
+        <source>Export</source>
+        <translation>Eksport</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="39"/>
         <source>Export directory</source>
         <translation>Katalog docelowy</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="30"/>
+        <location filename="../ui/DBExportDialog.ui" line="60"/>
         <source>Export filename</source>
         <translation>Nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="37"/>
+        <location filename="../ui/DBExportDialog.ui" line="67"/>
         <source>Filename for exported database file/archive (doesn&apos;t include file extension)</source>
         <translation>Nazwa pliku/archiwum dla eksportowanej bazy danych (nie zawiera rozszerzenia pliku)</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="40"/>
+        <location filename="../ui/DBExportDialog.ui" line="70"/>
         <source>export filename</source>
         <translation>nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="47"/>
-        <source>Archive format</source>
-        <translation>Format archiwum</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="54"/>
-        <source>Archive format for exported database file.</source>
-        <translation>Rodzaj archiwum dla eksportowanej bazy.</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="61"/>
+        <location filename="../ui/DBExportDialog.ui" line="77"/>
         <source>Export .info file</source>
         <translation>Eksportuj plik .info</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="68"/>
+        <location filename="../ui/DBExportDialog.ui" line="84"/>
         <source>Export INFO file together with database file. This option is available only if database is exported to archive.</source>
         <translation>Ekspotuje INFO wspólnie z bazą danych. Ta opcja jest dostępna tylko gdy baza ekposrtowana jest do archiwum.</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="78"/>
+        <location filename="../ui/DBExportDialog.ui" line="94"/>
         <source>Output filename</source>
         <translation>nazwa pliku wyjściowego</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="85"/>
+        <location filename="../ui/DBExportDialog.ui" line="101"/>
         <source>Displays final export file name.</source>
         <translation>Wyświetla nazwę docelową pliku.</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="91"/>
+        <location filename="../ui/DBExportDialog.ui" line="107"/>
         <source>output full filename</source>
         <translation>wyjściowa nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="100"/>
+        <location filename="../ui/DBExportDialog.ui" line="133"/>
+        <source>Import</source>
+        <translation>Import</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="142"/>
+        <source>Import file</source>
+        <translation>Plik do importu</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="163"/>
+        <source>Database name</source>
+        <translation>Nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="170"/>
+        <source>.info db name</source>
+        <translation>Zawartość .info</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="180"/>
+        <source>real database name; </source>
+        <translation>oryginalnabaza danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="190"/>
+        <source>imported database name; </source>
+        <translation>Nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="197"/>
+        <source>Import .info file</source>
+        <translation>Importuj plik .info</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="216"/>
         <source>Export database to given file</source>
         <translation>Eksportuj bazę do podanego pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="103"/>
+        <location filename="../ui/DBExportDialog.ui" line="219"/>
         <source>&amp;Export</source>
         <translation>&amp;Eksportuj</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="110"/>
+        <location filename="../ui/DBExportDialog.ui" line="226"/>
         <source>Reset to default settings</source>
         <translation>Ustaw domyślne</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="113"/>
+        <location filename="../ui/DBExportDialog.ui" line="229"/>
         <source>&amp;Reset</source>
         <translation>&amp;Domyślne</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="120"/>
+        <location filename="../ui/DBExportDialog.ui" line="240"/>
+        <source>&amp;Import</source>
+        <translation>&amp;Import</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="247"/>
+        <source>R&amp;eset</source>
+        <translation>R&amp;esetuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportDialog.ui" line="20"/>
         <source>Cancel export and back to program</source>
         <translation>Anuluj i powróć do programu</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="123"/>
-        <source>&amp;Cancel</source>
-        <translation>&amp;Anuluj</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="137"/>
+        <location filename="../ui/DBExportDialog.ui" line="51"/>
+        <location filename="../ui/DBExportDialog.ui" line="154"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="164"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="126"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="221"/>
         <source>File exists</source>
         <translation>Plik istnieje</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="164"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="126"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="221"/>
         <source>File %1 exists. Do you want overwrite it?</source>
         <translation>Plik %1 istnieje. Czy chcesz go nadpisać?</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="167"/>
-        <source>File remove</source>
-        <translation>Usuń plik</translation>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="134"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="229"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="239"/>
+        <source>File open</source>
+        <translation>Otwarcie pliku</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="167"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="178"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="142"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="307"/>
+        <source>Input file open</source>
+        <translation>Plik wejściowy</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="142"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="149"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="307"/>
+        <source>Unable to open source file %1. Export aborted.</source>
+        <translation>Nie można otworzyć pliku %1. Eksport przerwany.</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="149"/>
+        <source>Input info file open</source>
+        <translation>Otwarcie pliku .info</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="134"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="229"/>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="239"/>
         <source>Unable to overwrite file %1. Export aborted.</source>
         <translation>Nie można nadpisać pliku %1. Eksport przerwany.</translation>
-    </message>
-    <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="178"/>
-        <source>File copy</source>
-        <translation>Kopiuj plik</translation>
     </message>
 </context>
 <context>
@@ -1404,27 +1431,27 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../main.cpp" line="249"/>
+        <location filename="../../main.cpp" line="247"/>
         <source>Startup information</source>
         <translation>Informacje startowe</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="250"/>
+        <location filename="../../main.cpp" line="248"/>
         <source>You are using development version of the Zarlok. We strongly recommend you to register to our mailing list to retrieve always fresh information about Zarlok. Just send e-mail to address &lt;a href=&apos;mailto:%1?subject=&apos;[Newsletter registration]&apos;&apos;&gt;%1&lt;/a&gt;</source>
         <translation>Używasz niestabilnej wersji Żarłoka. Zachęcamy Cię do zapisania się na naszą listę mailingową abyś zawsze otrzymywał świeże i ważne informacje o Żarłoku. Po prostu wyślij do nas maila na adres &lt;a href=&apos;mailto:%1?subject=&apos;[Rejestracja]&apos;&apos;&gt;%1&lt;/a&gt;  </translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="255"/>
+        <location filename="../../main.cpp" line="253"/>
         <source>Remind me later</source>
         <translation>Przypomnij mi później</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="256"/>
+        <location filename="../../main.cpp" line="254"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="311"/>
+        <location filename="../../main.cpp" line="308"/>
         <location filename="../db/DBReports.cpp" line="75"/>
         <location filename="../db/DBReports.cpp" line="85"/>
         <location filename="../db/DBReports.cpp" line="146"/>
@@ -1433,7 +1460,7 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="312"/>
+        <location filename="../../main.cpp" line="309"/>
         <source>Unable to find resources in %1
 Check your installation and try to run again.
 Click Close to exit.</source>
@@ -1442,32 +1469,32 @@ Sprawdz poprawność instalacji i uruchom program ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="329"/>
+        <location filename="../../main.cpp" line="326"/>
         <source>Preparing palletes</source>
         <translation>Przygotowanie kolorów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="351"/>
+        <location filename="../../main.cpp" line="348"/>
         <source>Loading translations</source>
         <translation>Ładowanie tłumaczeń</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="357"/>
+        <location filename="../../main.cpp" line="354"/>
         <source>Loading resources</source>
         <translation>Ładowanie zasobów</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="380"/>
+        <location filename="../../main.cpp" line="377"/>
         <source>Loading settings</source>
         <translation>Ładowanie ustawień</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="382"/>
+        <location filename="../../main.cpp" line="379"/>
         <source>Starting database browser</source>
         <translation>Start menadżera baz danych</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="388"/>
+        <location filename="../../main.cpp" line="385"/>
         <source>Running application</source>
         <translation>Uruchamianie programu</translation>
     </message>
@@ -1619,6 +1646,11 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../db/MealManager.cpp" line="65"/>
         <source>Other</source>
         <translation>Inny</translation>
+    </message>
+    <message>
+        <location filename="../gui/dialogs/DBExportDialog.cpp" line="31"/>
+        <source>Zarlok archive</source>
+        <translation>Archiwum Żarłoka</translation>
     </message>
 </context>
 <context>
@@ -1928,6 +1960,41 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/UnitInput.cpp" line="26"/>
         <source>unit</source>
         <translation>jednostka</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateCheckService</name>
+    <message>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="69"/>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="93"/>
+        <source>Updates available</source>
+        <translation>Aktualizacje dostępne</translation>
+    </message>
+    <message>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="70"/>
+        <source>Updates of Zarlok is available.
+
+To finish upgrade process this zarlok session must be closed (this will be handled automaticly).
+
+Do you want download and install updates?</source>
+        <translation>Aktualizacja Żarłoka jest dostępna.
+
+Żeby dokończyć proces aktualizacji ten program musi zostać zamknięty (Zostanie to dokonane automatycznie).
+
+Czy chcesz pobrać i zainstalować aktualizcje?</translation>
+    </message>
+    <message>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="83"/>
+        <source>Updates of Zarlok is available.&lt;br /&gt;&lt;br /&gt;You can download it for from here:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</source>
+        <translation>Aktualizacja Żarloka jest dostępna.&lt;br /&gt;&lt;br /&gt;Może je pobrać stąd:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateDownloadService</name>
+    <message>
+        <location filename="../misc/net/UpdateDownloadService.cpp" line="34"/>
+        <source>Downloading...</source>
+        <translation>Pobieranie aktualizacji...</translation>
     </message>
 </context>
 <context>
