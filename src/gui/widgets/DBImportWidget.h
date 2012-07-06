@@ -18,31 +18,28 @@
 */
 
 
-#ifndef DBEXPORTDIALOG_H
-#define DBEXPORTDIALOG_H
+#ifndef DBIMPORTWIDGET_H
+#define DBIMPORTWIDGET_H
 
-#include <QCompleter>
+#include "ui_DBImportWidget.h"
+#include "DBExportCommon.h"
 
-#include "ui_DBExportDialog.h"
-#include "DBExportWidget.h"
-#include "DBImportWidget.h"
-
-class DBExportDialog : public QDialog, public Ui::DBExportDialog {
-	Q_OBJECT
+class DBImportWidget : public QWidget, public Ui::DBImportWidget {
+Q_OBJECT
 public:
-	DBExportDialog(QDialog * parent = NULL);
-	virtual ~DBExportDialog();
+	DBImportWidget(QWidget * parent = NULL);
+	virtual ~DBImportWidget();
 
 public slots:
-	virtual int exec();
+	virtual void resetForm();
+	
+private slots:
+	virtual void validateForm();
+	virtual void selectImportFile();
+	virtual void doImport();
 
 private:
-	static QSettings appSettings;
-
-	QCompleter * dircompleter;
-
-	DBExportWidget dbexw;
-	DBImportWidget dbimw;
+	DBExportCommon::DBBuffer buff;
 };
 
-#endif /* DBEXPORTDIALOG_H */
+#endif // DBIMPORTWIDGET_H

@@ -573,174 +573,150 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>&amp;Wyjdź</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="30"/>
-        <source>Export</source>
-        <translation>Eksport</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="39"/>
-        <source>Export directory</source>
-        <translation>Katalog docelowy</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="60"/>
-        <source>Export filename</source>
-        <translation>Nazwa pliku</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="67"/>
-        <source>Filename for exported database file/archive (doesn&apos;t include file extension)</source>
-        <translation>Nazwa pliku/archiwum dla eksportowanej bazy danych (nie zawiera rozszerzenia pliku)</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="70"/>
-        <source>export filename</source>
-        <translation>nazwa pliku</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="77"/>
-        <source>Export .info file</source>
-        <translation>Eksportuj plik .info</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="84"/>
-        <source>Export INFO file together with database file. This option is available only if database is exported to archive.</source>
-        <translation>Ekspotuje INFO wspólnie z bazą danych. Ta opcja jest dostępna tylko gdy baza ekposrtowana jest do archiwum.</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="94"/>
-        <source>Output filename</source>
-        <translation>nazwa pliku wyjściowego</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="101"/>
-        <source>Displays final export file name.</source>
-        <translation>Wyświetla nazwę docelową pliku.</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="107"/>
-        <source>output full filename</source>
-        <translation>wyjściowa nazwa pliku</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="133"/>
-        <source>Import</source>
-        <translation>Import</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="142"/>
-        <source>Import file</source>
-        <translation>Plik do importu</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="163"/>
-        <source>Database name</source>
-        <translation>Nazwa bazy danych</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="170"/>
-        <source>.info db name</source>
-        <translation>Zawartość .info</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="180"/>
-        <source>real database name; </source>
-        <translation>oryginalnabaza danych</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="190"/>
-        <source>imported database name; </source>
-        <translation>Nazwa bazy danych</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="197"/>
-        <source>Import .info file</source>
-        <translation>Importuj plik .info</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="216"/>
-        <source>Export database to given file</source>
-        <translation>Eksportuj bazę do podanego pliku</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="219"/>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksportuj</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="226"/>
-        <source>Reset to default settings</source>
-        <translation>Ustaw domyślne</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="229"/>
-        <source>&amp;Reset</source>
-        <translation>&amp;Domyślne</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="240"/>
-        <source>&amp;Import</source>
-        <translation>&amp;Import</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBExportDialog.ui" line="247"/>
-        <source>R&amp;eset</source>
-        <translation>R&amp;esetuj</translation>
-    </message>
-    <message>
         <location filename="../ui/DBExportDialog.ui" line="20"/>
         <source>Cancel export and back to program</source>
         <translation>Anuluj i powróć do programu</translation>
     </message>
+</context>
+<context>
+    <name>DBExportWidget</name>
     <message>
-        <location filename="../ui/DBExportDialog.ui" line="51"/>
-        <location filename="../ui/DBExportDialog.ui" line="154"/>
+        <location filename="../ui/DBExportWidget.ui" line="14"/>
+        <source>Form</source>
+        <translation>Formularz</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="20"/>
+        <source>Export</source>
+        <translation>Eksport</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="29"/>
+        <source>Export directory</source>
+        <translation>Katalog docelowy</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="41"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="126"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="221"/>
-        <source>File exists</source>
-        <translation>Plik istnieje</translation>
+        <location filename="../ui/DBExportWidget.ui" line="50"/>
+        <source>Export filename</source>
+        <translation>Nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="126"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="221"/>
-        <source>File %1 exists. Do you want overwrite it?</source>
-        <translation>Plik %1 istnieje. Czy chcesz go nadpisać?</translation>
+        <location filename="../ui/DBExportWidget.ui" line="57"/>
+        <source>Filename for exported database file/archive (doesn&apos;t include file extension)</source>
+        <translation>Nazwa pliku/archiwum dla eksportowanej bazy danych (nie zawiera rozszerzenia pliku)</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="134"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="229"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="239"/>
-        <source>File open</source>
-        <translation>Otwarcie pliku</translation>
+        <location filename="../ui/DBExportWidget.ui" line="60"/>
+        <source>export filename</source>
+        <translation>nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="142"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="307"/>
-        <source>Input file open</source>
-        <translation>Plik wejściowy</translation>
+        <location filename="../ui/DBExportWidget.ui" line="67"/>
+        <source>Export .info file</source>
+        <translation>Eksportuj plik .info</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="142"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="149"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="307"/>
-        <source>Unable to open source file %1. Export aborted.</source>
-        <translation>Nie można otworzyć pliku %1. Eksport przerwany.</translation>
+        <location filename="../ui/DBExportWidget.ui" line="74"/>
+        <source>Export INFO file together with database file. This option is available only if database is exported to archive.</source>
+        <translation>Ekspotuje INFO wspólnie z bazą danych. Ta opcja jest dostępna tylko gdy baza ekposrtowana jest do archiwum.</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="149"/>
-        <source>Input info file open</source>
-        <translation>Otwarcie pliku .info</translation>
+        <location filename="../ui/DBExportWidget.ui" line="84"/>
+        <source>Output filename</source>
+        <translation>nazwa pliku wyjściowego</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="134"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="229"/>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="239"/>
-        <source>Unable to overwrite file %1. Export aborted.</source>
-        <translation>Nie można nadpisać pliku %1. Eksport przerwany.</translation>
+        <location filename="../ui/DBExportWidget.ui" line="91"/>
+        <source>Displays final export file name.</source>
+        <translation>Wyświetla nazwę docelową pliku.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="97"/>
+        <source>output full filename</source>
+        <translation>wyjściowa nazwa pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="130"/>
+        <source>Export database to given file</source>
+        <translation>Eksportuj bazę do podanego pliku</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="133"/>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="140"/>
+        <source>Reset to default settings</source>
+        <translation>Ustaw domyślne</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="143"/>
+        <source>&amp;Reset</source>
+        <translation>&amp;Domyślne</translation>
+    </message>
+</context>
+<context>
+    <name>DBImportWidget</name>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="14"/>
+        <source>Form</source>
+        <translation>Formularz</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="20"/>
+        <source>Import</source>
+        <translation>Import</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="29"/>
+        <source>Import file</source>
+        <translation>Plik do importu</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="41"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="50"/>
+        <source>Database name</source>
+        <translation>Nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="57"/>
+        <source>.info db name</source>
+        <translation>Zawartość .info</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="67"/>
+        <source>real database name; </source>
+        <translation>oryginalnabaza danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="77"/>
+        <source>imported database name; </source>
+        <translation>Nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="84"/>
+        <source>Import .info file</source>
+        <translation>Importuj plik .info</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="116"/>
+        <source>&amp;Import</source>
+        <translation>&amp;Import</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="123"/>
+        <source>Rese&amp;t</source>
+        <translation>Rese&amp;tuj</translation>
     </message>
 </context>
 <context>
@@ -1648,9 +1624,53 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Inny</translation>
     </message>
     <message>
-        <location filename="../gui/dialogs/DBExportDialog.cpp" line="31"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="27"/>
         <source>Zarlok archive</source>
         <translation>Archiwum Żarłoka</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="35"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="107"/>
+        <source>Input file open</source>
+        <translation>Plik wejściowy</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="35"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="42"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="107"/>
+        <source>Unable to open source file %1. Export aborted.</source>
+        <translation>Nie można otworzyć pliku %1. Eksport przerwany.</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="42"/>
+        <source>Input info file open</source>
+        <translation>Otwarcie pliku .info</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="63"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="154"/>
+        <source>File exists</source>
+        <translation>Plik istnieje</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="63"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="154"/>
+        <source>File %1 exists. Do you want overwrite it?</source>
+        <translation>Plik %1 istnieje. Czy chcesz go nadpisać?</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="71"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="162"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="174"/>
+        <source>File open</source>
+        <translation>Otwarcie pliku</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="71"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="162"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="174"/>
+        <source>Unable to overwrite file %1. Export aborted.</source>
+        <translation>Nie można nadpisać pliku %1. Eksport przerwany.</translation>
     </message>
 </context>
 <context>

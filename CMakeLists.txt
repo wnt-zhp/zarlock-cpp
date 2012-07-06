@@ -79,6 +79,8 @@ set(${CMAKE_PROJECT_NAME}_FORMS
 		src/ui/TabMealWidget.ui
 		src/ui/MealFoodListItemDataWidget.ui
 		src/ui/MealTabInsertWidget.ui
+		src/ui/DBExportWidget.ui
+		src/ui/DBImportWidget.ui
 
 		src/ui/AboutDialog.ui
 		src/ui/CampSettingsDialog.ui
@@ -127,6 +129,9 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/gui/widgets/MealFoodList.cpp
 		src/gui/widgets/MealTabInsertWidget.cpp
  		src/gui/widgets/QProgressIndicator.cpp
+		src/gui/widgets/DBExportWidget.cpp
+		src/gui/widgets/DBImportWidget.cpp
+		src/gui/widgets/DBExportCommon.cpp
 
 		src/gui/dialogs/AboutDialog.cpp
 		src/gui/dialogs/CampSettingsDialog.cpp
