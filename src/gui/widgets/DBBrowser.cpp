@@ -47,6 +47,8 @@ DBBrowser::DBBrowser(QWidget * parent): QWidget(parent), z(NULL) {
 	dbb_quit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 	dbb_load->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton) );
 
+// 	dbb_list->setViewMode(QListView::IconMode);
+	dbb_list->setWrapping(true);
 	refreshList();
 
 // 	dbb_list->setViewMode(QListView::IconMode);
@@ -152,9 +154,36 @@ void DBBrowser::databaseSelected(QListWidgetItem * item) {
 	}
 }
 
-void DBBrowser::refreshList(int sort, int order) {
+void DBBrowser::refreshList(sortflags sort, orderflags order) {
 	dbb_list->clear();
 
+	QVector<DBBrowser::DBListEntry> dble = fetchDBEntryList(sort, order);
+
+	for (int i = 0; i < dble.size(); ++i) {
+		dbb_list->setIconSize(QSize(64, 64));
+		QListWidgetItem * witem = new QListWidgetItem(QIcon(":/resources/icons/user-home.png"), dble[i].infoContent);
+		witem->setData(Qt::UserRole, dble[i].fileInfo.baseName());
+		dbb_list->addItem(witem);
+	}
+}
+
+QString DBBrowser::newDatabaseCreator(bool autoopen) {
+	bool wasOK = false;
+	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"), QLineEdit::Normal, "", &wasOK);
+
+	if (wasOK && autoopen) {
+// 		Database::Instance().open_database(dbname, true);
+// 		openZarlock(dbname);
+		Database::Instance()->create_database(dbname);
+		refreshList();
+
+		return dbname;
+	}
+
+	return QString();
+}
+
+QVector<DBBrowser::DBListEntry> DBBrowser::fetchDBEntryList(DBBrowser::sortflags sort, DBBrowser::orderflags order) {
 	int sflag = 0x00;
 	switch (sort) {
 		case s_name:
@@ -175,51 +204,44 @@ void DBBrowser::refreshList(int sort, int order) {
 			break;
 	}
 
-	QDir dir(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
+	QStringList filters;
+	filters << "*" % Database::dbfilext;
 
+	QDir dir(QDir::homePath() + QString(ZARLOK_HOME ZARLOK_DB));
 	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 	dir.setSorting(QDir::SortFlag(sflag));
+	dir.setNameFilters(filters);
 
-// 	QFileInfoList list = dir.entryInfoList(QStringList({".db"}), QDir::Files);
+	QVector<DBListEntry> dble;
+
 	QFileInfoList list = dir.entryInfoList();
+
 	for (int i = 0; i < list.size(); ++i) {
 		QFileInfo fileInfo = list.at(i);
-		QString fname = fileInfo.fileName();
+		QString fname = fileInfo.baseName();
 
-		int pos = fname.lastIndexOf(".db", -3);
-		if (pos < 0)
-			continue;
-		fname.remove(pos, 3);
+		QString finfo = dbInfoName(fname);
 
-		QFile infoFile(dir.absoluteFilePath(fname % ".info"));
-		QString finfo = fname;
-		if (infoFile.exists()) {
-			infoFile.open(QIODevice::ReadOnly);
-			finfo = QString::fromUtf8(infoFile.readAll());
-			infoFile.close();
-		}
-
-		dbb_list->setIconSize(QSize(64, 64));
-		QListWidgetItem * witem = new QListWidgetItem(QIcon(":/resources/icons/user-home.png"), finfo);
-		witem->setData(Qt::UserRole, fname);
-		dbb_list->addItem(witem);
-	}
-}
-
-QString DBBrowser::newDatabaseCreator(bool autoopen) {
-	bool wasOK = false;
-	QString dbname = QInputDialog::getText(this, tr("Create new database"), tr("Database name"), QLineEdit::Normal, "", &wasOK);
-
-	if (wasOK && autoopen) {
-// 		Database::Instance().open_database(dbname, true);
-// 		openZarlock(dbname);
-		Database::Instance()->create_database(dbname);
-		refreshList();
-
-		return dbname;
+		DBListEntry le;
+		le.fileInfo = fileInfo;
+		le.infoContent = finfo;
+		dble.push_back(le);
 	}
 
-	return QString();
+	return dble;
 }
+
+QString DBBrowser::dbInfoName(const QString& dbname) {
+	QFile infoFile(Database::fileFromDBName(dbname, true) % ".info");
+	QString finfo = dbname;
+	if (infoFile.exists()) {
+		infoFile.open(QIODevice::ReadOnly);
+		finfo = QString::fromUtf8(infoFile.readAll());
+		infoFile.close();
+	}
+
+	return finfo;
+}
+
 
 #include "DBBrowser.moc"

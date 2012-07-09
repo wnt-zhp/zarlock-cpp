@@ -26,16 +26,20 @@
 #include "DBExportWidget.h"
 #include "Database.h"
 #include "DBExportCommon.h"
+#include "DBBrowser.h"
 
 DBExportWidget::DBExportWidget(QWidget *) : Ui::DBExportWidget(), dircompleter(NULL) {
 	setupUi(this);
 
-	connect(exp_push_dir, SIGNAL(clicked(bool)), this, SLOT(selectExportDirectory()));
-	connect(exp_line_dir, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
-	connect(exp_line_filename, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
+	connect(cb_dbname, SIGNAL(currentIndexChanged(int)), this, SLOT(validateDBForm(int)));
+	connect(chb_current, SIGNAL(stateChanged(int)), this, SLOT(setUseCurrent(int)));
+
+	connect(push_dir, SIGNAL(clicked(bool)), this, SLOT(selectExportDirectory()));
+	connect(line_dir, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
+	connect(line_filename, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
 	
-	connect(exp_push_export, SIGNAL(clicked(bool)), this, SLOT(doExport()));
-	connect(exp_push_reset, SIGNAL(clicked(bool)), this, SLOT(resetForm()));
+	connect(push_export, SIGNAL(clicked(bool)), this, SLOT(doExport()));
+	connect(push_reset, SIGNAL(clicked(bool)), this, SLOT(resetForm()));
 }
 
 DBExportWidget::~DBExportWidget() {
@@ -45,31 +49,45 @@ DBExportWidget::~DBExportWidget() {
 	delete dircompleter;
 }
 
+void DBExportWidget::validateDBForm(int idx) {
+	if (idx >= 0) {
+		infofile = cb_dbname->itemText(idx);
+		datafile = cb_dbname->itemData(idx).toString();
+	} else {
+		datafile.clear();
+		infofile.clear();
+	}
+
+	QString expdbfname = infofile % QDateTime::currentDateTime().toString("_yyMMdd_hhmmss");
+	line_filename->setText(expdbfname);
+
+	validateForm();
+}
 
 void DBExportWidget::validateForm() {
-	QString str_dir = exp_line_dir->text();
+	QString str_dir = line_dir->text();
 	// 	if (str_dir.isEmpty())
 	str_dir.append("/");
 
 	QString ofilename;
-	QString str_fn = exp_line_filename->text();
+	QString str_fn = line_filename->text();
 	if (!str_fn.isEmpty()) {
 		ofilename =  str_dir % str_fn % DBExportCommon::exportArchExt;
-		exp_push_export->setEnabled(true);
+		push_export->setEnabled(true);
 	} else {
-		exp_push_export->setEnabled(false);
+		push_export->setEnabled(false);
 	}
 
 	QFile file(ofilename);
-	exp_line_output->setText(file.fileName());
+	line_output->setText(file.fileName());
 }
 
 void DBExportWidget::resetForm() {
-	exp_chb_info->setChecked(true);
+	chb_info->setChecked(true);
 
-	exp_push_export->setDisabled(true);
+	push_export->setDisabled(true);
 
-	exp_line_dir->setText(QDir::homePath());
+	line_dir->setText(QDir::homePath());
 
 	// 	cb_format->setCurrentIndex(1);
 
@@ -85,28 +103,34 @@ void DBExportWidget::resetForm() {
 	dircompleter->setWrapAround(true);
 
 	QFileSystemModel * fsmodel = new QFileSystemModel(dircompleter);
-	fsmodel->setRootPath(exp_line_dir->text());
+	fsmodel->setRootPath(line_dir->text());
 	fsmodel->setFilter(QDir::Dirs);
 
 	dircompleter->setModel(fsmodel);
 
-	exp_line_dir->setCompleter(dircompleter);
+	line_dir->setCompleter(dircompleter);
 
-	QString expdbfname = Database::Instance()->openedDatabase() % QDateTime::currentDateTime().toString("_yyMMdd_hhmmss");
+// 	validateForm();
 
-	exp_line_filename->setText(expdbfname);
+	cb_dbname->clear();
+	QVector<DBBrowser::DBListEntry> dble = DBBrowser::fetchDBEntryList(DBBrowser::s_name, DBBrowser::o_asc);
+	for (int i = 0; i < dble.size(); ++i) {
+		cb_dbname->addItem(dble[i].infoContent, dble[i].fileInfo.fileName());
+	}
 
-	validateForm();
+	int idx = cb_dbname->findText(Database::Instance()->openedDatabase(), Qt::MatchExactly);
+// 	if (idx != -1)
+	cb_dbname->setCurrentIndex(idx);
 }
 
 void DBExportWidget::doExport() {
 	Database * db = Database::Instance();
 	QString ifilestr = db->fileFromDBName(db->openedDatabase(), true, true);
 	QString infilestr = db->fileFromDBName(db->openedDatabase(), true, false) % ".info";
-	QString ofilestr = exp_line_output->text();
+	QString ofilestr = line_output->text();
 
 	DBExportCommon::DBBuffer buff;
-	DBExportCommon::Compress(ifilestr, infilestr, &buff);
+	DBExportCommon::PackData(ifilestr, infilestr, &buff);
 	DBExportCommon::ExportFile(ofilestr, &buff);
 }
 
@@ -115,7 +139,7 @@ void DBExportWidget::selectExportDirectory() {
 	dialog.setFileMode(QFileDialog::Directory);
 	dialog.setOption(QFileDialog::ShowDirsOnly, true);
 	
-	dialog.setDirectory(exp_line_dir->text());
+	dialog.setDirectory(line_dir->text());
 	
 	if (!dialog.exec())
 		return;
@@ -123,7 +147,17 @@ void DBExportWidget::selectExportDirectory() {
 // 	QString dir = dialog.getExistingDirectory();
 	QString dir = dialog.selectedFiles().at(0);
 
-	exp_line_dir->setText(dir);
+	line_dir->setText(dir);
+}
+
+void DBExportWidget::setUseCurrent(int useCurrent) {
+	if (useCurrent) {
+		int idx = cb_dbname->findText(Database::Instance()->openedDatabase(), Qt::MatchExactly);
+		// 	if (idx != -1)
+		cb_dbname->setCurrentIndex(idx);
+	}
+
+	cb_dbname->setDisabled(useCurrent);
 }
 
 #include "DBExportWidget.moc"

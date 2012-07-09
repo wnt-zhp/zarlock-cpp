@@ -27,10 +27,20 @@
 class DBBrowser : public QWidget, public Ui::DatabaseBrowser {
 Q_OBJECT
 public:
-    DBBrowser(QWidget * parent = NULL);
-    virtual ~DBBrowser();
+	DBBrowser(QWidget * parent = NULL);
+	virtual ~DBBrowser();
 
 	virtual void goBrowser();
+
+	struct DBListEntry {
+		QFileInfo fileInfo;
+		QString infoContent;
+	};
+
+	enum sortflags { s_name = 0, s_time, s_size };
+	enum orderflags { o_asc = 0, o_dsc };
+	static QVector<DBListEntry> fetchDBEntryList(sortflags sort = s_name, orderflags order = o_asc);
+	static QString dbInfoName(const QString & dbname);
 
 public slots:
 	void databaseSelected(QListWidgetItem * item);
@@ -41,17 +51,13 @@ public slots:
 	void openZarlock(const QString & dbname);
 	void closeZarlock();
 
-private slots:
-
 private:
-	void refreshList(int sort = 0, int order = 0);
+	void refreshList(sortflags sort = s_name, orderflags order = o_asc);
 
 signals:
 	void dbb_database(const QString & dbname);
 
 private:
-	enum sortflags { s_name = 0, s_time, s_size };
-	enum orderflags { o_asc = 0, o_dsc };
 
 // 	QString dbname, dbfile;
 // 	Database & db;

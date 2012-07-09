@@ -30,14 +30,14 @@ public:
 	DBExportWidget(QWidget * parent = NULL);
 	virtual ~DBExportWidget();
 
-private:
-	void activateUi(bool activate = true);
-
 public slots:
 	virtual void resetForm();
+	virtual void setUseCurrent(int useCurrent);
 
 private slots:
 	virtual void validateForm();
+	virtual void validateDBForm(int idx);
+
 	virtual void doExport();
 
 	virtual void selectExportDirectory();
@@ -45,7 +45,8 @@ private slots:
 protected:
 	QCompleter * dircompleter;
 
-	void convertToCharArray(int number, char * array, int size);
+	QString datafile;
+	QString infofile;
 };
 
 #endif // DBEXPORTWIDGET_H

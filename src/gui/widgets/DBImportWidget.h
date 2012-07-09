@@ -32,14 +32,28 @@ public:
 
 public slots:
 	virtual void resetForm();
-	
+	void setAdvancedMode(bool advanced);
+	void setTargetCurrent();
+	void setTargetDatabase(int idx);
+	void setTargetNew(const QString & newdb);
+
 private slots:
-	virtual void validateForm();
-	virtual void selectImportFile();
+	void validateForm();
+	void selectImportFile();
 	virtual void doImport();
+
+	void inputFileChanged();
+	void existingDBChanged();
+	void newDBChanged();
+
+	void targetSelected();
 
 private:
 	DBExportCommon::DBBuffer buff;
+
+	QString datafile;
+	QString infofile;
+	bool initial;
 };
 
 #endif // DBIMPORTWIDGET_H

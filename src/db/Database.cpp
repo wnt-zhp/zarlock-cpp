@@ -131,9 +131,9 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 	autoupgrade = false;
 
 	unsigned int dbversion;
-	if (qdbv.next())
+	if (qdbv.next()) {
 		dbversion = qdbv.value(0).toUInt();
-	else {
+	} else {
 		QMessageBox msgBox;
 		msgBox.setText(tr("Your database \"%1\" is corrupted. Unable to find version number.").arg(dbname));
 		msgBox.setInformativeText(tr("This is critical error and if your database has important data, "
@@ -255,7 +255,6 @@ bool Database::delete_database(const QString& dbname) {
 
 	return false;
 }
-
 
 /**
  * @brief ...
@@ -483,58 +482,6 @@ bool Database::createDBStructure(const QString& dbfile) {
 	return execQueryFromFile(":/resources/database_00000301.sql");
 }
 
-// void Database::updateBatchQty() {
-// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-// 		db.transaction();
-// 
-// 	QSqlQuery qBatch("UPDATE batch SET used_qty=(SELECT sum(quantity) FROM distributor WHERE batch_id=batch.id);");
-// 	qBatch.exec();
-// 
-// 	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-// 		if (!db.commit())
-// 			db.rollback();
-// 
-// 	model_batch->select();
-// }
-
-// void Database::updateBatchQty(const int bid) {
-// 	QSqlQuery q;
-//         q.prepare("SELECT SUM(quantity) FROM distributor WHERE batch_id=?;");
-// 	q.bindValue(0, bid);
-// 	q.exec();
-// 
-// 	int qty = 0;
-// 	if (q.next())
-//         qty = q.value(0).toInt();
-// 
-// 	q.prepare("UPDATE batch SET used_qty=? WHERE id=?;");
-// 	q.bindValue(0, qty);
-// 	q.bindValue(1, bid);
-// 	q.exec();
-// }
-
-// void Database::updateMealCosts() {
-// 	QSqlQuery q;
-// // 	q.exec("UPDATE meal_day SET avcosts=(SELECT (sum(d.quantity*b.price)/(m.scouts+m.leaders+m.others)/10000.0) "
-// // 		   "FROM meal AS m, distributor AS d, batch as b WHERE m.mealday=meal_day.id AND d.disttype_a=m.id AND b.id=d.batch_id);");
-// // 	q.exec("UPDATE meal_day SET avcosts=CAST(round((SELECT (sum(d.quantity*b.price)/(SELECT sum(m.scouts+m.leaders+m.others) FROM meal AS m WHERE mealday=meal_day.id)/100) "
-// // 			"FROM distributor AS d, batch as b WHERE d.disttype_a=meal_day.id AND d.batch_id=b.id)) AS INTEGER);");
-// 	q.exec("UPDATE meal_day SET avcosts=round(CAST((SELECT sum(d.quantity*b.price) FROM batch AS b, distributor AS d, meal AS m WHERE b.id=d.batch_id AND d.disttype=2 AND d.disttype_a=m.id AND m.mealday=meal_day.id) AS DOUBLE)/"
-// 			"(SELECT sum(m.scouts+m.leaders+m.others) FROM meal as m WHERE mealday=meal_day.id)) WHERE id=(SELECT md.id FROM meal_day AS md, meal AS m, distributor AS d WHERE d.disttype=2 AND m.id=d.disttype_a AND md.id=m.mealday);");
-// 	model_mealday->select();
-// }
-
-// void Database::updateMealCosts(const QModelIndex& idx) {
-// 	int mdid = idx.model()->data(idx.model()->index(idx.row(), MealDayTableModel::HId), Qt::EditRole).toInt();
-// 	QSqlQuery q;
-// 	q.prepare("UPDATE meal_day SET avcosts=CAST(round((SELECT (sum(d.quantity*b.price)/(SELECT sum(m.scouts+m.leaders+m.others) FROM meal AS m WHERE mealday=meal_day.id)/100) "
-// 			"FROM distributor AS d, batch as b WHERE d.disttype_a=m.id AND b.id=d.batch_id)) AS INTEGER) WHERE id=?;");
-// 	q.bindValue(0, mdid);
-// 	q.exec();
-// 
-// 	model_mealday->select();
-// }
-
 /** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
  *  @param version wersja bazy danych do aktualizacji
  *  @return zwraca true jeśliaktualiazcja zakończona sukcesem, w przeciwnym wypadku zmienna version zawiera
@@ -591,7 +538,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
 				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
 				qdbup.bindValue(1, int(netto*(vat+100)));
-				qdbup.bindValue(2, bid);
+				qdbup.bindValue(2, bid);	
 				qdbup.exec();
 				qdbup.finish();
 			}
@@ -603,7 +550,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 				}
 			}
 			progress.setValue(pos++);
-			
+		
 			// 			while (q.isActive() or qdbup.isActive()) {}
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
 			progress.setValue(pos++);

@@ -540,22 +540,22 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
 <context>
     <name>DBBrowser</name>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="134"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="136"/>
         <source>Database removing</source>
         <translation>Usuwanie bazy danych</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="135"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="137"/>
         <source>Are you sure to delete database %1?</source>
         <translation>Jesteś pewien aby usunąć bazę danych %1?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="211"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="172"/>
         <source>Create new database</source>
         <translation>Stwórz nową bazę danych dla obozu</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBBrowser.cpp" line="211"/>
+        <location filename="../gui/widgets/DBBrowser.cpp" line="172"/>
         <source>Database name</source>
         <translation>Nazwa bazy danych (obozu)</translation>
     </message>
@@ -587,8 +587,8 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
     <message>
         <location filename="../ui/DBExportWidget.ui" line="20"/>
-        <source>Export</source>
-        <translation>Eksport</translation>
+        <source>Export database</source>
+        <translation>Eksportuj bazę danych</translation>
     </message>
     <message>
         <location filename="../ui/DBExportWidget.ui" line="29"/>
@@ -596,67 +596,97 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Katalog docelowy</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="41"/>
+        <location filename="../ui/DBExportWidget.ui" line="38"/>
+        <source>Directory where file is exported.</source>
+        <translation>Katalog docelowy eksportu bazy danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="45"/>
+        <source>Open directory browser.</source>
+        <translation>Otwórz przeglądarkę katalogów.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="48"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="50"/>
+        <location filename="../ui/DBExportWidget.ui" line="57"/>
         <source>Export filename</source>
         <translation>Nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="57"/>
+        <location filename="../ui/DBExportWidget.ui" line="64"/>
         <source>Filename for exported database file/archive (doesn&apos;t include file extension)</source>
         <translation>Nazwa pliku/archiwum dla eksportowanej bazy danych (nie zawiera rozszerzenia pliku)</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="60"/>
+        <location filename="../ui/DBExportWidget.ui" line="67"/>
         <source>export filename</source>
         <translation>nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="67"/>
+        <location filename="../ui/DBExportWidget.ui" line="74"/>
         <source>Export .info file</source>
         <translation>Eksportuj plik .info</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="74"/>
-        <source>Export INFO file together with database file. This option is available only if database is exported to archive.</source>
-        <translation>Ekspotuje INFO wspólnie z bazą danych. Ta opcja jest dostępna tylko gdy baza ekposrtowana jest do archiwum.</translation>
+        <location filename="../ui/DBExportWidget.ui" line="81"/>
+        <source>Check this if you want to export .info file to archive.</source>
+        <translation>Zaznacz to pole jeślich chcesz również wyeksportować plik .info do archiwum.</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="84"/>
+        <location filename="../ui/DBExportWidget.ui" line="94"/>
         <source>Output filename</source>
         <translation>nazwa pliku wyjściowego</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="91"/>
-        <source>Displays final export file name.</source>
-        <translation>Wyświetla nazwę docelową pliku.</translation>
+        <location filename="../ui/DBExportWidget.ui" line="101"/>
+        <source>This field contains final name for expoerted file. Read-only field. name.</source>
+        <translation>To pole zawiera ostateczną nazwę dla eksportowanego pliku, Pole tylko do odczytu.</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="97"/>
+        <location filename="../ui/DBExportWidget.ui" line="107"/>
         <source>output full filename</source>
         <translation>wyjściowa nazwa pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="130"/>
+        <location filename="../ui/DBExportWidget.ui" line="114"/>
+        <source>Database to export</source>
+        <translation>Baza danych do eksportu</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="129"/>
+        <source>List of existing databases.</source>
+        <translation>Lista istniejących baz danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="136"/>
+        <source>Use current database.</source>
+        <translation>Użyj aktualnej bazy danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="139"/>
+        <source>&amp;Use current</source>
+        <translation>&amp;Urzyj aktualnej</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBExportWidget.ui" line="176"/>
         <source>Export database to given file</source>
         <translation>Eksportuj bazę do podanego pliku</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="133"/>
+        <location filename="../ui/DBExportWidget.ui" line="179"/>
         <source>&amp;Export</source>
         <translation>&amp;Eksportuj</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="140"/>
+        <location filename="../ui/DBExportWidget.ui" line="186"/>
         <source>Reset to default settings</source>
-        <translation>Ustaw domyślne</translation>
+        <translation>Resetuj do ustawień domyślnych</translation>
     </message>
     <message>
-        <location filename="../ui/DBExportWidget.ui" line="143"/>
+        <location filename="../ui/DBExportWidget.ui" line="189"/>
         <source>&amp;Reset</source>
         <translation>&amp;Domyślne</translation>
     </message>
@@ -670,8 +700,8 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
     <message>
         <location filename="../ui/DBImportWidget.ui" line="20"/>
-        <source>Import</source>
-        <translation>Import</translation>
+        <source>Import database</source>
+        <translation>Import bazy danych</translation>
     </message>
     <message>
         <location filename="../ui/DBImportWidget.ui" line="29"/>
@@ -679,44 +709,155 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Plik do importu</translation>
     </message>
     <message>
+        <location filename="../ui/DBImportWidget.ui" line="38"/>
+        <source>Path to file to import.</source>
+        <translation>Ścieżka do importowanego pliku.</translation>
+    </message>
+    <message>
         <location filename="../ui/DBImportWidget.ui" line="41"/>
+        <source>file to import</source>
+        <translation>plik do importu</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="48"/>
+        <source>Open browser to import select file.</source>
+        <translation>Otwórz przeglądarkę plików aby wybrać plik do importu.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="51"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../ui/DBImportWidget.ui" line="50"/>
-        <source>Database name</source>
-        <translation>Nazwa bazy danych</translation>
-    </message>
-    <message>
-        <location filename="../ui/DBImportWidget.ui" line="57"/>
-        <source>.info db name</source>
-        <translation>Zawartość .info</translation>
+        <location filename="../ui/DBImportWidget.ui" line="60"/>
+        <source>Destination</source>
+        <translation>Cel importu</translation>
     </message>
     <message>
         <location filename="../ui/DBImportWidget.ui" line="67"/>
-        <source>real database name; </source>
-        <translation>oryginalnabaza danych</translation>
+        <source>.info file is a file containing display name of the database. This name may be different than database file saved on the disk.</source>
+        <translation>Plik .info jest plikiem zawierajacym nazwę bazy danych, która jest wyświetlana w programie. Ta nazwa może być inna niż fizyczna nazwa pliku na dysku.</translation>
     </message>
     <message>
-        <location filename="../ui/DBImportWidget.ui" line="77"/>
-        <source>imported database name; </source>
-        <translation>Nazwa bazy danych</translation>
+        <location filename="../ui/DBImportWidget.ui" line="70"/>
+        <source>.info content</source>
+        <translation>Zawartośc pliku .info</translation>
     </message>
     <message>
-        <location filename="../ui/DBImportWidget.ui" line="84"/>
-        <source>Import .info file</source>
-        <translation>Importuj plik .info</translation>
+        <location filename="../ui/DBImportWidget.ui" line="79"/>
+        <source>This field contains new display name for target database.</source>
+        <translation>To pole zawiera nową wyświetlaną nazwę bazy danych.</translation>
     </message>
     <message>
-        <location filename="../ui/DBImportWidget.ui" line="116"/>
+        <location filename="../ui/DBImportWidget.ui" line="85"/>
+        <source>imported database name</source>
+        <translation>Wyświetlana nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="92"/>
+        <source>If you don&apos;t want import new display name to your target database, uncheck this field.</source>
+        <translation>Jeśli nie chcesz zaimportować nowej wartości dla wyświetlanej nazwy bazy danych, odznacz to pole.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="95"/>
+        <location filename="../ui/DBImportWidget.ui" line="222"/>
         <source>&amp;Import</source>
         <translation>&amp;Import</translation>
     </message>
     <message>
-        <location filename="../ui/DBImportWidget.ui" line="123"/>
+        <location filename="../ui/DBImportWidget.ui" line="112"/>
+        <source>List of existing databases.</source>
+        <translation>Lista istniejących baz danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="119"/>
+        <source>Current database name. Read-only field.</source>
+        <translation>Aktualna naza danych. Pole tylko do odczytu.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="125"/>
+        <source>current database name</source>
+        <translation>nazwa aktualnej bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="132"/>
+        <source>This field contains name of new database to write.</source>
+        <translation>To pole zawiera nazwę dla nowej bazy danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="135"/>
+        <source>name of new database</source>
+        <translation>nazwa nowej bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="142"/>
+        <source>Use current database as a target.</source>
+        <translation>Użyj aktualnej bazy danych jako docelowej.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="145"/>
+        <source>Import to &amp;current database</source>
+        <translation>Importuj do &amp;aktualnej bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="152"/>
+        <source>Use one of existing databases.</source>
+        <translation>Użyj istniejącej bazy danych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="155"/>
+        <source>Import to exi&amp;sting database</source>
+        <translation>Importuj do &amp;istniejącej bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="162"/>
+        <source>Create new database. If warning icon is displayed then target database exists already. You may overwrite it.</source>
+        <translation>Stwórz nową bazę danych. Jeśli ikona ostrzeżenia jest wyświetlona, to plik docelowy już istnieje i możesz go nadpisać.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="165"/>
+        <source>Import to &amp;new database</source>
+        <translation>Importuj do &amp;nowej bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="181"/>
+        <source>Target database file</source>
+        <translation>Plik docelowy</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="188"/>
+        <source>This field shows path to target file where imported data are stored.</source>
+        <translation>Te pole pokazuje nazwę pliku docelowego gdzie baza danych zostanie zaimportowana.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="194"/>
+        <source>real database name</source>
+        <translation>wyjściowa nazwa bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="219"/>
+        <source>Import data to selected target.</source>
+        <translation>Importuj dane to wybranej bazy docelowej.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="229"/>
+        <source>Reset to default settings.</source>
+        <translation>Resetuj do ustawień domyślnych.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="232"/>
         <source>Rese&amp;t</source>
         <translation>Rese&amp;tuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="239"/>
+        <source>Show advanced options.</source>
+        <translation>Pokaż opcje zaawansowane.</translation>
+    </message>
+    <message>
+        <location filename="../ui/DBImportWidget.ui" line="242"/>
+        <source>A&amp;dvanced</source>
+        <translation>Z&amp;aawansowane</translation>
     </message>
 </context>
 <context>
@@ -845,12 +986,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="546"/>
+        <location filename="../db/Database.cpp" line="493"/>
         <source>Updating database...</source>
         <translation>Aktualizacja bazy danych...</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="546"/>
+        <location filename="../db/Database.cpp" line="493"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -860,27 +1001,27 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Czy chcesz zaktualizować bazę danych?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="402"/>
+        <location filename="../db/Database.cpp" line="401"/>
         <source>The database name is empty</source>
         <translation>Nazwa bazy danych jest pusta</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="425"/>
+        <location filename="../db/Database.cpp" line="424"/>
         <source>The database name &quot;%1&quot; doesn&apos;t exists!</source>
         <translation>Baza danych &quot;%1&quot; nie istnieje!</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="426"/>
+        <location filename="../db/Database.cpp" line="425"/>
         <source>Do you want to create new database with name &quot;%1&quot;?</source>
         <translation>Czy chcesz utworzyć nową baze danych o nazwie &quot;%1&quot;?</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="457"/>
+        <location filename="../db/Database.cpp" line="456"/>
         <source>The database name &apos;%1&apos; already exists.</source>
         <translation>Baza danych &apos;%1&apos; już istnieje.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="458"/>
+        <location filename="../db/Database.cpp" line="457"/>
         <source>Do you want to overwrite existing database?</source>
         <translation>Czy chcesz nadpisać istniejącą baze danych?</translation>
     </message>
@@ -1508,9 +1649,9 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="304"/>
-        <location filename="../db/Database.cpp" line="322"/>
-        <location filename="../db/Database.cpp" line="327"/>
+        <location filename="../db/Database.cpp" line="303"/>
+        <location filename="../db/Database.cpp" line="321"/>
+        <location filename="../db/Database.cpp" line="326"/>
         <source>Database error</source>
         <translation>Błąd bazy danych</translation>
     </message>
@@ -1630,14 +1771,14 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../gui/widgets/DBExportCommon.cpp" line="35"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="107"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="109"/>
         <source>Input file open</source>
         <translation>Plik wejściowy</translation>
     </message>
     <message>
         <location filename="../gui/widgets/DBExportCommon.cpp" line="35"/>
         <location filename="../gui/widgets/DBExportCommon.cpp" line="42"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="107"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="109"/>
         <source>Unable to open source file %1. Export aborted.</source>
         <translation>Nie można otworzyć pliku %1. Eksport przerwany.</translation>
     </message>
@@ -1647,30 +1788,38 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Otwarcie pliku .info</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="63"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="154"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="65"/>
         <source>File exists</source>
         <translation>Plik istnieje</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="63"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="154"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="65"/>
         <source>File %1 exists. Do you want overwrite it?</source>
         <translation>Plik %1 istnieje. Czy chcesz go nadpisać?</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="71"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="162"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="174"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="73"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="158"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="170"/>
         <source>File open</source>
         <translation>Otwarcie pliku</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="71"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="162"/>
-        <location filename="../gui/widgets/DBExportCommon.cpp" line="174"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="73"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="158"/>
+        <location filename="../gui/widgets/DBExportCommon.cpp" line="170"/>
         <source>Unable to overwrite file %1. Export aborted.</source>
         <translation>Nie można nadpisać pliku %1. Eksport przerwany.</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
+        <source>Database import</source>
+        <translation>Import bazy danych</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
+        <source>This action will overwrite all existing data. Do you want continue?</source>
+        <translation>Ta akcją spowoduje nadpisanie istniejących danych. Czy chcesz kontynuować?</translation>
     </message>
 </context>
 <context>
@@ -2120,17 +2269,17 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="384"/>
+        <location filename="../zarlok.cpp" line="336"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="384"/>
+        <location filename="../zarlok.cpp" line="336"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="393"/>
+        <location filename="../zarlok.cpp" line="345"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

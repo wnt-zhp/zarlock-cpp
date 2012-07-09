@@ -33,8 +33,8 @@ namespace DBExportCommon {
 	void convertToCharArray(int number, char * array, int size);
 	void convertFromCharArray(int & number, char * array, int size);
 
-	void Compress(const QString & dbfilestr, const QString & infofilestr, DBBuffer * buff);
-	void Uncompress(const QString & archFile, DBBuffer * buff);
+	void PackData(const QString & dbfilestr, const QString & infofilestr, DBBuffer * buff);
+	void UnpackData(const QString & archFile, DBBuffer * buff);
 
 	void ExportFile(const QString & archFile, DBBuffer * buff);
 	void ImportFile(const QString & dbFile, const QString & infoFile, DBBuffer * buff);

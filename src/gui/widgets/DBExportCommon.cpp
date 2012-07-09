@@ -27,7 +27,7 @@
 const QString DBExportCommon::exportArchName = QObject::tr("Zarlok archive");
 const QString DBExportCommon::exportArchExt = ".zar";
 
-void DBExportCommon::Compress(const QString& dbfilestr, const QString& infofilestr, DBBuffer * buff) {
+void DBExportCommon::PackData(const QString& dbfilestr, const QString& infofilestr, DBBuffer * buff) {
 	QFile ifile(dbfilestr);
 	QFile infile(infofilestr);
 
@@ -43,12 +43,14 @@ void DBExportCommon::Compress(const QString& dbfilestr, const QString& infofiles
 		return;
 	}
 
+	QFileInfo ifilei(ifile);
 	// export database file
-	buff->dbname = qCompress(ifile.fileName().toAscii());
+	buff->dbname = qCompress(ifilei.baseName().toAscii());
 	buff->dbdata = qCompress(ifile.readAll());
 
 	if (buff->has_info) {
-		buff->infoname = qCompress(infile.fileName().toAscii());
+		QFileInfo infilei(infile);
+		buff->infoname = qCompress(infilei.baseName().toAscii());
 		buff->infodata = qCompress(infile.readAll());
 	}
 
@@ -100,7 +102,7 @@ void DBExportCommon::ExportFile(const QString& archFile, DBExportCommon::DBBuffe
 	}
 }
 
-void DBExportCommon::Uncompress(const QString& archFile, DBBuffer * buff) {
+void DBExportCommon::UnpackData(const QString& archFile, DBBuffer * buff) {
 	QFile ifile(archFile);
 
 	if (!ifile.open(QIODevice::ReadOnly)) {
@@ -149,12 +151,6 @@ void DBExportCommon::Uncompress(const QString& archFile, DBBuffer * buff) {
 void DBExportCommon::ImportFile(const QString& dbFile, const QString& infoFile, DBExportCommon::DBBuffer* buff) {
 	QFile ofile(dbFile);
 	QFile onfile(infoFile);
-
-	if (ofile.exists()) {
-		int ret = QMessageBox::question(NULL, QObject::tr("File exists"), QObject::tr("File %1 exists. Do you want overwrite it?").arg(dbFile), QMessageBox::Yes | QMessageBox::No);
-		if (ret != QMessageBox::Yes)
-			return;
-	}
 
 	ofile.open(QIODevice::WriteOnly | QIODevice::Truncate);
 

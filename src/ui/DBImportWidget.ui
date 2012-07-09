@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>179</height>
+    <height>314</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,28 +15,38 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="imp_groupBox">
+    <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Import</string>
+      <string>Import database</string>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="imp_label_file">
+       <widget class="QLabel" name="label_file">
         <property name="text">
          <string>Import file</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="imp_horizontalLayout_file">
+       <layout class="QHBoxLayout" name="horizontalLayout_file">
         <item>
-         <widget class="QLineEdit" name="imp_line_file"/>
+         <widget class="QLineEdit" name="line_file">
+          <property name="toolTip">
+           <string>Path to file to import.</string>
+          </property>
+          <property name="placeholderText">
+           <string>file to import</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="imp_push_file">
+         <widget class="QPushButton" name="push_file">
+          <property name="toolTip">
+           <string>Open browser to import select file.</string>
+          </property>
           <property name="text">
            <string>...</string>
           </property>
@@ -45,50 +55,143 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="imp_label_dbname">
+       <widget class="QLabel" name="label_destination">
         <property name="text">
-         <string>Database name</string>
+         <string>Destination</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="imp_label_infoname">
+       <widget class="QLabel" name="label_infoname">
+        <property name="toolTip">
+         <string>.info file is a file containing display name of the database. This name may be different than database file saved on the disk.</string>
+        </property>
         <property name="text">
-         <string>.info db name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="imp_line_dbname">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>real database name; </string>
+         <string>.info content</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="imp_line_infoname">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>imported database name; </string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="line_infoname">
+          <property name="toolTip">
+           <string>This field contains new display name for target database.</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="placeholderText">
+           <string>imported database name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="chb_info">
+          <property name="toolTip">
+           <string>If you don't want import new display name to your target database, uncheck this field.</string>
+          </property>
+          <property name="text">
+           <string>&amp;Import</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="3" column="1">
+         <widget class="QComboBox" name="cb_dbname">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>List of existing databases.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="line_current">
+          <property name="toolTip">
+           <string>Current database name. Read-only field.</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="placeholderText">
+           <string>current database name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="line_new">
+          <property name="toolTip">
+           <string>This field contains name of new database to write.</string>
+          </property>
+          <property name="placeholderText">
+           <string>name of new database</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QRadioButton" name="rb_current">
+          <property name="toolTip">
+           <string>Use current database as a target.</string>
+          </property>
+          <property name="text">
+           <string>Import to &amp;current database</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QRadioButton" name="rb_existing">
+          <property name="toolTip">
+           <string>Use one of existing databases.</string>
+          </property>
+          <property name="text">
+           <string>Import to exi&amp;sting database</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QRadioButton" name="rb_new">
+          <property name="toolTip">
+           <string>Create new database. If warning icon is displayed then target database exists already. You may overwrite it.</string>
+          </property>
+          <property name="text">
+           <string>Import to &amp;new database</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_hidden">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="imp_label_info">
+       <widget class="QLabel" name="label_dbname">
         <property name="text">
-         <string>Import .info file</string>
+         <string>Target database file</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QCheckBox" name="imp_chb_info">
-        <property name="text">
-         <string/>
+       <widget class="QLineEdit" name="line_dbname">
+        <property name="toolTip">
+         <string>This field shows path to target file where imported data are stored.</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>real database name</string>
         </property>
        </widget>
       </item>
@@ -109,18 +212,37 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="imp_horizontalLayout_buttons">
+    <layout class="QHBoxLayout" name="horizontalLayout_buttons">
      <item>
-      <widget class="QPushButton" name="imp_push_import">
+      <widget class="QPushButton" name="push_import">
+       <property name="toolTip">
+        <string>Import data to selected target.</string>
+       </property>
        <property name="text">
         <string>&amp;Import</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="imp_push_reset">
+      <widget class="QPushButton" name="push_reset">
+       <property name="toolTip">
+        <string>Reset to default settings.</string>
+       </property>
        <property name="text">
         <string>Rese&amp;t</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="push_advanced">
+       <property name="toolTip">
+        <string>Show advanced options.</string>
+       </property>
+       <property name="text">
+        <string>A&amp;dvanced</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

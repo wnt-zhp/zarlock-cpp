@@ -92,7 +92,7 @@ public:
 
 	inline CampProperties * cs() { return camp; };
 	inline const QString & openedDatabase() { return opened_db; }
-	QString fileFromDBName(const QString & dbname, bool fullpath = true, bool adddbext = false);
+	static QString fileFromDBName(const QString & dbname, bool fullpath = true, bool adddbext = false);
 
 private:
 	bool openDBFile(const QString& dbname, bool createifnotexists = false);
@@ -128,6 +128,9 @@ public:
 	enum BatchWL		{ BWspec, BWunit, BWprice, BWqty, BWinvoice, BWbooking, BWexpire };
 	enum DistributorWL	{ DWqty, DWdist, DWreason, DWoptional };
 
+	static const QString dbfilext;
+	static const QString infofilext;
+
 private:
 	static Database * dbi;
 	QSqlDatabase db;
@@ -153,9 +156,6 @@ private:
 						dbv_JAN12	= 0x0000301
 	};
 	static const unsigned int DBVERSION = dbv_JAN12;
-
-	static const QString dbfilext;
-	static const QString infofilext;
 };
 
 #endif // DATABASE_H

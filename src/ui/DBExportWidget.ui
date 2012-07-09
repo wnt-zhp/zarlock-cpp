@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>179</height>
+    <height>208</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,28 +15,35 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="exp_groupBox">
+    <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Export</string>
+      <string>Export database</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="exp_label_dir">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_dir">
         <property name="text">
          <string>Export directory</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <layout class="QHBoxLayout" name="exp_horizontalLayout_dir">
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_dir">
         <item>
-         <widget class="QLineEdit" name="exp_line_dir"/>
+         <widget class="QLineEdit" name="line_dir">
+          <property name="toolTip">
+           <string>Directory where file is exported.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="exp_push_dir">
+         <widget class="QPushButton" name="push_dir">
+          <property name="toolTip">
+           <string>Open directory browser.</string>
+          </property>
           <property name="text">
            <string>...</string>
           </property>
@@ -44,15 +51,15 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="exp_label_filename">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_filename">
         <property name="text">
          <string>Export filename</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="exp_line_filename">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="line_filename">
         <property name="toolTip">
          <string>Filename for exported database file/archive (doesn't include file extension)</string>
         </property>
@@ -61,34 +68,37 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="exp_label_info">
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_info">
         <property name="text">
          <string>Export .info file</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="exp_chb_info">
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="chb_info">
         <property name="toolTip">
-         <string>Export INFO file together with database file. This option is available only if database is exported to archive.</string>
+         <string>Check this if you want to export .info file to archive.</string>
+        </property>
+        <property name="statusTip">
+         <string/>
         </property>
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="exp_label_output">
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_output">
         <property name="text">
          <string>Output filename</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="exp_line_output">
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="line_output">
         <property name="toolTip">
-         <string>Displays final export file name.</string>
+         <string>This field contains final name for expoerted file. Read-only field. name.</string>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -98,15 +108,51 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_dbname">
+        <property name="text">
+         <string>Database to export</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="cb_dbname">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>List of existing databases.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="chb_current">
+          <property name="toolTip">
+           <string>Use current database.</string>
+          </property>
+          <property name="text">
+           <string>&amp;Use current</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
-     <zorder>exp_label_dir</zorder>
+     <zorder>label_dir</zorder>
      <zorder></zorder>
-     <zorder>exp_label_filename</zorder>
-     <zorder>exp_line_filename</zorder>
-     <zorder>exp_label_info</zorder>
-     <zorder>exp_chb_info</zorder>
-     <zorder>exp_label_output</zorder>
-     <zorder>exp_line_output</zorder>
+     <zorder>label_filename</zorder>
+     <zorder>line_filename</zorder>
+     <zorder>label_info</zorder>
+     <zorder>chb_info</zorder>
+     <zorder>label_output</zorder>
+     <zorder>line_output</zorder>
+     <zorder>label_dbname</zorder>
+     <zorder>horizontalLayoutWidget</zorder>
     </widget>
    </item>
    <item>
@@ -123,9 +169,9 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="exp_horizontalLayout_buttons">
+    <layout class="QHBoxLayout" name="horizontalLayout_buttons">
      <item>
-      <widget class="QPushButton" name="exp_push_export">
+      <widget class="QPushButton" name="push_export">
        <property name="toolTip">
         <string>Export database to given file</string>
        </property>
@@ -135,7 +181,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="exp_push_reset">
+      <widget class="QPushButton" name="push_reset">
        <property name="toolTip">
         <string>Reset to default settings</string>
        </property>
