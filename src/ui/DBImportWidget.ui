@@ -45,7 +45,7 @@
         <item>
          <widget class="QPushButton" name="push_file">
           <property name="toolTip">
-           <string>Open browser to import select file.</string>
+           <string>Open browser to select import file.</string>
           </property>
           <property name="text">
            <string>...</string>

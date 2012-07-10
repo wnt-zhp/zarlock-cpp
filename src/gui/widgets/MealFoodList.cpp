@@ -124,6 +124,7 @@ void MealFoodList::paintEvent(QPaintEvent* e) {
 		qDeleteAll(to_remove);
 		to_remove.clear();
 		populateModel();
+		Database::Instance()->CachedMealDay()->select();
 	}
 
 	QListView::paintEvent(e);

@@ -153,9 +153,11 @@ private:
 
 	enum DBVERSIONS {	dbv_INIT	= 0x0000000,
 						dbv_AUG11	= 0x0000030,
-						dbv_JAN12	= 0x0000301
+						dbv_JAN12	= 0x0000301,
+						dbv_JUL12	= 0x0000302,
+						dbv_DUMMY
 	};
-	static const unsigned int DBVERSION = dbv_JAN12;
+	static const unsigned int DBVERSION = dbv_DUMMY-1;
 };
 
 #endif // DATABASE_H

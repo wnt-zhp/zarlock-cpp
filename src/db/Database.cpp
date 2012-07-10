@@ -248,7 +248,7 @@ bool Database::delete_database(const QString& dbname) {
 	}
 
 	QFile finfofile(infofile);
-	
+
 	if (finfofile.exists()) {
 		finfofile.remove();
 	}
@@ -429,7 +429,7 @@ bool Database::openDBFile(const QString & dbname, bool createifnotexists) {
 		create = msgBox.exec();
 		if (create != QMessageBox::Yes)
 			return false;
-	}	
+	}
 
 	return createDBFile(dbname);
 }
@@ -462,7 +462,7 @@ bool Database::createDBFile(const QString & dbname) {
 		if (msgBox.exec() == QMessageBox::No)
 			return false;
 	}
-		
+
 	file.open(QIODevice::ReadWrite | QIODevice::Truncate);
 	file.close();
 
@@ -505,10 +505,10 @@ bool Database::doDBUpgrade(unsigned int version) {
 			progress.setMinimumDuration(0);
 			progress.setWindowModality(Qt::WindowModal);
 			progress.setCancelButton(NULL);
-			
-			q.exec("SELECT count(id) FROM batch;");			
+
+			q.exec("SELECT count(id) FROM batch;");
 			progress.setMaximum(5+q.value(0).toInt());
-			
+
 			progress.setValue(pos++);
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_a.sql");
 			progress.setValue(pos++);
@@ -516,9 +516,9 @@ bool Database::doDBUpgrade(unsigned int version) {
 			progress.setValue(pos++);
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_b.sql");
 			progress.setValue(pos++);
-			
+
 			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
-			
+
 			if (db.driver()->hasFeature(QSqlDriver::Transactions))
 				db.transaction();
 			while (q.next()) {
@@ -527,18 +527,18 @@ bool Database::doDBUpgrade(unsigned int version) {
 				QString expdate = q.value(3).toString();
 				QString price = q.value(4).toString();
 				QString regdate = q.value(5).toString();
-				
+
 				double netto, vat;
 				DataParser::price(price, netto, vat);
-				
+
 				QDate regdate_n, expdate_n, entrydate_n;
 				regdate_n = QDate::fromString(regdate, Qt::ISODate);
 				DataParser::date(expdate, expdate_n, regdate_n);
-				
+
 				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
 				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
 				qdbup.bindValue(1, int(netto*(vat+100)));
-				qdbup.bindValue(2, bid);	
+				qdbup.bindValue(2, bid);
 				qdbup.exec();
 				qdbup.finish();
 			}
@@ -550,16 +550,20 @@ bool Database::doDBUpgrade(unsigned int version) {
 				}
 			}
 			progress.setValue(pos++);
-		
+
 			// 			while (q.isActive() or qdbup.isActive()) {}
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
 			progress.setValue(pos++);
-			
+
 			return true;
-			
-			case dbv_JAN12:
-				PR("Database up-to-date!");
-				return true;
+
+		case dbv_JAN12:
+			execQueryFromFile(":/resources/dbconv_00000301_00000302_part_a.sql");
+			return true;
+
+		case dbv_JUL12:
+			PR("Database up-to-date!");
+			return true;
 	}
 	return false;
 }
@@ -630,7 +634,7 @@ bool Database::addProductRecord(const QString& name, const QString& unit, const 
 	status = model_products->submitAll();
 	if (status)
 		updateProductsWordList();
-	
+
 	return status;
 }
 

@@ -720,8 +720,8 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
     <message>
         <location filename="../ui/DBImportWidget.ui" line="48"/>
-        <source>Open browser to import select file.</source>
-        <translation>Otwórz przeglądarkę plików aby wybrać plik do importu.</translation>
+        <source>Open browser to select import file.</source>
+        <translation>Otwiera przeglądarkę plików aby wybrać plik do importu.</translation>
     </message>
     <message>
         <location filename="../ui/DBImportWidget.ui" line="51"/>

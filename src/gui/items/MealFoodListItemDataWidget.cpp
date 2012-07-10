@@ -101,13 +101,6 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
 	connect(closeB, SIGNAL(clicked(bool)), this, SLOT(buttonClose()));
 
-	
-// 	connect(batch, SIGNAL(), this, SLOT(validateBatchAdd()));
-
-// 	connect(closeB, SIGNAL(clicked(bool)), mfl->parent()->parent(), SLOT(closeOpenItems()));
-
-// 	convertToEmpty();
-
 	connect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 
 	addB->setEnabled(false);
@@ -120,6 +113,7 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
 	DII();
 
+	disconnect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 	deleteView();
 }
 
