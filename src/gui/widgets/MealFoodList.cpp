@@ -99,7 +99,7 @@ void MealFoodList::setProxyModel(MealTableModelProxy* model) {
 	proxy = model;
 }
 
-const MealTableModelProxy* MealFoodList::proxyModel() {
+MealTableModelProxy* MealFoodList::proxyModel() const {
 	return proxy;
 }
 

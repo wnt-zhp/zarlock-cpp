@@ -34,7 +34,7 @@ public:
 	virtual ~MealFoodList();
 
 	virtual void setProxyModel(MealTableModelProxy * model);
-	virtual const MealTableModelProxy * proxyModel();
+	virtual MealTableModelProxy * proxyModel() const;
 
 	virtual void insertEmptySlot();
 	virtual void insertHeaderSlot();

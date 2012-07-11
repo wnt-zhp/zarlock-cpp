@@ -47,7 +47,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 {
 	CII();
 
-	mfl = (MealFoodList *)parent;
+	mfl = dynamic_cast<MealFoodList *>(parent);
 	setupUi(this);
 
 	filter_string.reserve(100);
@@ -208,7 +208,7 @@ void MealFoodListItemDataWidget::validateAdd() {
 	}
 }
 
-/** @brief Inser/replace record
+/** @brief Insert/replace record
  */
 void MealFoodListItemDataWidget::buttonAdd() {
 	Database * db = Database::Instance();
@@ -223,7 +223,10 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	// If item is empty then we perform insert action
 	if (empty) {
 		// Get proxy model of distributions for current meal and fetch list of distributions of the same batch
-		const MealTableModelProxy * pr = ((MealFoodList *)owner->listWidget())->proxyModel();
+		MealTableModelProxy * pr = dynamic_cast<MealFoodList *>(owner->listWidget())->proxyModel();
+		if (pr == NULL) return;
+		pr->invalidate();
+
 		QModelIndexList same_meal_list = pr->match(pr->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bidx.data(Qt::EditRole), -1, Qt::MatchExactly);
 
 		// Ask if we merge them or we add as a new entry
@@ -271,6 +274,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity*100, reference_date,
 			reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			// Update record data
+			invalidateProxy();
 			setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 		} else
 			// If update failed then return
@@ -289,8 +293,8 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 		return;
 
 	// Close other open items and this as open
-	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenItems();
-	((MealTabWidget *)(mfl->parent()->parent()))->markOpenItem(owner);
+	dynamic_cast<MealTabWidget *>(mfl->parent()->parent())->closeOpenItems();
+	dynamic_cast<MealTabWidget *>(mfl->parent()->parent())->markOpenItem(owner);
 
 	// prepare proxy model and prepare table view
 	invalidateProxy();
@@ -398,6 +402,7 @@ void MealFoodListItemDataWidget::prepareView() {
 	batch->setView(tv);
 
 	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(batch_row, BatchTableModel::HSpec)).row());
+	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
 }
 
 int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
@@ -411,10 +416,10 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 												"Please select your action from the list below."),
 												QMessageBox::Save | QMessageBox::Discard);
 
+	QGridLayout * glay = dynamic_cast<QGridLayout *>(mbox->layout());
 
-	int items_num =  mbox->layout()->count();
-
-	QLayoutItem * li = ((QGridLayout *)mbox->layout())->takeAt(items_num-1);
+	int items_num = glay->count();
+	QLayoutItem * li = glay->takeAt(items_num-1);
 
 	QWidget * radioWidget = new QWidget;
 	QVBoxLayout * layout = new QVBoxLayout;
@@ -429,7 +434,7 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 	layout->addWidget(radios[0]);
 
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
-	const MealTableModelProxy * p = ((MealFoodList *)owner->listWidget())->proxyModel();
+	const MealTableModelProxy * p = dynamic_cast<MealFoodList *>(owner->listWidget())->proxyModel();
 
 	for (int i = 0; i < lsize; ++i) {
 		int row = btm->getRowById(list.at(i).data(Qt::EditRole).toInt());
@@ -446,8 +451,8 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 	scroll->setWidget(radioWidget);
 	scroll->setMaximumHeight(layout->itemAt(0)->geometry().height()*6);
 
-	((QGridLayout *)mbox->layout())->addWidget(scroll, ((QGridLayout *)mbox->layout())->rowCount(), 0, 1, -1);
-	((QGridLayout *)mbox->layout())->addItem(li, ((QGridLayout *)mbox->layout())->rowCount(), 0, 1, -1);
+	glay->addWidget(scroll, glay->rowCount(), 0, 1, -1);
+	glay->addItem(li, glay->rowCount(), 0, 1, -1);
 	int ans = mbox->exec();
 	int res = -1;
 
@@ -463,7 +468,7 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 		res = -2;
 	}
 
-	((QGridLayout *)mbox->layout())->takeAt(((QGridLayout *)mbox->layout())->indexOf(scroll));
+	glay->takeAt(glay->indexOf(scroll));
 
 	while (layout->itemAt(0) != NULL)
 		layout->takeAt(0);
@@ -529,7 +534,7 @@ void MealFoodListItemDataWidget::convertToHeader() {
 	label_unit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
 	delete addB;
-	addB = (QPushButton *)((void *)new QLabel(tr("Actions")));
+	addB = reinterpret_cast<QPushButton *>(new QLabel(tr("Actions")));
 	this->layout()->addWidget(addB);
 // 	addB->setText(tr("Actions"));
 // 	addB->setIcon(QIcon());
@@ -537,7 +542,7 @@ void MealFoodListItemDataWidget::convertToHeader() {
 // 	addB->setCheckable(false);
 	addB->setVisible(true);
 	addB->setMinimumSize(QSize(64, 16));
-	((QLabel *)addB)->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	reinterpret_cast<QLabel *>(addB)->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	addB->setAutoFillBackground(true);
 	addB->setPalette(text);
 
@@ -560,7 +565,7 @@ void MealFoodListItemDataWidget::invalidateProxy() {
 
 void MealFoodListItemDataWidget::eventCaptured(QEvent * evt) {
 	if (evt->type() == QEvent::KeyPress) {
-		QKeyEvent * kevt = (QKeyEvent *)evt;
+		QKeyEvent * kevt = dynamic_cast<QKeyEvent *>(evt);
 		int key = kevt->key();
 
 		switch (key) {
@@ -597,20 +602,18 @@ void MealFoodListItemDataWidget::setFilter() {
 
 void MealFoodListItemDataWidget::setFilterString(const QString& string) {
 	ledit->setText(string);
-// PR(string.toStdString());
+
 	if (string.size() > 0) {
 		ledit->show();
 	}
-// 	else {
-// 		ledit->hide();
-// 	}
 
 	QString f = string;
 	f.replace(' ', '*');
-	// 	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::Wildcard));
+//	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::Wildcard));
 	proxy->setFilterWildcard(f);
 	proxy->setFilterKeyColumn(BatchTableModel::HSpec);
 	proxy->setFilterRole(Qt::UserRole);
+	proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 #include "MealFoodListItemDataWidget.moc"
