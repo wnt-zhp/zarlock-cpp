@@ -68,7 +68,7 @@ void NetworkServicesManager::finished(QNetworkReply* reply) {
 // 	QVariant redirectionTargetUrl =
 // 	reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 // 	// see CS001432 on how to handle this
-// 	
+// 
 // 	// 	// no error received?
 // 	// 	if (reply->error() != QNetworkReply::NoError) {
 // 		// 			// handle errors here

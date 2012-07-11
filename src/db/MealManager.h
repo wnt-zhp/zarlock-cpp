@@ -40,7 +40,7 @@ public:
 	virtual bool addMealDayRecord(const QDate & mealday, int avgcost);
 	virtual bool updateMealDayRecord(const int row, const QDate & mealday, int avgcost);
 	virtual bool getMealDayRecord(const int row, int & mdid, QDate & mealday, int & avgcost);
-	
+
 	virtual bool addMealRecord(int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
 	virtual bool updateMealRecord(int mid, int mealday, int mealkind, const QString & name, int scouts, int leaders, int others, int avgcosts, const QString & notes);
 	virtual bool removeMealRecord(const QVector<int> & ids);

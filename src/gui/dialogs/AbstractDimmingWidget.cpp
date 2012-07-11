@@ -197,7 +197,7 @@ QTimeLine * AbstractDimmingWidget::animate() {
 				break;
 		}
 		move(limits[animate_start][0], limits[animate_start][1]);
-		
+
 		// Set calculated start and stop positions
 		sceneX->setFrameRange(limits[animate_start][0], limits[animate_pause][0]);
 		sceneY->setFrameRange(limits[animate_start][1], limits[animate_pause][1]);
@@ -224,7 +224,7 @@ QTimeLine * AbstractDimmingWidget::animate() {
 				break;
 		}
 		move(limits[animate_pause][0], limits[animate_pause][1]);
-		
+
 		// Set calculated start and stop positions
 		sceneX->setFrameRange(limits[animate_stop][0], limits[animate_pause][0]);
 		sceneY->setFrameRange(limits[animate_stop][1], limits[animate_pause][1]);

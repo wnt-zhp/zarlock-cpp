@@ -30,11 +30,11 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 	completer_invoice(NULL), completer_book(NULL), completer_expiry(NULL), pproxy(NULL) {
 	CI();
 	setupUi(parent);
-	
+
 	button_label_insert_and_next = action_addnext->text();
 	button_label_insert_and_exit = action_addexit->text();
 	button_label_close = action_cancel->text();
-	
+
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
@@ -197,7 +197,7 @@ void BatchRecordWidget::update_model() {
 	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	combo_products->setModel(pproxy);
 	combo_products->setModelColumn(1);
-	
+
 	if (completer_spec) delete completer_spec;
 // 	if (completer_qty) delete completer_qty;
 	if (completer_unit) delete completer_unit;

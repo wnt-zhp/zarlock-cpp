@@ -37,7 +37,7 @@ DBExportWidget::DBExportWidget(QWidget *) : Ui::DBExportWidget(), dircompleter(N
 	connect(push_dir, SIGNAL(clicked(bool)), this, SLOT(selectExportDirectory()));
 	connect(line_dir, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
 	connect(line_filename, SIGNAL(textChanged(QString)), this, SLOT(validateForm()));
-	
+
 	connect(push_export, SIGNAL(clicked(bool)), this, SLOT(doExport()));
 	connect(push_reset, SIGNAL(clicked(bool)), this, SLOT(resetForm()));
 }
@@ -45,7 +45,7 @@ DBExportWidget::DBExportWidget(QWidget *) : Ui::DBExportWidget(), dircompleter(N
 DBExportWidget::~DBExportWidget() {
 	if (dircompleter)
 		delete dircompleter->model();
-	
+
 	delete dircompleter;
 }
 
@@ -138,12 +138,12 @@ void DBExportWidget::selectExportDirectory() {
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::Directory);
 	dialog.setOption(QFileDialog::ShowDirsOnly, true);
-	
+
 	dialog.setDirectory(line_dir->text());
-	
+
 	if (!dialog.exec())
 		return;
-	
+
 // 	QString dir = dialog.getExistingDirectory();
 	QString dir = dialog.selectedFiles().at(0);
 

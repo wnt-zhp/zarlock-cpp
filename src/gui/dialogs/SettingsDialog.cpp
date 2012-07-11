@@ -71,7 +71,7 @@ int SettingsDialog::exec() {
 
 	cb_format_csv_encoding->setCurrentIndex(encodingCodes.indexOf(progset->csv_encoding));
 	cb_format_csv_separator->setCurrentIndex(separatorCodes.indexOf(progset->csv_separator));
-	
+
 	int ret = QDialog::exec();
 
 	if (!ret)

@@ -245,7 +245,7 @@ void TabMealWidget::mealTabChanged(int tab) {
 
 	MealTableModel * mt = db->CachedMeal();
 	QModelIndexList meals = mt->match(mt->index(0, MealTableModel::HId), Qt::EditRole, mid, -1, Qt::MatchExactly);
-	
+
 	if (meals.count() != 1)
 		return;
 

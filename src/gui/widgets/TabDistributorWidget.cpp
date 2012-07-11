@@ -60,7 +60,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 // 	table_dist->setPalette(globals::item_palette);
 
 	dwbox = new DimmingWidget(this);
-	
+
 	dwbox->setOverlay(true, true);
 	dwbox->setWidget(widget_add_distributor);
 	dwbox->setOverlayOpacity(100);

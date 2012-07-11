@@ -243,7 +243,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 		all_sco += sco;
 		all_lea += lea;
 		all_oth += oth;
-	
+
 		QString h = header_tmp.arg(name).arg(sco).arg(lea).arg(oth);
 		headers.push_back(h);
 
@@ -480,13 +480,13 @@ void DBReports::printKMReport(QString * reportsdir) {
 						QString qs4 = QString("SELECT name FROM meal WHERE id=%1;").arg(disttype_a.toInt());
 						QSqlQuery q4(qs4);
 						q4.exec();
-						
+
 						if (q4.next()) {
 							reas = QString("Wydanie na %1").arg(q4.value(0).toString());
 						}
 						break;
 				}
-				
+
 				tot_qty -= qty;
 				tot_price -= qty * kmm_iter->price;
 
@@ -508,7 +508,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 		out.setRealNumberNotation(QTextStream::FixedNotation);
 		out.setRealNumberPrecision(2);
 		out.setLocale(QLocale(QLocale::C));
-		
+
 		out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
 
 		out << outs;
@@ -752,9 +752,9 @@ void DBReports::printSMReport(QString * reportsdir) {
 		out.setRealNumberNotation(QTextStream::FixedNotation);
 		out.setRealNumberPrecision(2);
 		out.setLocale(QLocale(QLocale::C));
-		
+
 		out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
-		
+
 		out << outs;
 	}
 

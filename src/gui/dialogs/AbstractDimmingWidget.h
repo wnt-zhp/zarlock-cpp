@@ -92,7 +92,7 @@ private:
 	int overlay_opacity;
 	bool overlay_just_resize;
 	bool overlay_dont_animate;
-	
+
 	PState animate_direction;
 	PState last_state;
 	QTimeLine::Direction animate_move_direction;

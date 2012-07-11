@@ -64,7 +64,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 	globals::appSettings->endGroup();
 
 	dwbox = new DimmingWidget(this);
-	
+
 	dwbox->setOverlay(true, true);
 	dwbox->setWidget(widget_add_products);
 	dwbox->setOverlayOpacity(100);
@@ -72,7 +72,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 TabProductsWidget::~TabProductsWidget() {
 	DI();
-	
+
 	globals::appSettings->beginGroup("TabProducts");
 	globals::appSettings->setValue("splitterHoriz", splitter_H->saveState());
 	globals::appSettings->setValue("splitterVert", splitter_V->saveState());

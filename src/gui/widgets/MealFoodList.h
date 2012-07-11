@@ -38,12 +38,15 @@ public:
 
 	virtual void insertEmptySlot();
 	virtual void insertHeaderSlot();
+
 public slots:
 	virtual void populateModel();
 	virtual void refreshModel();
 
 	virtual void doItemEdit(QListWidgetItem * item);
 	virtual void doItemRemoved(QListWidgetItem * item);
+
+	virtual void refreshItem(int distId);
 
 protected:
 	virtual void paintEvent(QPaintEvent* e);

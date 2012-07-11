@@ -54,7 +54,7 @@ public slots:
 	void convertToEmpty();
 	void convertToHeader();
 
-	void invalidate();
+	void invalidateProxy();
 
 protected slots:
 	void validateBatchAdd();
@@ -66,8 +66,10 @@ protected slots:
 
 signals:
 	void itemRemoved(QListWidgetItem * item);
+	void itemMerged();
 
 private:
+	void resetWidget();
 	void prepareView();
 	void deleteView();
 

@@ -48,7 +48,7 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 	virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-	
+
 	virtual void setTable(const QString & table);
 
 	virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
@@ -80,7 +80,7 @@ public:
 		// 		QVector<QVariant> * operator->()       { return arr; }  // #1
 		// 		QVector<QVariant> const * operator->() const { return arr; }
 		QVariant & operator *();
-		
+
 		QVector<QVariant> arr[Qt::EditRole+1];
 		AbstractTableModel * model;
 	};

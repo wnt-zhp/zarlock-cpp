@@ -400,7 +400,7 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
 <context>
     <name>BatchTableModelProxy</name>
     <message>
-        <location filename="../models/BatchTableModelProxy.cpp" line="124"/>
+        <location filename="../models/BatchTableModelProxy.cpp" line="125"/>
         <source>%1 / %2 / %3</source>
         <translation>%1 / %2 / %3</translation>
     </message>
@@ -1224,7 +1224,7 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="467"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="500"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
@@ -1236,14 +1236,14 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="469"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="502"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="468"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="501"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
@@ -1268,34 +1268,39 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="137"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="168"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="334"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="154"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="185"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="360"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="382"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="408"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="383"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="409"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="413"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="425"/>
+        <source>Add new record</source>
+        <translation>Dodaj nowy rekord</translation>
+    </message>
+    <message>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="439"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="466"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="532"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>

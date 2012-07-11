@@ -112,14 +112,15 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 		QString name = this->mapToSource(this->index(index.row(), BatchTableModel::HSpec)).data(Qt::DisplayRole).toString();
 		QString unit = this->mapToSource(this->index(index.row(), BatchTableModel::HUnit)).data(Qt::DisplayRole).toString();
 		QString price = this->mapToSource(this->index(index.row(), BatchTableModel::HPrice)).data(Qt::DisplayRole).toString();
-		
+
 // 		return QVariant(tr("%1\t[ 1 unit = %2,\tprice: %3 zl/%2 ]").arg(res.toString()).arg(unit, 10, ' ').arg(price, 6, ' '));
 // 		index.data(Qt::DisplayRole).toString()
 
 		QString item_mark;
-		
-		if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum))
+
+		if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum)) {
 			name = "* " % name;
+		}
 
 		return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
 
@@ -131,9 +132,9 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 
 			if (!expd.isValid())
 				return globals::item_nexpired_base;
-			
+
 			int daystoexp = expd.daysTo(QDate::currentDate());
-			
+
 			if (daystoexp > 0) {
 				if (row % 2)
 					return globals::item_expired_base;

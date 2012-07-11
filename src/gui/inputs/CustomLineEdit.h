@@ -36,7 +36,7 @@ public:
 	virtual void clear();
 
 	bool ok() const;
-	
+
 	virtual const QString text(bool placeholdertext = false);
 	virtual void setText(const QString & t);
 	virtual void setRaw(const QString & t);

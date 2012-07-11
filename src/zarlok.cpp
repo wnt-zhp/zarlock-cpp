@@ -298,7 +298,7 @@ bool zarlok::doCampSettings() {
 		db->cs()->writeCampSettings();
 
 	activateUi(db->cs()->isCorrect);
-	
+
 
 	return ans;
 }
@@ -332,20 +332,20 @@ void zarlok::doCreateKMreports() {
 void zarlok::doCreateZZReports() {
 	QString fn;
 	int num = db->CachedMealDay()->rowCount();
-	
+
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
 	progress.setMinimumDuration(0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setValue(0);
-	
+
 	for (int i = 0; i < num; ++i) {
 		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-		
+
 		progress.setValue(i);
 		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
 		if (progress.wasCanceled())
 			break;
-		
+
 		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
 	}
 	progress.setValue(num);

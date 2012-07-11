@@ -55,7 +55,7 @@ int DBExportDialog::exec() {
 		return ret;
 
 	// if action required then do it here
-	
+
 	// Exit from dialog
 	return ret;
 }

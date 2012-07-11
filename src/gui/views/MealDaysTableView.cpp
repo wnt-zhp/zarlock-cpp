@@ -83,7 +83,7 @@ void MealDaysTableView::setModel(QAbstractItemModel * model) {
 	hideColumn(MealDayTableModel::HId);
 	horizontalHeader()->setResizeMode(MealDayTableModel::HMealDate, QHeaderView::Stretch);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
-	
+
 //	setSortingEnabled(true);
 	setSelectionBehavior(QAbstractItemView::SelectRows);
 	setSelectionMode(QAbstractItemView::SingleSelection);

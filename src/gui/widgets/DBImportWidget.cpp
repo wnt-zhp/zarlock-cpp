@@ -63,7 +63,7 @@ DBImportWidget::~DBImportWidget() {
 
 void DBImportWidget::inputFileChanged() {
 	bool fileSelected = !line_file->text().isEmpty();
-	
+
 	if (!fileSelected) {
 		datafile.clear();
 		infofile.clear();
@@ -226,12 +226,12 @@ void DBImportWidget::setAdvancedMode(bool advanced) {
 void DBImportWidget::selectImportFile() {
 	QFileDialog dialog(this);
 	dialog.setNameFilter(QString("%1 (*%2)").arg(DBExportCommon::exportArchName).arg(DBExportCommon::exportArchExt));
-	
+
 	// 	dialog.setDirectory(exp_line_dir->text());
-	
+
 	if (!dialog.exec())
 		return;
-	
+
 // 	QString dir = dialog.getExistingDirectory();
 	QString file = dialog.selectedFiles().at(0);
 

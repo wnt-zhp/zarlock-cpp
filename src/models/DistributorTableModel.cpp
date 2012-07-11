@@ -118,7 +118,7 @@ QVariant DistributorTableModel::prepareBatch(const QVariant & v) {
 		QString name = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HSpec).data(Qt::DisplayRole).toString();
 		QString unit = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 		QString price = db->CachedBatch()->index(qmil.first().row(), BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
-// 		
+// 
 // 		return QVariant(tr("%1\t[ 1 unit = %2, price: %3/%2 ]").arg(name).arg(unit).arg(price));
 		return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
 	}
@@ -218,7 +218,7 @@ QVariant DistributorTableModel::raw(const QModelIndex & idx) const {
 bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& ddate, const QDate& rdate, int disttype, const QString& dt_a, const QString& dt_b, bool autoupdate) {
 	QString query("INSERT INTO :table: VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);");
 	query.replace(":table:", table);
-	
+
 	QSqlQuery q;
 	q.prepare(query);
 
@@ -256,7 +256,7 @@ bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, con
 
 	QString query("UPDATE :table: SET batch_id=?, quantity=?, distdate=?, entrydate=?, disttype=?, disttype_a=?, disttype_b=? WHERE id=?;");
 	query.replace(":table:", table);
-	
+
 	QSqlQuery q;
 	q.prepare(query);
 
@@ -279,7 +279,7 @@ bool DistributorTableModel::updateRecord(int row, unsigned int bid, int qty, con
 
 	query = "SELECT * FROM :table: WHERE id = ?";
 	query.replace(":table:", table);
-	
+
 	q.prepare(query);
 	q.bindValue(0, id);
 	q.exec();
@@ -322,9 +322,9 @@ bool DistributorTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signa
 
 		rec->arr[Qt::EditRole][r]				= q.value(r);
 		rec->arr[Qt::EditRole][r].convert(dtypes[Qt::EditRole][r]);
-		
+
 	}
-	
+
 	rec->arr[Qt::DisplayRole][HBatchId]			= prepareBatch(q.value(HBatchId));
 	rec->arr[Qt::DisplayRole][HQty]				= prepareQty(q.value(HQty), rec->arr[Qt::EditRole][HBatchId]);
 	rec->arr[Qt::DisplayRole][HDistDate]		= prepareDate(q.value(HDistDate));

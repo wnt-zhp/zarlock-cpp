@@ -128,7 +128,7 @@ void AbstractTableView::reloadPalette() {
  **/
 void AbstractTableView::removeRecord() {
 	QModelIndexList l = selectedIndexes();
-	
+
 	QVector<int> v;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
 		if (it->column() == 0)
@@ -140,13 +140,13 @@ void AbstractTableView::removeRecord() {
 
 void AbstractTableView::editRecord() {
 	QModelIndexList l = selectedIndexes();
-	
+
 	QVector<int> v;
 	for (QModelIndexList::iterator it = l.begin(); it != l.end(); ++it) {
 		if (it->column() == 0)
 			v.push_back(it->data(Qt::EditRole).toInt());
 	}
-	
+
 	emit editRecordRequested(v);
 }
 

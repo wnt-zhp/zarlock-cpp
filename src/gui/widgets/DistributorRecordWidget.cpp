@@ -194,7 +194,7 @@ void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	QString spec, price, disttype_a, disttype_b;
 	QDate reg, entry;
 	int disttype;
-	
+
 	clearForm();
 	update_model();
 
@@ -226,7 +226,7 @@ void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	this->disttype = disttype;
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);
-	
+
 	action_addnext->setText(tr("Update record and exit"));
 	validateAdd();								// revalidate proxy model
 

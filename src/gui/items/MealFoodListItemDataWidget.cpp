@@ -41,9 +41,9 @@
 #include "TextInput.h"
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWidgetItem * item, Qt::WindowFlags f):
-QWidget(parent, f), empty(true), editable(true), lock(true),
-batch_row(-1), dist_id(-1), dist_row(-1),
-owner(item), tv(NULL), evf(NULL), ledit(NULL)
+	QWidget(parent, f), empty(true), editable(true), lock(true),
+	batch_row(-1), dist_id(-1), dist_row(-1),
+	owner(item), tv(NULL), evf(NULL), ledit(NULL)
 {
 	CII();
 
@@ -56,7 +56,9 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 	evf->registerFilter(QEvent::KeyPress);
 	evf->registerFilter(QEvent::Show);
 	evf->registerFilter(QEvent::Hide);
+
 	batch->installEventFilter(evf);
+
 	connect(evf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
 
 	ledit = new TextInput(this);
@@ -65,12 +67,10 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 
 	batch->setModel(proxy);
 	batch->setModelColumn(BatchTableModel::HSpec);
-	
-	batch->setCurrentIndex(batch_row);
 
 	batch->setAutoCompletion(true);
 	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
-	
+
 	addB->setMaximumSize(32, 32);
 	addB->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
 	addB->setIconSize(QSize(16,16));
@@ -92,10 +92,10 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 	qty->setMaximumSize(128, 32);
 	qty->setMaximum(9999);
 	qty_label->setMaximumSize(128, 32);
-	
+
 	connect(batch, SIGNAL(activated(int)), this, SLOT(validateBatchAdd()));
 	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
-	
+
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
 	connect(removeB, SIGNAL(clicked(bool)), this, SLOT(buttonRemove()));
@@ -103,18 +103,41 @@ owner(item), tv(NULL), evf(NULL), ledit(NULL)
 
 	connect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 
-	addB->setEnabled(false);
-
-	invalidate();
-
+	resetWidget();
 	render();
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
 	DII();
-
-	disconnect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 	deleteView();
+}
+
+void MealFoodListItemDataWidget::resetWidget() {
+	batch_row = -1;
+	invalidateProxy();
+
+// 	PR(batch_row);PR(&batch_row);
+
+	batch->setCurrentIndex(batch_row);
+	addB->setEnabled(false);
+}
+
+void MealFoodListItemDataWidget::convertToEmpty() {
+	resetWidget();
+
+	batch_label->setText("---");
+	qty_label->setText("---");
+	label_price->setText("---");
+	label_unit->setText("---");
+
+	qty->setValue(0);
+	qty->setMaximum(0);
+
+	empty = true;
+	editable = true;
+
+	prepareView();
+	render();
 }
 
 /** @brief Render widget
@@ -129,7 +152,7 @@ void MealFoodListItemDataWidget::render() {FII();
 	qty->setVisible(editable);
 	qty_label->setVisible(!editable);
 	qty->setSuffix(tr(" of %1").arg(qty->maximum()));
-	
+
 	batch->setVisible(editable);
 	batch_label->setVisible(!editable);
 }
@@ -138,10 +161,10 @@ void MealFoodListItemDataWidget::update() {
 	int tmp_batch_row = proxy->mapToSource(proxy->index(batch->currentIndex(), BatchTableModel::HId)).row();
 
 	double tmp_qty_max = 10000;
-	
+
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
 	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
-	
+
 	int ball = btm->index(tmp_batch_row, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 	int used = btm->index(tmp_batch_row, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
 	int dqty = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
@@ -185,117 +208,126 @@ void MealFoodListItemDataWidget::validateAdd() {
 	}
 }
 
-void MealFoodListItemDataWidget::convertToEmpty() {
-	batch_row = -1;
-	invalidate();
-
-	batch->setCurrentIndex(-1);
-
-	batch_label->setText("---");
-	qty_label->setText("---");
-	label_price->setText("---");
-	label_unit->setText("---");
-
-	qty->setValue(0);
-	qty->setMaximum(0);
-
-	empty = true;
-	editable = true;
-
-	render();
-
-	prepareView();
-}
-
+/** @brief Inser/replace record
+ */
 void MealFoodListItemDataWidget::buttonAdd() {
 	Database * db = Database::Instance();
-	// 	lock = false;
-	
+
+	// Map current batch proxy model selection to general batch model
 	QModelIndex bidx = proxy->mapToSource(proxy->index(batch->currentIndex(), BatchTableModel::HId));
 	batch_row = bidx.row();
 	quantity = qty->value();
 
-	QDate d = mfl->proxyModel()->refDate();
+	QDate reference_date = mfl->proxyModel()->refDate();
 
+	// If item is empty then we perform insert action
 	if (empty) {
-		const MealTableModelProxy * p = ((MealFoodList *)owner->listWidget())->proxyModel();
+		// Get proxy model of distributions for current meal and fetch list of distributions of the same batch
+		const MealTableModelProxy * pr = ((MealFoodList *)owner->listWidget())->proxyModel();
+		QModelIndexList same_meal_list = pr->match(pr->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bidx.data(Qt::EditRole), -1, Qt::MatchExactly);
 
-		QModelIndexList l = p->match(p->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bidx.data(Qt::EditRole), -1, Qt::MatchExactly);
-
-		int ans = mergeBox(l);
+		// Ask if we merge them or we add as a new entry
+		int ans = mergeBox(same_meal_list);
+		// If canceled then exit
 		if (ans == -2)
 			return;
 
+		// If selected new entry
 		if (ans == -1) {
-			if (db->addDistributorRecord(bidx.data().toInt(), quantity*100, d, d,
+			// Try add to database
+			if (db->addDistributorRecord(bidx.data().toInt(), quantity*100, reference_date, reference_date,
 				DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
-
+				// Reload widget data from database and ask for new empty slot
 				dist_row = db->CachedDistributor()->rowCount()-1;
 				setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
+				invalidateProxy();
+				//TODO: this must be outside widget
 				mfl->insertEmptySlot();
-				invalidate();
 			} else
-				return;
-		} else {
-			int update_row = p->mapToSource(l.at(ans)).row();
-			int old_qty = p->index(l.at(ans).row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
-			if (db->updateDistributorRecord(update_row, bidx.data().toUInt(), old_qty + quantity*100, d, d,
-				DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
-				invalidate();
-			} else
+				// If insertion failed then return
 				return;
 		}
-	} else {
-		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity*100, d, d,
-			DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
-// 			empty = false;
+		// If we requestested merge with another widget
+		else {
+			// Get row to update, get old quantity value and...
+			int update_row = pr->mapToSource(same_meal_list.at(ans)).row();
+			int old_qty = pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
+			// ...update record with new quantity
+			if (db->updateDistributorRecord(update_row, bidx.data().toUInt(), old_qty + quantity*100, reference_date,
+				reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
+				// Refresh modified widget
+				mfl->refreshItem(pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
+				// Convert current to empty and reload proxy
+				convertToEmpty();
+				invalidateProxy();
+			} else
+				// If insertion failed then return
+				return;
+		}
+	}
+	// otherwise we have update action
+	else {
+		// Try update record in database
+		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity*100, reference_date,
+			reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
+			// Update record data
 			setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 		} else
+			// If update failed then return
 			return;
 	}
 
+	// Refresh meal model data
 	db->CachedMealDay()->select();
 }
 
 /** @brief Prepare widget to update data.
  */
 void MealFoodListItemDataWidget::buttonUpdate() {
-	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenItems();
-	((MealTabWidget *)(mfl->parent()->parent()))->markOpenItem(owner);
-
+	// if empty then no update available
 	if (empty)
 		return;
 
-	invalidate();
+	// Close other open items and this as open
+	((MealTabWidget *)(mfl->parent()->parent()))->closeOpenItems();
+	((MealTabWidget *)(mfl->parent()->parent()))->markOpenItem(owner);
 
+	// prepare proxy model and prepare table view
+	invalidateProxy();
 	prepareView();
 
+	// set proper index of batch combo box
 	batch->setCurrentIndex(proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row());
 
+	// mart as editable and render widget
 	editable = true;
-
 	render();
 }
 
 /** @brief Close widget and display data
  */
 void MealFoodListItemDataWidget::buttonClose() {
+	// if button is empty then do not close it
 	if (!empty) {
+		// remove view model and reset to oryginal data
 		deleteView();
 		resetWidgetData();
 	}
 }
 
+/** @brief Remove widget and item.
+ *  This will result with remove data from database
+ */
 void MealFoodListItemDataWidget::buttonRemove() {
 	Database * db = Database::Instance();
-	
+
+	// Prepare list of records to remove, delete and refresh batch model
 	QVector<int> v;
 	v.push_back(dist_id);
 	db->removeDistributorRecord(v);
-
 	db->CachedBatch()->selectRow(batch_row);
-// 	db->CachedMealDay()->select();
 
+	// inform about removal
 	emit itemRemoved(owner);
 }
 
@@ -307,20 +339,20 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
 	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
-	
+
 	dist_row = dtm->getRowById(dist_id);
-	
+
 	// set batch
 	int tmp_dist_batchid = dtm->index(dtm->getRowById(did), DistributorTableModel::HBatchId).data(Qt::EditRole).toInt();
 	batch_row = btm->getRowById(tmp_dist_batchid);
 
 	// set quantity
 	quantity = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toDouble()/100.0;
-	
+
 	int ball = btm->index(batch_row, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 	int used = btm->index(batch_row, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
 	int dqty = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
-	
+
 	double tmp_qty_max = double(ball - used + dqty)/100.0;
 
 	qty->setMaximum(tmp_qty_max);
@@ -331,7 +363,7 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 	editable = false;
 	empty = false;
 
-	invalidate();
+	invalidateProxy();
 	batch->setCurrentIndex(proxy->mapFromSource(btm->index(batch_row, BatchTableModel::HSpec)).row());
 
 	update();
@@ -383,14 +415,14 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 	int items_num =  mbox->layout()->count();
 
 	QLayoutItem * li = ((QGridLayout *)mbox->layout())->takeAt(items_num-1);
-	
+
 	QWidget * radioWidget = new QWidget;
 	QVBoxLayout * layout = new QVBoxLayout;
 	QScrollArea * scroll = new QScrollArea;
 
 	QVector<QRadioButton *> radios(list.size()+1);
 
-	radios[0] = new QRadioButton("Add new record", radioWidget);
+	radios[0] = new QRadioButton(tr("Add new record"), radioWidget);
 	mbox->button(QMessageBox::Save)->setEnabled(false);
 	connect(radios[0], SIGNAL(toggled(bool)), mbox->button(QMessageBox::Save), SLOT(setEnabled(bool)));
 
@@ -446,14 +478,21 @@ int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
 	return res;
 }
 
+/** @brief Get id of distributed record.
+ * @return id of distributor record. -1 if no data (empty item or header item).
+ */
 int MealFoodListItemDataWidget::distributorId() {
 	return dist_id;
 }
 
+/** @brief Restore default widget data
+ */
 void MealFoodListItemDataWidget::resetWidgetData() {
 	setWidgetData(dist_id);
 }
 
+/** @brief Make widget a header - temporary solution
+ */
 void MealFoodListItemDataWidget::convertToHeader() {
 	editable = false;
 	batch_row = -1;
@@ -509,12 +548,12 @@ void MealFoodListItemDataWidget::convertToHeader() {
 
 	qty->setVisible(false);
 	qty_label->setVisible(true);
-	
+
 	batch->setVisible(false);
 	batch_label->setVisible(true);
 }
 
-void MealFoodListItemDataWidget::invalidate() {
+void MealFoodListItemDataWidget::invalidateProxy() {
 	proxy->setItemNum(&batch_row);
 	proxy->invalidate();
 }
@@ -552,7 +591,7 @@ void MealFoodListItemDataWidget::eventCaptured(QEvent * evt) {
 }
 
 void MealFoodListItemDataWidget::setFilter() {
-	this->invalidate();
+	this->invalidateProxy();
 // 	table_batch->setModel(proxy_model);
 }
 

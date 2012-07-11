@@ -39,7 +39,7 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 	tab_action_rename = new QAction(tr("&Rename"), this);
 	// 	removeRec->setShortcut(QKeySequence::Delete);
 	tab_action_rename->setToolTip(tr("Remove record from database"));
-	
+
 	//  Łączymy akcję kliknięcia w menu "Remove" z funkcją (slotem), która to wykona.
 	// 	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
 	tab_context_menu.addAction(tab_action_rename);
@@ -162,16 +162,16 @@ void MealTabWidget::prepareTab(int mealid, const QDate & mealday, int pos) {
 		return;
 
 	QString mn = mt->index(ml.at(0).row(), MealTableModel::HMealName).data().toString();
-	
+
 	MealTableModelProxy * proxy = new MealTableModelProxy;
 	proxy->setSourceModel((QAbstractItemModel *)Database::Instance()->CachedDistributor());
-	
+
 	MealFoodList * foodlist = new MealFoodList(this);
 	this->insertTab(pos, foodlist, mn);
 	tab_handler.insert(pos, foodlist);
-	
+
 	foodlist->setProxyModel(proxy);
-	
+
 	proxy->setKey(mealid);
 	proxy->setRefDate(mealday);
 	proxy->invalidate();

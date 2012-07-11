@@ -84,7 +84,7 @@ void ProgramSettings::saveSettings() {
 	globals::appSettings->setValue("doUpdateCheck", this->doUpdateCheck);
 
 	globals::appSettings->setValue("CSVEncoding", csv_encoding);
-	globals::appSettings->setValue("CSVSeparator", csv_separator);	
+	globals::appSettings->setValue("CSVSeparator", csv_separator);
 
 	globals::appSettings->endGroup();
 

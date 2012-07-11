@@ -85,9 +85,9 @@ void MealFoodList::insertEmptySlot() {
 void MealFoodList::insertHeaderSlot() {
 	QListWidgetItem * qlwi = new QListWidgetItem(this);
 	qlwi->setSizeHint(QSize(100, 36));
-	
+
 	MealFoodListItemDataWidget * mflidw = new MealFoodListItemDataWidget(this, qlwi);
-	
+
 	this->insertItem(0, qlwi);
 	this->setItemWidget(qlwi, (QWidget *)mflidw);
 	mflidw->convertToHeader();
@@ -129,5 +129,16 @@ void MealFoodList::paintEvent(QPaintEvent* e) {
 
 	QListView::paintEvent(e);
 }
+
+void MealFoodList::refreshItem(int distId) {
+	for (int i = 0; i < this->count(); ++i) {
+		MealFoodListItemDataWidget * w = qobject_cast< MealFoodListItemDataWidget* >(this->itemWidget(this->item(i)));
+		if (w->distributorId() == distId) {
+			w->resetWidgetData();
+			break;
+		}
+	}
+}
+
 
 #include "MealFoodList.moc"

@@ -218,7 +218,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				QString qty;
 				return tr("   %1 of %2   ").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
-			
+
 			return records[row]->arr[Qt::DisplayRole][col];
 
 			break;
@@ -253,7 +253,7 @@ QVariant BatchTableModel::raw(const QModelIndex & idx) const {
 bool BatchTableModel::addRecord(int pid, const QString& spec, int price, const QString& unit, int qty, const QDate& reg, const QDate& expiry, const QDate& entry, const QString& invoice, const QString& notes) {
 	QString query("INSERT INTO :table: VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 	query.replace(":table:", table);
-	
+
 	QSqlQuery q;
 	q.prepare(query);
 
@@ -357,7 +357,7 @@ bool BatchTableModel::fillRow(const QSqlQuery& q, int row, bool emit_signal) {
 
 	rec->arr[Qt::EditRole].resize(DummyHeadersSize);
 	rec->arr[Qt::DisplayRole].resize(DummyHeadersSize);
-	
+
 	for (int r = 0; r < DummyHeadersSize; ++r) {
 		rec->arr[Qt::DisplayRole][r]			= q.value(r);
 		rec->arr[Qt::DisplayRole][r].convert(dtypes[Qt::DisplayRole][r]);

@@ -144,7 +144,7 @@ void DBBrowser::deleteDatabase() {
 	}
 }
 
-		
+
 void DBBrowser::databaseSelected(QListWidgetItem * item) {
 // 	QString dbname = item->data(Qt::UserRole).toString();
 // 	openZarlock(dbname);

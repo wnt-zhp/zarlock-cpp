@@ -63,7 +63,7 @@ bool DataParser::quantity(const QString & data, double & qty_formated) {
 
 bool DataParser::quantity(const QString & data, QString & qty_formated) {
 	double quantity;
-	
+
 	bool status = DataParser::quantity(data, quantity);
 	qty_formated.sprintf("%.2f", quantity);
 
@@ -92,7 +92,7 @@ bool DataParser::price(const QString & data, double & netto_formated, double & v
 
 bool DataParser::price(const QString & data, QString & price_formated) {
 	double price, tax;
-	
+
 	bool status = DataParser::price(data, price, tax);
 	price_formated.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), price*(100.0+tax)/100.0);
 

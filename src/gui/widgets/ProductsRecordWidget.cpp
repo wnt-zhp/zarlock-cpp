@@ -29,7 +29,7 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWid
 	button_label_insert_and_next = action_addnext->text();
 	button_label_insert_and_exit = action_addexit->text();
 	button_label_close = action_cancel->text();
-	
+
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );

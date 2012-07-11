@@ -100,26 +100,26 @@ bool AbstractTableModel::selectColumn(int column) {
 	QSqlQuery q;
 	q.prepare(query);
 	q.exec();
-	
+
 	PR(q.size());
 	int i = -1;
 	while (q.next()) {
 		records[++i]->arr[Qt::EditRole][column] = q.value(0);
 	}
-	
+
 	return true;
 }
 
 bool AbstractTableModel::selectRow(int row) {
 	QString query("SELECT * FROM :table: WHERE id=?");
 	query.replace(":table:", table);
-	
+
 	QSqlQuery q;
 	q.prepare(query);
 	q.bindValue(0, records[row]->arr[Qt::EditRole][HId].toInt());
 
 	q.exec();
-	
+
 	while (q.next()) {
 		fillRow(q, row, true);
 	}
@@ -295,7 +295,7 @@ QVector< int > AbstractTableModel::search(int column, const QVariant& value, int
 			break;
 		}
 	}
-	
+
 	return result;
 }
 
@@ -411,7 +411,7 @@ bool AbstractTableModel::d_record::operator==(const QVariant & rhs) const {
 // 	QVariant v1 = this->arr[model->find_role][model->find_column];
 // 	QVariant v2 = rhs->arr[model->find_role][rhs.model->find_column];
 // 	bool res = false;
-// 	
+// 
 // 	switch (this->model->dtypes[model->find_column]) {
 // 		case AbstractTableModel::DTInt:
 // 			res = ( v1.toInt() == v2.toInt() );

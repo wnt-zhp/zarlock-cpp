@@ -28,7 +28,7 @@
 #include "Database.h"
 
 MealDayTableModel::MealDayTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
-	CI();	
+	CI();
 // 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));
 }
 

@@ -70,7 +70,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 // 	connect(table_batch, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit_record(QModelIndex)));
 
 	dwbox = new DimmingWidget(this);
-	
+
 	dwbox->setOverlay(true, true);
 	dwbox->setWidget(widget_add_batch);
 	dwbox->setOverlayOpacity(100);
