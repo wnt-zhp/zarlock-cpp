@@ -21,17 +21,15 @@
 #ifndef DATAPARSER_H
 #define DATAPARSER_H
 
-#include <QDate>
-
 namespace DataParser {
-	bool text(const QString & data, QString & text_formated, bool allow_empty = false);
-	bool quantity(const QString & data, double & qty_formated);
-	bool quantity(const QString & data, QString & qty_formated);
-	bool price(const QString & data, double & price_formated, double & tax_formated);
-	bool price(const QString & data, QString & price_formated);
-	bool unit(const QString & data, QString & unit_formated);
-	bool date(const QString & data, QDate & date_formated, const QDate & ref = QDate::currentDate());
-	bool date(const QString & data, QString & date_formated, const QDate & ref = QDate::currentDate());
+	bool text(const QString & data, QString & text_parsed, bool allow_empty = false);
+	bool quantity(const QString & data, double & qty_parsed);
+	bool quantity(const QString & data, QString & qty_parsed);
+	bool price(const QString & data, double & netto_parsed, int & vat_parsed);
+	bool price(const QString & data, QString & price_parsed);
+	bool unit(const QString & data, QString & unit_parsed);
+	bool date(const QString & data, QDate & date_parsed, const QDate & ref = QDate::currentDate());
+	bool date(const QString & data, QString & date_parsed, const QDate & ref = QDate::currentDate());
 };
 
 #endif // DATAPARSER_H

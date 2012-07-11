@@ -24,6 +24,7 @@
 
 #include <QStringList>
 #include <QSqlQuery>
+#include <QMessageBox>
 
 BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::BRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
@@ -94,9 +95,9 @@ void BatchRecordWidget::insertRecord() {
 	unsigned int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toUInt();
 
 	// price
-	double netto, vat;
+	double netto; int vat;
 	DataParser::price(edit_price->text(), netto, vat);
-	int uprice = int(netto*(100+vat));
+	int uprice = netto*(100+vat);
 	// unit price
 	int unitprice = check_uprice->isChecked() ? uprice : (uprice / spin_qty->value());
 	QDate regdate, expdate;
@@ -166,9 +167,9 @@ void BatchRecordWidget::validateAdd() {
 
 	int uprice = 0;
 	if (edit_price->ok()) {
-		double netto, vat;
+		double netto; int vat;
 		DataParser::price(edit_price->text(), netto, vat);
-		uprice = int(netto*(100+vat));
+		uprice = netto*(100+vat);
 	}
 
 	if (edit_spec->ok() and edit_unit->ok() and

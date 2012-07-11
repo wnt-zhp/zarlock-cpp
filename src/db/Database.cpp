@@ -528,7 +528,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 				QString price = q.value(4).toString();
 				QString regdate = q.value(5).toString();
 
-				double netto, vat;
+				double netto; int vat;
 				DataParser::price(price, netto, vat);
 
 				QDate regdate_n, expdate_n, entrydate_n;
@@ -537,7 +537,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 
 				qdbup.prepare("UPDATE batch SET expirydate=?,price=? WHERE id=?;");/*start_qty=?,used_qty=?,*/
 				qdbup.bindValue(0, expdate_n.toString(Qt::ISODate));
-				qdbup.bindValue(1, int(netto*(vat+100)));
+				qdbup.bindValue(1, netto*(vat+100));
 				qdbup.bindValue(2, bid);
 				qdbup.exec();
 				qdbup.finish();
