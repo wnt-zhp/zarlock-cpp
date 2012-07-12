@@ -23,6 +23,7 @@
 #include <QRadioButton>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QDesktopWidget>
 
 #include "globals.h"
 
@@ -39,6 +40,8 @@
 
 #include "EventFilter.h"
 #include "TextInput.h"
+
+const int new_width = 1000;
 
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWidgetItem * item, Qt::WindowFlags f):
 	QWidget(parent, f), empty(true), editable(true), lock(true),
@@ -60,6 +63,11 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 	batch->installEventFilter(evf);
 
 	connect(evf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
+
+	vevf = new EventFilter;
+	vevf->registerFilter(QEvent::Show);
+
+	connect(vevf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(viewEventCaptured(QEvent*)));
 
 	ledit = new TextInput(this);
 	ledit->setVisible(false);
@@ -151,7 +159,7 @@ void MealFoodListItemDataWidget::render() {FII();
 
 	qty->setVisible(editable);
 	qty_label->setVisible(!editable);
-	qty->setSuffix(tr(" of %1").arg(qty->maximum()));
+	qty->setSuffix(tr(" of %1.%2").arg(qty->maximum()/100).arg(qty->maximum() % 100, 2, 10, QChar('0')));
 
 	batch->setVisible(editable);
 	batch_label->setVisible(!editable);
@@ -160,7 +168,7 @@ void MealFoodListItemDataWidget::render() {FII();
 void MealFoodListItemDataWidget::update() {
 	int tmp_batch_row = proxy->mapToSource(proxy->index(batch->currentIndex(), BatchTableModel::HId)).row();
 
-	double tmp_qty_max = 1000000;
+	int tmp_qty_max = 1000000;
 
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
 	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
@@ -182,9 +190,9 @@ void MealFoodListItemDataWidget::update() {
 	batch_label->setText(tmp_batch_label);
 
 	qty->setMaximum(tmp_qty_max);
-	qty->setSuffix(tr(" of %1").arg(tmp_qty_max/100));
+	qty->setSuffix(tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
 
-	qty_label->setText(QString("%1").arg(qty->value()));
+	qty_label->setText(QString("%1.%2").arg(qty->value()/100).arg(qty->value() % 100, 2, 10, QChar('0')));
 
 	QString unit = btm->index(tmp_batch_row, BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 	QString price = btm->index(tmp_batch_row, BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
@@ -351,18 +359,18 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 	batch_row = btm->getRowById(tmp_dist_batchid);
 
 	// set quantity
-	quantity = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toDouble();
+	quantity = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
 
 	int ball = btm->index(batch_row, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 	int used = btm->index(batch_row, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
 	int dqty = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
 
-	double tmp_qty_max = double(ball - used + dqty);
+	int tmp_qty_max = double(ball - used + dqty);
 
 	qty->setMaximum(tmp_qty_max);
 	qty->setValue(quantity);
-	qty->setSuffix(tr(" of %1").arg(tmp_qty_max/100));
-	qty_label->setText(QString("%1").arg(quantity/100));
+	qty->setSuffix(tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
+	qty_label->setText(QString("%1.%2").arg(quantity/100).arg(quantity % 100, 2, 10, QChar('0')));
 
 	editable = false;
 	empty = false;
@@ -403,6 +411,8 @@ void MealFoodListItemDataWidget::prepareView() {
 
 	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(batch_row, BatchTableModel::HSpec)).row());
 	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
+
+	tv->installEventFilter(vevf);
 }
 
 int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
@@ -592,6 +602,27 @@ void MealFoodListItemDataWidget::eventCaptured(QEvent * evt) {
 	if (evt->type() == QEvent::Hide) {
 		ledit->hide();
 		this->setFilterString(QString());
+	}
+}
+
+void MealFoodListItemDataWidget::viewEventCaptured(QEvent * evt) {
+	if (evt->type() == QEvent::Show) {
+		QFrame * popup = batch->findChild<QFrame*>();
+
+		popup->resize(new_width, popup->rect().height());
+
+		QRect screen;
+#ifndef Q_WS_S60
+		int screenid = QApplication::desktop()->screenNumber(this);
+		screen = QApplication::desktop()->screenGeometry(screenid);
+#else
+		screen = qt_TRect2QRect(static_cast<CEikAppUi*>(S60->appUi())->ClientRect());
+#endif
+
+		QPoint p = popup->pos();
+		int dxpos = screen.right() - (p.x() + new_width);
+		if (dxpos < 0)
+			popup->move(p.x()+dxpos, p.y());
 	}
 }
 

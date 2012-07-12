@@ -60,9 +60,11 @@ protected slots:
 	void validateBatchAdd();
 	void validateAdd();
 
-	void eventCaptured(QEvent * evt);
 	void setFilter();
 	void setFilterString(const QString & string);
+
+	void eventCaptured(QEvent * evt);
+	void viewEventCaptured(QEvent * evt);
 
 signals:
 	void itemRemoved(QListWidgetItem * item);
@@ -77,7 +79,7 @@ private:
 
 	bool empty, editable, lock;
 
-	double quantity;
+	int quantity;
 
 	int batch_row;
 	int dist_id, dist_row;
@@ -88,6 +90,7 @@ private:
 	BatchTableView * tv;
 
 	EventFilter * evf;
+	EventFilter * vevf;
 	QString filter_string;
 	TextInput * ledit;
 };
