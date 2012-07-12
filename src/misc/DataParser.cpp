@@ -43,7 +43,7 @@ bool DataParser::text(const QString & data, QString & text_parsed, bool allow_em
 	return allow_empty;
 }
 
-bool DataParser::quantity(const QString & data, double & qty_parsed) {
+bool DataParser::quantity(const QString & data, int & qty_parsed) {
 	QRegExp rx("^\\s*((\\d+)?(([.,]?\\d+))?)\\s*$");
 
 // 	PR(rx.indexIn(data));
@@ -55,18 +55,19 @@ bool DataParser::quantity(const QString & data, double & qty_parsed) {
 
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
-		qty_parsed = rx.cap(1).toDouble();
-		if (qty_parsed > 0)
+		double qty = rx.cap(1).toDouble();
+		if (qty > 0)
+			qty_parsed = qty * 100.0 + 0.5;
 			return true;
 	}
 	return false;
 }
 
 bool DataParser::quantity(const QString & data, QString & qty_parsed) {
-	double quantity;
+	int quantity;
 
 	bool status = DataParser::quantity(data, quantity);
-	qty_parsed.sprintf("%.2f", quantity);
+	qty_parsed = QObject::tr("%1.%2").arg(quantity/100).arg(quantity % 100);
 
 	return status;
 }
@@ -106,7 +107,7 @@ bool DataParser::price(const QString & data, QString & price_parsed) {
 
 	bool status = DataParser::price(data, price);
 // 	price_parsed.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), 333);//0.01*price*(100.0+tax));
-	price_parsed = QString("%1.%2 zl").arg(price/100).arg(price % 100);
+	price_parsed = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100);
 
 	return status;
 }

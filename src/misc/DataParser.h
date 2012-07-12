@@ -23,7 +23,7 @@
 
 namespace DataParser {
 	bool text(const QString & data, QString & text_parsed, bool allow_empty = false);
-	bool quantity(const QString & data, double & qty_parsed);
+	bool quantity(const QString & data, int & qty_parsed);
 	bool quantity(const QString & data, QString & qty_parsed);
 	bool price(const QString & data, double & netto_parsed, int & vat_parsed);
 	bool price(const QString & data, int & price_parsed);

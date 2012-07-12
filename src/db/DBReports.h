@@ -35,8 +35,8 @@ public:
 	static void printKMReport(QString * reportsdir = NULL);
 
 private:
-	static void addVectors(QVector<double> & target, const QVector<double> & source);
-	static void subVectors(QVector<double> & target, const QVector<double> & source);
+	static void addVectors(QVector<int> & target, const QVector<int> & source);
+	static void subVectors(QVector<int> & target, const QVector<int> & source);
 };
 
 #endif // DBREPORTS_H

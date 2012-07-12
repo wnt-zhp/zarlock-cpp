@@ -338,7 +338,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 			QString spec = q2.value(1).toString().trimmed().toUtf8();
 			QString unit;
 			int price = q2.value(3).toInt();
-			QString price_s = QString("%1 zl").arg(double(price)/100, 0, 'f', 2);;
+			QString price_s = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100);
 			int qty = q2.value(4).toInt();
 			int uqty = q2.value(5).toInt();
 			QString invoice = q2.value(6).toString().trimmed();
@@ -569,7 +569,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 		QString bname = pnames[q.value(0).toInt()].trimmed() % " " % q.value(1).toString().toUtf8().trimmed();
 
 		QString bunit;
-		double bqty;
+		int bqty;
 
 		DataParser::unit(q.value(2).toString(), bunit);
 		DataParser::quantity(q.value(3).toString(), bqty);
@@ -591,13 +591,13 @@ void DBReports::printSMReport(QString * reportsdir) {
 	bnum = bidnames.count();
 
 	QMap<QString, int> batches_in_stock;
-	QVector<double> batches_in_stock_num(bnum);
+	QVector<int> batches_in_stock_num(bnum);
 	QMap<QString, int> batches_new;
-	QVector<double> batches_new_num(bnum);
+	QVector<int> batches_new_num(bnum);
 	QMap<QString, int> batches_removed;
-	QVector<double> batches_removed_num(bnum);
+	QVector<int> batches_removed_num(bnum);
 	QMap<QString, int> batches_bilans;
-	QVector<double> batches_bilans_num(bnum);
+	QVector<int> batches_bilans_num(bnum);
 
 	// calculate number of days to proceed
 	q.exec("SELECT regdate FROM batch ORDER BY regdate ASC LIMIT 1;");
@@ -625,7 +625,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 		totdays = b_min.daysTo(b_max);
 
 	QString bidname, bunit;
-	double bqty;
+	int bqty;
 
 	q.prepare("SELECT * FROM batch WHERE regdate=?;");
 	q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
@@ -737,7 +737,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 // 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
 		for (QMap<QString, int>::iterator kmm_iter = batches_in_stock.begin(); kmm_iter != batches_in_stock.end(); ++kmm_iter) {
 			int idx = kmm_iter.value();
-			if (batches_in_stock_num[idx] > 0.0) {
+			if (batches_in_stock_num[idx] > 0) {
 // 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]/100);
 				QString entry = entry2_tmpl
 					.arg(QString::fromUtf8(bnames[idx].toStdString().c_str()))
@@ -763,7 +763,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 			QSqlDatabase::database().rollback();
 }
 
-void DBReports::addVectors(QVector< double >& target, const QVector< double >& source) {
+void DBReports::addVectors(QVector<int>& target, const QVector<int>& source) {
 	int st = target.size();
 	int ss = source.size();
 
@@ -774,7 +774,7 @@ void DBReports::addVectors(QVector< double >& target, const QVector< double >& s
 		target[i] += source.at(i);
 }
 
-void DBReports::subVectors(QVector< double >& target, const QVector< double >& source) {
+void DBReports::subVectors(QVector<int>& target, const QVector<int>& source) {
 	int st = target.size();
 	int ss = source.size();
 
