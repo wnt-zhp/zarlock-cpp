@@ -199,7 +199,6 @@ add_custom_command(
 # TRANSLATIONS
 ####################################################
 file (GLOB TS_FILES src/translations/${CMAKE_PROJECT_NAME}_*.ts)
-set(${CMAKE_PROJECT_NAME}_TS ${TS_FILES})
 
 option (UPDATE_TRANSLATIONS "Update source translation translations/*.ts files (WARNING: make clean will delete the source .ts files! Danger!)")
 
@@ -216,7 +215,7 @@ qt4_wrap_ui(${CMAKE_PROJECT_NAME}_FORMS_HEADERS ${${CMAKE_PROJECT_NAME}_FORMS})
 qt4_wrap_cpp(${${CMAKE_PROJECT_NAME}_MOC_INCS} ${${CMAKE_PROJECT_NAME}_SRCS})
 qt4_automoc(${${CMAKE_PROJECT_NAME}_MOC_SRCS} ${${CMAKE_PROJECT_NAME}_SRCS})
 
-message(STATUS "QM files" ${QM_FILES})
+message(STATUS "QM files: " ${QM_FILES})
 ##################
 # TODO for MACOSX
 ##################
@@ -288,7 +287,7 @@ elseif (WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy ${QM_FILES} ${trans_qmoutfile}
 		COMMAND ${CMAKE_COMMAND} -E copy ${trans_srcfile} ${trans_infile}
 		COMMAND ${QT_RCC_EXECUTABLE} ${rcc_options} -name ${trans_file} -o ${trans_outfile} ${trans_infile}
-		DEPENDS ${TS_FILES} ${trans_infile}
+		DEPENDS ${QM_FILES} ${trans_srcfile}
 	)
 
 	SET(RCC_SRCS ${${CMAKE_PROJECT_NAME}_db_RESOURCES_RCC} ${${CMAKE_PROJECT_NAME}_reports_RESOURCES_RCC} ${${CMAKE_PROJECT_NAME}_icons_RESOURCES_RCC} ${${CMAKE_PROJECT_NAME}_splash_RESOURCES_RCC} ${trans_outfile} )
