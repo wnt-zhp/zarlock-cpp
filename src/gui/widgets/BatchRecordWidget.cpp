@@ -95,9 +95,8 @@ void BatchRecordWidget::insertRecord() {
 	unsigned int prod_id = pproxy->mapToSource(pproxy->index(idx, 0)).data().toUInt();
 
 	// price
-	double netto; int vat;
-	DataParser::price(edit_price->text(), netto, vat);
-	int uprice = netto*(100+vat);
+	int uprice;
+	DataParser::price(edit_price->text(), uprice);
 	// unit price
 	int unitprice = check_uprice->isChecked() ? uprice : (uprice / spin_qty->value());
 	QDate regdate, expdate;
@@ -167,9 +166,7 @@ void BatchRecordWidget::validateAdd() {
 
 	int uprice = 0;
 	if (edit_price->ok()) {
-		double netto; int vat;
-		DataParser::price(edit_price->text(), netto, vat);
-		uprice = netto*(100+vat);
+		DataParser::price(edit_price->text(), uprice);
 	}
 
 	if (edit_spec->ok() and edit_unit->ok() and

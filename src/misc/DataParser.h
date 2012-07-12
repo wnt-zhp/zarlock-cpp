@@ -26,6 +26,7 @@ namespace DataParser {
 	bool quantity(const QString & data, double & qty_parsed);
 	bool quantity(const QString & data, QString & qty_parsed);
 	bool price(const QString & data, double & netto_parsed, int & vat_parsed);
+	bool price(const QString & data, int & price_parsed);
 	bool price(const QString & data, QString & price_parsed);
 	bool unit(const QString & data, QString & unit_parsed);
 	bool date(const QString & data, QDate & date_parsed, const QDate & ref = QDate::currentDate());

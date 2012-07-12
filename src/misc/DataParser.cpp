@@ -91,13 +91,22 @@ bool DataParser::price(const QString & data, double & netto_parsed, int & vat_pa
 	return false;
 }
 
-bool DataParser::price(const QString & data, QString & price_parsed) {
+bool DataParser::price(const QString & data, int & price_parsed) {
 	double price; int tax;
-
+	
 	bool status = DataParser::price(data, price, tax);
+	// 	price_parsed.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), 333);//0.01*price*(100.0+tax));
+	price_parsed = price*(100+tax) + 0.5;
+	
+	return status;
+}
+
+bool DataParser::price(const QString & data, QString & price_parsed) {
+	int price;
+
+	bool status = DataParser::price(data, price);
 // 	price_parsed.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), 333);//0.01*price*(100.0+tax));
-	int cost = price*(100+tax);
-	price_parsed = QString("%1.%2 zl").arg(cost/100).arg(cost % 100);
+	price_parsed = QString("%1.%2 zl").arg(price/100).arg(price % 100);
 
 	return status;
 }
