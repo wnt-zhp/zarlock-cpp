@@ -338,7 +338,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 			QString spec = q2.value(1).toString().trimmed().toUtf8();
 			QString unit;
 			int price = q2.value(3).toInt();
-			QString price_s = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100);
+			QString price_s = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100, 2, 10, QChar('0'));
 			int qty = q2.value(4).toInt();
 			int uqty = q2.value(5).toInt();
 			QString invoice = q2.value(6).toString().trimmed();

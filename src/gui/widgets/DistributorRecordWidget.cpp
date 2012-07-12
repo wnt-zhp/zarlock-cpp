@@ -45,7 +45,7 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 
 	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
 	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
-	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
+	connect(spin_qty, SIGNAL(valueChanged(int)), this, SLOT(validateAdd()));
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 // 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
@@ -91,7 +91,7 @@ void DistributorRecordWidget::insertRecord() {
 		QModelIndexList dl = dtm->match(dtm->index(0, DistributorTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (dl.size() != 1)
 			return;
-		if (db->updateDistributorRecord(dl.at(0).row(), batch_id, spin_qty->value()*100, df, QDate::currentDate(),
+		if (db->updateDistributorRecord(dl.at(0).row(), batch_id, spin_qty->value(), df, QDate::currentDate(),
 			disttype, edit_reason_a->text(), edit_reason_b->text()))
 		{
 			idToUpdate = 0;
@@ -99,7 +99,7 @@ void DistributorRecordWidget::insertRecord() {
 			edit_date->setFocus();
 		}
 	} else {
-		if (db->addDistributorRecord(batch_id, spin_qty->value()*100, df, QDate::currentDate(),
+		if (db->addDistributorRecord(batch_id, spin_qty->value(), df, QDate::currentDate(),
 			disttype, edit_reason_a->text(), edit_reason_b->text()))
 		{
 			clearForm();
@@ -135,7 +135,7 @@ void DistributorRecordWidget::validateAdd() {
 
 	label_unit->setText(tr("x %1").arg(qunit));
 	spin_qty->setSuffix(tr(" of %1").arg(totalmax/100.0, 0, 'f', 2));
-	spin_qty->setMaximum(totalmax/100.0);
+	spin_qty->setMaximum(totalmax);
 
 	bool is_date_ok = edit_date->ok();
 	if (is_date_ok) {
@@ -222,7 +222,7 @@ void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	validateAdd();								// revalidate proxy model
 
 	combo_products->setCurrentIndex(pproxy->mapFromSource(batchl.at(0)).row());
-	spin_qty->setValue(qty/100.0);
+	spin_qty->setValue(qty);
 	this->disttype = disttype;
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);

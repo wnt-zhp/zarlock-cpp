@@ -21,13 +21,9 @@
      </property>
      <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
       <item row="1" column="4">
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
         <item>
-         <widget class="QDoubleSpinBox" name="spin_qty">
-          <property name="maximum">
-           <double>999999.000000000000000</double>
-          </property>
-         </widget>
+         <widget class="QtySpinInput" name="spin_qty"/>
         </item>
         <item>
          <widget class="QLabel" name="label_unit">
@@ -151,6 +147,11 @@
    <class>DateInput</class>
    <extends>QLineEdit</extends>
    <header>DateInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtySpinInput</class>
+   <extends>QSpinBox</extends>
+   <header>QtySpinInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

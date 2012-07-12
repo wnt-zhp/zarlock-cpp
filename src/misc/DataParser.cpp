@@ -67,7 +67,7 @@ bool DataParser::quantity(const QString & data, QString & qty_parsed) {
 	int quantity;
 
 	bool status = DataParser::quantity(data, quantity);
-	qty_parsed = QObject::tr("%1.%2").arg(quantity/100).arg(quantity % 100);
+	qty_parsed = QObject::tr("%1.%2").arg(quantity/100).arg(quantity % 100, 2, 10, QChar('0'));
 
 	return status;
 }
@@ -107,7 +107,7 @@ bool DataParser::price(const QString & data, QString & price_parsed) {
 
 	bool status = DataParser::price(data, price);
 // 	price_parsed.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), 333);//0.01*price*(100.0+tax));
-	price_parsed = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100);
+	price_parsed = QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100, 2, 10, QChar('0'));
 
 	return status;
 }

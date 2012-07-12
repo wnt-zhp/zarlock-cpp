@@ -32,6 +32,8 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 	CI();
 	setupUi(parent);
 
+	spin_qty->setMaximum(999999);
+
 	button_label_insert_and_next = action_addnext->text();
 	button_label_insert_and_exit = action_addexit->text();
 	button_label_close = action_cancel->text();
@@ -56,8 +58,8 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 
 // 	connect(edit_spec, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-	connect(spin_qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
-// 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
+	connect(spin_qty, SIGNAL(valueChanged(int)), this, SLOT(validateAdd()));
+	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_price, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(check_uprice, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
 	connect(edit_invoice, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
@@ -111,14 +113,14 @@ void BatchRecordWidget::insertRecord() {
 		if (bl.size() != 1)
 			return;
 		if (db->updateBatchRecord(bl.at(0).row(), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 			idToUpdate = 0;
 			clearForm();
 			combo_products->setFocus();
 		}
 	} else {
 		if (db->addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
-			spin_qty->value()*100, regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
+			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 			clearForm();
 			combo_products->setFocus();
 		}
@@ -257,8 +259,8 @@ void BatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	edit_price->setRaw(QString("%1").arg(0.01*price));
 	check_uprice->setChecked(true);
 	edit_unit->setRaw(unit);
-	spin_qty->setMinimum(0.01*used);
-	spin_qty->setValue(0.01*qty);
+	spin_qty->setMinimum(used);
+	spin_qty->setValue(qty);
 	edit_book->setRaw(reg.toString("dd/MM/yyyy"));
 	edit_expiry->setRaw(expiry.toString("dd/MM/yyyy"));
 	check_inf->setChecked(!expiry.isValid());

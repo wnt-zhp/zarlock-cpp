@@ -160,7 +160,7 @@ void MealFoodListItemDataWidget::render() {FII();
 void MealFoodListItemDataWidget::update() {
 	int tmp_batch_row = proxy->mapToSource(proxy->index(batch->currentIndex(), BatchTableModel::HId)).row();
 
-	double tmp_qty_max = 10000;
+	double tmp_qty_max = 1000000;
 
 	BatchTableModel * btm = Database::Instance()->CachedBatch();
 	DistributorTableModel * dtm = Database::Instance()->CachedDistributor();
@@ -171,10 +171,10 @@ void MealFoodListItemDataWidget::update() {
 	if (tmp_batch_row >= 0) {
 		if (tmp_batch_row != batch_row) {
 			qty->setValue(0.0);
-			tmp_qty_max = double(ball-used)/100.0;
+			tmp_qty_max = double(ball-used);
 		} else {
 			qty->setValue(quantity);
-			tmp_qty_max = double(ball-used + dqty)/100.0;
+			tmp_qty_max = double(ball-used + dqty);
 		}
 	}
 
@@ -238,7 +238,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		// If selected new entry
 		if (ans == -1) {
 			// Try add to database
-			if (db->addDistributorRecord(bidx.data().toInt(), quantity*100, reference_date, reference_date,
+			if (db->addDistributorRecord(bidx.data().toInt(), quantity, reference_date, reference_date,
 				DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 				// Reload widget data from database and ask for new empty slot
 				dist_row = db->CachedDistributor()->rowCount()-1;
@@ -256,7 +256,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 			int update_row = pr->mapToSource(same_meal_list.at(ans)).row();
 			int old_qty = pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HQty).data(Qt::EditRole).toInt();
 			// ...update record with new quantity
-			if (db->updateDistributorRecord(update_row, bidx.data().toUInt(), old_qty + quantity*100, reference_date,
+			if (db->updateDistributorRecord(update_row, bidx.data().toUInt(), old_qty + quantity, reference_date,
 				reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 				// Refresh modified widget
 				mfl->refreshItem(pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
@@ -271,7 +271,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	// otherwise we have update action
 	else {
 		// Try update record in database
-		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity*100, reference_date,
+		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity, reference_date,
 			reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			// Update record data
 			invalidateProxy();
@@ -351,18 +351,18 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 	batch_row = btm->getRowById(tmp_dist_batchid);
 
 	// set quantity
-	quantity = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toDouble()/100.0;
+	quantity = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toDouble();
 
 	int ball = btm->index(batch_row, BatchTableModel::HStaQty).data(Qt::EditRole).toInt();
 	int used = btm->index(batch_row, BatchTableModel::HUsedQty).data(Qt::EditRole).toInt();
 	int dqty = dtm->index(dist_row, DistributorTableModel::HQty).data(Qt::EditRole).toInt();
 
-	double tmp_qty_max = double(ball - used + dqty)/100.0;
+	double tmp_qty_max = double(ball - used + dqty);
 
 	qty->setMaximum(tmp_qty_max);
 	qty->setValue(quantity);
-	qty->setSuffix(tr(" of %1").arg(tmp_qty_max));
-	qty_label->setText(QString("%1").arg(quantity));
+	qty->setSuffix(tr(" of %1").arg(tmp_qty_max/100));
+	qty_label->setText(QString("%1").arg(quantity/100));
 
 	editable = false;
 	empty = false;

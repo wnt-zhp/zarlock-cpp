@@ -38,7 +38,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QDoubleSpinBox" name="qty">
+      <widget class="QtySpinInput" name="qty">
        <property name="toolTip">
         <string>Quantity</string>
        </property>
@@ -173,6 +173,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtySpinInput</class>
+   <extends>QSpinBox</extends>
+   <header>QtySpinInput.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

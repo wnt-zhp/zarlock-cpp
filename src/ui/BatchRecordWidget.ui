@@ -73,13 +73,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="spin_qty">
-        <property name="maximum">
-         <double>999999.000000000000000</double>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="3">
        <widget class="QLabel" name="label_expiry">
         <property name="text">
@@ -164,6 +157,9 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="QtySpinInput" name="spin_qty"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -221,6 +217,11 @@
    <class>PriceInput</class>
    <extends>QLineEdit</extends>
    <header>PriceInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QtySpinInput</class>
+   <extends>QSpinBox</extends>
+   <header>QtySpinInput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
