@@ -22,7 +22,7 @@
 
 #include "UnitInput.h"
 
-UnitInput::UnitInput(QWidget * parent) : CustomLineEdit(parent) {
+UnitInput::UnitInput(QWidget * parent) : AbstractInputWidget(parent) {
 	setPlaceholderText(tr("unit"));
 }
 

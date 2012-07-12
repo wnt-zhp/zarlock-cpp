@@ -18,28 +18,31 @@
 */
 
 
-#ifndef CUSTOMLINEEDIT_H
-#define CUSTOMLINEEDIT_H
+#ifndef ABSTRACTINPUTWIDGET_H
+#define ABSTRACTINPUTWIDGET_H
 
 #include <QtGui/QLineEdit>
 #include <QtGui/QToolButton>
 
-class CustomLineEdit : public QLineEdit {
+class AbstractInputWidget : public QLineEdit {
 Q_OBJECT
 public:
-	CustomLineEdit(QWidget * parent);
-	virtual ~CustomLineEdit();
+	AbstractInputWidget(QWidget * parent);
+	virtual ~AbstractInputWidget();
 
 	virtual void focusOutEvent(QFocusEvent *);
 	virtual void focusInEvent(QFocusEvent *);
 
 	virtual void clear();
 
-	bool ok() const;
+	virtual bool ok() const;
 
 	virtual const QString text(bool placeholdertext = false);
 	virtual void setText(const QString & t);
 	virtual void setRaw(const QString & t);
+
+	virtual void setEmptyAllowed(bool en = true);
+	virtual bool emptyAllowed();
 
 protected:
 	void resizeEvent(QResizeEvent *);
@@ -64,9 +67,10 @@ protected:
 	QString displaytext, rawtext;
 	bool edit_mode, is_ok;
 	QPalette defpal;
+	bool allow_empty;
 
 private:
 	QToolButton * clearButton;
 };
 
-#endif // CUSTOMLINEEDI
+#endif // ABSTRACTINPUTWIDGET_H

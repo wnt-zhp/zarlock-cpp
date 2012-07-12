@@ -22,7 +22,7 @@
 
 #include "PriceInput.h"
 
-PriceInput::PriceInput(QWidget * parent) : CustomLineEdit(parent) {
+PriceInput::PriceInput(QWidget * parent) : AbstractInputWidget(parent) {
 	setPlaceholderText(tr("date"));
 }
 

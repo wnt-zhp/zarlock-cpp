@@ -94,7 +94,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 	qty_label->setMaximumSize(128, 32);
 
 	connect(batch, SIGNAL(activated(int)), this, SLOT(validateBatchAdd()));
-	connect(qty, SIGNAL(valueChanged(double)), this, SLOT(validateAdd()));
+	connect(qty, SIGNAL(valueChanged(int)), this, SLOT(validateAdd()));
 
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
@@ -182,7 +182,7 @@ void MealFoodListItemDataWidget::update() {
 	batch_label->setText(tmp_batch_label);
 
 	qty->setMaximum(tmp_qty_max);
-	qty->setSuffix(tr(" of %1").arg(tmp_qty_max));
+	qty->setSuffix(tr(" of %1").arg(tmp_qty_max/100));
 
 	qty_label->setText(QString("%1").arg(qty->value()));
 

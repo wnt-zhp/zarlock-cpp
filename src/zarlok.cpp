@@ -219,9 +219,12 @@ void zarlok::doSwitchDB() {
 }
 
 void zarlok::doExportDB() {
-	DBExportDialog dbexpdial;
+	QMessageBox::information(this, tr("Export window"),
+		tr("Because critical bug which could destroy your database has been found, export feature is disabled in current release of Zarlok."
+		" It will be enabled again in next release after bug is fixed."), QMessageBox::Ok);
 
-	dbexpdial.exec();
+// 	DBExportDialog dbexpdial;
+// 	dbexpdial.exec();
 }
 
 void zarlok::doExitZarlok() {

@@ -73,7 +73,7 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 
 	connect(Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
 
-	edit_spec->enableEmpty(true);
+	edit_spec->setEmptyAllowed(true);
 	edit_expiry->setDateReferenceObj(edit_book);
 }
 

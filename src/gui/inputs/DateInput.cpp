@@ -22,7 +22,7 @@
 
 #include "DateInput.h"
 
-DateInput::DateInput(QWidget * parent) : CustomLineEdit(parent), data_ref(NULL) {
+DateInput::DateInput(QWidget * parent) : AbstractInputWidget(parent), data_ref(NULL) {
 	setPlaceholderText(tr("Expiry date"));
 }
 
@@ -64,7 +64,7 @@ bool DateInput::verifyText(const QString & raw, QString & placeholder) {
 }
 
 void DateInput::doRefresh() {
-	CustomLineEdit::doRefresh();
+	AbstractInputWidget::doRefresh();
 }
 
 #include "DateInput.moc"

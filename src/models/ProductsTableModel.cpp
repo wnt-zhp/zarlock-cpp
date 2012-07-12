@@ -77,16 +77,18 @@ bool ProductsTableModel::setData(const QModelIndex& index, const QVariant& value
 		case Qt::EditRole:
 			if (index.column() == HUnit) {
 				QString unitf;
-				if (!DataParser::unit(value.toString(), unitf)) {
-					inputErrorMsgBox(value.toString());
+				QString sunit = value.toString();
+				if (!sunit.isEmpty() and !DataParser::unit(sunit, unitf)) {
+					inputErrorMsgBox(sunit);
 					return false;
 				}
 			}
 
 			if (index.column() == HExpire) {
 				QDate date;
-				if (!DataParser::date(value.toString(), date)) {
-					inputErrorMsgBox(value.toString());
+				QString sdate = value.toString();
+				if (!sdate.isEmpty() and !DataParser::date(sdate, date)) {
+					inputErrorMsgBox(sdate);
 					return false;
 				}
 			}

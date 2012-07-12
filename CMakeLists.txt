@@ -108,7 +108,7 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/gui/views/MealDaysTableView.cpp
 		src/gui/views/TableDelegates.cpp
 
-		src/gui/inputs/CustomLineEdit.cpp
+		src/gui/inputs/AbstractInputWidget.cpp
 		src/gui/inputs/DateInput.cpp
 		src/gui/inputs/UnitInput.cpp
 		src/gui/inputs/PriceInput.cpp

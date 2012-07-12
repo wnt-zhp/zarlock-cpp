@@ -22,12 +22,12 @@
 
 #include "TextInput.h"
 
-TextInput::TextInput(QWidget * parent) : CustomLineEdit(parent), allow_empty(false) {
+TextInput::TextInput(QWidget * parent) : AbstractInputWidget(parent) {
 	setPlaceholderText(tr("Expiry date"));
 }
 
 bool TextInput::verifyText(const QString & raw, QString & placeholder) {
-	if (DataParser::text(raw, placeholder, this->allow_empty)) {
+	if (DataParser::text(raw, placeholder)) {
 		return true;
 	}
 	return false;

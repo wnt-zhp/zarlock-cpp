@@ -54,7 +54,7 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 
 // 	connect(db->CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
-	edit_reason_b->enableEmpty();
+	edit_reason_b->setEmptyAllowed(true);
 	// TODO: do it better
 	combo_products->setStyleSheet("color: black;");
 

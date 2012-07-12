@@ -21,9 +21,9 @@
 #ifndef PRICEINPUT_H
 #define PRICEINPUT_H
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 
-class PriceInput : public CustomLineEdit {
+class PriceInput : public AbstractInputWidget {
 Q_OBJECT
 public:
     PriceInput(QWidget * parent);

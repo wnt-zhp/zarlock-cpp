@@ -20,11 +20,11 @@
 #include "globals.h"
 #include "DataParser.h"
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 
 #include <QStyle>
 
-CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false) {
+AbstractInputWidget::AbstractInputWidget(QWidget * parent) : QLineEdit(parent), edit_mode(false), is_ok(false), allow_empty(false) {
 	defpal = this->palette();
 
 	clearButton = new QToolButton(this);
@@ -44,16 +44,16 @@ CustomLineEdit::CustomLineEdit(QWidget * parent) : QLineEdit(parent), edit_mode(
 	connect(this, SIGNAL(returnPressed()), this, SLOT(doReturnPressed()));
 }
 
-CustomLineEdit::~CustomLineEdit() {
+AbstractInputWidget::~AbstractInputWidget() {
 	delete clearButton;
 	FPR(__func__);
 }
 
-bool CustomLineEdit::ok() const {
+bool AbstractInputWidget::ok() const {
 	return is_ok;
 }
 
-void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
+void AbstractInputWidget::focusOutEvent(QFocusEvent * ev) {
 // 	if (edit_mode) {
 // 		rawtext = QLineEdit::text();
 // 	}
@@ -70,7 +70,7 @@ void CustomLineEdit::focusOutEvent(QFocusEvent * ev) {
 		QLineEdit::focusOutEvent(ev);
 }
 
-void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
+void AbstractInputWidget::focusInEvent(QFocusEvent* ev) {
 	if (!edit_mode) {
 		QLineEdit::setFont(globals::font_edit);
 		QLineEdit::setText(rawtext);
@@ -81,19 +81,22 @@ void CustomLineEdit::focusInEvent(QFocusEvent* ev) {
 		QLineEdit::focusInEvent(ev);
 }
 
-bool CustomLineEdit::verify() {
+bool AbstractInputWidget::verify() {
 	if (edit_mode)
 		rawtext = QLineEdit::text();
 
 	return verify(rawtext);
 }
 
-bool CustomLineEdit::verify(const QString & t) {
+bool AbstractInputWidget::verify(const QString & t) {
 	updateClearButton(t);
 
 	this->setPalette(defpal);
 
-	if (verifyText(t, displaytext)) {
+	if (t.isEmpty()) {
+		is_ok = allow_empty;
+		displaytext.clear();
+	} else if (verifyText(t, displaytext)) {
 		if (!t.isEmpty()) this->setPalette(globals::palette_ok);
 		is_ok = true;
 	} else {
@@ -105,20 +108,20 @@ bool CustomLineEdit::verify(const QString & t) {
 	return is_ok;
 }
 
-void CustomLineEdit::clear() {
+void AbstractInputWidget::clear() {
 	rawtext.clear();
 	this->setPalette(defpal);
-	is_ok = false;
+	is_ok = allow_empty;
 	QLineEdit::clear();
 }
 
-void CustomLineEdit::setText(const QString& t) {
+void AbstractInputWidget::setText(const QString& t) {
 	if (!edit_mode) {
 		QLineEdit::setText(t);
 	}
 }
 
-void CustomLineEdit::setRaw(const QString& t) {
+void AbstractInputWidget::setRaw(const QString& t) {
 	rawtext = t;
 
 	if (edit_mode) {
@@ -130,7 +133,7 @@ void CustomLineEdit::setRaw(const QString& t) {
 	}
 }
 
-void CustomLineEdit::doTextChanged(const QString& t) {
+void AbstractInputWidget::doTextChanged(const QString& t) {
 	if (!edit_mode) {
 		QLineEdit::setFont(globals::font_edit);
 		edit_mode = true;
@@ -141,28 +144,37 @@ void CustomLineEdit::doTextChanged(const QString& t) {
 	verify(rawtext);
 }
 
-void CustomLineEdit::doReturnPressed() {
+void AbstractInputWidget::doReturnPressed() {
 	focusOutEvent(NULL);
 }
 
-void CustomLineEdit::doRefresh() {
+void AbstractInputWidget::doRefresh() {
 	if (!edit_mode)
 		focusOutEvent(NULL);
 }
 
-const QString CustomLineEdit::text(bool placeholdertext) {
+const QString AbstractInputWidget::text(bool placeholdertext) {
 	return placeholdertext ? displaytext : rawtext;
 }
 
-void CustomLineEdit::resizeEvent(QResizeEvent *) {
+void AbstractInputWidget::resizeEvent(QResizeEvent *) {
 	QSize sz = clearButton->sizeHint();
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 	clearButton->move(rect().right() - frameWidth - sz.width(),
 					  (rect().bottom() + 1 - sz.height())/2);
 }
 
-void CustomLineEdit::updateClearButton(const QString& text) {
+void AbstractInputWidget::updateClearButton(const QString& text) {
 	clearButton->setVisible(!text.isEmpty());
 }
 
-#include "CustomLineEdit.moc"
+void AbstractInputWidget::setEmptyAllowed(bool en) {
+	is_ok = allow_empty = en;
+}
+
+bool AbstractInputWidget::emptyAllowed() {
+	return allow_empty;
+}
+
+
+#include "AbstractInputWidget.moc"

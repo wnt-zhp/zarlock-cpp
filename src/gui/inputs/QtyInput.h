@@ -21,9 +21,9 @@
 #ifndef QTYINPUT_H
 #define QTYINPUT_H
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 
-class QtyInput : public CustomLineEdit {
+class QtyInput : public AbstractInputWidget {
 Q_OBJECT
 public:
     QtyInput(QWidget * parent);

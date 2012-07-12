@@ -38,6 +38,9 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWid
 	action_addexit->setEnabled(false);
 	action_addnext->setEnabled(false);
 
+	edit_unit->setEmptyAllowed(true);
+	edit_expiry->setEmptyAllowed(true);
+
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
 	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(closeForm()));

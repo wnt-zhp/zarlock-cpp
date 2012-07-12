@@ -22,7 +22,7 @@
 
 #include "QtyInput.h"
 
-QtyInput::QtyInput(QWidget * parent) : CustomLineEdit(parent) {
+QtyInput::QtyInput(QWidget * parent) : AbstractInputWidget(parent) {
 	setPlaceholderText(tr("quantity"));
 }
 

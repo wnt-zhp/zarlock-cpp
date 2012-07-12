@@ -21,20 +21,15 @@
 #ifndef TEXTINPUT_H
 #define TEXTINPUT_H
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 
-class TextInput : public CustomLineEdit {
+class TextInput : public AbstractInputWidget {
 Q_OBJECT
 public:
 	TextInput(QWidget * parent);
 
-	inline void enableEmpty(bool en = true) { allow_empty = en; is_ok = en; }
-
 private slots:
 	bool verifyText(const QString &, QString & );
-
-private:
-	bool allow_empty;
 };
 
 #endif // TEXTINPUT_H

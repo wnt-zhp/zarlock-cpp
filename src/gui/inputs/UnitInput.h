@@ -21,9 +21,9 @@
 #ifndef UNITINPUT_H
 #define UNITINPUT_H
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 
-class UnitInput : public CustomLineEdit {
+class UnitInput : public AbstractInputWidget {
 Q_OBJECT
 public:
     UnitInput(QWidget * parent);

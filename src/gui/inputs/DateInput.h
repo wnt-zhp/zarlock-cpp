@@ -21,10 +21,10 @@
 #ifndef DATEINPUT_H
 #define DATEINPUT_H
 
-#include "CustomLineEdit.h"
+#include "AbstractInputWidget.h"
 #include <QDate>
 
-class DateInput : public CustomLineEdit {
+class DateInput : public AbstractInputWidget {
 Q_OBJECT
 public:
 	DateInput(QWidget * parent);
