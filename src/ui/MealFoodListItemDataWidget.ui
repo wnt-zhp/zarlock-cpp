@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>MealFoodListItemDataWidget</class>
  <widget class="QWidget" name="MealFoodListItemDataWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>787</width>
-    <height>35</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>

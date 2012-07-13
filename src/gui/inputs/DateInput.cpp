@@ -31,17 +31,18 @@ void DateInput::setDateReferenceObj(const DateInput * ref) {
 }
 
 const QDate DateInput::date() const { // TODO: Fix this buggy place
-	QDate d;
-// 	PR(displaytext.toStdString());
 	if (is_ok) {
-		DataParser::date(rawtext, d);
-// 		d = QDate::fromString(displaytext, Qt::DefaultLocaleShortDate);
+		QDate d, ref;
+		if (data_ref == NULL)
+			ref = QDate::currentDate();
+		else
+			ref = data_ref->date();
+
+		if (DataParser::date(rawtext, d, ref))
+			return d;
 	}
-// 	PR(d.toString(Qt::ISODate).toStdString());
-/*	if (DataParser::date(rawtext, d, data_ref->date())) {
-		return d;
-	}*/
-	return d;
+
+	return QDate();
 }
 
 bool DateInput::verifyText(const QString & raw, QString & placeholder) {

@@ -139,7 +139,7 @@ bool DataParser::date(const QString & data, QDate & date_parsed, const QDate & r
 	rx2.indexIn(data);
 	rx3.indexIn(data);
 	if (!rx1.cap(0).isEmpty()) {
-		date_parsed = ref.addDays(rx1.cap(0).toInt());
+	date_parsed = ref.addDays(rx1.cap(0).toInt());
 		return true;
 	} else if (!rx2.cap(0).isEmpty()) {
 		date_parsed = QDate::currentDate();

@@ -170,7 +170,6 @@ void BatchRecordWidget::validateAdd() {
 	if (edit_price->ok()) {
 		DataParser::price(edit_price->text(), uprice);
 	}
-
 	if (edit_spec->ok() and edit_unit->ok() and
 		edit_book->ok() and (uprice > 0) and
 		(spin_qty->value() > 0) and edit_invoice->ok() and
