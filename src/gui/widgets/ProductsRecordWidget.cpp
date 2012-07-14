@@ -26,12 +26,9 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWid
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {
 	setupUi(parent);
 
-	button_label_insert_and_next = action_addnext->text();
-	button_label_insert_and_exit = action_addexit->text();
-	button_label_close = action_cancel->text();
-
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_update->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
 	action_cancel->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 
@@ -50,11 +47,9 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWid
 	connect(edit_unit, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 	connect(edit_expiry, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
-	connect(Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(update_model()));
+	connect(Database::Instance(), SIGNAL(productsWordListUpdated()), this, SLOT(prepareWidget()));
 
-	button_label_insert_and_next = action_addnext->text();
-	button_label_insert_and_exit = action_addexit->text();
-	button_label_close = action_addexit->text();
+	prepareInsert();
 }
 
 ProductsRecordWidget::~ProductsRecordWidget() {
@@ -72,7 +67,7 @@ void ProductsRecordWidget::setVisible(bool visible) {
 void ProductsRecordWidget::insertRecord() {
 	Database * db = Database::Instance();
 
-	if (idToUpdate >= 0) {
+	if (widget_mode == UPDATE_MODE) {
 		ProductsTableModel * ptm = db->CachedProducts();
 		QModelIndexList pl = ptm->match(ptm->index(0, ProductsTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (pl.size() != 1)
@@ -82,20 +77,22 @@ void ProductsRecordWidget::insertRecord() {
 			idToUpdate = 0;
 			clearForm();
 		}
-	} else {
+	} else if (widget_mode == INSERT_MODE) {
 		if (db->addProductRecord(edit_name->text(), edit_unit->text(), edit_expiry->text(), ";)")) {
 			clearForm();
 		}
 	}
 }
 
-void ProductsRecordWidget::prepareUpdate(const QModelIndex& idx) {
+void ProductsRecordWidget::prepareUpdate() {
 	int pid;
 	QString name, unit, expiry, notes;
 
 	clearForm();
 
 	Database * db = Database::Instance();
+
+	const QModelIndex & idx = idxToUpdate;
 
 	ProductsTableModel * ptm = db->CachedProducts();
 	QModelIndexList pl = ptm->match(ptm->index(0, BatchTableModel::HId), Qt::EditRole, idx.model()->index(idx.row(), ProductsTableModel::HId).data(Qt::EditRole), -1, Qt::MatchExactly);
@@ -109,10 +106,10 @@ void ProductsRecordWidget::prepareUpdate(const QModelIndex& idx) {
 	edit_expiry->setRaw(expiry);
 // 	edit_notes->setRaw(notes);
 
-	action_addexit->setText(tr("Update record"));
+	action_update->show();
+	action_addexit->hide();
 	action_addnext->hide();
 }
-
 
 void ProductsRecordWidget::clearForm() {
 	edit_name->clear();
@@ -130,7 +127,7 @@ void ProductsRecordWidget::validateAdd() {
 	}
 }
 
-void ProductsRecordWidget::update_model() {
+void ProductsRecordWidget::prepareWidget() {
 	if (completer_name) delete completer_name;
 	if (completer_unit) delete completer_unit;
 	if (completer_expiry) delete completer_expiry;
@@ -146,6 +143,12 @@ void ProductsRecordWidget::update_model() {
 	edit_name->setCompleter(completer_name);
 	edit_unit->setCompleter(completer_unit);
 	edit_expiry->setCompleter(completer_expiry);
+}
+
+void ProductsRecordWidget::prepareInsert() {
+	action_update->hide();
+	action_addexit->show();
+	action_addnext->show();
 }
 
 #include "ProductsRecordWidget.moc"

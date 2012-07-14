@@ -479,7 +479,11 @@ bool Database::createDBStructure(const QString& dbfile) {
 	if (!db.open())
 		return false;
 
-	return execQueryFromFile(":/resources/database_00000301.sql");
+	if (execQueryFromFile(":/resources/database_00000301.sql")) {
+		doDBUpgrade(dbv_JAN12);
+		return true;
+	}
+	return false;
 }
 
 /** @brief Ta funkcja zawiera aktualizacje wersji baz danych. Funkcja powinna być wywoływana rekurencyjnie.
@@ -558,6 +562,7 @@ bool Database::doDBUpgrade(unsigned int version) {
 			return true;
 
 		case dbv_JAN12:
+			PR("Upgrade to"); PR(dbv_JUL12);
 			execQueryFromFile(":/resources/dbconv_00000301_00000302_part_a.sql");
 			return true;
 

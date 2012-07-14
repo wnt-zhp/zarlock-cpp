@@ -25,8 +25,9 @@
 
 #include "globals.h"
 
-DimmingWidget::DimmingWidget(QWidget * parent) : AbstractDimmingWidget(new QWidget(parent), parent), widget(NULL), modal_mode(false) {
+DimmingWidget::DimmingWidget(QWidget * parent) : AbstractDimmingWidget(parent), overlay_widget(new QWidget(parent)), widget(NULL), modal_mode(false) {
 	setLayout(new QHBoxLayout(this));
+	setOverlayWidget(overlay_widget);
 
 	widget = NULL;
 
@@ -35,7 +36,8 @@ DimmingWidget::DimmingWidget(QWidget * parent) : AbstractDimmingWidget(new QWidg
 }
 
 DimmingWidget::~DimmingWidget() {
-// 	delete overlay;
+// 	delete overlay_widget;
+	widget->setStyleSheet("");
 }
 
 void DimmingWidget::setWidget(QWidget * widget) {
@@ -44,27 +46,33 @@ void DimmingWidget::setWidget(QWidget * widget) {
 	else {
 		layout()->removeWidget(this->widget);
 		layout()->addWidget(widget);
+		if (this->widget)
+			this->widget->setStyleSheet(widget_stylesheet);
+
+		widget_stylesheet = widget->styleSheet();
 		this->widget = widget;
 		widget->setStyleSheet(".QWidget { color:white; background-color:rgba(0,0,0,200); border: 1px solid rgba(0,0,0,200); border-radius:4px; } QWidget QLabel, .QWidget QGroupBox, QWidget QCheckBox { color:white; }");
 		adjustSize();
+	
+		connect(this, SIGNAL(widgetOut()), widget, SLOT(hide()));
 	}
 }
 
-void DimmingWidget::go(bool modal) {
+void DimmingWidget::showWidget(bool modal) {
 	modal_mode = modal;
 	if (modal) {
 		widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget /*| Qt::Tool*/);
 		widget->setWindowModality(Qt::WindowModal);
 	}
 	widget->show();
-	adjustSize();
-	AbstractDimmingWidget::go();
+	AbstractDimmingWidget::showWidget();
 }
 
-void DimmingWidget::og() {
+void DimmingWidget::hideWidget() {
 	if (modal_mode) {
 		widget->setWindowModality(Qt::NonModal);
 		widget->setWindowFlags(Qt::Widget);
 	}
-	AbstractDimmingWidget::og();
+// 	widget->hide();
+	AbstractDimmingWidget::hideWidget();
 }

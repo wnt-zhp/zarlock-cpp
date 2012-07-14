@@ -33,15 +33,16 @@ public:
 	BatchRecordWidget(QWidget * parent = NULL);
 	virtual ~BatchRecordWidget();
 
-public slots:
-	void update_model();
-	void prepareUpdate(const QModelIndex & idx);
-
 private slots:
 	void insertRecord();
 	void clearForm();
 	void validateAdd();
 	void validateCB(int i);
+	void prepareWidget();
+
+private:
+	void prepareInsert();
+	void prepareUpdate();
 
 private:
 	QCompleter * completer_spec;

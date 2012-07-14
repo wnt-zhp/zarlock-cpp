@@ -25,9 +25,8 @@
 #include <QStringList>
 #include <QSqlQuery>
 
-AbstractRecordWidget::AbstractRecordWidget(QWidget * parent) : idToUpdate(0) {
+AbstractRecordWidget::AbstractRecordWidget(QWidget * parent) : idToUpdate(0), widget_mode(INSERT_MODE) {
 	CI();
-	button_label_update = tr("Update record");
 }
 
 AbstractRecordWidget::~AbstractRecordWidget() {
@@ -36,7 +35,7 @@ AbstractRecordWidget::~AbstractRecordWidget() {
 
 void AbstractRecordWidget::insertRecordAndExit() {
 	insertRecord();
-	this->setVisible(false);
+	setVisible(false);
 	closeForm();
 }
 
@@ -47,23 +46,24 @@ void AbstractRecordWidget::closeForm() {
 	emit closed(false);
 }
 
-void AbstractRecordWidget::update_model() {
+void AbstractRecordWidget::prepareWidget() {
 }
 
-void AbstractRecordWidget::prepareInsert(bool visible) {
-// 	action_addexit->setText(button_label_insert_and_exit);	//!
-// 	action_addnext->show();									//!
+void AbstractRecordWidget::setInsertMode() {
+	widget_mode = INSERT_MODE;
 	idToUpdate = -1;
-	if (visible) {
-		clearForm();
-	}
+	prepareWidget();
+	clearForm();
+	prepareInsert();
 }
 
-void AbstractRecordWidget::prepareUpdate(const QModelIndex & idx) {
-	idToUpdate = -1;
-
-// 	action_addexit->setText(button_label_update);		//!
-// 	action_addnext->hide();									//!
+void AbstractRecordWidget::setUpdateMode(const QModelIndex & idx) {
+	widget_mode = UPDATE_MODE;
+	idxToUpdate = idx;
+	idToUpdate = idx.model()->index(idx.row(), 0).data(Qt::EditRole).toUInt();
+	prepareWidget();
+	clearForm();
+	prepareUpdate();
 }
 
 #include "AbstractRecordWidget.moc"

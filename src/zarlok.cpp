@@ -245,16 +245,18 @@ void zarlok::doExitZarlok() {
 void zarlok::activateUi(bool activate) {
 	MainTab->setEnabled(activate);
 
+	this->MainTab->updateGeometry();
+
 	if (!db->cs()->isCorrect) {
 // 		doSwitchDB();
 		delete dw;
 		dw = new DimmingMessage(MainTab);
 		dw->setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical));
 		dw->setMessage(tr("Database is not loaded properly."));
-		dw->go();
+		dw->showWidget();
 	} else {
 		if (dw)
-			dw->og();
+			dw->hideWidget();
 	}
 
 	if (activate) {
@@ -363,6 +365,20 @@ void zarlok::doBrowseReports() {
 
 	PR(reportsdir.toStdString());
 	QDesktopServices::openUrl(QUrl(reportsdir, QUrl::TolerantMode));
+}
+
+void zarlok::checkForDatabase() {
+	if (!db->cs()->isCorrect) {
+		// 		doSwitchDB();
+		delete dw;
+		dw = new DimmingMessage(MainTab);
+		dw->setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical));
+		dw->setMessage(tr("Database is not loaded properly."));
+		dw->showWidget();
+	} else {
+		if (dw)
+			dw->hideWidget();
+	}
 }
 
 #include "zarlok.moc"

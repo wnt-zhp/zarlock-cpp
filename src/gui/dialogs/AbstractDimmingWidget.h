@@ -33,61 +33,78 @@ class EventFilter;
 class AbstractDimmingWidget : public QWidget {
 Q_OBJECT
 public:
-	explicit AbstractDimmingWidget(QWidget * overlay = NULL, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	explicit AbstractDimmingWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 	virtual ~AbstractDimmingWidget();
 
 	enum PTextPosition { TOPLEFT, TOPCENTER, TOPRIGHT, MIDLEFT, MIDCENTER, MIDRIGHT, BOTLEFT, BOTCENTER, BOTRIGHT, CURRENT };
-	enum PState { IN, OUT, FINISHED };
+	enum PState { UNDEFINDE, IN, OUT, FINISHED };
 	enum PCallbacksActions { CALL_UPDATE, CALL_SETFRAME, CALL_STOPFRAME };
 
-	void setOverlay(bool animated = false, bool use_style = true);
+	void setOverlayWidget(QWidget * widget);
+	QWidget * overlayWidget();
+
+	void setOverlayAnimated(bool animated);
+	bool overlayAnimated();
+
+	void setOverlayStyled(bool use_style);
+	bool overlayStyled();
+
+	void setOverlayDefaultOpacity(int opacity);
+	int overlayDefaultOpacity();
+
 	void setShadow(int offset = 3, int radius = 9, QColor color = Qt::black);
+
+	void enableOverlay();
 	void disableOverlay();
+
+	bool isEnabled();
 
 	void setAnimationMove(PTextPosition start, PTextPosition pause, PTextPosition stop);
 	void setAnimationCurve(QEasingCurve curve);
 	void setDuration(int duration = 2000, int animate_duration = 1000);
-	void setOverlayOpacity(int opacity = 200);
+
 	void setEventTransparent(bool transparent = true);
+
 	virtual void resizeEvent(QResizeEvent* );
 
-	virtual void go();
-	virtual void og();
+	virtual void showWidget();
+	virtual void hideWidget();
+
+public slots:
+	void setOverlayOpacity(int opacity);
 
 protected slots:
 	virtual void setVisible(bool visible);
 	virtual void setHidden(bool visible);
 	virtual void show();
 	virtual void hide();
-
-private:
-	QTimeLine * animate();
-	QTimeLine * animate(QTimeLine * start_after);
-
-	void disable_parent();
-
-	void setOverlayClickMethod(/*method*/);
+	void moveFrame(int frame);
 
 private slots:
+	void animate();
 	void finalize();
 	void parentResizeEvent();
 	void eventCaptured(QEvent * evt);
 
-protected slots:
-	void setOverlayStyle(int opacity);
-	void moveFrame(int frame);
+signals:
+	void widgetIn();
+	void widgetOut();
+private:
+	void disableParent();
+
+private:
+	void prepareOverlay();
 
 protected:
 	int duration;
 
 private:
-	QWidget * overlay;
+	QWidget * overlay_widget;
 	QWidget * parent_widget;
+	bool custom_overlay;
 
-	bool init_finished;
-
-	bool overlay_animated;
 	bool overlay_enabled;
+	bool overlay_animated;
 	bool overlay_styled;
 	int overlay_opacity;
 	bool overlay_just_resize;
@@ -108,8 +125,12 @@ private:
 	QTimeLine * sceneY;
 	QTimeLine * sceneF;
 
+	QTimeLine * delayed;
+
 	QGraphicsDropShadowEffect * effect;
 	EventFilter * evfilter;
+
+	QString overlay_widget_stylesheet;
 };
 
 #endif // ABSTRACTDIMMINGWIDGET_H

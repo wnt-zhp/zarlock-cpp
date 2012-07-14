@@ -27,12 +27,9 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 	pproxy(NULL), hideempty(NULL), disttype(0) {
 	setupUi(parent);
 
-	button_label_insert_and_next = action_addnext->text();
-	button_label_insert_and_exit = action_addexit->text();
-	button_label_close = action_cancel->text();
-
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_update->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
 	action_cancel->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 
@@ -50,7 +47,7 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
 // 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
 
-	connect(Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(update_model()));
+	connect(Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(prepareWidget()));
 
 // 	connect(db->CachedDistributor(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update_model()));
 // 	edit_date->setDateReferenceObj(edit_book);
@@ -63,11 +60,11 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 
 	pproxy = new BatchTableModelProxy(hideempty);
 	pproxy->setExtendedSpec(true);
-	update_model();
+	prepareWidget();
 }
 
 DistributorRecordWidget::~DistributorRecordWidget() {
-	FPR(__func__);
+	DII();
 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
 	if (completer_reason) delete completer_reason;
@@ -86,7 +83,7 @@ void DistributorRecordWidget::insertRecord() {
 	if (!DataParser::date(edit_date->text(), df))
 		return;
 
-	if (idToUpdate >= 0) {
+	if (widget_mode == UPDATE_MODE) {
 		DistributorTableModel * dtm = db->CachedDistributor();
 		QModelIndexList dl = dtm->match(dtm->index(0, DistributorTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (dl.size() != 1)
@@ -94,16 +91,16 @@ void DistributorRecordWidget::insertRecord() {
 		if (db->updateDistributorRecord(dl.at(0).row(), batch_id, spin_qty->value(), df, QDate::currentDate(),
 			disttype, edit_reason_a->text(), edit_reason_b->text()))
 		{
-			idToUpdate = 0;
 			clearForm();
 			edit_date->setFocus();
 		}
-	} else {
+	} else if (widget_mode == INSERT_MODE) {
 		if (db->addDistributorRecord(batch_id, spin_qty->value(), df, QDate::currentDate(),
 			disttype, edit_reason_a->text(), edit_reason_b->text()))
 		{
 			clearForm();
 			edit_date->setFocus();
+			pproxy->invalidate();
 		}
 	}
 }
@@ -126,8 +123,7 @@ void DistributorRecordWidget::validateAdd() {
 	unsigned int qtytotal = db->CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toUInt();
 	QString qunit = db->CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
-// 	if (indexToUpdate and (idx.row() == copyOfIndexToUpdate.row())) {
-	if (idToUpdate and (idx.row() == sourceRowToUpdate)) {
+	if (widget_mode == UPDATE_MODE > 0 and (idx.row() == sourceRowToUpdate)) {
 		fake = db->CachedDistributor()->getIndexById(idToUpdate, DistributorTableModel::HQty).data(DistributorTableModel::RRaw).toUInt();
 	}
 
@@ -155,7 +151,7 @@ void DistributorRecordWidget::validateAdd() {
 	}
 }
 
-void DistributorRecordWidget::update_model() {
+void DistributorRecordWidget::prepareWidget() {
 	Database * db = Database::Instance();
 
 	pproxy->setSourceModel(db->CachedBatch());
@@ -187,7 +183,7 @@ void DistributorRecordWidget::update_model() {
 	edit_reason_b->setCompleter(completer_reason2);
 }
 
-void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
+void DistributorRecordWidget::prepareUpdate() {
 	int bid;
 	int qty;
 
@@ -196,12 +192,13 @@ void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	int disttype;
 
 	clearForm();
-	update_model();
+	prepareWidget();
 
 	Database * db = Database::Instance();
 
 	BatchTableModel * bm = db->CachedBatch();
 
+	const QModelIndex & idx = idxToUpdate;
 	QModelIndex sidx = idx.model()->index(idx.row(), DistributorTableModel::HBatchId);
 
 	idToUpdate = sidx.model()->index(sidx.row(), DistributorTableModel::HId).data(Qt::EditRole).toUInt();
@@ -227,11 +224,17 @@ void DistributorRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);
 
-	action_addnext->setText(tr("Update record and exit"));
 	validateAdd();								// revalidate proxy model
 
-	action_addexit->setText(tr("Update record"));
+	action_update->show();
+	action_addexit->hide();
 	action_addnext->hide();
+}
+
+void DistributorRecordWidget::prepareInsert() {
+	action_update->hide();
+	action_addexit->show();
+	action_addnext->show();
 }
 
 #include "DistributorRecordWidget.moc"

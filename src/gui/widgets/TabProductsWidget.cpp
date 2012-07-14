@@ -33,7 +33,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 	setupUi(this);
 
-	widget_add_products->setVisible(false);
+// 	widget_add_products->setVisible(false);
 	prw = new ProductsRecordWidget(widget_add_products);
 
 	table_batchbyid->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -41,6 +41,7 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 	activateUi(true);
 
+#warning FIXME: double addRecord for closed() -> InsertAction, but not for UpdateAction, Add button must be disabled
 	connect(button_add_prod, SIGNAL(toggled(bool)), this, SLOT(addRecord(bool)));
 	connect(table_products, SIGNAL(addRecordRequested(bool)), button_add_prod, SLOT(setChecked(bool)));
 	connect(prw, SIGNAL(closed(bool)), button_add_prod, SLOT(setChecked(bool)));
@@ -65,9 +66,10 @@ TabProductsWidget::TabProductsWidget(QWidget *) :
 
 	dwbox = new DimmingWidget(this);
 
-	dwbox->setOverlay(true, true);
+	dwbox->setOverlayAnimated(true);
+	dwbox->setOverlayStyled(true);
+	dwbox->setOverlayDefaultOpacity(100);
 	dwbox->setWidget(widget_add_products);
-	dwbox->setOverlayOpacity(100);
 }
 
 TabProductsWidget::~TabProductsWidget() {
@@ -119,7 +121,6 @@ void TabProductsWidget::activateUi(bool activate) {
 			table_products->setModel(proxy_model);
 			table_products->show();
 			connect(edit_filter_prod, SIGNAL(textChanged(QString)), this, SLOT(setFilterString(QString)));
-			prw->update_model();
 		}
 
 		// batch proxy
@@ -139,12 +140,12 @@ void TabProductsWidget::activateUi(bool activate) {
 
 void TabProductsWidget::addRecord(bool newrec) {
 	if (newrec) {
-		prw->prepareInsert(newrec);
+		prw->setInsertMode();
 
-		dwbox->go(true);
-	} else {
-		dwbox->og();
 		dwbox->setEventTransparent(false);
+		dwbox->showWidget(true);
+	} else {
+		dwbox->hideWidget();
 	}
 }
 
@@ -155,10 +156,9 @@ void TabProductsWidget::editRecord(const QVector< int >& ids) {
 }
 
 void TabProductsWidget::editRecord(const QModelIndex& idx) {
-	prw->prepareUpdate(idx);
-	widget_add_products->setVisible(true);
-	dwbox->go();
+	prw->setUpdateMode(idx);
 	dwbox->setEventTransparent(true);
+	dwbox->showWidget();
 }
 
 void TabProductsWidget::doFilterBatches() {

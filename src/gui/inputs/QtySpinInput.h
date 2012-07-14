@@ -24,6 +24,7 @@
 #include <QSpinBox>
 
 class QtySpinInput : public QSpinBox {
+Q_OBJECT
 public:
 	explicit QtySpinInput(QWidget* parent = 0);
 

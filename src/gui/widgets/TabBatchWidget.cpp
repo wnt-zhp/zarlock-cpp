@@ -43,7 +43,7 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	cb_hideempty->setChecked(false);
 
-	widget_add_batch->setVisible(false);
+	widget_add_batch->setVisible(true);
 	brw = new BatchRecordWidget(widget_add_batch);
 
 	activateUi(true);
@@ -71,9 +71,10 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	dwbox = new DimmingWidget(this);
 
-	dwbox->setOverlay(true, true);
+	dwbox->setOverlayAnimated(true);
+	dwbox->setOverlayStyled(true);
+	dwbox->setOverlayDefaultOpacity(100);
 	dwbox->setWidget(widget_add_batch);
-	dwbox->setOverlayOpacity(100);
 // 
 // 	widget_add_batch->setVisible(true);
 }
@@ -106,7 +107,6 @@ void TabBatchWidget::activateUi(bool activate) {
 			table_batch->setModel(proxy_model);
 
 			table_batch->show();
-			brw->update_model();
 
 			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), proxy_model, SLOT(invalidate()));
 		}
@@ -114,33 +114,22 @@ void TabBatchWidget::activateUi(bool activate) {
 }
 
 void TabBatchWidget::addRecord(bool newrec) {
-// 	DimmingMessage * mbox = new DimmingMessage(this);
-// 	mbox->setOverlay(true, true);
-// 	mbox->setMessage("My message for you");
-// 	QIcon ic = QApplication::style()->standardIcon(QStyle::SP_DesktopIcon);
-// 	mbox->setIcon(&ic);
-// 	mbox->showBusy();
-// 	mbox->go();
-
-// 	dwbox->setWidget(widget_add_batch);
-
 	if (newrec) {
-		brw->prepareInsert(newrec);
-// 		widget_add_batch->setVisible(newrec);
-		dwbox->go(true);
-	} else {
-		dwbox->og();
+		brw->setInsertMode();
+
 		dwbox->setEventTransparent(false);
-// 		widget_add_batch->setVisible(newrec);
+		dwbox->showWidget(true);
+	} else {
+		dwbox->hideWidget();
 	}
 }
 
 void TabBatchWidget::editRecord(const QVector<int>& ids) {
 	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
-		brw->prepareUpdate(db->CachedBatch()->getIndexById(*it));
-		widget_add_batch->setVisible(true);
-		dwbox->go();
+		brw->setUpdateMode(db->CachedBatch()->getIndexById(*it));
+// 		widget_add_batch->setVisible(true);
 		dwbox->setEventTransparent(true);
+		dwbox->showWidget();
 	}
 }
 

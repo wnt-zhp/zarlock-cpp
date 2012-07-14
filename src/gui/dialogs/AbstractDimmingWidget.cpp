@@ -24,38 +24,31 @@
 #include "AbstractDimmingWidget.h"
 #include "EventFilter.h"
 
-AbstractDimmingWidget::AbstractDimmingWidget(QWidget * ov, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f),
-	duration(2000), overlay(ov), parent_widget(parent), init_finished(false),
-	overlay_animated(true), overlay_enabled(true), overlay_styled(true),
+AbstractDimmingWidget::AbstractDimmingWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f),
+	duration(2000), overlay_widget(NULL), parent_widget(parent),
+	overlay_enabled(false), overlay_animated(true), overlay_styled(true),
 	overlay_opacity(200), overlay_just_resize(false), overlay_dont_animate(false),
-	animate_direction(FINISHED), last_state(OUT), animate_move_direction(QTimeLine::Forward),
+	animate_direction(FINISHED), last_state(UNDEFINDE), animate_move_direction(QTimeLine::Forward),
 	animate_start(TOPCENTER), animate_pause(MIDCENTER), animate_stop(BOTCENTER),
 	animate_duration(1400),  disable_parent_in_shown(false),
-	sceneX(new QTimeLine), sceneY(new QTimeLine), sceneF(new QTimeLine), effect(NULL),
+	sceneX(new QTimeLine), sceneY(new QTimeLine), sceneF(new QTimeLine),
+	delayed(NULL), effect(NULL),
 	evfilter(NULL)
 {
 	this->hide();
 
-// 	overlay->setAttribute(Qt::WA_TransparentForMouseEvents);
-	overlay->hide();
-
 	setEnabled(true);
 
-	if (overlay_enabled)
-		setOverlay(overlay_animated, overlay_styled);
-
+	setOverlayDefaultOpacity(overlay_opacity);
 	setAnimationCurve(animation);
 	setDuration(duration, animate_duration);
-	setOverlayOpacity();
 
 	// Finalize
 	connect(sceneX, SIGNAL(finished()), this, SLOT(finalize()));
 
 	connect(sceneX, SIGNAL(frameChanged(int)), this, SLOT(moveFrame(int)));
 	connect(sceneY, SIGNAL(frameChanged(int)), this, SLOT(moveFrame(int)));
-	connect(sceneF, SIGNAL(frameChanged(int)), this, SLOT(setOverlayStyle(int)));
-
-	init_finished = true;
+	connect(sceneF, SIGNAL(frameChanged(int)), this, SLOT(setOverlayOpacity(int)));
 
 	evfilter = new EventFilter;
 	parent_widget->installEventFilter(evfilter);
@@ -75,7 +68,6 @@ AbstractDimmingWidget::~AbstractDimmingWidget() {
 	delete effect;
 }
 
-
 // void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
 // 	// FIXME: what to do with tris resize?
 // // 	if (overlay_enabled) {
@@ -92,49 +84,94 @@ void AbstractDimmingWidget::setAnimationMove(AbstractDimmingWidget::PTextPositio
 	animate_stop = stop;
 }
 
-void AbstractDimmingWidget::setOverlay(bool animated, bool use_style) {
-	// Resize the overlay with parent's size
-	overlay_enabled = true;
-	overlay_animated = animated;
-	overlay_styled = use_style;
-	sceneF->setUpdateInterval(20);
+void AbstractDimmingWidget::setOverlayWidget(QWidget* widget) {
+	if (!widget)
+		return;
 
-	if (overlay_styled) {
-		if (animated) {
-			// Register animation range for overlay fade-in/out effect
-		} else {
-			// Set overlay opacity
-			setOverlayStyle(overlay_opacity);
-		}
-	} else {
-		overlay->setAutoFillBackground(true);
-	}
+	if (overlay_widget)
+		overlay_widget->setStyleSheet(overlay_widget_stylesheet);
+
+	overlay_widget_stylesheet = widget->styleSheet();
+
+	overlay_widget = widget;
+	overlay_widget->hide();
+	overlay_widget->stackUnder(this);
+	overlay_enabled = true;
+
+	setOverlayOpacity(0);
+
+	prepareOverlay();
+}
+
+QWidget* AbstractDimmingWidget::overlayWidget() {
+	return overlay_widget;
+}
+
+void AbstractDimmingWidget::enableOverlay() {
+	if (overlay_widget)
+		overlay_enabled = true;
+	else
+		overlay_enabled = false;
 }
 
 void AbstractDimmingWidget::disableOverlay() {
 	overlay_enabled = false;
 }
 
-void AbstractDimmingWidget::setOverlayStyle(int opacity) {
-	overlay->setStyleSheet(QString("QWidget { background-color: rgba(0, 0, 0, %1) }").arg(opacity));
+bool AbstractDimmingWidget::isEnabled() {
+	return overlay_enabled;
 }
 
-QTimeLine * AbstractDimmingWidget::animate(QTimeLine * start_after) {
-	if (start_after) {
-		if (start_after->state() == QTimeLine::Running) {
-			disconnect(start_after, SIGNAL(finished()), this, SLOT(animate()));
-			connect(start_after, SIGNAL(finished()), this, SLOT(animate()));
-			return NULL;
+void AbstractDimmingWidget::setOverlayAnimated(bool animated) {
+	// Resize the overlay with parent's size
+	overlay_animated = animated;
+	prepareOverlay();
+}
+
+bool AbstractDimmingWidget::overlayAnimated() {
+	return overlay_animated;
+}
+
+void AbstractDimmingWidget::setOverlayStyled(bool use_style) {
+	// Resize the overlay with parent's size
+	overlay_styled = use_style;
+	prepareOverlay();
+}
+
+bool AbstractDimmingWidget::overlayStyled() {
+	return overlay_styled;
+}
+
+void AbstractDimmingWidget::setOverlayOpacity(int opacity) {
+	if (!overlay_widget)
+		return;
+
+	overlay_widget->setStyleSheet(QString("QWidget { background-color: rgba(0, 0, 0, %1) }").arg(opacity));
+}
+
+void AbstractDimmingWidget::prepareOverlay() {
+	if (!overlay_widget)
+		return;
+
+	if (overlay_animated)
+		sceneF->setUpdateInterval(20);
+
+	if (overlay_styled) {
+		if (overlay_animated) {
+			// Register animation range for overlay fade-in/out effect
 		} else {
-			animate();
+			// Set overlay opacity
+			setOverlayOpacity(overlay_opacity);
 		}
+	} else {
+		overlay_widget->setAutoFillBackground(true);
 	}
-	return NULL;
 }
 
-QTimeLine * AbstractDimmingWidget::animate() {
-	overlay->resize(parent_widget->size());
-// 	qDebug() << parent_widget->size();
+void AbstractDimmingWidget::animate() {
+	if (overlay_widget)
+		overlay_widget->resize(parent_widget->size());
+
 	// Stop all running animations
 	sceneX->stop();
 	sceneY->stop();
@@ -202,7 +239,7 @@ QTimeLine * AbstractDimmingWidget::animate() {
 		sceneX->setFrameRange(limits[animate_start][0], limits[animate_pause][0]);
 		sceneY->setFrameRange(limits[animate_start][1], limits[animate_pause][1]);
 	} else
-		if (animate_direction == OUT) {
+	if (animate_direction == OUT) {
 		switch (animate_stop) {
 			case TOPLEFT:
 			case MIDLEFT:
@@ -240,35 +277,31 @@ QTimeLine * AbstractDimmingWidget::animate() {
 
 	// Run predefined callback functions for given direction
 // 	runCallBacks(animate_direction);
-	disable_parent();
+	disableParent();
 
-	// Show/hide overlay if overlay enabled
-	if (overlay_enabled) {
-		overlay->show();
-	}
-	else
-		overlay->hide();
+	if (overlay_widget) {
+		// Show/hide overlay if overlay enabled
+		overlay_widget->setVisible(overlay_enabled);
 
-	if (overlay_dont_animate) {
-		overlay->setHidden(animate_direction == OUT);
-		setHidden(animate_direction == OUT);
-// 		runCallBacks(FINISHED);
-	} else {
-		// Start the animation!
-		if (sceneX->state() == QTimeLine::NotRunning) {
+		if (overlay_dont_animate) {
+			overlay_widget->setHidden(animate_direction == OUT);
+			setHidden(animate_direction == OUT);
+// 			runCallBacks(FINISHED);
+		} else {
+			// Start the animation!
+			if (sceneX->state() == QTimeLine::NotRunning) {
 
-			sceneX->start();
-			sceneY->start();
-			if (!overlay_just_resize) {
-				// The animation will just work for repositioning the widget,
-				// so we dont need overlay fade animation
-				sceneF->start();
+				sceneX->start();
+				sceneY->start();
+				if (!overlay_just_resize) {
+					// The animation will just work for repositioning the widget,
+					// so we dont need overlay fade animation
+					sceneF->start();
+					overlay_just_resize = false;
+				}
 			}
 		}
 	}
-
-	// Return the X coordinate timeline obj to use as reference for next animation
-	return sceneX;
 }
 
 void AbstractDimmingWidget::finalize() {
@@ -283,12 +316,25 @@ void AbstractDimmingWidget::finalize() {
 	}
 
 	if (last_state == IN) {
+		emit widgetIn();
 	}
 	else
-	if (last_state == OUT) {
+		if (last_state == OUT) {
+		emit widgetOut();
 	}
 
-	overlay->setHidden(last_state == OUT);
+	if (overlay_widget)
+		overlay_widget->setHidden(last_state == OUT);
+
+	this->setHidden(last_state == OUT);
+
+	if (delayed) {
+		if (delayed->state() != QTimeLine::Running) {
+			animate();
+			delayed = NULL;
+			// 			return;
+		}
+	}
 }
 
 void AbstractDimmingWidget::moveFrame(int frame) {
@@ -298,7 +344,7 @@ void AbstractDimmingWidget::moveFrame(int frame) {
 		this->move(x(), frame);
 }
 
-void AbstractDimmingWidget::disable_parent() {
+void AbstractDimmingWidget::disableParent() {
 	// FIXME: WTF it is?
 
 	if (disable_parent_in_shown) {
@@ -320,16 +366,17 @@ void AbstractDimmingWidget::setAnimationCurve(QEasingCurve curve) {
 	sceneY->setEasingCurve(curve);
 }
 
-void AbstractDimmingWidget::go() {
+void AbstractDimmingWidget::showWidget() {
 	adjustSize();
-	if (init_finished and (last_state != IN)) {
+	if (last_state != IN) {
 		animate_direction = IN;
+		this->show();
 		animate();
 	}
 }
 
-void AbstractDimmingWidget::og() {
-	if (init_finished and (last_state != OUT)) {
+void AbstractDimmingWidget::hideWidget() {
+	if (last_state != OUT) {
 		animate_direction = OUT;
 		animate();
 	}
@@ -355,9 +402,13 @@ void AbstractDimmingWidget::setShadow(int offset, int radius, QColor color)  {
 	setGraphicsEffect(effect);
 }
 
-void AbstractDimmingWidget::setOverlayOpacity(int opacity) {
+void AbstractDimmingWidget::setOverlayDefaultOpacity(int opacity) {
 	overlay_opacity = opacity;
 	sceneF->setFrameRange(0, opacity);
+}
+
+int AbstractDimmingWidget::overlayDefaultOpacity() {
+	return overlay_opacity;
 }
 
 void AbstractDimmingWidget::setVisible(bool visible) {
@@ -377,20 +428,22 @@ void AbstractDimmingWidget::hide() {
 }
 
 void AbstractDimmingWidget::setEventTransparent(bool transparent) {
-	overlay->setAttribute(Qt::WA_TransparentForMouseEvents, transparent);
+	if (overlay_widget)
+	overlay_widget->setAttribute(Qt::WA_TransparentForMouseEvents, transparent);
 }
 
 void AbstractDimmingWidget::parentResizeEvent() {
+	adjustSize();
+
 	if (this->isHidden())
 		return;
 
 	if (overlay_enabled) {
-		overlay->resize(parent_widget->size());
-		if (this->isVisible() or this->last_state == IN) {
-// 			qDebug() << parent_widget->size();
+		overlay_widget->resize(parent_widget->size());
+		if (this->last_state != OUT) {
 			overlay_just_resize = true;
-			animate(sceneX);
-			overlay_just_resize = false;
+			delayed = sceneX;
+			finalize();
 		}
 	}
 }
@@ -400,13 +453,11 @@ void AbstractDimmingWidget::eventCaptured(QEvent* evt) {
 		parentResizeEvent();
 }
 
-
 void AbstractDimmingWidget::resizeEvent(QResizeEvent* event) {
 	if (this->isVisible())
 		animate();
 
 	QWidget::resizeEvent(event);
 }
-
 
 #include "AbstractDimmingWidget.moc"

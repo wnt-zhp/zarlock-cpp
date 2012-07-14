@@ -32,7 +32,7 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 	setupUi(this);
 
-	widget_add_distributor->setVisible(true);
+// 	widget_add_distributor->setVisible(true);
 	drw = new DistributorRecordWidget(widget_add_distributor);
 
 	activateUi(true);
@@ -61,9 +61,10 @@ TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), 
 
 	dwbox = new DimmingWidget(this);
 
-	dwbox->setOverlay(true, true);
+	dwbox->setOverlayAnimated(true);
+	dwbox->setOverlayStyled(true);
+	dwbox->setOverlayDefaultOpacity(100);
 	dwbox->setWidget(widget_add_distributor);
-	dwbox->setOverlayOpacity(100);
 }
 
 TabDistributorWidget::~TabDistributorWidget() {
@@ -94,7 +95,6 @@ void TabDistributorWidget::activateUi(bool activate) {
 			proxy_model->setSourceModel(model_dist);
 			table_dist->setModel(proxy_model);
 			table_dist->show();
-			drw->update_model();
 		}
 	}
 }
@@ -116,30 +116,32 @@ void TabDistributorWidget::setFilterString(const QString& string) {
 
 void TabDistributorWidget::addRecord(bool newrec) {
 	if (newrec) {
-		drw->prepareInsert(newrec);
+		drw->setInsertMode();
 		// 		widget_add_batch->setVisible(newrec);
-		dwbox->go(true);
-	} else {
-		dwbox->og();
 		dwbox->setEventTransparent(false);
+		dwbox->showWidget();
+	} else {
+		dwbox->hideWidget();
 		// 		widget_add_batch->setVisible(newrec);
 	}
 }
 
 void TabDistributorWidget::editRecord(const QVector< int >& ids) {
 	for (QVector<int>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
-		drw->prepareUpdate(db->CachedDistributor()->getIndexById(*it));
-		widget_add_distributor->setVisible(true);
-		dwbox->go();
-		dwbox->setEventTransparent(true);
+		editRecord(db->CachedDistributor()->getIndexById(*it));
+// 		drw->setUpdateMode(db->CachedDistributor()->getIndexById(*it));
+// // 		widget_add_distributor->setVisible(true);
+// 		dwbox->setEventTransparent(true);
+// 		dwbox->showWidget();
 	}
 }
 
 void TabDistributorWidget::editRecord(const QModelIndex& idx) {
-	drw->prepareUpdate(proxy_model->mapToSource(idx));
-	widget_add_distributor->setVisible(true);
-	dwbox->go();
+// 	drw->setUpdateMode(proxy_model->mapFromSource(idx));
+	drw->setUpdateMode(idx);
+// 	widget_add_distributor->setVisible(true);
 	dwbox->setEventTransparent(true);
+	dwbox->showWidget();
 }
 
 void TabDistributorWidget::markSourceRowActive(int row) {

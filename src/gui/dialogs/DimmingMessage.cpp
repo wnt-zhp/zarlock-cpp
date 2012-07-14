@@ -23,12 +23,14 @@
 #include <QHBoxLayout>
 #include <QLayout>
 
-DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(new QWidget(parent), parent) {
+DimmingMessage::DimmingMessage(QWidget * parent) : AbstractDimmingWidget(parent), overlay_widget(new QWidget(parent)) {
 	CII();
+
 	QString stylesheet = "color:white; background-color:rgba(0,0,0,200); border: 1px solid rgba(0,0,0,200); border-radius:4px;";
 	this->setStyleSheet(stylesheet);
 
 	setLayout(new QHBoxLayout(this));
+	setOverlayWidget(overlay_widget);
 
 	icon = new QLabel;
 	setIcon((QIcon()));
@@ -52,9 +54,9 @@ DimmingMessage::~DimmingMessage() {
 	delete label;
 	delete busy;
 	delete icon;
+
+// 	delete overlay_widget;
 }
-
-
 
 void DimmingMessage::setMessage(const QString& message) {
 	if (message.isEmpty())
@@ -83,4 +85,10 @@ void DimmingMessage::showBusy(bool show) {
 		busy->startAnimation();
 	else
 		busy->stopAnimation();
+}
+
+void DimmingMessage::showWidget()
+{
+	adjustSize();
+AbstractDimmingWidget::showWidget();
 }

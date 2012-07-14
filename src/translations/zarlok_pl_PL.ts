@@ -143,11 +143,11 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
 </context>
 <context>
-    <name>AbstractRecordWidget</name>
+    <name>AbstractInputWidget</name>
     <message>
-        <location filename="../gui/widgets/AbstractRecordWidget.cpp" line="30"/>
-        <source>Update record</source>
-        <translation>Zmień</translation>
+        <location filename="../gui/inputs/AbstractInputWidget.cpp" line="103"/>
+        <source>ERROR: parse error</source>
+        <translation>ERROR: Błąd parsowania</translation>
     </message>
 </context>
 <context>
@@ -226,77 +226,74 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="86"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="79"/>
         <source>Expiry</source>
         <translation>Ważność</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="93"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="86"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="100"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="93"/>
         <source>Booking</source>
         <translation>Wpis</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="107"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="100"/>
         <source>booking time</source>
         <translation>data katalogowania</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="121"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="114"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="130"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="123"/>
         <source>price</source>
         <translation>cena</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="140"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="133"/>
         <source>&amp;Unit price</source>
         <translation>&amp;Cena jednostkowa</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="149"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="142"/>
         <source>specificator</source>
         <translation>specyfikator produktu</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="156"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="149"/>
         <source>invoice number</source>
         <translation>numer faktury</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="175"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="171"/>
         <source>&amp;Insert</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="182"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="178"/>
         <source>Insert and &amp;Exit</source>
         <translation>Dodaj i &amp;wyjdź</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="189"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="185"/>
+        <source>&amp;Update</source>
+        <translation>&amp;Aktualizuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/BatchRecordWidget.ui" line="192"/>
         <source>C&amp;lear</source>
         <translation>&amp;Wyczyść</translation>
     </message>
     <message>
-        <location filename="../ui/BatchRecordWidget.ui" line="196"/>
+        <location filename="../ui/BatchRecordWidget.ui" line="199"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
-    </message>
-</context>
-<context>
-    <name>BatchRecordWidget</name>
-    <message>
-        <location filename="../gui/widgets/BatchRecordWidget.cpp" line="269"/>
-        <source>Update record</source>
-        <translation>Zmień</translation>
     </message>
 </context>
 <context>
@@ -527,14 +524,6 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
             <numerusform>%n dni</numerusform>
             <numerusform>%n dni</numerusform>
         </translation>
-    </message>
-</context>
-<context>
-    <name>CustomLineEdit</name>
-    <message>
-        <location filename="../gui/inputs/CustomLineEdit.cpp" line="100"/>
-        <source>ERROR: parse error</source>
-        <translation>ERROR: Błąd parsowania</translation>
     </message>
 </context>
 <context>
@@ -876,62 +865,67 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="44"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="40"/>
         <source>Optional</source>
         <translation>Opcjonalny</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="51"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="47"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="58"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="54"/>
         <source>Date</source>
         <translation>Data</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="65"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="61"/>
         <source>reason</source>
         <translation>przyczyna wydania</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="72"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="68"/>
         <source>Reason</source>
         <translation>Powód</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="79"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="75"/>
         <source>Product</source>
         <translation>Produkt</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="86"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="82"/>
         <source>additional reason</source>
         <translation>dodatkowy opis</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="93"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="89"/>
         <source>distribute date</source>
         <translation>data wydania</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="115"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="111"/>
         <source>&amp;Insert</source>
         <translation>&amp;Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="122"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="118"/>
         <source>Insert and &amp;Exit</source>
         <translation>Dodaj i &amp;wyjdź</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="129"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="125"/>
+        <source>&amp;Update</source>
+        <translation>&amp;Aktualizuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/DistributorRecordWidget.ui" line="132"/>
         <source>C&amp;lear</source>
         <translation>&amp;Wyczyść</translation>
     </message>
     <message>
-        <location filename="../ui/DistributorRecordWidget.ui" line="136"/>
+        <location filename="../ui/DistributorRecordWidget.ui" line="139"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -986,12 +980,12 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Aktualziacja bazy danych &quot;%1&quot; nie powiodła się.</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="493"/>
+        <location filename="../db/Database.cpp" line="497"/>
         <source>Updating database...</source>
         <translation>Aktualizacja bazy danych...</translation>
     </message>
     <message>
-        <location filename="../db/Database.cpp" line="493"/>
+        <location filename="../db/Database.cpp" line="497"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -1062,7 +1056,7 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../gui/inputs/DateInput.cpp" line="57"/>
+        <location filename="../gui/inputs/DateInput.cpp" line="58"/>
         <source>To obtain correct expiry date, set registration date first</source>
         <translation>Wprowadź datę wpisu aby dostać datę ważności</translation>
     </message>
@@ -1070,24 +1064,14 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>DistributorRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="136"/>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="132"/>
         <source>x %1</source>
         <translation>x %1</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="137"/>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="133"/>
         <source> of %1</source>
         <translation> z %1</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="230"/>
-        <source>Update record and exit</source>
-        <translation>Zmień rekord i zamknij</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="233"/>
-        <source>Update record</source>
-        <translation>Zmień</translation>
     </message>
 </context>
 <context>
@@ -1206,101 +1190,101 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealFoodListItemDataWidget</name>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="14"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="6"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="22"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="14"/>
         <source>Batch to distribute</source>
         <translation>Partia do wydania</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="29"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="32"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="21"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="24"/>
         <source>Batch name</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="500"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="35"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="54"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="515"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="65"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="57"/>
         <source>Qty value</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="502"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="84"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="87"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="517"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="501"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="112"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="115"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="516"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="138"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="130"/>
         <source>Delete entry</source>
         <translation>Usuń wpis</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="148"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="140"/>
         <source>Insert</source>
         <translation>Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="155"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="147"/>
         <source>Edit entry</source>
         <translation>Edytuj wpis</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="165"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="157"/>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="154"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="185"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="360"/>
-        <source> of %1</source>
-        <translation> z %1</translation>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="162"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="193"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="372"/>
+        <source> of %1.%2</source>
+        <translation> z %1.%2</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="408"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="423"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="409"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="424"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="425"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="440"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="439"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="454"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="514"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="532"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="547"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
@@ -1489,11 +1473,16 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../ui/ProductsRecordWidget.ui" line="81"/>
+        <source>&amp;Update</source>
+        <translation>&amp;Aktualizuj</translation>
+    </message>
+    <message>
+        <location filename="../ui/ProductsRecordWidget.ui" line="88"/>
         <source>C&amp;lear</source>
         <translation>&amp;Wyczyść</translation>
     </message>
     <message>
-        <location filename="../ui/ProductsRecordWidget.ui" line="88"/>
+        <location filename="../ui/ProductsRecordWidget.ui" line="95"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
@@ -1515,37 +1504,29 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
 </context>
 <context>
-    <name>ProductsRecordWidget</name>
-    <message>
-        <location filename="../gui/widgets/ProductsRecordWidget.cpp" line="109"/>
-        <source>Update record</source>
-        <translation>Zmień</translation>
-    </message>
-</context>
-<context>
     <name>ProductsTableModel</name>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="106"/>
+        <location filename="../models/ProductsTableModel.cpp" line="108"/>
         <source>ID</source>
         <translation>Lp</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="107"/>
+        <location filename="../models/ProductsTableModel.cpp" line="109"/>
         <source>Name</source>
         <translation>Nazwa</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="108"/>
+        <location filename="../models/ProductsTableModel.cpp" line="110"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="109"/>
+        <location filename="../models/ProductsTableModel.cpp" line="111"/>
         <source>Expire date (template)</source>
         <translation>Wzór daty ważności</translation>
     </message>
     <message>
-        <location filename="../models/ProductsTableModel.cpp" line="110"/>
+        <location filename="../models/ProductsTableModel.cpp" line="112"/>
         <source>Notes</source>
         <translation>Notatka</translation>
     </message>
@@ -1654,6 +1635,12 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
+        <location filename="../db/DBReports.cpp" line="341"/>
+        <location filename="../misc/DataParser.cpp" line="110"/>
+        <source>%1.%2 zl</source>
+        <translation>%1.%2 zł</translation>
+    </message>
+    <message>
         <location filename="../db/Database.cpp" line="303"/>
         <location filename="../db/Database.cpp" line="321"/>
         <location filename="../db/Database.cpp" line="326"/>
@@ -1667,11 +1654,6 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../db/DBReports.cpp" line="157"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
-    </message>
-    <message>
-        <location filename="../misc/DataParser.cpp" line="97"/>
-        <source>%.2f zl</source>
-        <translation>%.2f zl</translation>
     </message>
     <message>
         <location filename="../models/ModelsCommon.cpp" line="36"/>
@@ -1826,6 +1808,11 @@ Wybierz Zamknij aby wyjść.</translation>
         <source>This action will overwrite all existing data. Do you want continue?</source>
         <translation>Ta akcją spowoduje nadpisanie istniejących danych. Czy chcesz kontynuować?</translation>
     </message>
+    <message>
+        <location filename="../misc/DataParser.cpp" line="70"/>
+        <source>%1.%2</source>
+        <translation>%1.%2</translation>
+    </message>
 </context>
 <context>
     <name>QtyDelegate</name>
@@ -1841,6 +1828,14 @@ Wybierz Zamknij aby wyjść.</translation>
         <location filename="../gui/inputs/QtyInput.cpp" line="26"/>
         <source>quantity</source>
         <translation>ilość</translation>
+    </message>
+</context>
+<context>
+    <name>QtySpinInput</name>
+    <message>
+        <location filename="../gui/inputs/QtySpinInput.cpp" line="30"/>
+        <source>%1.%2</source>
+        <translation>%1.%2</translation>
     </message>
 </context>
 <context>
@@ -2269,22 +2264,33 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="250"/>
+        <location filename="../zarlok.cpp" line="222"/>
+        <source>Export window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="223"/>
+        <source>Because critical bug which could destroy your database has been found, export feature is disabled in current release of Zarlok. It will be enabled again in next release after bug is fixed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="255"/>
+        <location filename="../zarlok.cpp" line="376"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="336"/>
+        <location filename="../zarlok.cpp" line="341"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="336"/>
+        <location filename="../zarlok.cpp" line="341"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="345"/>
+        <location filename="../zarlok.cpp" line="350"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

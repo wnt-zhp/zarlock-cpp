@@ -180,6 +180,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="action_update">
+       <property name="text">
+        <string>&amp;Update</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="action_clear">
        <property name="text">
         <string>C&amp;lear</string>

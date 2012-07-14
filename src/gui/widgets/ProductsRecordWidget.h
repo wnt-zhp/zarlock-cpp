@@ -34,14 +34,16 @@ public:
 
 	virtual void setVisible(bool visible);
 
-public slots:
-	void update_model();
-	void prepareUpdate(const QModelIndex & idx);
-
 private slots:
 	void insertRecord();
 	void clearForm();
 	void validateAdd();
+	void prepareWidget();
+
+private:
+	void prepareInsert();
+	void prepareUpdate();
+
 
 private:
 	QCompleter * completer_name;

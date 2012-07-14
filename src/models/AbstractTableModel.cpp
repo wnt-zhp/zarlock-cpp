@@ -328,7 +328,7 @@ int AbstractTableModel::getRowById(int id) throw (int) {
 	return 0;
 }
 
-QModelIndex AbstractTableModel::getIndexById(int id, int column){
+QModelIndex AbstractTableModel::getIndexById(int id, int column) {
 	return this->index(this->getRowById(id), column);
 }
 

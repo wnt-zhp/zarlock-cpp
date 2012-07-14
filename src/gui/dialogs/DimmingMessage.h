@@ -36,7 +36,10 @@ public:
 	void setIcon(const QIcon & icon);
 	void showBusy(bool show = true);
 
+	virtual void showWidget();
+
 private:
+	QWidget * overlay_widget;
 	QStyle * st;
 	QLabel * icon;
 	QProgressIndicator * busy;

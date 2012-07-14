@@ -32,13 +32,15 @@ public:
 
 	void setWidget(QWidget * widget = NULL);
 
-	virtual void go(bool modal = false);
-	virtual void og();
+	virtual void showWidget(bool modal = false);
+	virtual void hideWidget();
 
 private:
-	QWidget * overlay;
+	QWidget * overlay_widget;
 	QWidget * widget;
 	bool modal_mode;
+
+	QString widget_stylesheet;
 };
 
 #endif // DIMMINGWIDGET_H

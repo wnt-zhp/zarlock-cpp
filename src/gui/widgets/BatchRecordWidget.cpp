@@ -34,12 +34,9 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 
 	spin_qty->setMaximum(999999);
 
-	button_label_insert_and_next = action_addnext->text();
-	button_label_insert_and_exit = action_addexit->text();
-	button_label_close = action_cancel->text();
-
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
+	action_update->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_clear->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogDiscardButton) );
 	action_cancel->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton) );
 
@@ -71,7 +68,7 @@ BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(),
 	connect(check_inf, SIGNAL(toggled(bool)), edit_expiry, SLOT(setDisabled(bool)));
 	connect(check_inf, SIGNAL(stateChanged(int)), this, SLOT(validateAdd()));
 
-	connect(Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(update_model()));
+	connect(Database::Instance(), SIGNAL(batchWordListUpdated()), this, SLOT(prepareWidget()));
 
 	edit_spec->setEmptyAllowed(true);
 	edit_expiry->setDateReferenceObj(edit_book);
@@ -107,18 +104,17 @@ void BatchRecordWidget::insertRecord() {
 	}
 	regdate = edit_book->date();
 
-	if (idToUpdate >= 0) {
+	if (widget_mode == UPDATE_MODE) {
 		BatchTableModel * btm = db->CachedBatch();
 		QModelIndexList bl = btm->match(btm->index(0, BatchTableModel::HId), Qt::EditRole, idToUpdate, 1, Qt::MatchExactly);
 		if (bl.size() != 1)
 			return;
 		if (db->updateBatchRecord(bl.at(0).row(), prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
-			idToUpdate = 0;
 			clearForm();
 			combo_products->setFocus();
 		}
-	} else {
+	} else if (widget_mode == INSERT_MODE) {
 		if (db->addBatchRecord(prod_id, edit_spec->text(), unitprice, edit_unit->text(),
 			spin_qty->value(), regdate, expdate, QDate::currentDate(), edit_invoice->text(), ":)")) {
 			clearForm();
@@ -186,7 +182,7 @@ void BatchRecordWidget::validateAdd() {
 	}
 }
 
-void BatchRecordWidget::update_model() {
+void BatchRecordWidget::prepareWidget() {
 	Database * db = Database::Instance();
 
 	if (pproxy) delete pproxy;
@@ -232,7 +228,7 @@ void BatchRecordWidget::update_model() {
 	validateCB(combo_products->currentIndex());
 }
 
-void BatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
+void BatchRecordWidget::prepareUpdate() {
 	int pid;
 	QString spec, unit, invoice, notes;
 	QDate reg, expiry, entry;
@@ -244,7 +240,7 @@ void BatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 
 	BatchTableModel * btm = db->CachedBatch();
 
-	idToUpdate = idx.model()->index(idx.row(), BatchTableModel::HId).data(Qt::EditRole).toUInt();
+	const QModelIndex & idx = idxToUpdate;
 
 	db->getBatchRecord(idx.model()->index(idx.row(), BatchTableModel::HId).row(), pid, spec, price, unit, qty, used, reg, expiry, entry, invoice, notes);
 
@@ -265,8 +261,16 @@ void BatchRecordWidget::prepareUpdate(const QModelIndex & idx) {
 	check_inf->setChecked(!expiry.isValid());
 	edit_invoice->setRaw(invoice);
 
-	action_addexit->setText(tr("Update record"));
+	action_update->show();
+	action_addexit->hide();
 	action_addnext->hide();
+}
+
+void BatchRecordWidget::prepareInsert() {
+	// 	action_addnext->setText(button_label_insert_and_next);
+	action_update->hide();
+	action_addexit->show();
+	action_addnext->show();
 }
 
 #include "BatchRecordWidget.moc"

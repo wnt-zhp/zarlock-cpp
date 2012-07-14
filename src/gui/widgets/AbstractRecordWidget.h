@@ -36,9 +36,8 @@ signals:
 	void closed(bool);
 
 public slots:
-	virtual void update_model();
-	virtual void prepareInsert(bool visible);
-	virtual void prepareUpdate(const QModelIndex & idx);
+	virtual void setInsertMode();
+	virtual void setUpdateMode(const QModelIndex & idx);
 
 protected slots:
 	virtual void insertRecord() = 0;
@@ -46,13 +45,16 @@ protected slots:
 	virtual void closeForm();
 	virtual void clearForm();
 
+private:
+	virtual void prepareInsert() = 0;
+	virtual void prepareUpdate() = 0;
+	virtual void prepareWidget();
+
 protected:
 	int idToUpdate;
-	QString button_label_insert_and_next;
-	QString button_label_insert_and_exit;
-	QString button_label_close;
-	QString button_label_clear;
-	QString button_label_update;
+	QModelIndex idxToUpdate;
+
+	enum WidgetMode { INSERT_MODE, UPDATE_MODE } widget_mode;
 };
 
 #endif // ABSTRACTRECORDWIDGET_H

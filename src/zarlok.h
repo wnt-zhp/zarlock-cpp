@@ -65,7 +65,7 @@ private slots:
 
 	virtual void printDailyReport();
 
-// 	void tabChanged(int index);
+	void checkForDatabase();
 
 	virtual void doCreateSMreports();
 	virtual void doCreateKMreports();
