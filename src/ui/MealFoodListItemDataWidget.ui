@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MealFoodListItemDataWidget</class>
  <widget class="QWidget" name="MealFoodListItemDataWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>779</width>
+    <height>33</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -9,7 +17,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QComboBox" name="batch">
+      <widget class="ExpandableComboBox" name="batch">
        <property name="toolTip">
         <string>Batch to distribute</string>
        </property>
@@ -170,6 +178,11 @@
    <class>QtySpinInput</class>
    <extends>QSpinBox</extends>
    <header>QtySpinInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ExpandableComboBox</class>
+   <extends>QComboBox</extends>
+   <header>ExpandableComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

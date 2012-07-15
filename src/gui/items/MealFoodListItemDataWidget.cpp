@@ -46,31 +46,15 @@ const int new_width = 1000;
 MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWidgetItem * item, Qt::WindowFlags f):
 	QWidget(parent, f), empty(true), editable(true), lock(true),
 	batch_row(-1), dist_id(-1), dist_row(-1),
-	owner(item), tv(NULL), evf(NULL), ledit(NULL)
+	owner(item), tv(NULL)
 {
 	CII();
 
 	mfl = dynamic_cast<MealFoodList *>(parent);
 	setupUi(this);
 
-	filter_string.reserve(100);
-	evf = new EventFilter;
+	batch->setPopupExpandable(true);
 
-	evf->registerFilter(QEvent::KeyPress);
-	evf->registerFilter(QEvent::Show);
-	evf->registerFilter(QEvent::Hide);
-
-	batch->installEventFilter(evf);
-
-	connect(evf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(eventCaptured(QEvent*)));
-
-	vevf = new EventFilter;
-	vevf->registerFilter(QEvent::Show);
-
-	connect(vevf, SIGNAL(eventFiltered(QEvent*)), this, SLOT(viewEventCaptured(QEvent*)));
-
-	ledit = new TextInput(this);
-	ledit->setVisible(false);
 	proxy = ((MealTabWidget *)(mfl->parent()->parent()))->getBatchProxyModel();
 
 	batch->setModel(proxy);
@@ -232,7 +216,8 @@ void MealFoodListItemDataWidget::buttonAdd() {
 	if (empty) {
 		// Get proxy model of distributions for current meal and fetch list of distributions of the same batch
 		MealTableModelProxy * pr = dynamic_cast<MealFoodList *>(owner->listWidget())->proxyModel();
-		if (pr == NULL) return;
+		if (!pr) return;
+
 		pr->invalidate();
 
 		QModelIndexList same_meal_list = pr->match(pr->index(0, DistributorTableModel::HBatchId), Qt::EditRole, bidx.data(Qt::EditRole), -1, Qt::MatchExactly);
@@ -251,6 +236,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 				// Reload widget data from database and ask for new empty slot
 				dist_row = db->CachedDistributor()->rowCount()-1;
 				setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
+				batch_row = -1;
 				invalidateProxy();
 				//TODO: this must be outside widget
 				mfl->insertEmptySlot();
@@ -270,6 +256,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 				mfl->refreshItem(pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
 				// Convert current to empty and reload proxy
 				convertToEmpty();
+				batch_row = -1;
 				invalidateProxy();
 			} else
 				// If insertion failed then return
@@ -282,6 +269,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity, reference_date,
 			reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			// Update record data
+			batch_row = -1;
 			invalidateProxy();
 			setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 		} else
@@ -396,7 +384,6 @@ void MealFoodListItemDataWidget::prepareView() {
 
 	delete tv;
 	tv = new BatchTableView;
-	tv->installEventFilter(evf);
 
 	tv->verticalHeader()->setDefaultSectionSize(20);
 	tv->horizontalHeader()->setVisible(true);
@@ -411,8 +398,6 @@ void MealFoodListItemDataWidget::prepareView() {
 
 	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(batch_row, BatchTableModel::HSpec)).row());
 	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
-
-	tv->installEventFilter(vevf);
 }
 
 int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {
@@ -571,80 +556,6 @@ void MealFoodListItemDataWidget::convertToHeader() {
 void MealFoodListItemDataWidget::invalidateProxy() {
 	proxy->setItemNum(&batch_row);
 	proxy->invalidate();
-}
-
-void MealFoodListItemDataWidget::eventCaptured(QEvent * evt) {
-	if (evt->type() == QEvent::KeyPress) {
-		QKeyEvent * kevt = dynamic_cast<QKeyEvent *>(evt);
-		int key = kevt->key();
-
-		switch (key) {
-			case Qt::Key_Escape:
-				filter_string.clear();
-				break;
-			case Qt::Key_Enter:
-				break;
-			case Qt::Key_Backspace:
-				filter_string.remove(filter_string.size()-1,1);
-				break;
-			default:
-				if (key < 0xffff) {
-					filter_string.append(kevt->text());
-				}
-		}
-
-		this->setFilterString(filter_string);
-	} else
-	if (evt->type() == QEvent::Show) {
-// 		ledit->show();
-// 		this->setFilterString(QString());
-	}
-	if (evt->type() == QEvent::Hide) {
-		ledit->hide();
-		this->setFilterString(QString());
-	}
-}
-
-void MealFoodListItemDataWidget::viewEventCaptured(QEvent * evt) {
-	if (evt->type() == QEvent::Show) {
-		QFrame * popup = batch->findChild<QFrame*>();
-
-		popup->resize(new_width, popup->rect().height());
-
-		QRect screen;
-#ifndef Q_WS_S60
-		int screenid = QApplication::desktop()->screenNumber(this);
-		screen = QApplication::desktop()->screenGeometry(screenid);
-#else
-		screen = qt_TRect2QRect(static_cast<CEikAppUi*>(S60->appUi())->ClientRect());
-#endif
-
-		QPoint p = popup->pos();
-		int dxpos = screen.right() - (p.x() + new_width);
-		if (dxpos < 0)
-			popup->move(p.x()+dxpos, p.y());
-	}
-}
-
-void MealFoodListItemDataWidget::setFilter() {
-	this->invalidateProxy();
-// 	table_batch->setModel(proxy_model);
-}
-
-void MealFoodListItemDataWidget::setFilterString(const QString& string) {
-	ledit->setText(string);
-
-	if (string.size() > 0) {
-		ledit->show();
-	}
-
-	QString f = string;
-	f.replace(' ', '*');
-//	proxy_model->setFilterRegExp(QRegExp(f, Qt::CaseInsensitive, QRegExp::Wildcard));
-	proxy->setFilterWildcard(f);
-	proxy->setFilterKeyColumn(BatchTableModel::HSpec);
-	proxy->setFilterRole(Qt::UserRole);
-	proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 #include "MealFoodListItemDataWidget.moc"

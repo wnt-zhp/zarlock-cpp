@@ -27,6 +27,8 @@
 #include "Database.h"
 
 #include <QDate>
+#include <QApplication>
+#include <QStyle>
 
 /**
  * @brief Konstruktor - nic się nie dzieje.
@@ -37,7 +39,7 @@
 BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
 												QSortFilterProxyModel(parent),
 												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL),
-												cb_hide(hide), itemnum(NULL), extended_spec(false) {
+												cb_hide(hide), itemnum(NULL) {
 	CI();
 }
 
@@ -106,24 +108,11 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 }
 
 QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
-	QVariant res = QSortFilterProxyModel::data(index, role);
-
-	if ( extended_spec and (index.column() == BatchTableModel::HSpec) and (role == Qt::DisplayRole) ) {
-		QString name = this->mapToSource(this->index(index.row(), BatchTableModel::HSpec)).data(Qt::DisplayRole).toString();
-		QString unit = this->mapToSource(this->index(index.row(), BatchTableModel::HUnit)).data(Qt::DisplayRole).toString();
-		QString price = this->mapToSource(this->index(index.row(), BatchTableModel::HPrice)).data(Qt::DisplayRole).toString();
-
-// 		return QVariant(tr("%1\t[ 1 unit = %2,\tprice: %3 zl/%2 ]").arg(res.toString()).arg(unit, 10, ' ').arg(price, 6, ' '));
-// 		index.data(Qt::DisplayRole).toString()
-
-		QString item_mark;
+	if ( (role == Qt::DecorationRole) and (index.column() == BatchTableModel::HSpec) ) {
 
 		if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum)) {
-			name = "* " % name;
+			return QApplication::style()->standardIcon(QStyle::SP_ArrowRight);
 		}
-
-		return QVariant(tr("%1 / %2 / %3").arg(name).arg(unit).arg(price));
-
 	}
 
 	if (role == Qt::BackgroundRole) {
@@ -151,7 +140,7 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 			else
 				return globals::item_nexpired_altbase;
 	}
-	return res;
+	return QSortFilterProxyModel::data(index, role);
 }
 
 void BatchTableModelProxy::setDateKey(const QDate& dk) {
@@ -164,14 +153,6 @@ void BatchTableModelProxy::setItemNum(int * item) {
 
 void BatchTableModelProxy::allwaysAccept(const QModelIndex * idx) {
 	aaidx = idx;
-}
-
-void BatchTableModelProxy::setFilter(const QString& filter) {
-	this->filter = filter;
-}
-
-void BatchTableModelProxy::setExtendedSpec(bool extspec) {
-	extended_spec = extspec;
 }
 
 #include "BatchTableModelProxy.moc"

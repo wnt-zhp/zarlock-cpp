@@ -115,6 +115,7 @@ set(${CMAKE_PROJECT_NAME}_SRCS
 		src/gui/inputs/QtyInput.cpp
 		src/gui/inputs/TextInput.cpp
 		src/gui/inputs/QtySpinInput.cpp
+		src/gui/inputs/ExpandableComboBox.cpp
 
 		src/gui/widgets/AbstractRecordWidget.cpp
 		src/gui/widgets/ProductsRecordWidget.cpp

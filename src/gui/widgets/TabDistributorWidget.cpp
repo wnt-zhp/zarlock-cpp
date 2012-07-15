@@ -145,7 +145,7 @@ void TabDistributorWidget::editRecord(const QModelIndex& idx) {
 }
 
 void TabDistributorWidget::markSourceRowActive(int row) {
-	int proxy_row = proxy_model->mapFromSource(model_dist->index(row, DistributorTableModel::HId)).row();
+// 	int proxy_row = proxy_model->mapFromSource(model_dist->index(row, DistributorTableModel::HId)).row();
 	table_dist->selectRow(row);
 }
 

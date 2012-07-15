@@ -40,6 +40,7 @@ ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWid
 
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
 	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
+	connect(action_update, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(closeForm()));
 	connect(action_clear, SIGNAL(clicked(bool)), this,  SLOT(clearForm()));
 

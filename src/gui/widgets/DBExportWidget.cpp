@@ -132,6 +132,8 @@ void DBExportWidget::doExport() {
 	DBExportCommon::DBBuffer buff;
 	DBExportCommon::PackData(ifilestr, infilestr, &buff);
 	DBExportCommon::ExportFile(ofilestr, &buff);
+
+	QMessageBox::information(this, tr("Database export dialog"), tr("Database exported"), QMessageBox::Ok);
 }
 
 void DBExportWidget::selectExportDirectory() {

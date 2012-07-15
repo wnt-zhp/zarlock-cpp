@@ -395,14 +395,6 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     </message>
 </context>
 <context>
-    <name>BatchTableModelProxy</name>
-    <message>
-        <location filename="../models/BatchTableModelProxy.cpp" line="125"/>
-        <source>%1 / %2 / %3</source>
-        <translation>%1 / %2 / %3</translation>
-    </message>
-</context>
-<context>
     <name>BatchTableModelProxyP</name>
     <message>
         <location filename="../models/BatchTableModelProxyP.cpp" line="57"/>
@@ -679,6 +671,16 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <source>&amp;Reset</source>
         <translation>&amp;Domyślne</translation>
     </message>
+    <message>
+        <location filename="../gui/widgets/DBExportWidget.cpp" line="136"/>
+        <source>Database export dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBExportWidget.cpp" line="136"/>
+        <source>Database exported</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DBImportWidget</name>
@@ -847,6 +849,17 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <location filename="../ui/DBImportWidget.ui" line="242"/>
         <source>A&amp;dvanced</source>
         <translation>Z&amp;aawansowane</translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
+        <location filename="../gui/widgets/DBImportWidget.cpp" line="181"/>
+        <source>Database import dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/widgets/DBImportWidget.cpp" line="181"/>
+        <source>Database imported</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1064,12 +1077,12 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>DistributorRecordWidget</name>
     <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="132"/>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="168"/>
         <source>x %1</source>
         <translation>x %1</translation>
     </message>
     <message>
-        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="133"/>
+        <location filename="../gui/widgets/DistributorRecordWidget.cpp" line="169"/>
         <source> of %1</source>
         <translation> z %1</translation>
     </message>
@@ -1190,101 +1203,101 @@ Wciśnij Zamknij aby wyjść.</translation>
 <context>
     <name>MealFoodListItemDataWidget</name>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="6"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="14"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="14"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="22"/>
         <source>Batch to distribute</source>
         <translation>Partia do wydania</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="21"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="24"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="29"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="32"/>
         <source>Batch name</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="35"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="54"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="515"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="500"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="57"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="65"/>
         <source>Qty value</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="84"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="87"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="517"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="502"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="112"/>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="115"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="516"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="501"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="130"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="138"/>
         <source>Delete entry</source>
         <translation>Usuń wpis</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="140"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="148"/>
         <source>Insert</source>
         <translation>Dodaj</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="147"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="155"/>
         <source>Edit entry</source>
         <translation>Edytuj wpis</translation>
     </message>
     <message>
-        <location filename="../ui/MealFoodListItemDataWidget.ui" line="157"/>
+        <location filename="../ui/MealFoodListItemDataWidget.ui" line="165"/>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="162"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="193"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="372"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="146"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="177"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="360"/>
         <source> of %1.%2</source>
         <translation> z %1.%2</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="423"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="408"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="424"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="409"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="440"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="425"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="454"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="439"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="514"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="547"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="532"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
@@ -1800,11 +1813,6 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
-        <source>Database import</source>
-        <translation>Import bazy danych</translation>
-    </message>
-    <message>
-        <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
         <source>This action will overwrite all existing data. Do you want continue?</source>
         <translation>Ta akcją spowoduje nadpisanie istniejących danych. Czy chcesz kontynuować?</translation>
     </message>
@@ -2270,27 +2278,29 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
         <location filename="../zarlok.cpp" line="223"/>
-        <source>Because critical bug which could destroy your database has been found, export feature is disabled in current release of Zarlok. It will be enabled again in next release after bug is fixed.</source>
+        <source>This is experimental version of the database exporter/importer. Here you can easily do backups of your data.
+
+Although we put lot of work to test this module to be safe for users we can&apos;t exclude any possible problems. If you are using this dialog be careful. In case of problems with imported data please contact us. Do not delete files you tried export or import. Information stored there can be very useful to understood your problem. Zarlok provides mechanism which allow us to restore your data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="255"/>
-        <location filename="../zarlok.cpp" line="376"/>
+        <location filename="../zarlok.cpp" line="259"/>
+        <location filename="../zarlok.cpp" line="380"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="341"/>
+        <location filename="../zarlok.cpp" line="345"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="341"/>
+        <location filename="../zarlok.cpp" line="345"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="350"/>
+        <location filename="../zarlok.cpp" line="354"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

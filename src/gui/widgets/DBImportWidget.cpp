@@ -167,7 +167,7 @@ void DBImportWidget::resetForm() {
 void DBImportWidget::doImport() {
 	PR(datafile.toStdString());
 
-	int ret = QMessageBox::question(this, QObject::tr("Database import"), QObject::tr("This action will overwrite all existing data. Do you want continue?"), QMessageBox::Yes | QMessageBox::No);
+	int ret = QMessageBox::question(this, tr("Database import dialog"), QObject::tr("This action will overwrite all existing data. Do you want continue?"), QMessageBox::Yes | QMessageBox::No);
 	if (ret != QMessageBox::Yes)
 		return;
 
@@ -177,6 +177,8 @@ void DBImportWidget::doImport() {
 		DBExportCommon::ImportFile(datafile, "", &buff);
 
 	Database::Instance()->rebuild_models();
+
+	QMessageBox::information(this, tr("Database import dialog"), tr("Database imported"), QMessageBox::Ok);
 }
 
 void DBImportWidget::setTargetCurrent() {
@@ -184,7 +186,6 @@ void DBImportWidget::setTargetCurrent() {
 
 	validateForm();
 }
-
 
 void DBImportWidget::setTargetDatabase(int idx) {
 	if ( (idx >= 0) and (idx < cb_dbname->count()) )
@@ -209,7 +210,6 @@ void DBImportWidget::setTargetNew(const QString& newdb) {
 
 	validateForm();
 }
-
 
 void DBImportWidget::setAdvancedMode(bool advanced) {
 	if (!advanced) {

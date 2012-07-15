@@ -60,12 +60,6 @@ protected slots:
 	void validateBatchAdd();
 	void validateAdd();
 
-	void setFilter();
-	void setFilterString(const QString & string);
-
-	void eventCaptured(QEvent * evt);
-	void viewEventCaptured(QEvent * evt);
-
 signals:
 	void itemRemoved(QListWidgetItem * item);
 	void itemMerged();
@@ -88,11 +82,6 @@ private:
 	QListWidgetItem * owner;
 	BatchTableModelProxy * proxy;
 	BatchTableView * tv;
-
-	EventFilter * evf;
-	EventFilter * vevf;
-	QString filter_string;
-	TextInput * ledit;
 };
 
 #endif // MEALFOODLISTITEMDATAWIDGET_H

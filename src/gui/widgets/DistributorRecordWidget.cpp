@@ -17,15 +17,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QCompleter>
+#include <QProxyModel>
+#include <QDesktopWidget>
+
 #include "globals.h"
 #include "DistributorRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
+#include "EventFilter.h"
+#include "BatchTableView.h"
+#include "TextInput.h"
+
+const int new_width = 1000;
 
 DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::DRWidget(),
 	completer_qty(NULL), completer_date(NULL), completer_reason(NULL), completer_reason2(NULL),
-	pproxy(NULL), hideempty(NULL), disttype(0) {
+	proxy(NULL), hideempty(NULL), disttype(0), tv(NULL) {
 	setupUi(parent);
+
+	combo_batch->setPopupExpandable(true);
 
 	action_addnext->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
 	action_addexit->setIcon( QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton) );
@@ -37,15 +48,16 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 
 	connect(action_addnext, SIGNAL(clicked(bool)), this, SLOT(insertRecord()));
 	connect(action_addexit, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
+	connect(action_update, SIGNAL(clicked(bool)), this, SLOT(insertRecordAndExit()));
 	connect(action_cancel, SIGNAL(clicked(bool)), this,  SLOT(closeForm()));
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clearForm()));
 
-	connect(combo_products, SIGNAL(currentIndexChanged(int)), this, SLOT(validateAdd()));
-	connect(combo_products, SIGNAL(editTextChanged(QString)), this, SLOT(validateAdd()));
-	connect(spin_qty, SIGNAL(valueChanged(int)), this, SLOT(validateAdd()));
-	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
-	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateAdd()));
-// 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateAdd()));
+	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateDistDate()));
+	connect(combo_batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateData()));
+// 	connect(combo_batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateData()));
+	connect(spin_qty, SIGNAL(valueChanged(int)), this, SLOT(validateData()));
+	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateData()));
+// 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateData()));
 
 	connect(Database::Instance(), SIGNAL(distributorWordListUpdated()), this, SLOT(prepareWidget()));
 
@@ -53,14 +65,21 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 // 	edit_date->setDateReferenceObj(edit_book);
 	edit_reason_b->setEmptyAllowed(true);
 	// TODO: do it better
-	combo_products->setStyleSheet("color: black;");
+	combo_batch->setStyleSheet("color: black;");
 
 	hideempty = new QCheckBox;
 	hideempty->setChecked(true);
 
-	pproxy = new BatchTableModelProxy(hideempty);
-	pproxy->setExtendedSpec(true);
+	proxy = new BatchTableModelProxy(hideempty);
+
+	combo_batch->setModel(proxy);
+	combo_batch->setModelColumn(BatchTableModel::HSpec);
+
+	combo_batch->setAutoCompletion(true);
+	combo_batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
+
 	prepareWidget();
+	prepareView();
 }
 
 DistributorRecordWidget::~DistributorRecordWidget() {
@@ -69,15 +88,17 @@ DistributorRecordWidget::~DistributorRecordWidget() {
 	if (completer_date) delete completer_date;
 	if (completer_reason) delete completer_reason;
 	if (completer_reason2) delete completer_reason2;
-	if (pproxy) delete pproxy;
+	if (proxy) delete proxy;
 	delete hideempty;
+
+	delete tv;
 }
 
 void DistributorRecordWidget::insertRecord() {
 	Database * db = Database::Instance();
 
-	int idx = combo_products->currentIndex();
-	int batch_id = pproxy->mapToSource(pproxy->index(idx, 0)).data(BatchTableModel::RRaw).toInt();	//HBatchId
+	int idx = combo_batch->currentIndex();
+	int batch_id = proxy->mapToSource(proxy->index(idx, 0)).data(BatchTableModel::RRaw).toInt();	//HBatchId
 
 	QDate df;
 	if (!DataParser::date(edit_date->text(), df))
@@ -100,7 +121,7 @@ void DistributorRecordWidget::insertRecord() {
 		{
 			clearForm();
 			edit_date->setFocus();
-			pproxy->invalidate();
+			proxy->invalidate();
 		}
 	}
 }
@@ -113,8 +134,23 @@ void DistributorRecordWidget::clearForm() {
 	edit_reason_b->clear();
 }
 
-void DistributorRecordWidget::validateAdd() {
-	QModelIndex idx = pproxy->mapToSource(pproxy->index(combo_products->currentIndex(), 0));
+void DistributorRecordWidget::validateDistDate() {
+	bool is_date_ok = edit_date->ok();
+	if (is_date_ok) {
+		proxy->setDateKey(edit_date->date());
+		proxy->invalidate();
+	}
+
+	combo_batch->setEnabled(is_date_ok);
+	spin_qty->setEnabled(is_date_ok);
+	edit_reason_a->setEnabled(is_date_ok);
+	edit_reason_b->setEnabled(is_date_ok);
+
+	validateData();
+}
+
+void DistributorRecordWidget::validateData() {
+	QModelIndex idx = proxy->mapToSource(proxy->index(combo_batch->currentIndex(), 0));
 
 	Database * db = Database::Instance();
 
@@ -123,7 +159,7 @@ void DistributorRecordWidget::validateAdd() {
 	unsigned int qtytotal = db->CachedBatch()->index(idx.row(), BatchTableModel::HStaQty).data(Qt::EditRole).toUInt();
 	QString qunit = db->CachedBatch()->index(idx.row(), BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
 
-	if (widget_mode == UPDATE_MODE > 0 and (idx.row() == sourceRowToUpdate)) {
+	if ((widget_mode == UPDATE_MODE) and (idx.row() == sourceRowToUpdate)) {
 		fake = db->CachedDistributor()->getIndexById(idToUpdate, DistributorTableModel::HQty).data(DistributorTableModel::RRaw).toUInt();
 	}
 
@@ -133,18 +169,7 @@ void DistributorRecordWidget::validateAdd() {
 	spin_qty->setSuffix(tr(" of %1").arg(totalmax/100.0, 0, 'f', 2));
 	spin_qty->setMaximum(totalmax);
 
-	bool is_date_ok = edit_date->ok();
-	if (is_date_ok) {
-		pproxy->setDateKey(edit_date->date());
-		pproxy->invalidate();
-	}
-
-	combo_products->setEnabled(is_date_ok);
-	spin_qty->setEnabled(is_date_ok);
-	edit_reason_a->setEnabled(is_date_ok);
-	edit_reason_b->setEnabled(is_date_ok);
-
-	if ((spin_qty->value() > 0.0) and is_date_ok and edit_reason_a->ok()) {
+	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason_a->ok()) {
 		action_addnext->setEnabled(true);
 	} else {
 		action_addnext->setEnabled(false);
@@ -154,13 +179,10 @@ void DistributorRecordWidget::validateAdd() {
 void DistributorRecordWidget::prepareWidget() {
 	Database * db = Database::Instance();
 
-	pproxy->setSourceModel(db->CachedBatch());
-	pproxy->setDynamicSortFilter(true);
-	pproxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-	pproxy->sort(2, Qt::AscendingOrder);
-
-	combo_products->setModel(pproxy);
-	combo_products->setModelColumn(2);
+	proxy->setSourceModel(db->CachedBatch());
+	proxy->setDynamicSortFilter(true);
+	proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+	proxy->sort(2, Qt::AscendingOrder);
 
 // 	if (completer_qty) delete completer_qty;
 	if (completer_date) delete completer_date;
@@ -215,16 +237,16 @@ void DistributorRecordWidget::prepareUpdate() {
 
 	sourceRowToUpdate = batchl.at(0).row();		// source row number
 
-	pproxy->setItemNum(&sourceRowToUpdate);		// update proxy
-	validateAdd();								// revalidate proxy model
+	proxy->setItemNum(&sourceRowToUpdate);		// update proxy
+	proxy->invalidate();
 
-	combo_products->setCurrentIndex(pproxy->mapFromSource(batchl.at(0)).row());
+	combo_batch->setCurrentIndex(proxy->mapFromSource(batchl.at(0)).row());
 	spin_qty->setValue(qty);
 	this->disttype = disttype;
 	edit_reason_a->setRaw(disttype_a);
 	edit_reason_b->setRaw(disttype_b);
 
-	validateAdd();								// revalidate proxy model
+	validateDistDate();								// revalidate proxy model
 
 	action_update->show();
 	action_addexit->hide();
@@ -235,6 +257,27 @@ void DistributorRecordWidget::prepareInsert() {
 	action_update->hide();
 	action_addexit->show();
 	action_addnext->show();
+}
+
+void DistributorRecordWidget::prepareView() {
+	FII();
+
+	delete tv;
+	tv = new BatchTableView;
+
+	tv->verticalHeader()->setDefaultSectionSize(20);
+	tv->horizontalHeader()->setVisible(true);
+	tv->verticalHeader()->setVisible(false);
+
+	// 	tv->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+	// 	tv->resizeColumnsToContents();
+	// 	tv->resizeColumnToContents(BatchTableModel::HSpec);
+	tv->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+	combo_batch->setView(tv);
+
+	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(sourceRowToUpdate, BatchTableModel::HSpec)).row());
+	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
 }
 
 #include "DistributorRecordWidget.moc"

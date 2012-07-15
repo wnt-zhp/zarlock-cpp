@@ -42,9 +42,6 @@ public:
 	virtual void setDateKey(const QDate & dk);
 	virtual void setItemNum(int * item);
 	virtual void allwaysAccept(const QModelIndex * idx);
-	virtual void setFilter(const QString & filter);
-
-	virtual void setExtendedSpec(bool extspec = false);
 
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -57,9 +54,6 @@ private:
 	QDate datekey;
 	int * itemnum;
 	const QModelIndex * aaidx;
-
-	QString filter;
-	bool extended_spec;
 };
 
 #endif // BATCHTABLEMODELPROXY_H

@@ -21,12 +21,15 @@
 #ifndef DISTRIBUTERECORDWIDGET_H
 #define DISTRIBUTERECORDWIDGET_H
 
-#include <QCompleter>
-#include <QProxyModel>
-
 #include "ui_DistributorRecordWidget.h"
 #include "BatchTableModelProxy.h"
 #include "AbstractRecordWidget.h"
+
+class QCompleter;
+class QProxyModel;
+class BatchTableView;
+class EventFilter;
+class TextInput;
 
 class DistributorRecordWidget : public AbstractRecordWidget, public Ui::DRWidget {
 Q_OBJECT
@@ -37,12 +40,14 @@ public:
 private slots:
 	void insertRecord();
 	void clearForm();
-	void validateAdd();
+	void validateDistDate();
+	void validateData();
 	void prepareWidget();
 
 private:
 	void prepareInsert();
 	void prepareUpdate();
+	void prepareView();
 
 private:
 	QCompleter * completer_qty;
@@ -50,7 +55,7 @@ private:
 	QCompleter * completer_reason;
 	QCompleter * completer_reason2;
 
-	BatchTableModelProxy * pproxy;
+	BatchTableModelProxy * proxy;
 	QCheckBox * hideempty;
 
 // 	const QModelIndex * indexToUpdate;
@@ -58,6 +63,8 @@ private:
 // 	QModelIndex sourceIndex;
 	int sourceRowToUpdate;
 	int disttype;
+
+	BatchTableView * tv;
 };
 
 #endif // DISTRIBUTERECORDWIDGET_H

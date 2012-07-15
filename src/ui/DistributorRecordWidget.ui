@@ -91,7 +91,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="combo_products">
+       <widget class="ExpandableComboBox" name="combo_batch">
         <property name="insertPolicy">
          <enum>QComboBox::NoInsert</enum>
         </property>
@@ -160,10 +160,15 @@
    <extends>QSpinBox</extends>
    <header>QtySpinInput.h</header>
   </customwidget>
+  <customwidget>
+   <class>ExpandableComboBox</class>
+   <extends>QComboBox</extends>
+   <header>ExpandableComboBox.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>edit_date</tabstop>
-  <tabstop>combo_products</tabstop>
+  <tabstop>combo_batch</tabstop>
   <tabstop>spin_qty</tabstop>
   <tabstop>edit_reason_a</tabstop>
   <tabstop>edit_reason_b</tabstop>
