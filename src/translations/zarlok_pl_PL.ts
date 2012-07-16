@@ -674,12 +674,12 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
     <message>
         <location filename="../gui/widgets/DBExportWidget.cpp" line="136"/>
         <source>Database export dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno eksportu bazy danych</translation>
     </message>
     <message>
         <location filename="../gui/widgets/DBExportWidget.cpp" line="136"/>
         <source>Database exported</source>
-        <translation type="unfinished"></translation>
+        <translation>Daza wyeksportowana</translation>
     </message>
 </context>
 <context>
@@ -854,12 +854,12 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <location filename="../gui/widgets/DBImportWidget.cpp" line="170"/>
         <location filename="../gui/widgets/DBImportWidget.cpp" line="181"/>
         <source>Database import dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno importu baza danych</translation>
     </message>
     <message>
         <location filename="../gui/widgets/DBImportWidget.cpp" line="181"/>
         <source>Database imported</source>
-        <translation type="unfinished"></translation>
+        <translation>Baza zaimportowana</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1221,7 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="500"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="507"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
@@ -1233,14 +1233,14 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="502"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="509"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="501"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="508"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
@@ -1265,39 +1265,32 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="146"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="177"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="360"/>
-        <source> of %1.%2</source>
-        <translation> z %1.%2</translation>
-    </message>
-    <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="408"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="415"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="409"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="416"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="425"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="432"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="439"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="446"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="499"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="506"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="532"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="539"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
@@ -1649,6 +1642,7 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../db/DBReports.cpp" line="341"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="188"/>
         <location filename="../misc/DataParser.cpp" line="110"/>
         <source>%1.%2 zl</source>
         <translation>%1.%2 zł</translation>
@@ -1817,6 +1811,15 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Ta akcją spowoduje nadpisanie istniejących danych. Czy chcesz kontynuować?</translation>
     </message>
     <message>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="150"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="181"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="365"/>
+        <source> of %1.%2</source>
+        <translation> z %1.%2</translation>
+    </message>
+    <message>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="183"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="366"/>
         <location filename="../misc/DataParser.cpp" line="70"/>
         <source>%1.%2</source>
         <translation>%1.%2</translation>
@@ -2274,14 +2277,16 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     <message>
         <location filename="../zarlok.cpp" line="222"/>
         <source>Export window</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno eksportu</translation>
     </message>
     <message>
         <location filename="../zarlok.cpp" line="223"/>
         <source>This is experimental version of the database exporter/importer. Here you can easily do backups of your data.
 
 Although we put lot of work to test this module to be safe for users we can&apos;t exclude any possible problems. If you are using this dialog be careful. In case of problems with imported data please contact us. Do not delete files you tried export or import. Information stored there can be very useful to understood your problem. Zarlok provides mechanism which allow us to restore your data.</source>
-        <translation type="unfinished"></translation>
+        <translation>To jest eksperymentalna wersja eksportera i importera bazy danych. Tutaj możesz w łatwy sposób zrobić kopie zapasowe swoich danych.
+
+Jednakże pomimo, że włożyliśmy sporo pracy aby przetestować ten moduł aby był bezpieczny w użyciu nie możemy wykluczyć żadnych błędów. Jeśli używasz tego modułu bądz ostrożny. W przypadku problemów z importem bazy danych proszę skontaktuj się z nami. Nie usuwaj żadnych plików które próbowałeś wyeksportować albo zaimportować. Informacje zapisane tam są niezwykle użyteczne dla rozwiazania problemu. Zarłok ponadto posiada mechanizmy pozwalające idzyskać Twoje dane.    </translation>
     </message>
     <message>
         <location filename="../zarlok.cpp" line="259"/>

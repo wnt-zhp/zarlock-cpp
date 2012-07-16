@@ -85,8 +85,8 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 	qty->setMaximum(9999);
 	qty_label->setMaximumSize(128, 32);
 
-	connect(batch, SIGNAL(activated(int)), this, SLOT(validateBatchAdd()));
-	connect(qty, SIGNAL(valueChanged(int)), this, SLOT(validateAdd()));
+	connect(batch, SIGNAL(activated(int)), this, SLOT(validateBatchData()));
+	connect(qty, SIGNAL(valueChanged(int)), this, SLOT(validateData()));
 
 	connect(addB, SIGNAL(clicked(bool)), this, SLOT(buttonAdd()));
 	connect(updateB, SIGNAL(clicked(bool)), this, SLOT(buttonUpdate()));
@@ -95,6 +95,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 
 	connect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 
+	prepareView();
 	resetWidget();
 	render();
 }
@@ -122,28 +123,31 @@ void MealFoodListItemDataWidget::convertToEmpty() {
 	label_price->setText("---");
 	label_unit->setText("---");
 
-	qty->setValue(0);
 	qty->setMaximum(0);
+	qty->setMinimum(0);
+	qty->setValue(0);
 
 	empty = true;
 	editable = true;
 
-	prepareView();
+	updateView();
 	render();
 }
 
 /** @brief Render widget
  * @param doRender if thre then render 'readable' version of widget, otherwise render 'editable' version
  */
-void MealFoodListItemDataWidget::render() {FII();
+void MealFoodListItemDataWidget::render() {
 	addB->setVisible(editable);
 	updateB->setVisible(!editable);
-	removeB->setVisible(!empty);
-	closeB->setVisible(editable and !empty);
+	removeB->setVisible(!editable);
+	removeB->setEnabled(!empty);
+	closeB->setVisible(editable);
+	closeB->setEnabled(!empty);
 
 	qty->setVisible(editable);
 	qty_label->setVisible(!editable);
-	qty->setSuffix(tr(" of %1.%2").arg(qty->maximum()/100).arg(qty->maximum() % 100, 2, 10, QChar('0')));
+	qty->setSuffix(QObject::tr(" of %1.%2").arg(qty->maximum()/100).arg(qty->maximum() % 100, 2, 10, QChar('0')));
 
 	batch->setVisible(editable);
 	batch_label->setVisible(!editable);
@@ -174,25 +178,25 @@ void MealFoodListItemDataWidget::update() {
 	batch_label->setText(tmp_batch_label);
 
 	qty->setMaximum(tmp_qty_max);
-	qty->setSuffix(tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
+	qty->setSuffix(QObject::tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
 
-	qty_label->setText(QString("%1.%2").arg(qty->value()/100).arg(qty->value() % 100, 2, 10, QChar('0')));
+	qty_label->setText(QObject::tr("%1.%2").arg(qty->value()/100).arg(qty->value() % 100, 2, 10, QChar('0')));
 
 	QString unit = btm->index(tmp_batch_row, BatchTableModel::HUnit).data(Qt::DisplayRole).toString();
-	QString price = btm->index(tmp_batch_row, BatchTableModel::HPrice).data(Qt::DisplayRole).toString();
+	int price = btm->index(tmp_batch_row, BatchTableModel::HPrice).data(Qt::EditRole).toInt();
 
-	label_price->setText(price);
+	label_price->setText(QObject::tr("%1.%2 zl").arg(price/100).arg(price % 100, 2, 10, QChar('0')));
 	label_unit->setText(unit);
 }
 
-void MealFoodListItemDataWidget::validateBatchAdd() {
+void MealFoodListItemDataWidget::validateBatchData() {
 	if (batch->currentIndex() < 0)
 		return;
 
 	update();
 }
 
-void MealFoodListItemDataWidget::validateAdd() {
+void MealFoodListItemDataWidget::validateData() {
 	if ((qty->value() != 0) && batch->currentIndex() >= 0) {
 		addB->setEnabled(true);
 	} else {
@@ -294,7 +298,7 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 
 	// prepare proxy model and prepare table view
 	invalidateProxy();
-	prepareView();
+	updateView();
 
 	// set proper index of batch combo box
 	batch->setCurrentIndex(proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row());
@@ -324,11 +328,12 @@ void MealFoodListItemDataWidget::buttonRemove() {
 	// Prepare list of records to remove, delete and refresh batch model
 	QVector<int> v;
 	v.push_back(dist_id);
-	db->removeDistributorRecord(v);
-	db->CachedBatch()->selectRow(batch_row);
+	if (db->removeDistributorRecord(v)) {
+		db->CachedBatch()->selectRow(batch_row);
 
-	// inform about removal
-	emit itemRemoved(owner);
+		// inform about removal
+		emit itemRemoved(owner);
+	}
 }
 
 /** @brief Prepare data for widget
@@ -357,8 +362,8 @@ void MealFoodListItemDataWidget::setWidgetData(int did) {
 
 	qty->setMaximum(tmp_qty_max);
 	qty->setValue(quantity);
-	qty->setSuffix(tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
-	qty_label->setText(QString("%1.%2").arg(quantity/100).arg(quantity % 100, 2, 10, QChar('0')));
+	qty->setSuffix(QObject::tr(" of %1.%2").arg(tmp_qty_max/100).arg(tmp_qty_max % 100, 2, 10, QChar('0')));
+	qty_label->setText(QObject::tr("%1.%2").arg(quantity/100).arg(quantity % 100, 2, 10, QChar('0')));
 
 	editable = false;
 	empty = false;
@@ -380,8 +385,6 @@ void MealFoodListItemDataWidget::deleteView() {
 }
 
 void MealFoodListItemDataWidget::prepareView() {
-	FII();
-
 	delete tv;
 	tv = new BatchTableView;
 
@@ -395,9 +398,13 @@ void MealFoodListItemDataWidget::prepareView() {
 	tv->setSelectionBehavior(QAbstractItemView::SelectRows);
 
 	batch->setView(tv);
-
-	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(batch_row, BatchTableModel::HSpec)).row());
 	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
+}
+
+void MealFoodListItemDataWidget::updateView() {
+	if (!tv)
+		return;
+	tv->selectRow(proxy->mapFromSource(proxy->sourceModel()->index(batch_row, BatchTableModel::HSpec)).row());
 }
 
 int MealFoodListItemDataWidget::mergeBox(const QModelIndexList& list) {

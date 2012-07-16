@@ -57,8 +57,8 @@ public slots:
 	void invalidateProxy();
 
 protected slots:
-	void validateBatchAdd();
-	void validateAdd();
+	void validateBatchData();
+	void validateData();
 
 signals:
 	void itemRemoved(QListWidgetItem * item);
@@ -68,6 +68,7 @@ private:
 	void resetWidget();
 	void prepareView();
 	void deleteView();
+	void updateView();
 
 	int mergeBox(const QModelIndexList & list);
 
