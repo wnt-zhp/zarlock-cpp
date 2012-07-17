@@ -2145,13 +2145,13 @@ Wybierz Zamknij aby wyjść.</translation>
 <context>
     <name>UpdateCheckService</name>
     <message>
-        <location filename="../misc/net/UpdateCheckService.cpp" line="69"/>
-        <location filename="../misc/net/UpdateCheckService.cpp" line="93"/>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="72"/>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="97"/>
         <source>Updates available</source>
         <translation>Aktualizacje dostępne</translation>
     </message>
     <message>
-        <location filename="../misc/net/UpdateCheckService.cpp" line="70"/>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="73"/>
         <source>Updates of Zarlok is available.
 
 To finish upgrade process this zarlok session must be closed (this will be handled automaticly).
@@ -2164,7 +2164,7 @@ Do you want download and install updates?</source>
 Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
-        <location filename="../misc/net/UpdateCheckService.cpp" line="83"/>
+        <location filename="../misc/net/UpdateCheckService.cpp" line="87"/>
         <source>Updates of Zarlok is available.&lt;br /&gt;&lt;br /&gt;You can download it for from here:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</source>
         <translation>Aktualizacja Żarloka jest dostępna.&lt;br /&gt;&lt;br /&gt;Może je pobrać stąd:&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%2&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%2&apos;&gt;%1/%3&lt;/a&gt;&lt;br /&gt;&lt;a href=&apos;%1/%4&apos;&gt;%1/%4&lt;/a&gt;&lt;br /&gt;</translation>
     </message>

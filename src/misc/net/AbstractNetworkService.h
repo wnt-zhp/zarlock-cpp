@@ -35,8 +35,8 @@ public:
 	virtual ~AbstractNetworkService();
 
 public slots:
-	virtual void sendRequest(const QUrl & url);
-	virtual void sendRequest(const QString & url);
+	virtual QNetworkReply * sendRequest(const QUrl & url);
+	virtual QNetworkReply * sendRequest(const QString & url);
 
 protected slots:
 	virtual void requestFinished() = 0;

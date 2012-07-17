@@ -31,23 +31,35 @@ AbstractNetworkService::~AbstractNetworkService() {
 	DI();
 }
 
-void AbstractNetworkService::sendRequest(const QUrl & url) {
+QNetworkReply * AbstractNetworkService::sendRequest(const QUrl & url) {
 	if (reply) {
 		reply->disconnect(this);
 		reply->deleteLater();
 	}
 
-	reply = nam.get(QNetworkRequest(url));
+	QUrl _url = url;
+	QByteArray iknow = qgetenv("I_KNOW_WHAT_I_AM_DOING");
+	
+	if (iknow.size())
+		_url.addQueryItem("test_mode","true");
+	
+
+	QNetworkRequest nr;
+	nr.setUrl(_url);
+	nr.setRawHeader("User-Agent", "Zarlok");
+	reply = nam.get(nr);
 
 	connect(reply, SIGNAL(finished()), this, SLOT(requestFinished()));
 	connect(reply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
 	connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
 
-	request = url.toString();
+	request = _url.toString();
+
+	return reply;
 }
 
-void AbstractNetworkService::sendRequest(const QString & url) {
-	sendRequest(QUrl(url));
+QNetworkReply * AbstractNetworkService::sendRequest(const QString & url) {
+	return sendRequest(QUrl(url));
 }
 
 void AbstractNetworkService::error(QNetworkReply::NetworkError) {

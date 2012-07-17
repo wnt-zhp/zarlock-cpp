@@ -27,20 +27,22 @@
 #include <qprocess.h>
 #include <QMessageBox>
 #include <QStringBuilder>
+#include <QDir>
 
 UpdateDownloadService::UpdateDownloadService(QNetworkAccessManager & netmanager, QObject * parent) : AbstractNetworkService(netmanager, parent) {
-
 	downloaded_filename = "update.exe";
 	download_progress.setLabelText(tr("Downloading..."));
 	download_progress.setMaximum(0);
 
-// 	download_progress.setMinimumDuration(0);
+	download_progress.setMinimumDuration(0);
 	download_progress.setWindowModality(Qt::WindowModal);
 	download_progress.setCancelButton(NULL);
 }
 
-void UpdateDownloadService::sendRequest(const QUrl & url) {
-	AbstractNetworkService::sendRequest(url);
+QNetworkReply * UpdateDownloadService::sendRequest(const QUrl & url) {
+	QNetworkReply * r = AbstractNetworkService::sendRequest(url);
+	QObject::connect(r, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
+	return r;
 }
 
 void UpdateDownloadService::requestFinished() {
@@ -49,12 +51,17 @@ void UpdateDownloadService::requestFinished() {
 		return;
 	}
 
-// 	QObject::disconnect(replyDownloadRequest, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
+	QObject::disconnect(sender(), SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
 
 	download_progress.setMaximum(0);
 	download_progress.hide();
 
-	QFile localFile(downloaded_filename);
+	QString targetfile = reply-> header(QNetworkRequest::ContentDispositionHeader).toString();
+	if (targetfile.isEmpty())
+		targetfile = downloaded_filename;
+
+	QString of = QDir::tempPath() % "/" % targetfile;
+	QFile localFile(of);
 	if (!localFile.open(QIODevice::WriteOnly))
 		return;
 	localFile.write(reply->readAll());
@@ -62,7 +69,7 @@ void UpdateDownloadService::requestFinished() {
 
 	QProcess myProcess;
 	// Start the QProcess instance.
-	myProcess.startDetached(downloaded_filename);
+	myProcess.startDetached(of);
 	exit(0);
 }
 

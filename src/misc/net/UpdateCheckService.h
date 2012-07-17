@@ -32,8 +32,8 @@ signals:
 	void downloadUrlFound(const QString & url);
 
 public slots:
-	virtual void sendRequest();
-	virtual void sendRequest(const QUrl & url);
+	virtual QNetworkReply * sendRequest();
+	virtual QNetworkReply * sendRequest(const QUrl & url);
 
 protected slots:
 	virtual void requestFinished();

@@ -30,8 +30,8 @@ public:
 	virtual ~FeedService();
 
 public slots:
-	virtual void sendRequest();
-	virtual void sendRequest(const QUrl & url);
+	virtual QNetworkReply * sendRequest();
+	virtual QNetworkReply * sendRequest(const QUrl & url);
 
 private slots:
 	virtual void requestFinished();

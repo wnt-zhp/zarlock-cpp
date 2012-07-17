@@ -36,11 +36,11 @@ FeedService::FeedService(QNetworkAccessManager& netmanager, QObject* parent): Ab
 FeedService::~FeedService()  {
 }
 
-void FeedService::sendRequest() {
-	sendRequest(QUrl("http://zarlok.zhp.pl/zarlok_update.php"));
+QNetworkReply * FeedService::sendRequest() {
+	return sendRequest(QUrl("http://zarlok.zhp.pl/zarlok_update.php"));
 }
 
-void FeedService::sendRequest(const QUrl & url) {
+QNetworkReply * FeedService::sendRequest(const QUrl & url) {
 	QUrl updateurl("http://zarlok.zhp.pl/zarlok_update.php");
 	if (!url.isEmpty()) {
 		updateurl = url;
@@ -49,12 +49,11 @@ void FeedService::sendRequest(const QUrl & url) {
 	updateurl.addQueryItem("version", ZARLOK_VERSION);
 #if defined(__unix__)
 	updateurl.addQueryItem("OS", "UNIX");
-#elif defined(__WIN32)
+#elif defined(_WIN32)
 	updateurl.addQueryItem("OS", "WIN32");
 #endif
 
-	AbstractNetworkService::sendRequest(url);
-
+	return AbstractNetworkService::sendRequest(url);
 }
 
 void FeedService::requestFinished() {
@@ -62,7 +61,6 @@ void FeedService::requestFinished() {
 	if (!(statusCode >= 200 && statusCode < 300)) {
 		return;
 	}
-
 }
 
 #include "FeedService.moc"

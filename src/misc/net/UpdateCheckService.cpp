@@ -31,20 +31,22 @@
 UpdateCheckService::UpdateCheckService(QNetworkAccessManager& netmanager, QObject* parent): AbstractNetworkService(netmanager, parent) {
 }
 
-void UpdateCheckService::sendRequest() {
-	sendRequest(QUrl("http://zarlok.zhp.pl/zarlok_update.php"));
+QNetworkReply * UpdateCheckService::sendRequest() {
+	return sendRequest(QUrl("http://zarlok.zhp.pl/zarlok_update.php"));
 }
 
-void UpdateCheckService::sendRequest(const QUrl & url) {
+QNetworkReply * UpdateCheckService::sendRequest(const QUrl & url) {
 	QUrl _url = url;
 	_url.addQueryItem("version", ZARLOK_VERSION);
 #if defined(__unix__)
+// #if defined(_WIN32)
 	_url.addQueryItem("OS", "UNIX");
-#elif defined(__WIN32)
+#elif defined(_WIN32)
+// #elif defined(__unix__)
 	_url.addQueryItem("OS", "WIN32");
 #endif
 
-	AbstractNetworkService::sendRequest(_url);
+	return AbstractNetworkService::sendRequest(_url);
 }
 
 void UpdateCheckService::requestFinished() {
@@ -66,6 +68,7 @@ void UpdateCheckService::requestFinished() {
 			url_download_values[i] = dwvalues[i];
 
 #ifdef _WIN32
+// #ifdef __unix__
 		QMessageBox mbox(QMessageBox::Information, tr("Updates available"),
 						 tr("Updates of Zarlok is available.\n\n"
 						 "To finish upgrade process this zarlok session must be closed (this will be handled automaticly).\n\n"
@@ -80,6 +83,7 @@ void UpdateCheckService::requestFinished() {
 		}
 #endif /* _WIN32 */
 #ifdef __unix__
+// #ifdef _WIN32
 		QString msgtext = tr(
 			"Updates of Zarlok is available.<br /><br />You can download it for from here:<br />"
 			"<a href='%1/%2'>%1/%2</a><br />"

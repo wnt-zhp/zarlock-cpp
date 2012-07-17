@@ -29,7 +29,7 @@ public:
 	UpdateDownloadService(QNetworkAccessManager & netmanager, QObject * parent = NULL);
 
 public slots:
-	virtual void sendRequest(const QUrl & url);
+	virtual QNetworkReply * sendRequest(const QUrl & url);
 
 private slots:
 	virtual void requestFinished();
