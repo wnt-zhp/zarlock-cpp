@@ -26,13 +26,14 @@
 #include <QMessageBox>
 #include <QStringBuilder>
 #include <QSqlQuery>
-
-#include "BatchTableModel.h"
-#include "DataParser.h"
-#include "Database.h"
 #include <qsqlresult.h>
 #include <qsqlrecord.h>
 
+#include "BatchTableModel.h"
+#include "ProductsTableModel.h"
+
+#include "DataParser.h"
+#include "Database.h"
 
 BatchTableModel::BatchTableModel(QObject* parent, QSqlDatabase sqldb): AbstractTableModel(parent, sqldb), autosubmit(true) {
 	CI();

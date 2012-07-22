@@ -42,6 +42,7 @@ public:
 	virtual void setModel(QAbstractItemModel* model);
 
 	virtual void reloadPalette();
+	virtual void initHeader();
 
 signals:
 	void addRecordRequested(bool);

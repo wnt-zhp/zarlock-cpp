@@ -36,24 +36,10 @@
  * @param parent rodzic
  * @param db Połączenie do bazy danych, z których model będzie pobierał dane
  **/
-BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * hide, QObject * parent) :
-												QSortFilterProxyModel(parent),
-												cb_exp(NULL), cb_aexp(NULL), cb_nexp(NULL),
-												cb_hide(hide), itemnum(NULL) {
-	CI();
-}
-
-/**
- * @brief Konstruktor - nic się nie dzieje.
- *
- * @param parent rodzic
- * @param db Połączenie do bazy danych, z których model będzie pobierał dane
- **/
-BatchTableModelProxy::BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
-										   const QCheckBox * nexp, const QCheckBox * hide,
-										   QObject * parent) :
-												QSortFilterProxyModel(parent),
-												cb_exp(exp), cb_aexp(aexp), cb_nexp(nexp), cb_hide(hide), itemnum(NULL) {
+BatchTableModelProxy::BatchTableModelProxy(QObject * parent) :
+										   QSortFilterProxyModel(parent), hide_exp(false),
+										   hide_aexp(false), hide_nexp(false),
+										   hide_empty(false), hide_future(true), itemnum(NULL) {
 	CI();
 }
 
@@ -72,7 +58,7 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 
 	double free = sourceModel()->index(sourceRow, BatchTableModel::HUsedQty).data(BatchTableModel::RFreeQty).toDouble();	// quantity of free batches
 
-	if (cb_hide and cb_hide->isChecked() and free == 0) {		// hide empty
+	if (hide_empty and free == 0) {		// hide empty
 		if (itemnum == NULL)
 			return false;
 		else {
@@ -86,7 +72,7 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 		refd = datekey;
 		QDate regd = sourceModel()->index(sourceRow, BatchTableModel::HRegDate).data(BatchTableModel::RRaw).toDate();
 		if (regd.daysTo(refd) < 0)
-			return false;
+			return (false or !hide_future);
 	} else
 		refd = QDate::currentDate();
 
@@ -97,21 +83,71 @@ bool BatchTableModelProxy::filterAcceptsRow(int sourceRow, const QModelIndex &so
 
 	int daystoexp = refd.daysTo(expds);
 
-	if (cb_exp and daystoexp < 0)
-		return cb_exp->isChecked();
-	if (cb_aexp and daystoexp == 0)
-		return cb_aexp->isChecked();
-	if (cb_nexp and daystoexp > 0)
-		return cb_nexp->isChecked();
+	if (daystoexp < 0)
+		return !hide_exp;
+	if (daystoexp == 0)
+		return !hide_aexp;
+	if (daystoexp > 0)
+		return !hide_nexp;
 
 	return true;
 }
 
 QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
-	if ( (role == Qt::DecorationRole) and (index.column() == BatchTableModel::HSpec) ) {
+	if ( role == Qt::DecorationRole ) {
 
-		if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum)) {
-			return QApplication::style()->standardIcon(QStyle::SP_ArrowRight);
+		switch (index.column()) {
+			case BatchTableModel::HSpec:
+				if ((itemnum != NULL) and (mapToSource(index).row() == *itemnum)) {
+					return QApplication::style()->standardIcon(QStyle::SP_ArrowRight);
+				}
+				break;
+			case BatchTableModel::HRegDate:
+				{
+					QDate refdate;
+					if (datekey.isValid()) {
+						refdate = datekey;
+					} else
+						refdate = QDate::currentDate();
+
+					QDate regd = this->index(index.row(), BatchTableModel::HRegDate).data(BatchTableModel::RRaw).toDate();
+
+					if (regd.daysTo(refdate) < 0)
+						return QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning);
+
+					QPixmap px(QSize(16,16));
+					px.fill(Qt::transparent);
+					QIcon ic(px);
+					return ic;
+				}
+				break;
+			case BatchTableModel::HExpiryDate:
+				{
+					QDate expd = this->index(index.row(), BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
+					
+					if (!expd.isValid())
+						break;
+					
+					QDate refdate;
+					if (datekey.isValid()) {
+						refdate = datekey;
+					} else
+						refdate = QDate::currentDate();
+					
+					int daystoexp = expd.daysTo(refdate);
+					
+					if (daystoexp > 0) {
+						return QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical);
+					} else if (daystoexp == 0) {
+						return QApplication::style()->standardIcon(QStyle::SP_MessageBoxWarning);
+					} else {
+						QPixmap px(QSize(16,16));
+						px.fill(Qt::transparent);
+						QIcon ic(px);
+						return ic;
+					}
+				}
+				break;
 		}
 	}
 
@@ -122,7 +158,13 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 			if (!expd.isValid())
 				return globals::item_nexpired_base;
 
-			int daystoexp = expd.daysTo(QDate::currentDate());
+			QDate refdate;
+			if (datekey.isValid()) {
+				refdate = datekey;
+			} else
+				refdate = QDate::currentDate();
+
+			int daystoexp = expd.daysTo(refdate);
 
 			if (daystoexp > 0) {
 				if (row % 2)

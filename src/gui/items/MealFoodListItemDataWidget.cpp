@@ -27,16 +27,17 @@
 
 #include "globals.h"
 
+#include "MealFoodListItemDataWidget.h"
 #include "Database.h"
 
-#include "MealFoodListItemDataWidget.h"
 #include "MealFoodList.h"
 #include "MealTabWidget.h"
-
 #include "BatchTableView.h"
-#include "MealFoodList.h"
+
+#include "BatchTableModel.h"
 #include "BatchTableModelProxy.h"
-#include "Database.h"
+#include "DistributorTableModel.h"
+#include "MealDayTableModel.h"
 
 #include "EventFilter.h"
 #include "TextInput.h"
@@ -54,12 +55,13 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 	setupUi(this);
 
 	batch->setPopupExpandable(true);
-
 	proxy = ((MealTabWidget *)(mfl->parent()->parent()))->getBatchProxyModel();
+	prepareView();
+	invalidateProxy();
 
 	batch->setModel(proxy);
 	batch->setModelColumn(BatchTableModel::HSpec);
-
+	
 	batch->setAutoCompletion(true);
 	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
 
@@ -95,9 +97,10 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 
 	connect(this, SIGNAL(itemRemoved(QListWidgetItem*)), owner->listWidget(), SLOT(doItemRemoved(QListWidgetItem*)));
 
-	prepareView();
 	resetWidget();
 	render();
+
+	connect(batch, SIGNAL(popupAboutToBeShow()), this, SLOT(updateBatchModel()));
 }
 
 MealFoodListItemDataWidget::~MealFoodListItemDataWidget() {
@@ -118,6 +121,7 @@ void MealFoodListItemDataWidget::resetWidget() {
 void MealFoodListItemDataWidget::convertToEmpty() {
 	resetWidget();
 
+	batch_row = -1;
 	batch_label->setText("---");
 	qty_label->setText("---");
 	label_price->setText("---");
@@ -240,7 +244,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 				// Reload widget data from database and ask for new empty slot
 				dist_row = db->CachedDistributor()->rowCount()-1;
 				setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
-				batch_row = -1;
+// 				batch_row = -1;
 				invalidateProxy();
 				//TODO: this must be outside widget
 				mfl->insertEmptySlot();
@@ -260,7 +264,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 				mfl->refreshItem(pr->index(same_meal_list.at(ans).row(), DistributorTableModel::HId).data(Qt::EditRole).toInt());
 				// Convert current to empty and reload proxy
 				convertToEmpty();
-				batch_row = -1;
+// 				batch_row = -1;
 				invalidateProxy();
 			} else
 				// If insertion failed then return
@@ -273,7 +277,7 @@ void MealFoodListItemDataWidget::buttonAdd() {
 		if (db->updateDistributorRecord(dist_row, bidx.data().toUInt(), quantity, reference_date,
 			reference_date, DistributorTableModel::RMeal, QString("%1").arg(mfl->proxyModel()->key()), "")) {
 			// Update record data
-			batch_row = -1;
+// 			batch_row = -1;
 			invalidateProxy();
 			setWidgetData(db->CachedDistributor()->index(dist_row, DistributorTableModel::HId).data(Qt::EditRole).toInt());
 		} else
@@ -299,9 +303,10 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	// prepare proxy model and prepare table view
 	invalidateProxy();
 	updateView();
-
+	PR(batch_row);
 	// set proper index of batch combo box
-	batch->setCurrentIndex(proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row());
+	int map_row = proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row();PR(map_row);
+	batch->setCurrentIndex(map_row);
 
 	// mart as editable and render widget
 	editable = true;
@@ -392,13 +397,10 @@ void MealFoodListItemDataWidget::prepareView() {
 	tv->horizontalHeader()->setVisible(true);
 	tv->verticalHeader()->setVisible(false);
 
-// 	tv->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-// 	tv->resizeColumnsToContents();
-// 	tv->resizeColumnToContents(BatchTableModel::HSpec);
 	tv->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-	batch->setView(tv);
 	tv->sortByColumn(BatchTableModel::HSpec, Qt::AscendingOrder);
+	batch->setView(tv);
 }
 
 void MealFoodListItemDataWidget::updateView() {
@@ -563,6 +565,14 @@ void MealFoodListItemDataWidget::convertToHeader() {
 void MealFoodListItemDataWidget::invalidateProxy() {
 	proxy->setItemNum(&batch_row);
 	proxy->invalidate();
+}
+
+void MealFoodListItemDataWidget::updateBatchModel() {
+// 	invalidateProxy();
+// 	tv->initHeader();
+
+// 	if (tv) batch->setView(tv);
+// 	tv->
 }
 
 #include "MealFoodListItemDataWidget.moc"

@@ -31,13 +31,22 @@
 #include <QDir>
 #include <QStringBuilder>
 
-#include<QDebug>
+#include <QDebug>
+
+#include "globals.h"
+#include "config.h"
 
 #include "Database.h"
 #include "DataParser.h"
 #include "MealManager.h"
-#include "globals.h"
-#include "config.h"
+
+#include "ProductsTableModel.h"
+#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
+#include "MealDayTableModel.h"
+#include "MealTableModel.h"
+
+#include "CampProperties.h"
 
 const int Database::plist_size = 3;
 const int Database::blist_size = 7;
@@ -157,6 +166,8 @@ bool Database::open_database(const QString & dbname, bool autoupgrade) {
 		msgBox.exec();
 		return false;
 	}
+
+	qdbv.finish();
 
 	if (dbversion != DBVERSION) {
 		if (!autoupgrade) {
@@ -336,45 +347,6 @@ bool Database::rebuild_models() {
 	return true;
 }
 
-bool Database::execQueryFromFile(const QString& resource) {
-	if (!db.isOpen())
-		return false;
-
-	if (db.driver()->hasFeature(QSqlDriver::Transactions))
-		db.transaction();
-
-	QFile dbresfile(resource);   // TODO: Fix it later
-	if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		return false;
-	}
-	while (!dbresfile.atEnd()) {
-		QString line = dbresfile.readLine();
-		if (line.trimmed().isEmpty())
-			continue;
-
-		if (line.startsWith("--"))
-			continue;
-
-		QSqlQuery query;
-
-		if (!query.exec(line.fromUtf8(line.toStdString().c_str()))) {
-// 			PR(query.lastError().text().toStdString());
-// 			PR(query.lastQuery().toStdString());
-			qDebug() << "Failed to create table:" << query.lastError();
-		} else {
-// 			PR(query.lastQuery().toStdString());
-		}
-	}
-
-	if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
-		if (!db.commit()) {
-			db.rollback();
-			return false;
-		}
-	}
-	return true;
-}
-
 QString Database::fileFromDBName(const QString& dbname, bool fullpath, bool adddbext) {
 	QString safename = dbname;
 	safename.replace(QRegExp(QString::fromUtf8("[^a-zA-Z0-9_]")), "_");
@@ -492,41 +464,38 @@ bool Database::createDBStructure(const QString& dbfile) {
  * numer ostatniej wersji dla której aktualizacja zakończyla się sukcesem.
  */
 bool Database::doDBUpgrade(unsigned int version) {
-	QSqlQuery qdbup, q;
-	QString str;
-	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, 0);
-	int pos = 0;
+	QProgressDialog progress(tr("Updating database..."), tr("&Cancel"), 0, dbv_DUMMY);
+// 	progress.setMinimumDuration(1);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setCancelButton(NULL);
 
+	PR(progress.maximum());
 	switch (version) {
 		case dbv_INIT:
 			PR("Upgrade from 0");
-			str = "UPDATE settings SET value='%1' WHERE key='dbversion';";
-			qdbup.exec(str.arg(dbv_AUG11));
-			return doDBUpgrade((unsigned int)dbv_AUG11);
-			break;
+			progress.setValue(dbv_INIT);
+			{
+				QString str("UPDATE settings SET value='%1' WHERE key='dbversion';");
+				QSqlQuery qdbup(str.arg(dbv_AUG11));
+				qdbup.exec();
+			}
+// 			return doDBUpgrade((unsigned int)dbv_AUG11);
+// 			break;
 		case dbv_AUG11:
-			PR("Upgrade to"); PR(dbv_JAN12);
-			progress.setMinimumDuration(0);
-			progress.setWindowModality(Qt::WindowModal);
-			progress.setCancelButton(NULL);
+			PR("Upgrade to"); PR(dbv_AUG11);
+			progress.setValue(dbv_AUG11);
+			{
 
-			q.exec("SELECT count(id) FROM batch;");
-			progress.setMaximum(5+q.value(0).toInt());
-
-			progress.setValue(pos++);
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_a.sql");
-			progress.setValue(pos++);
 			execQueryFromFile(":/resources/database_00000301.sql");
-			progress.setValue(pos++);
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_b.sql");
-			progress.setValue(pos++);
-
-			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
 
 			if (db.driver()->hasFeature(QSqlDriver::Transactions))
 				db.transaction();
+
+			QSqlQuery q, qdbup;
+			q.exec("SELECT id,start_qty,used_qty,expirydate,price,regdate FROM batch;");
 			while (q.next()) {
-				progress.setValue(pos++);
 				int bid = q.value(0).toInt();
 				QString expdate = q.value(3).toString();
 				QString price = q.value(4).toString();
@@ -553,24 +522,71 @@ bool Database::doDBUpgrade(unsigned int version) {
 					return false;
 				}
 			}
-			progress.setValue(pos++);
 
-			// 			while (q.isActive() or qdbup.isActive()) {}
 			execQueryFromFile(":/resources/dbconv_00000030_00000301_part_c.sql");
-			progress.setValue(pos++);
+			}
 
-			return true;
+// 			return true;
 
 		case dbv_JAN12:
-			PR("Upgrade to"); PR(dbv_JUL12);
+			PR("Upgrade to"); PR(dbv_JAN12);
+			progress.setValue(dbv_INIT);
 			execQueryFromFile(":/resources/dbconv_00000301_00000302_part_a.sql");
-			return true;
+// 			return true;
 
 		case dbv_JUL12:
+			progress.setValue(dbv_JUL12);
 			PR("Database up-to-date!");
 			return true;
 	}
 	return false;
+}
+
+bool Database::execQueryFromFile(const QString& resource) {
+	if (!db.isOpen())
+		return false;
+
+	if (db.driver()->hasFeature(QSqlDriver::Transactions))
+		db.transaction();
+	QFile dbresfile(resource);   // TODO: Fix it later
+	if (!dbresfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		return false;
+	}
+	while (!dbresfile.atEnd()) {
+		QString line = dbresfile.readLine();
+		if (line.trimmed().isEmpty())
+			continue;
+		if (line.startsWith("--"))
+			continue;
+		QSqlQuery query;
+		if (!query.exec(line.fromUtf8(line.toStdString().c_str()))) {
+			qDebug() << "SQL Error:" << query.lastError() << "for query:" << query.lastQuery();
+		} else {
+// 			PR(query.lastQuery().toStdString());
+		}
+	}
+	if (db.driver()->hasFeature(QSqlDriver::Transactions)) {
+		if (!db.commit()) {
+			db.rollback();
+			return false;
+		}
+	}
+	return true;
+}
+
+QString Database::getLastExecutedQuery(const QSqlQuery& query) {
+	QString str = query.lastQuery();
+	QMapIterator<QString, QVariant> it(query.boundValues());
+	
+	str.replace("?", "\"?\"");
+	while (it.hasNext()) {
+		it.next();
+		int idx = str.indexOf('?');
+		if (idx != -1) {
+			str.replace(idx, 1, it.value().toString());
+		}
+	}
+	return str;
 }
 
 void Database::updateProductsWordList() {
@@ -868,21 +884,6 @@ bool Database::getDistributorRecord(int row, int& bid, int& qty, QDate& distdate
 	dt_b		= model_distributor->index(row, DistributorTableModel::HDistTypeB).data(Qt::EditRole).toString();
 
 	return true;
-}
-
-QString Database::getLastExecutedQuery(const QSqlQuery& query) {
-	QString str = query.lastQuery();
-	QMapIterator<QString, QVariant> it(query.boundValues());
-
-	str.replace("?", "\"?\"");
-	while (it.hasNext()) {
-		it.next();
-		int idx = str.indexOf('?');
-		if (idx != -1) {
-			str.replace(idx, 1, it.value().toString());
-		}
-	}
-	return str;
 }
 
 #include "Database.moc"

@@ -17,15 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QStringBuilder>
+
 #include "globals.h"
 #include "TabProductsWidget.h"
 #include "Database.h"
 #include "DataParser.h"
 
-#include "ProductsTableModel.h"
 #include "ProductsRecordWidget.h"
 
-#include <QStringBuilder>
+#include "ProductsTableModel.h"
+#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
 
 TabProductsWidget::TabProductsWidget(QWidget *) :
 	Ui::TabProductsWidget(), db(Database::Instance()),

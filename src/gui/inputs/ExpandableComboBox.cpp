@@ -46,6 +46,8 @@ ExpandableComboBox::ExpandableComboBox(QWidget* parent): QComboBox(parent) {
 }
 
 void ExpandableComboBox::showPopup() {
+	emit popupAboutToBeShow();
+
 	QComboBox::showPopup();
 
 	if (!_popupExpandable)

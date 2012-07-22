@@ -17,16 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QPushButton>
+#include <QToolButton>
+#include <QInputDialog>
+
 #include "globals.h"
 #include "Database.h"
 #include "DataParser.h"
 #include "TabMealWidget.h"
+#include "MealFoodList.h"
 #include "TableDelegates.h"
 #include "MealManager.h"
 
-#include <QPushButton>
-#include <QToolButton>
-#include <QInputDialog>
+#include "DistributorTableModel.h"
+#include "MealTableModel.h"
+#include "MealDayTableModel.h"
 
 TabMealWidget::TabMealWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()),
 												 wmap(NULL), lock(false), current_meal_row(-1) {
@@ -118,13 +123,13 @@ void TabMealWidget::activateUi(bool activate) {
 		wmap->addMapping(spin_others, MealTableModel::HOthers);
 		wmap->addMapping(label_data, MealTableModel::HAvgCosts);
 
-		push_edit_s->setText(QString());
-		push_edit_l->setText(QString());
-		push_edit_o->setText(QString());
+		push_edit_s->setText(QString("..."));
+		push_edit_l->setText(QString("..."));
+		push_edit_o->setText(QString("..."));
 
-		push_edit_s->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
-		push_edit_l->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
-		push_edit_o->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+// 		push_edit_s->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
+// 		push_edit_l->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
+// 		push_edit_o->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
 
 // 		spin_scouts->setEnabled(false);
 // 		spin_leaders->setEnabled(false);

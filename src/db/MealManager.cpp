@@ -20,6 +20,10 @@
 
 #include "MealManager.h"
 
+#include "CampProperties.h"
+#include "MealTableModel.h"
+#include "MealDayTableModel.h"
+
 /**
  * @brief Instancja klasy MealManager
  **/

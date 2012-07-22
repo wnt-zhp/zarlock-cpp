@@ -20,19 +20,21 @@
 #ifndef zarlok_H
 #define zarlok_H
 
-#include "Database.h"
-
-#include "TabProductsWidget.h"
-#include "TabBatchWidget.h"
-#include "TabDistributorWidget.h"
-#include "TabMealWidget.h"
+#include <QToolBar>
+#include <QToolButton>
 
 #include "ui_MainWindow.h"
 
-#include "DBItemWidget.h"
-#include "DimmingMessage.h"
-
+class Database;
 class SettingsDialog;
+class DimmingMessage;
+class DBItemWidget;
+class TabMealWidget;
+class TabDistributorWidget;
+class TabBatchWidget;
+class TabProductsWidget;
+class SettingsDialog;
+
 class zarlok : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
 public:

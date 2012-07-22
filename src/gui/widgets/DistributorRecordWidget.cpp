@@ -21,13 +21,17 @@
 #include <QProxyModel>
 #include <QDesktopWidget>
 
-#include "globals.h"
 #include "DistributorRecordWidget.h"
+#include "globals.h"
+
 #include "Database.h"
 #include "DataParser.h"
 #include "EventFilter.h"
 #include "BatchTableView.h"
 #include "TextInput.h"
+
+#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
 
 const int new_width = 1000;
 
@@ -53,8 +57,7 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 	connect(action_clear, SIGNAL(clicked(bool)), this, SLOT(clearForm()));
 
 	connect(edit_date, SIGNAL(textChanged(QString)), this,  SLOT(validateDistDate()));
-	connect(combo_batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateData()));
-// 	connect(combo_batch, SIGNAL(editTextChanged(QString)), this, SLOT(validateData()));
+	connect(combo_batch, SIGNAL(currentIndexChanged(int)), this, SLOT(validateBatchData()));
 	connect(spin_qty, SIGNAL(valueChanged(int)), this, SLOT(validateData()));
 	connect(edit_reason_a, SIGNAL(textChanged(QString)), this, SLOT(validateData()));
 // 	connect(edit_reason_b, SIGNAL(textChanged(QString)), this,  SLOT(validateData()));
@@ -67,10 +70,12 @@ DistributorRecordWidget::DistributorRecordWidget(QWidget * parent) : AbstractRec
 	// TODO: do it better
 	combo_batch->setStyleSheet("color: black;");
 
-	hideempty = new QCheckBox;
+	hideempty = new QAction(this);
+	hideempty->setCheckable(true);
 	hideempty->setChecked(true);
 
-	proxy = new BatchTableModelProxy(hideempty);
+	proxy = new BatchTableModelProxy;
+	proxy->setHideEmpty(true);
 
 	combo_batch->setModel(proxy);
 	combo_batch->setModelColumn(BatchTableModel::HSpec);
@@ -146,10 +151,10 @@ void DistributorRecordWidget::validateDistDate() {
 	edit_reason_a->setEnabled(is_date_ok);
 	edit_reason_b->setEnabled(is_date_ok);
 
-	validateData();
+	validateBatchData();
 }
 
-void DistributorRecordWidget::validateData() {
+void DistributorRecordWidget::validateBatchData() {
 	QModelIndex idx = proxy->mapToSource(proxy->index(combo_batch->currentIndex(), 0));
 
 	Database * db = Database::Instance();
@@ -169,6 +174,11 @@ void DistributorRecordWidget::validateData() {
 	spin_qty->setSuffix(tr(" of %1").arg(totalmax/100.0, 0, 'f', 2));
 	spin_qty->setMaximum(totalmax);
 
+	validateData();
+}
+
+
+void DistributorRecordWidget::validateData() {
 	if ((spin_qty->value() > 0.0) and edit_date->ok() and edit_reason_a->ok()) {
 		action_addnext->setEnabled(true);
 	} else {

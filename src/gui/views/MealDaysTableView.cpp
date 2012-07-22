@@ -16,14 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <QHeaderView>
 
 #include "globals.h"
 #include "MealDaysTableView.h"
 #include "MealDayTableModel.h"
+#include "BatchTableModel.h"
 
 #include "TableDelegates.h"
 
-#include <QHeaderView>
+
 
 /**
  * @brief Standardowy konstruktor, żaden szał.

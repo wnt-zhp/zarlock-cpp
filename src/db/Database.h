@@ -25,14 +25,15 @@
 #include <QSqlDriver>
 #include <QVector>
 #include <QStringList>
+#include <QDate>
 
-#include "ProductsTableModel.h"
-#include "BatchTableModel.h"
-#include "DistributorTableModel.h"
-#include "MealDayTableModel.h"
-#include "MealTableModel.h"
+class ProductsTableModel;
+class BatchTableModel;
+class DistributorTableModel;
+class MealDayTableModel;
+class MealTableModel;
 
-#include "CampProperties.h"
+struct CampProperties;
 
 /**
  * @brief Klasa obsługuję całą komunikację z bazą danych oraz tworzenie/otwieranie/zamykanie. Jest singletonem.

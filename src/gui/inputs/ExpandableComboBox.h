@@ -49,6 +49,9 @@ public slots:
 private slots:
 	void popupEventCaptured(QEvent * evt);
 
+signals:
+	void popupAboutToBeShow();
+
 protected:
 // 	virtual void keyPressEvent(QKeyEvent* e);
 

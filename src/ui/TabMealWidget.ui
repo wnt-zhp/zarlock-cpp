@@ -220,7 +220,16 @@
  </customwidgets>
  <tabstops>
   <tabstop>list_days</tabstop>
+  <tabstop>calendar</tabstop>
+  <tabstop>action_insert</tabstop>
+  <tabstop>action_toggle</tabstop>
   <tabstop>tab_meals</tabstop>
+  <tabstop>spin_scouts</tabstop>
+  <tabstop>push_edit_s</tabstop>
+  <tabstop>spin_leaders</tabstop>
+  <tabstop>push_edit_l</tabstop>
+  <tabstop>spin_others</tabstop>
+  <tabstop>push_edit_o</tabstop>
  </tabstops>
  <resources/>
  <connections/>

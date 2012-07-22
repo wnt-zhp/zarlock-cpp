@@ -17,19 +17,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "globals.h"
-
-#include "MealTabWidget.h"
-
-#include "DistributorTableModel.h"
-#include "Database.h"
-#include "MealFoodListItemDataWidget.h"
-#include "MealManager.h"
-
 #include <QListWidgetItem>
 #include <QStyle>
 #include <QAction>
 #include <QInputDialog>
+
+#include "globals.h"
+
+#include "Database.h"
+
+#include "MealManager.h"
+
+#include "MealTabWidget.h"
+#include "MealTabInsertWidget.h"
+
+#include "MealFoodList.h"
+#include "MealFoodListItemDataWidget.h"
+
+#include "BatchTableModelProxy.h"
+#include "DistributorTableModel.h"
+#include "MealTableModel.h"
+#include "MealDayTableModel.h"
 
 MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NULL), mtiw(NULL) {
 	CI();
@@ -44,22 +52,43 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 	// 	connect(removeRec, SIGNAL(triggered()), this, SLOT(removeRecord()));
 	tab_context_menu.addAction(tab_action_rename);
 
+	action_showfuture = new QAction(tr("&Show future batches"), this);
+	action_showfuture->setCheckable(true);
+
+	action_hideexp = new QAction(tr("&Hide expired"), this);
+	action_hideexp->setCheckable(true);
+
+	action_hideempty = new QAction(tr("&Hide empty"), this);
+	action_hideempty->setCheckable(true);
+
+	tb_tools = new QToolButton();
+	tb_tools->setIcon(QIcon(":/resources/icons/configure.png"));
+// 	setCornerWidget(tb_tools, Qt::TopRightCorner);
+
+	tb_tools->addAction(action_showfuture);
+	tb_tools->addAction(action_hideexp);
+	tb_tools->addAction(action_hideempty);
 
 	mtiw = new MealTabInsertWidget(this);
 
-	che = new QCheckBox;
-	che->setChecked(true);
-	cexp = new QCheckBox;
-	cexp->setChecked(false);
-
-	batch_proxy = new BatchTableModelProxy(cexp, NULL, NULL, che);
+	batch_proxy = new BatchTableModelProxy;
 	batch_proxy->setSourceModel(Database::Instance()->CachedBatch());
 	batch_proxy->setDynamicSortFilter(true);
 	batch_proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
 	batch_proxy->sort(2, Qt::AscendingOrder);
 	batch_proxy->invalidate();
 
-	this->setTabsClosable(true);
+	connect(action_hideexp, SIGNAL(toggled(bool)), batch_proxy, SLOT(setHideExpired(bool)));
+	connect(action_hideempty, SIGNAL(toggled(bool)), batch_proxy, SLOT(setHideEmpty(bool)));
+	connect(action_showfuture, SIGNAL(toggled(bool)), this, SLOT(showFutureBatches(bool)));
+	connect(action_hideexp, SIGNAL(toggled(bool)), this, SLOT(invalidateProxy()));
+	connect(action_hideempty, SIGNAL(toggled(bool)), this, SLOT(invalidateProxy()));
+
+	action_showfuture->setChecked(false);
+	action_hideexp->setChecked(true);
+	action_hideempty->setChecked(true);
+
+	setTabsClosable(true);
 
 	mm = MealManager::Instance();
 
@@ -69,15 +98,13 @@ MealTabWidget::MealTabWidget(QWidget* parent): QTabWidget(parent), open_item(NUL
 
 	tab_handler.reserve(20);
 
-	this->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(this->tabBar(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuEvent(QPoint)));
+	tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(tabBar(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(customContextMenuEvent(QPoint)));
 }
 
 MealTabWidget::~MealTabWidget() {
 	DI();
 	delete batch_proxy;
-	delete che;
-	delete cexp;
 }
 
 void MealTabWidget::setMealDayId(int mdid) {
@@ -257,6 +284,16 @@ void MealTabWidget::customContextMenuEvent(const QPoint & point) {
 				tb->setTabText(t, newname);
 		}
 	}
+}
+
+void MealTabWidget::showFutureBatches(bool future) {
+	batch_proxy->setShowFuture(future);
+	invalidateProxy();
+}
+
+void MealTabWidget::invalidateProxy() {
+	if (batch_proxy)
+		batch_proxy->invalidate();
 }
 
 #include "MealTabWidget.moc"

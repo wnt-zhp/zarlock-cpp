@@ -40,6 +40,7 @@ public:
 	virtual ~BatchTableView();
 
 	virtual void setModel(QAbstractItemModel* model);
+	virtual void initHeader();
 
 private slots:
 	void removeRecord();

@@ -57,6 +57,7 @@ public slots:
 	void invalidateProxy();
 
 protected slots:
+	void updateBatchModel();
 	void validateBatchData();
 	void validateData();
 

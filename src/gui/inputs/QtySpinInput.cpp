@@ -32,7 +32,8 @@ QString QtySpinInput::textFromValue(int val) const {
 }
 
 int QtySpinInput::valueFromText(const QString& text) const {
-	return static_cast<int>(text.toDouble() * 100.0 + 0.5);
+	double d = text.section(" ", 0, 0).toDouble();
+	return static_cast<int>(d * 100.0 + 0.5);
 }
 
 QValidator::State QtySpinInput::validate(QString& input, int& pos) const {

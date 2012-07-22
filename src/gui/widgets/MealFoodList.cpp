@@ -23,10 +23,12 @@
 #include <QPushButton>
 #include <QLayout>
 
-#include "MealFoodListItemDataWidget.h"
 #include "Database.h"
-#include "DistributorTableModel.h"
+#include "MealFoodListItemDataWidget.h"
 #include "MealTabWidget.h"
+
+#include "DistributorTableModel.h"
+#include "MealDayTableModel.h"
 
 MealFoodList::MealFoodList(QWidget* parent): QListWidget(parent), isdirty(false), proxy(NULL), foodkey(-1), cached_parent((MealTabWidget *)parent) {
 	CII();

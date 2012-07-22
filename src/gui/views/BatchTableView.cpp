@@ -17,14 +17,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QHeaderView>
+#include <QMessageBox>
+
 #include "globals.h"
 #include "BatchTableView.h"
 #include "BatchTableModelProxy.h"
+#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
 
 #include "TableDelegates.h"
-
-#include <QHeaderView>
-#include <QMessageBox>
 
 /**
  * @brief Standardowy konstruktor, żaden szał.
@@ -65,26 +67,7 @@ BatchTableView::~BatchTableView() {
 void BatchTableView::setModel(QAbstractItemModel * model) {
 	QTableView::setModel(model);
 
-// 	hideColumn(BatchTableModel::HId);
-	hideColumn(BatchTableModel::HProdId);
-	hideColumn(BatchTableModel::HEntryDate);
-	hideColumn(BatchTableModel::HNotes);
-	hideColumn(BatchTableModel::HUsedQty);
-
-	horizontalHeader()->setResizeMode(BatchTableModel::HId, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HProdId, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HSpec, QHeaderView::Stretch);
-	horizontalHeader()->setResizeMode(BatchTableModel::HPrice, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HUnit, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HStaQty, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HEntryDate, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HRegDate, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HExpiryDate, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
-	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
-
-	sortByColumn(BatchTableModel::HId, Qt::AscendingOrder);
-	setSortingEnabled(true);
+	initHeader();
 }
 
 /**
@@ -139,5 +122,29 @@ void BatchTableView::removeRecord() {
 
 	emit removeRecordRequested(v, true);
 }
+
+void BatchTableView::initHeader() {
+	// 	hideColumn(BatchTableModel::HId);
+	hideColumn(BatchTableModel::HProdId);
+	hideColumn(BatchTableModel::HEntryDate);
+	hideColumn(BatchTableModel::HNotes);
+	hideColumn(BatchTableModel::HUsedQty);
+	
+	horizontalHeader()->setResizeMode(BatchTableModel::HId, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HProdId, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HSpec, QHeaderView::Stretch);
+	horizontalHeader()->setResizeMode(BatchTableModel::HPrice, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HUnit, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HStaQty, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HEntryDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HRegDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HExpiryDate, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
+	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
+	
+	sortByColumn(BatchTableModel::HId, Qt::AscendingOrder);
+	setSortingEnabled(true);
+}
+
 
 #include "BatchTableView.moc"

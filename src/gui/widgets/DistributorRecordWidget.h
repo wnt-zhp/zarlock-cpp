@@ -41,6 +41,7 @@ private slots:
 	void insertRecord();
 	void clearForm();
 	void validateDistDate();
+	void validateBatchData();
 	void validateData();
 	void prepareWidget();
 
@@ -56,7 +57,7 @@ private:
 	QCompleter * completer_reason2;
 
 	BatchTableModelProxy * proxy;
-	QCheckBox * hideempty;
+	QAction * hideempty;
 
 // 	const QModelIndex * indexToUpdate;
 // 	QModelIndex copyOfIndexToUpdate;

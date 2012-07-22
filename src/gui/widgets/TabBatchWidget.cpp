@@ -30,6 +30,27 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	setupUi(this);
 
+	// proxy
+	if (!proxy_model) {
+		proxy_model = new BatchTableModelProxy;
+		proxy_model->setDynamicSortFilter(true);
+		proxy_model->setSortCaseSensitivity(Qt::CaseInsensitive);
+
+		connect(cb_expired, SIGNAL(toggled(bool)), proxy_model, SLOT(setShowExpired(bool)));
+		connect(cb_aexpired, SIGNAL(toggled(bool)), proxy_model, SLOT(setShowAExpired(bool)));
+		connect(cb_nexpired, SIGNAL(toggled(bool)), proxy_model, SLOT(setShowNExpired(bool)));
+		connect(cb_hideempty, SIGNAL(toggled(bool)), proxy_model, SLOT(setHideEmpty(bool)));
+	}
+	// batch
+	if ((model_batch = db->CachedBatch())){
+		proxy_model->setSourceModel(model_batch);
+		table_batch->setModel(proxy_model);
+
+		table_batch->show();
+
+		connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), proxy_model, SLOT(invalidate()));
+	}
+
 	QPixmap pxme(QSize(20, 20));
 	pxme.fill(globals::item_expired_altbase);
 	cb_expired->setIcon(pxme);
@@ -43,10 +64,11 @@ TabBatchWidget::TabBatchWidget(QWidget * /*parent*/) : Ui::TabBatchWidget(), db(
 
 	cb_hideempty->setChecked(false);
 
+	QAction * act = new QAction("asd", this);
+// 	MainLayout->addWidget(act);
+
 	widget_add_batch->setVisible(true);
 	brw = new BatchRecordWidget(widget_add_batch);
-
-	activateUi(true);
 
 	list_messages->setVisible(false);
 
@@ -96,20 +118,7 @@ TabBatchWidget::~TabBatchWidget() {
  **/
 void TabBatchWidget::activateUi(bool activate) {
 	if (activate) {
-		if (!proxy_model) {
-			proxy_model = new BatchTableModelProxy(cb_expired, cb_aexpired, cb_nexpired, cb_hideempty);
-			proxy_model->setDynamicSortFilter(true);
-			proxy_model->setSortCaseSensitivity(Qt::CaseInsensitive);
-		}
-		// batch
-		if ((model_batch = db->CachedBatch())){
-			proxy_model->setSourceModel(model_batch);
-			table_batch->setModel(proxy_model);
 
-			table_batch->show();
-
-			connect(model_batch, SIGNAL(dataChanged(QModelIndex,QModelIndex)), proxy_model, SLOT(invalidate()));
-		}
 	}
 }
 

@@ -17,14 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "globals.h"
-#include "BatchRecordWidget.h"
-#include "Database.h"
-#include "DataParser.h"
-
 #include <QStringList>
 #include <QSqlQuery>
 #include <QMessageBox>
+
+#include "BatchRecordWidget.h"
+
+#include "globals.h"
+#include "Database.h"
+#include "DataParser.h"
+
+#include "ProductsTableModel.h"
+#include "BatchTableModel.h"
 
 BatchRecordWidget::BatchRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::BRWidget(),
 	completer_spec(NULL), completer_qty(NULL), completer_unit(NULL), completer_price(NULL),
@@ -98,7 +102,7 @@ void BatchRecordWidget::insertRecord() {
 	int uprice;
 	DataParser::price(edit_price->text(), uprice);
 	// unit price
-	int unitprice = check_uprice->isChecked() ? uprice : (uprice / spin_qty->value());
+	int unitprice = check_uprice->isChecked() ? uprice : (100*uprice / spin_qty->value());
 	QDate regdate, expdate;
 	if (!check_inf->isChecked()) {
 		expdate = edit_expiry->date();

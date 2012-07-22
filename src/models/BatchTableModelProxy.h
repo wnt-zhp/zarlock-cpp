@@ -20,8 +20,8 @@
 #ifndef BATCHTABLEMODELPROXY_H
 #define BATCHTABLEMODELPROXY_H
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
+#include <QAction>
 #include <QDate>
 
 /**
@@ -31,10 +31,7 @@
 class BatchTableModelProxy : public QSortFilterProxyModel {
 Q_OBJECT
 public:
-	BatchTableModelProxy(const QCheckBox * hide, QObject * parent = 0);
-	BatchTableModelProxy(const QCheckBox * exp, const QCheckBox * aexp,
-						 const QCheckBox * nexp, const QCheckBox * hide, QObject * parent = 0);
-						 
+	BatchTableModelProxy(QObject * parent = 0);
 	virtual ~BatchTableModelProxy();
 
 	virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -43,14 +40,29 @@ public:
 	virtual void setItemNum(int * item);
 	virtual void allwaysAccept(const QModelIndex * idx);
 
+public slots:
+	inline void setShowExpired(bool show) { hide_exp = !show; }
+	inline void setShowAExpired(bool show) { hide_aexp = !show; }
+	inline void setShowNExpired(bool show) { hide_nexp = !show; }
+	inline void setShowEmpty(bool show) { hide_empty = !show; }
+	inline void setShowFuture(bool show) { hide_future = !show; }
+
+	inline void setHideExpired(bool hide) { hide_exp = hide; }
+	inline void setHideAExpired(bool hide) { hide_aexp = hide; }
+	inline void setHideNExpired(bool hide) { hide_nexp = hide; }
+	inline void setHideEmpty(bool hide) { hide_empty = hide; }
+	inline void setHideFuture(bool hide) { hide_future = hide; }
+
 private:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
-	const QCheckBox * cb_exp;
-	const QCheckBox * cb_aexp;
-	const QCheckBox * cb_nexp;
-	const QCheckBox * cb_hide;
+	bool hide_exp;
+	bool hide_aexp;
+	bool hide_nexp;
+	bool hide_empty;
+	bool hide_future;
+
 	QDate datekey;
 	int * itemnum;
 	const QModelIndex * aaidx;

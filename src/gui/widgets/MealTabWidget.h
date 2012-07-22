@@ -25,11 +25,16 @@
 #include <QToolButton>
 #include <QMessageBox>
 #include <QMenu>
+#include <QCheckBox>
+#include <QListWidget>
+#include <QDate>
 
-#include "MealFoodList.h"
-#include "MealTabInsertWidget.h"
-#include "BatchTableModelProxy.h"
-#include "MealManager.h"
+class BatchTableModelProxy;
+class MealTabInsertWidget;
+class MealFoodList;
+class MealManager;
+class MealTabInsertWidget;
+class BatchTableModelProxy;
 
 class MealTabWidget : public QTabWidget {
 Q_OBJECT
@@ -45,6 +50,8 @@ public slots:
 	virtual void markOpenItem(QListWidgetItem* item);
 	virtual void closeOpenItems();
 
+	virtual void showFutureBatches(bool future);
+
 protected slots:
 	virtual void reloadTabs(int mealDayId);
 	virtual void closeTab(int index);
@@ -52,13 +59,14 @@ protected slots:
 
 	virtual void customContextMenuEvent(const QPoint & point);
 
+	virtual void invalidateProxy();
+
 private:
 	void prepareTab(int mealid, const QDate & mealday, int pos = 0);
 
 private:
 	BatchTableModelProxy * batch_proxy;
-	QCheckBox * che;
-	QCheckBox * cexp;
+
 	QListWidgetItem * open_item;
 	MealTabInsertWidget * mtiw;
 	int meal_day_id;
@@ -71,6 +79,11 @@ private:
 	QDate current_selected_day;
 
 	MealManager * mm;
+
+	QToolButton * tb_tools;
+	QAction * action_showfuture;
+	QAction * action_hideexp;
+	QAction * action_hideempty;
 };
 
 #endif // MEALTABWIDGET_H

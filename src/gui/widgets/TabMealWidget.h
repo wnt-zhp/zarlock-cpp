@@ -21,16 +21,15 @@
 #ifndef TABMEALWIDGET_H
 #define TABMEALWIDGET_H
 
-#include "ui_TabMealWidget.h"
-
-#include "Database.h"
-#include "DistributorTableModel.h"
-#include "MealTableModel.h"
-#include "MealManager.h"
-
 #include <QtSql>
 #include <QCompleter>
 #include <QDataWidgetMapper>
+
+#include "ui_TabMealWidget.h"
+
+class Database;
+class DistributorTableModel;
+class MealManager;
 
 class TabMealWidget : public QWidget, public Ui::TabMealWidget {
 Q_OBJECT

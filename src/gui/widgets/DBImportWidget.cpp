@@ -20,11 +20,12 @@
 #include <QStringBuilder>
 #include <QFileDialog>
 #include <QBitmap>
+#include <QMessageBox>
 
 #include "globals.h"
 #include "config.h"
-#include "DBImportWidget.h"
 #include "DBExportCommon.h"
+#include "DBImportWidget.h"
 #include "DBBrowser.h"
 #include "Database.h"
 

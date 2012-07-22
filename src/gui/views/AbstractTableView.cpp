@@ -155,4 +155,8 @@ void AbstractTableView::addRecord() {
 	emit addRecordRequested(true);
 }
 
+void AbstractTableView::initHeader() {
+
+}
+
 #include "AbstractTableView.moc"

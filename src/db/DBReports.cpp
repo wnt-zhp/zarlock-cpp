@@ -43,6 +43,10 @@
 
 #include "ProgramSettings.h"
 
+#include "CampProperties.h"
+#include "BatchTableModel.h"
+#include "DistributorTableModel.h"
+
 struct KMDB_entry {
 	int bid;
 	QString invoice;

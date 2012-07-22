@@ -18,9 +18,11 @@
 */
 
 #include "globals.h"
-#include "ProductsRecordWidget.h"
 #include "Database.h"
 #include "DataParser.h"
+#include "ProductsRecordWidget.h"
+#include "ProductsTableModel.h"
+#include "BatchTableModel.h"
 
 ProductsRecordWidget::ProductsRecordWidget(QWidget * parent) : AbstractRecordWidget(), Ui::PRWidget(),
 	completer_name(NULL), completer_unit(NULL), completer_expiry(NULL) {

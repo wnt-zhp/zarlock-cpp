@@ -20,15 +20,21 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
 #include <QSplashScreen>
+#include <QLabel>
+#include <QDir>
+#include <QResource>
+#include <QTranslator>
+#include <QStringBuilder>
 
 #include <getopt.h>
 
+#include "globals.h"
 #include "config.h"
 #include "version.h"
-#include "globals.h"
+
 #include "DBBrowser.h"
 #include "NetworkServicesManager.h"
-#include <AbstractNetworkService.h>
+#include "AbstractNetworkService.h"
 #include "ProgramSettings.h"
 
 namespace globals {

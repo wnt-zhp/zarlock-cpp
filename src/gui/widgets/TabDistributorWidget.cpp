@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <QtSql>
 
 #include "globals.h"
 #include "TabDistributorWidget.h"
@@ -24,8 +25,7 @@
 
 #include "DistributorRecordWidget.h"
 
-#include <QtSql>
-
+#include "DistributorTableModel.h"
 
 TabDistributorWidget::TabDistributorWidget(QWidget * parent) : QWidget(parent), db(Database::Instance()), proxy_model(NULL) {
 	CI();

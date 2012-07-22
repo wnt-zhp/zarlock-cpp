@@ -27,6 +27,8 @@
 #include "DataParser.h"
 #include "Database.h"
 
+#include "CampProperties.h"
+
 MealDayTableModel::MealDayTableModel(QObject* parent, QSqlDatabase db): QSqlTableModel(parent, db), autosubmit(true) {
 	CI();
 // 	connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(trigDataChanged()));

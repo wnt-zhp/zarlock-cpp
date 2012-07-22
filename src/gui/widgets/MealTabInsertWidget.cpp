@@ -23,6 +23,8 @@
 #include "DataParser.h"
 #include "MealManager.h"
 
+#include "MealTableModel.h"
+
 MealTabInsertWidget::MealTabInsertWidget(QWidget * /*parent*/) : Ui::MealTabInsertWidget(), db(Database::Instance()) {
 	setupUi(this);
 

@@ -200,6 +200,8 @@ QVariant DistributorTableModel::display(const QModelIndex & idx, const int role)
 	int col = idx.column();
 
 	return records.at(row)->arr[Qt::DisplayRole][col];
+
+	Q_UNUSED(role);
 }
 
 /**
@@ -242,7 +244,6 @@ bool DistributorTableModel::addRecord(unsigned int bid, int qty, const QDate& dd
 	q.prepare(query);
 	q.exec();
 
-	int n = records.count();
 	if (!q.next())
 		return false;
 

@@ -17,13 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "zarlok.h"
-#include "globals.h"
-#include "config.h"
-#include "version.h"
-
-#include "DBReports.h"
-
 #include <QDir>
 #include <QtGui/QLabel>
 #include <QtGui/QMenu>
@@ -36,10 +29,28 @@
 #include <QDesktopServices>
 #include <QProgressDialog>
 
+#include "zarlok.h"
+#include "globals.h"
+#include "config.h"
+#include "version.h"
+#include "Database.h"
+
+#include "DBReports.h"
+
 #include "CampSettingsDialog.h"
 #include "AboutDialog.h"
 #include "SettingsDialog.h"
 #include "DBExportDialog.h"
+
+#include "MealDayTableModel.h"
+
+#include "TabProductsWidget.h"
+#include "TabBatchWidget.h"
+#include "TabDistributorWidget.h"
+#include "TabMealWidget.h"
+
+#include "DBItemWidget.h"
+#include "DimmingMessage.h"
 
 /**
  * @brief Główny konstruktor klasy Zarlok. Klasa Zarlok jest główną klasą,

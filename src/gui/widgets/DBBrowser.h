@@ -20,9 +20,11 @@
 #ifndef DBBROWSER_H
 #define DBBROWSER_H
 
-#include "zarlok.h"
+#include <QFileInfo>
 
 #include "ui_DatabaseBrowser.h"
+
+class zarlok;
 
 class DBBrowser : public QWidget, public Ui::DatabaseBrowser {
 Q_OBJECT
@@ -58,9 +60,6 @@ signals:
 	void dbb_database(const QString & dbname);
 
 private:
-
-// 	QString dbname, dbfile;
-// 	Database & db;
 	zarlok * z;
 };
 
