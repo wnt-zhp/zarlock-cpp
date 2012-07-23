@@ -145,21 +145,11 @@ void BatchRecordWidget::clearForm() {
 void BatchRecordWidget::validateCB(int i) {
 	Database * db = Database::Instance();
 
-	ProductsTableModel * ptm = db->CachedProducts();
-	QString defexp = ptm->index(i, ProductsTableModel::HExpire).data().toString();
-	QString defunit = ptm->index(i, ProductsTableModel::HUnit).data().toString();
+	QString defexp = pproxy->index(i, ProductsTableModel::HExpire).data().toString();
+	QString defunit = pproxy->index(i, ProductsTableModel::HUnit).data().toString();
 
-// 	if (edit_expiry->text(true).isEmpty())
-	{
-		edit_expiry->setRaw(defexp);
-// 		edit_expiry->doRefresh();
-	}
-// 	if (edit_unit->text(true).isEmpty())
-	{
-		edit_unit->setRaw(defunit);
-// 		edit_unit->verify();
-// 		edit_unit->doRefresh();
-	}
+	edit_expiry->setRaw(defexp);
+	edit_unit->setRaw(defunit);
 
 	validateAdd();
 }

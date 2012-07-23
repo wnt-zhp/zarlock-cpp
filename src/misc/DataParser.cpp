@@ -86,7 +86,7 @@ bool DataParser::price(const QString & data, double & netto_parsed, int & vat_pa
 	rx.indexIn(data);
 	if (!rx.cap(0).isEmpty()) {
 		netto_parsed = rx.cap(1).toDouble();
-		vat_parsed = rx.cap(4).toInt()*100;
+		vat_parsed = rx.cap(4).toInt();
 		return true;
 	}
 	return false;
