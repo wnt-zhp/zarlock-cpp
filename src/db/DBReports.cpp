@@ -671,7 +671,8 @@ void DBReports::printSMReport(QString * reportsdir) {
 
 		while (q.next()) {
 			DataParser::unit(q.value(BatchTableModel::HUnit).toString(), bunit);
-			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
+// 			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
+			bqty = q.value(BatchTableModel::HStaQty).toInt();
 
 			bidname = "_" % pnames[q.value(BatchTableModel::HProdId).toInt()].trimmed() %
 						"_" % q.value(BatchTableModel::HSpec).toString().toUtf8().trimmed() % "_" % bunit % "_";
@@ -712,7 +713,8 @@ void DBReports::printSMReport(QString * reportsdir) {
 
 		while (q2.next()) {
 			int cbid = bids[q2.value(DistributorTableModel::HBatchId).toInt()];
-			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
+// 			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
+			bqty = q2.value(DistributorTableModel::HQty).toInt();
 
 			bidname = bidnames[cbid];
 
@@ -746,8 +748,7 @@ void DBReports::printSMReport(QString * reportsdir) {
 				QString entry = entry2_tmpl
 					.arg(QString::fromUtf8(bnames[idx].toStdString().c_str()))
 					.arg(QString::fromUtf8(bunits[idx].toStdString().c_str()))
-					.arg(batches_in_stock_num[idx]/100);
-
+					.arg(QString("%1.%2").arg(batches_in_stock_num[idx]/100).arg(batches_in_stock_num[idx] % 100, 2, 10, QChar('0')));
 				outs.append(entry);
 			}
 		}
