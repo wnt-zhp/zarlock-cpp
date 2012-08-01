@@ -56,9 +56,13 @@ void UpdateDownloadService::requestFinished() {
 	download_progress.setMaximum(0);
 	download_progress.hide();
 
+#if QT_VERSION >= 0x040800
 	QString targetfile = reply-> header(QNetworkRequest::ContentDispositionHeader).toString();
 	if (targetfile.isEmpty())
 		targetfile = downloaded_filename;
+#else
+	QString targetfile = downloaded_filename;
+#endif /* QT_VERSION >= 0x040800 */
 
 	QString of = QDir::tempPath() % "/" % targetfile;
 	QFile localFile(of);
