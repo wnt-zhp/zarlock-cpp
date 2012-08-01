@@ -22,6 +22,8 @@
 #include "globals.h"
 #include "SettingsDialog.h"
 
+#if QT_VERSION >= 0x040800
+
 const QStringList SettingsDialog::exportFormatsNames = {"CSV (*.csv) - Comma Separated Values"};
 const QStringList SettingsDialog::exportFormatsCodes = {"csv"};
 
@@ -29,7 +31,26 @@ const QStringList SettingsDialog::encodingNames = {"Windows-1250 (Windows recomm
 const QStringList SettingsDialog::encodingCodes = {"Windows-1250", "UTF-8", "ISO-8859-2"};
 const QStringList SettingsDialog::separatorCodes = {",", ";", "|"};
 
+#endif
+
 SettingsDialog::SettingsDialog(QDialog * /*parent*/) : Ui::SettingsDialog() {
+#if QT_VERSION < 0x040800
+	exportFormatsNames.push_back("CSV (*.csv) - Comma Separated Values");
+	exportFormatsCodes.push_back("csv");
+
+	encodingNames.push_back("Windows-1250 (Windows recommended)");
+	encodingNames.push_back("UTF-8 (Linux recommended)");
+	encodingNames.push_back("ISO-8859-2");
+
+	encodingCodes.push_back("Windows-1250");
+	encodingCodes.push_back("UTF-8");
+	encodingCodes.push_back("ISO-8859-2");
+
+	separatorCodes.push_back("|");
+	separatorCodes.push_back(";");
+	separatorCodes.push_back("|");
+#endif
+
 	setupUi(this);
 	progset = ProgramSettings::Instance();
 
