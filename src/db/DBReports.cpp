@@ -18,6 +18,7 @@
 */
 
 #include <cstdio>
+#include <cmath>
 
 #include <QDir>
 #include <QFile>
