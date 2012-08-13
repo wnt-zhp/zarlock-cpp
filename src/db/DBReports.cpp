@@ -144,7 +144,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 	doc.print(&printer);
 }
 
-void DBReports::printDailyMealReport(const QString& date, QString * reportfile) {
+void DBReports::printReport11A(const QString& date, QString * reportfile) {
 	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
@@ -188,7 +188,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	if (!dbsavepath.exists())
 		dbsavepath.mkpath(dbsavepath.absolutePath());
 
-	QString ofile = dbsavepath.absolutePath() % QString("/") % QString("ZZ_") % date % QString(".pdf");
+	QString ofile = dbsavepath.absolutePath() % QString("/") % QString("Form11a_") % date % QString(".pdf");
 // 	PR(ofile.toStdString());
 	printer.setOutputFileName(ofile);
 
@@ -217,7 +217,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	if (!q.next())
 		return;
 
-	double costs = q.value(1).toDouble()/10000;
+	int costs = q.value(1).toInt();
 
 	q2.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
 	q2.bindValue(0, q.value(0));
@@ -282,12 +282,12 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	tpl.replace("@QUATER@", db->cs()->campQuarter);
 	tpl.replace("@OTHER@", db->cs()->campOthers);
 	tpl.replace("@LEADER@", db->cs()->campLeader);
-	tpl.replace("@SCOUTSNO@", QString().sprintf("%d", all_sco));
-	tpl.replace("@LEADERSNO@", QString().sprintf("%d", all_lea));
-	tpl.replace("@OTHERSNO@", QString().sprintf("%d", all_oth));
-	tpl.replace("@ALL@", QString().sprintf("%d", all_sco + all_lea + all_oth));
-	tpl.replace("@AVGCOSTS@", QString().sprintf("%.2f", db->cs()->avgCosts));
-	tpl.replace("@AVG@", QString().sprintf("%.2f", costs));
+	tpl.replace("@SCOUTSNO@", QString("%1").arg(all_sco));
+	tpl.replace("@LEADERSNO@", QString("%1").arg(all_lea));
+	tpl.replace("@OTHERSNO@", QString("%1").arg(all_oth));
+	tpl.replace("@ALL@", QString("%1").arg(all_sco + all_lea + all_oth));
+	tpl.replace("@AVGCOSTS@", QString("%1.%2").arg(db->cs()->avgCosts/100).arg(db->cs()->avgCosts % 100, 2, 10, QChar('0')));
+	tpl.replace("@AVG@", QString("%1.%2").arg(costs/10000).arg(int(round((costs % 10000) / 100.0)), 2, 10, QChar('0')));
 
 	QString h, c;
 	for (int i = 0; i < headers.size(); ++i) {
@@ -302,7 +302,7 @@ void DBReports::printDailyMealReport(const QString& date, QString * reportfile) 
 	doc.print(&printer);
 }
 
-void DBReports::printKMReport(QString * reportsdir) {
+void DBReports::printReport13(QString * reportsdir) {
 	ProgramSettings * progset = ProgramSettings::Instance();
 
 	QString entry1_tmpl = QString::fromUtf8("@KARTOTEKA MAGAZYNOWA\n@ILOŚCIOWO-WARTOŚCIOWA\n@\n").replace("@", progset->csv_separator);
@@ -377,7 +377,7 @@ void DBReports::printKMReport(QString * reportsdir) {
 // 			QSqlDatabase::database().rollback();
 
 	for (QMap<QString, KMDB>::iterator kmm_iter = kmm.begin(); kmm_iter != kmm.end(); ++kmm_iter) {
-		QString ofile = dbsavepath.absolutePath() % QString("/") % "KM_" % QString().sprintf("%03d", kmm_iter->id) % ".csv";
+		QString ofile = dbsavepath.absolutePath() % QString("/") % "Form13_" % QString().sprintf("%03d", kmm_iter->id) % ".csv";
 
 		QFile file(ofile);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -519,6 +519,167 @@ void DBReports::printKMReport(QString * reportsdir) {
 	}
 }
 
+void DBReports::printReport13A(const QString& date, QString * reportfile) {
+	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
+	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+							  QObject::tr("Unable to find resources in ") +
+		dailymeal_tpl.fileName() + "\n" +
+		QObject::tr("Check your installation and try to run again.\n"
+		"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QFile sheet_css(":/resources/report_dailymeal.css");
+	if (!sheet_css.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
+							  QObject::tr("Unable to find resources in ") +
+		sheet_css.fileName() + "\n" +
+		QObject::tr("Check your installation and try to run again.\n"
+		"Click Close to exit."), QMessageBox::Close);
+		exit(EXIT_FAILURE);
+	}
+
+	QTextStream dailymeal_tstream(&dailymeal_tpl);
+	QTextStream sheet_tstream(&sheet_css);
+
+	dailymeal_tstream.setRealNumberNotation(QTextStream::FixedNotation);
+	dailymeal_tstream.setRealNumberPrecision(2);
+	dailymeal_tstream.setLocale(QLocale(QLocale::C));
+
+	dailymeal_tstream.setCodec(QTextCodec::codecForName("UTF-8"));
+
+	// Prepare printer
+	QPrinter printer(QPrinter::HighResolution);
+	printer.setPaperSize(QPrinter::A4);
+	printer.setColorMode(QPrinter::Color);
+	printer.setOutputFormat(QPrinter::PdfFormat);
+	printer.setOrientation(QPrinter::Landscape);
+	printer.setPageMargins(10, 10, 10, 10, QPrinter::Millimeter);
+
+	Database * db = Database::Instance();
+
+	QDir dbsavepath(QDir::homePath() % QString(ZARLOK_HOME ZARLOK_REPORTS) % db->openedDatabase());
+	if (!dbsavepath.exists())
+		dbsavepath.mkpath(dbsavepath.absolutePath());
+
+	QString ofile = dbsavepath.absolutePath() % QString("/") % QString("Form13a_") % date % QString(".pdf");
+	// 	PR(ofile.toStdString());
+	printer.setOutputFileName(ofile);
+
+	if (reportfile)
+		*reportfile = ofile;
+
+	// Prepare document
+		QTextDocument doc;
+		QString sheet = sheet_tstream.readAll();
+		doc.setDefaultStyleSheet(sheet);
+		// 	PR(sheet.toStdString());
+		QTextCursor cur(&doc);
+		cur.movePosition(QTextCursor::Start);
+
+		// Products table preparation
+		QSqlQuery q, q2, q3;
+
+		// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+		// 		QSqlDatabase::database().transaction();
+
+		q.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
+		q.bindValue(0, date);
+		if (!q.exec())
+			PR(q.lastError().databaseText().toStdString());
+
+		if (!q.next())
+			return;
+
+		int costs = q.value(1).toInt();
+
+		q2.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
+		q2.bindValue(0, q.value(0));
+		if (!q2.exec())
+			PR(q2.lastError().databaseText().toStdString());
+
+		int id/*, kind*/;
+		QString name;
+		int sco = 0, lea = 0, oth = 0;
+		int all_sco = 0, all_lea = 0, all_oth = 0;
+
+		QVector<QString> headers;
+		QVector<QString> contents;
+
+		const QString header_tmp = "<td width=\"auto\">%1 | %2/%3/%4</td>";
+
+		BatchTableModel * btm = db->CachedBatch();
+
+		while (q2.next()) {
+			id = q2.value(0).toInt();
+			// 		kind = q2.value(1).toInt();
+			name = q2.value(2).toString();
+			sco = q2.value(3).toInt();
+			lea = q2.value(4).toInt();
+			oth = q2.value(5).toInt();
+	
+			all_sco += sco;
+			all_lea += lea;
+			all_oth += oth;
+	
+			QString h = header_tmp.arg(name).arg(sco).arg(lea).arg(oth);
+			headers.push_back(h);
+	
+			QString content;
+	
+			q3.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
+			q3.bindValue(0, id);
+			q3.exec();
+	
+			while (q3.next()) {
+				int batch_id = q3.value(1).toInt();
+				QString spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
+				int qty = q3.value(2).toInt();
+				QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
+				int price = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data(Qt::EditRole).toInt();
+				QString price_s = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data().toString();
+		
+				if (!content.isEmpty())
+					content = content % "<br />";
+				content = content % QString("%1").arg(spec);
+				content = content % QString("<span style=\"margin: 0 auto;\">,&nbsp;%1,&nbsp;%2.%3&nbsp;zl,&nbsp;%4, &nbsp;%5.%6&nbsp;zl</span>")
+					.arg(unit)
+					.arg(qty/100).arg(qty % 100, 2, 10, QChar('0'))
+					.arg(price_s)
+					.arg(qty*price/10000).arg(int(round(((qty*price) % 10000) / 100.0)), 2, 10, QChar('0'))
+					;
+			}
+			contents.push_back("<td>" % content % "</td>");
+		}
+
+		QString tpl = dailymeal_tstream.readAll();
+		tpl.replace("@DATE@", date);
+		tpl.replace("@PLACE@", db->cs()->campPlace);
+		tpl.replace("@ORG@", db->cs()->campOrg);
+		tpl.replace("@QUATER@", db->cs()->campQuarter);
+		tpl.replace("@OTHER@", db->cs()->campOthers);
+		tpl.replace("@LEADER@", db->cs()->campLeader);
+		tpl.replace("@SCOUTSNO@", QString("%1").arg(all_sco));
+		tpl.replace("@LEADERSNO@", QString("%1").arg(all_lea));
+		tpl.replace("@OTHERSNO@", QString("%1").arg(all_oth));
+		tpl.replace("@ALL@", QString("%1").arg(all_sco + all_lea + all_oth));
+		tpl.replace("@AVGCOSTS@", QString("%1.%2").arg(db->cs()->avgCosts/100).arg(db->cs()->avgCosts % 100, 2, 10, QChar('0')));
+		tpl.replace("@AVG@", QString("%1.%2").arg(costs/10000).arg(int(round((costs % 10000) / 100.0)), 2, 10, QChar('0')));
+
+		QString h, c;
+		for (int i = 0; i < headers.size(); ++i) {
+			h = h % headers[i];
+			c = c % contents[i];
+		}
+		tpl.replace("@TABLE_HEADERS@", h);
+		tpl.replace("@TABLE_CONTENTS@", c);
+
+		doc.setHtml(tpl);
+
+		doc.print(&printer);
+}
+
 void DBReports::printSMReport(QString * reportsdir) {
 	ProgramSettings * progset = ProgramSettings::Instance();
 
@@ -581,11 +742,11 @@ void DBReports::printSMReport(QString * reportsdir) {
 		QString bidname = "_" % pnames[q.value(0).toInt()].trimmed() % "_" % q.value(1).toString().toUtf8().trimmed() % "_" % bunit % "_";
 		if (!ubatches.contains(bidname)) {
 			int bid = bidnames.size();
-
+	
 			bidnames.push_back(bidname);
 			bnames.push_back(bname);
 			bunits.push_back(bunit);
-
+	
 			ubatches.insert(bidname, bid);
 			bids[q.value(4).toInt()] = bid;
 		} else {
@@ -617,155 +778,155 @@ void DBReports::printSMReport(QString * reportsdir) {
 	if (q.next())
 		d_max = q.value(0).toDate();
 
-// 	PR(b_min.toString(Qt::DefaultLocaleShortDate).toStdString());
-// 	PR(b_max.toString(Qt::DefaultLocaleShortDate).toStdString());
-// 	PR(d_min.toString(Qt::DefaultLocaleShortDate).toStdString());
-// 	PR(d_max.toString(Qt::DefaultLocaleShortDate).toStdString());
+	// 	PR(b_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+		// 	PR(b_max.toString(Qt::DefaultLocaleShortDate).toStdString());
+		// 	PR(d_min.toString(Qt::DefaultLocaleShortDate).toStdString());
+		// 	PR(d_max.toString(Qt::DefaultLocaleShortDate).toStdString());
 
-	int totdays;
-	if (b_max.daysTo(d_max) > 0)
-		totdays = b_min.daysTo(d_max);
-	else
-		totdays = b_min.daysTo(b_max);
+		int totdays;
+		if (b_max.daysTo(d_max) > 0)
+			totdays = b_min.daysTo(d_max);
+		else
+			totdays = b_min.daysTo(b_max);
 
-	QString bidname, bunit;
-	int bqty;
+		QString bidname, bunit;
+		int bqty;
 
-	q.prepare("SELECT * FROM batch WHERE regdate=?;");
-	q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
-// return;
-	//##############################################
-	for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
-		QString cdate = b_min.addDays(i).toString(Qt::ISODate);
-
-		QString ofile = dbsavepath.absolutePath() % QString("/") % "SM_" % cdate % ".csv";
-
-		QFile file(ofile);
-		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-			return;
-
-		QString outs;
-		outs = entry1_tmpl
+		q.prepare("SELECT * FROM batch WHERE regdate=?;");
+		q2.prepare("SELECT * FROM distributor WHERE distdate=?;");
+		// return;
+		//##############################################
+		for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
+			QString cdate = b_min.addDays(i).toString(Qt::ISODate);
+	
+			QString ofile = dbsavepath.absolutePath() % QString("/") % "SM_" % cdate % ".csv";
+	
+			QFile file(ofile);
+			if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+				return;
+	
+			QString outs;
+			outs = entry1_tmpl
 			.arg(QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toUtf8()));
-
-		batches_new.clear();
-		batches_removed.clear();
-		batches_bilans.clear();
-
-		//*************************************************************
-		// in stock
-// 		std::printf("## batches in database for day %s\n", cdate.toStdString().c_str());
-// 		out << "## batches in database for day " << cdate.toStdString().c_str() << "\n";
-// 		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
-// 			int idx = it.value();
-// 			if (batches_in_stock_num[idx] > 0) {
-// 				std::printf("--S %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
-// 				out << "--S " << bnames[idx] << " " << bunits[idx].toStdString().c_str() << " " << batches_in_stock_num[idx] << endl;
-// 			}
-// 		}
-
-		//*************************************************************
-		// new inserions
-		q.bindValue(0, cdate);
-		q.exec();
-
-		while (q.next()) {
-			DataParser::unit(q.value(BatchTableModel::HUnit).toString(), bunit);
-// 			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
-			bqty = q.value(BatchTableModel::HStaQty).toInt();
-
-			bidname = "_" % pnames[q.value(BatchTableModel::HProdId).toInt()].trimmed() %
-						"_" % q.value(BatchTableModel::HSpec).toString().toUtf8().trimmed() % "_" % bunit % "_";
-
-			int cbid = -1;
-
-			if (ubatches.contains(bidname)) {
-				cbid = ubatches.value(bidname);
-			} else {
-				continue;
+	
+			batches_new.clear();
+			batches_removed.clear();
+			batches_bilans.clear();
+	
+			//*************************************************************
+			// in stock
+			// 		std::printf("## batches in database for day %s\n", cdate.toStdString().c_str());
+			// 		out << "## batches in database for day " << cdate.toStdString().c_str() << "\n";
+			// 		for (QMap<QString, int>::iterator it = batches_in_stock.begin(); it != batches_in_stock.end(); ++it) {
+				// 			int idx = it.value();
+			// 			if (batches_in_stock_num[idx] > 0) {
+				// 				std::printf("--S %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]);
+			// 				out << "--S " << bnames[idx] << " " << bunits[idx].toStdString().c_str() << " " << batches_in_stock_num[idx] << endl;
+			// 			}
+			// 		}
+	
+			//*************************************************************
+			// new inserions
+			q.bindValue(0, cdate);
+			q.exec();
+	
+			while (q.next()) {
+				DataParser::unit(q.value(BatchTableModel::HUnit).toString(), bunit);
+				// 			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
+				bqty = q.value(BatchTableModel::HStaQty).toInt();
+		
+				bidname = "_" % pnames[q.value(BatchTableModel::HProdId).toInt()].trimmed() %
+				"_" % q.value(BatchTableModel::HSpec).toString().toUtf8().trimmed() % "_" % bunit % "_";
+		
+				int cbid = -1;
+		
+				if (ubatches.contains(bidname)) {
+					cbid = ubatches.value(bidname);
+				} else {
+					continue;
+				}
+		
+				if (!batches_in_stock.contains(bidname)) {
+					batches_in_stock.insert(bidname, cbid);
+				} else {
+				}
+		
+				if (!batches_new.contains(bidname)) {
+					batches_new.insert(bidname, cbid);
+				} else {
+				}
+		
+				batches_new_num[cbid] = batches_new_num[cbid] + bqty;
 			}
-
-			if (!batches_in_stock.contains(bidname)) {
-				batches_in_stock.insert(bidname, cbid);
-			} else {
-			}
-
-			if (!batches_new.contains(bidname)) {
-				batches_new.insert(bidname, cbid);
-			} else {
-			}
-
-			batches_new_num[cbid] = batches_new_num[cbid] + bqty;
+	
+			// 		std::printf("## batches inserted for day %s\n", cdate.toStdString().c_str());
+			// 		out << "## batches inserted for day " << cdate.toStdString().c_str() << "\n";
+			// 		for (QMap<QString, int>::iterator it = batches_new.begin(); it != batches_new.end(); ++it) {
+				// 			int idx = it.value();
+				// 			std::printf("--A %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_new_num[idx]);
+				// 			out << "--A " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_new_num[idx] << endl;
+				// 		}
+		
+				//*************************************************************
+				// removals
+				q2.bindValue(0, cdate);
+				q2.exec();
+		
+				while (q2.next()) {
+					int cbid = bids[q2.value(DistributorTableModel::HBatchId).toInt()];
+					// 			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
+					bqty = q2.value(DistributorTableModel::HQty).toInt();
+			
+					bidname = bidnames[cbid];
+			
+					if (!batches_removed.contains(bidname)) {
+						batches_removed.insert(bidname, cbid);
+					} else {
+					}
+			
+					batches_removed_num[cbid] += bqty;
+				}
+		
+				// 		std::printf("## batches removed for day %s\n", cdate.toStdString().c_str());
+				// 		out << "## batches removed for day " << cdate.toStdString().c_str() << "\n";
+				// 		for (QMap<QString, int>::iterator it = batches_removed.begin(); it != batches_removed.end(); ++it) {
+					// 			int idx = it.value();
+					// 			std::printf("--R %s (%s) => -%.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_removed_num[idx]);
+					// 			out << "--R " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_removed_num[idx] << endl;
+					// 		}
+			
+					addVectors(batches_in_stock_num, batches_new_num);
+					batches_new_num.fill(0);
+					subVectors(batches_in_stock_num, batches_removed_num);
+					batches_removed_num.fill(0);
+			
+					// 		std::printf("## batches bilans for day %s\n", cdate.toStdString().c_str());
+					// 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
+					for (QMap<QString, int>::iterator kmm_iter = batches_in_stock.begin(); kmm_iter != batches_in_stock.end(); ++kmm_iter) {
+						int idx = kmm_iter.value();
+						if (batches_in_stock_num[idx] > 0) {
+							// 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]/100);
+							QString entry = entry2_tmpl
+							.arg(QString::fromUtf8(bnames[idx].toStdString().c_str()))
+							.arg(QString::fromUtf8(bunits[idx].toStdString().c_str()))
+							.arg(QString("%1.%2").arg(batches_in_stock_num[idx]/100).arg(batches_in_stock_num[idx] % 100, 2, 10, QChar('0')));
+							outs.append(entry);
+						}
+					}
+			
+					QTextStream out(&file);
+					out.setRealNumberNotation(QTextStream::FixedNotation);
+					out.setRealNumberPrecision(2);
+					out.setLocale(QLocale(QLocale::C));
+			
+					out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
+			
+					out << outs;
 		}
 
-// 		std::printf("## batches inserted for day %s\n", cdate.toStdString().c_str());
-// 		out << "## batches inserted for day " << cdate.toStdString().c_str() << "\n";
-// 		for (QMap<QString, int>::iterator it = batches_new.begin(); it != batches_new.end(); ++it) {
-// 			int idx = it.value();
-// 			std::printf("--A %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_new_num[idx]);
-// 			out << "--A " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_new_num[idx] << endl;
-// 		}
-
-		//*************************************************************
-		// removals
-		q2.bindValue(0, cdate);
-		q2.exec();
-
-		while (q2.next()) {
-			int cbid = bids[q2.value(DistributorTableModel::HBatchId).toInt()];
-// 			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
-			bqty = q2.value(DistributorTableModel::HQty).toInt();
-
-			bidname = bidnames[cbid];
-
-			if (!batches_removed.contains(bidname)) {
-				batches_removed.insert(bidname, cbid);
-			} else {
-			}
-
-			batches_removed_num[cbid] += bqty;
-		}
-
-// 		std::printf("## batches removed for day %s\n", cdate.toStdString().c_str());
-// 		out << "## batches removed for day " << cdate.toStdString().c_str() << "\n";
-// 		for (QMap<QString, int>::iterator it = batches_removed.begin(); it != batches_removed.end(); ++it) {
-// 			int idx = it.value();
-// 			std::printf("--R %s (%s) => -%.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_removed_num[idx]);
-// 			out << "--R " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_removed_num[idx] << endl;
-// 		}
-
-		addVectors(batches_in_stock_num, batches_new_num);
-		batches_new_num.fill(0);
-		subVectors(batches_in_stock_num, batches_removed_num);
-		batches_removed_num.fill(0);
-
-// 		std::printf("## batches bilans for day %s\n", cdate.toStdString().c_str());
-// 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
-		for (QMap<QString, int>::iterator kmm_iter = batches_in_stock.begin(); kmm_iter != batches_in_stock.end(); ++kmm_iter) {
-			int idx = kmm_iter.value();
-			if (batches_in_stock_num[idx] > 0) {
-// 				std::printf("--B %3d, %s (%s) => %.2f\n", idx, bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_in_stock_num[idx]/100);
-				QString entry = entry2_tmpl
-					.arg(QString::fromUtf8(bnames[idx].toStdString().c_str()))
-					.arg(QString::fromUtf8(bunits[idx].toStdString().c_str()))
-					.arg(QString("%1.%2").arg(batches_in_stock_num[idx]/100).arg(batches_in_stock_num[idx] % 100, 2, 10, QChar('0')));
-				outs.append(entry);
-			}
-		}
-
-		QTextStream out(&file);
-		out.setRealNumberNotation(QTextStream::FixedNotation);
-		out.setRealNumberPrecision(2);
-		out.setLocale(QLocale(QLocale::C));
-
-		out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
-
-		out << outs;
-	}
-
-	if (q.driver()->hasFeature(QSqlDriver::Transactions))
-		if (!QSqlDatabase::database().commit())
-			QSqlDatabase::database().rollback();
+		if (q.driver()->hasFeature(QSqlDriver::Transactions))
+			if (!QSqlDatabase::database().commit())
+				QSqlDatabase::database().rollback();
 }
 
 void DBReports::addVectors(QVector<int>& target, const QVector<int>& source) {

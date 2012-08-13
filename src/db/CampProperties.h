@@ -34,7 +34,7 @@ struct CampProperties {
 	QDate campDateEnd;			// camp end date
 	int scoutsNo;				// amount of scoutsNo
 	int leadersNo;				// amount of leaders
-	double avgCosts;			// average meal costs per day
+	int avgCosts;			// average meal costs per day
 	QString campLeader;			// leader's name
 	QString campQuarter;		// quartermaster's name
 	QString campOthers;			// others

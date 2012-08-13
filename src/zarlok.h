@@ -69,9 +69,10 @@ private slots:
 
 	void checkForDatabase();
 
-	virtual void doCreateSMreports();
-	virtual void doCreateKMreports();
-	virtual void doCreateZZReports();
+	virtual void doCreateReports11A();
+	virtual void doCreateReports13();
+	virtual void doCreateReports13A();
+	virtual void doCreateSMReports();
 	virtual void doBrowseReports();
 
 private:
@@ -97,9 +98,12 @@ private:
 	QAction * actionConfigDB;
 
 	QAction * actionSyncDB;
-	QAction * actionCreateSMrep;
-	QAction * actionCreateKMrep;
-	QAction * actionCreateZZrep;
+
+	QAction * actionCreateRepSM;
+	QAction * actionCreateRep11A;
+	QAction * actionCreateRep13;
+	QAction * actionCreateRep13A;
+
 	QAction * actionBrowseReports;
 
 	DBItemWidget * dbiw;

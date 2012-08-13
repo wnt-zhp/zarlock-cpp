@@ -81,9 +81,10 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	actionExportDB = new QAction(QIcon(":/resources/icons/svn-commit.png"), tr("Export DB"), this);
 
 // 	actionSyncDB = new QAction(tr("Sync database"), this);
-	actionCreateSMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create SM reports"), this);
-	actionCreateKMrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create KM reports"), this);
-	actionCreateZZrep = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create ZZ reports"), this);
+	actionCreateRep11A = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create reports 11A (ZZ)"), this);
+	actionCreateRep13 = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create reports 13 (KM)"), this);
+	actionCreateRep13A = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create reports 13A (ZZ+)"), this);
+	actionCreateRepSM = new QAction(QIcon(":/resources/icons/application-pdf.png"), tr("Create SM reports"), this);
 	actionBrowseReports = new QAction(style()->standardIcon(QStyle::SP_DirHomeIcon), tr("Browse reports directory"), this);
 
 // 	QKeySequence::StandardKey key = QKeySequence::HelpContents;
@@ -100,9 +101,14 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 	actionConfigDB->setShortcut(Qt::CTRL+Qt::Key_F5);
 	actionExportDB->setShortcut(Qt::CTRL+Qt::Key_E);
 
-	actionCreateKMrep->setShortcut(Qt::Key_F2);
-	actionCreateSMrep->setShortcut(Qt::Key_F3);
-	actionCreateZZrep->setShortcut(Qt::Key_F4);
+// 	actionCreateRep11A->setShortcut(Qt::Key_F2);
+// 	actionCreateRep13->setShortcut(Qt::Key_F3);
+// 	actionCreateRep13A->setShortcut(Qt::Key_F4);
+	actionCreateRep11A->setShortcut(Qt::ALT | Qt::Key_1);
+	actionCreateRep13->setShortcut(Qt::ALT + Qt::Key_2);
+	actionCreateRep13A->setShortcut(Qt::ALT + Qt::Key_3);
+	actionCreateRepSM->setShortcut(Qt::ALT + Qt::Key_4);
+
 	actionBrowseReports->setShortcut(Qt::Key_F5);
 
 	actionQuit->setMenuRole(QAction::QuitRole);
@@ -150,9 +156,11 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 
 	tools->addAction(actionConfigDB);
 // 	tools->addAction(actionSyncDB);
-	tools->addAction(actionCreateKMrep);
-	tools->addAction(actionCreateSMrep);
-	tools->addAction(actionCreateZZrep);
+	tools->addAction(actionCreateRep11A);
+	tools->addAction(actionCreateRep13);
+	tools->addAction(actionCreateRep13A);
+	tools->addAction(actionCreateRepSM);
+
 	tools->addAction(actionBrowseReports);
 	tools->addAction(actionExportDB);
 
@@ -188,9 +196,10 @@ zarlok::zarlok() : QMainWindow(), db(Database::Instance()),
 // 	connect(actionPrintReport, SIGNAL(triggered(bool)), this, SLOT(printDailyReport()));
 
 // 	connect(syncdb, SIGNAL(triggered(bool)), this, SLOT(syncDB()));
-	connect(actionCreateKMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateKMreports()));
-	connect(actionCreateSMrep, SIGNAL(triggered(bool)), this, SLOT(doCreateSMreports()));
-	connect(actionCreateZZrep, SIGNAL(triggered(bool)), this, SLOT(doCreateZZReports()));
+	connect(actionCreateRep11A, SIGNAL(triggered(bool)), this, SLOT(doCreateReports11A()));
+	connect(actionCreateRep13, SIGNAL(triggered(bool)), this, SLOT(doCreateReports13()));
+	connect(actionCreateRep13A, SIGNAL(triggered(bool)), this, SLOT(doCreateReports13A()));
+	connect(actionCreateRepSM, SIGNAL(triggered(bool)), this, SLOT(doCreateSMReports()));
 	connect(actionBrowseReports, SIGNAL(triggered(bool)), this, SLOT(doBrowseReports()));
 
 // 	connect(MainTab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
@@ -341,34 +350,56 @@ void zarlok::settings() {
 	appsettings->exec();
 }
 
-void zarlok::doCreateSMreports() {
-	DBReports::printSMReport();
-}
-
-void zarlok::doCreateKMreports() {
-	DBReports::printKMReport();
-}
-
-void zarlok::doCreateZZReports() {
+void zarlok::doCreateReports11A() {
 	QString fn;
 	int num = db->CachedMealDay()->rowCount();
-
+	
 	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
 	progress.setMinimumDuration(0);
 	progress.setWindowModality(Qt::WindowModal);
 	progress.setValue(0);
-
+	
 	for (int i = 0; i < num; ++i) {
 		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
-
+		
 		progress.setValue(i);
 		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
 		if (progress.wasCanceled())
 			break;
-
-		DBReports::printDailyMealReport(sd.toString(Qt::ISODate), &fn);
+		
+		DBReports::printReport11A(sd.toString(Qt::ISODate), &fn);
 	}
 	progress.setValue(num);
+}
+
+void zarlok::doCreateReports13() {
+	DBReports::printReport13();
+}
+
+void zarlok::doCreateReports13A() {
+	QString fn;
+	int num = db->CachedMealDay()->rowCount();
+	
+	QProgressDialog progress(tr("Printing reports..."), tr("&Cancel"), 0, num);
+	progress.setMinimumDuration(0);
+	progress.setWindowModality(Qt::WindowModal);
+	progress.setValue(0);
+	
+	for (int i = 0; i < num; ++i) {
+		QDate sd = db->CachedMealDay()->index(i, MealDayTableModel::HMealDate).data(Qt::EditRole).toDate();
+		
+		progress.setValue(i);
+		progress.setLabelText(tr("Creating report for day: ") % sd.toString(Qt::DefaultLocaleShortDate));
+		if (progress.wasCanceled())
+			break;
+		
+		DBReports::printReport13A(sd.toString(Qt::ISODate), &fn);
+	}
+	progress.setValue(num);
+}
+
+void zarlok::doCreateSMReports() {
+	DBReports::printSMReport();
 }
 
 void zarlok::doBrowseReports() {

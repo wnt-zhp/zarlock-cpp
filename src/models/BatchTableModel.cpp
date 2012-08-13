@@ -207,6 +207,11 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				}
 			}
 
+			else if (col == HPrice) {
+				int price_n = records[row]->arr[Qt::EditRole][HPrice].toInt();
+				return tr("%1.%2").arg(price_n/100).arg(price_n % 100, 2, 10, QChar('0'));
+			}
+
 			else if (col == HExpiryDate) {
 				if (idx.data(Qt::EditRole).isNull())
 					return QString(new QChar(0x221e), 1);

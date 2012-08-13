@@ -42,6 +42,8 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	edit_place->setText(camp->campPlace);
 	edit_org->setText(camp->campOrg);
 
+	spin_avgcosts->setMaximum(999999);
+
 	if (camp->isCorrect) {
 		edit_leader->setText(camp->campLeader);
 		edit_qmaster->setText(camp->campQuarter);
@@ -63,7 +65,7 @@ CampSettingsDialog::CampSettingsDialog(CampProperties * cp, QDialog * /*parent*/
 	connect(edit_qmaster, SIGNAL(textChanged(QString)), this, SLOT(verify()));
 	connect(spin_scouts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(spin_leaders, SIGNAL(valueChanged(int)), this, SLOT(verify()));
-	connect(spin_avgcosts, SIGNAL(valueChanged(double)), this, SLOT(verify()));
+	connect(spin_avgcosts, SIGNAL(valueChanged(int)), this, SLOT(verify()));
 	connect(period_start, SIGNAL(editingFinished()), this, SLOT(verifyStartDate()));
 	connect(period_stop, SIGNAL(editingFinished()), this, SLOT(verifyStopDate()));
 

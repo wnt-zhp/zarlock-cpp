@@ -29,10 +29,10 @@ class DBReports {
 public:
 	static void printDailyReport(const QString & dbname, const QDate & date);
 
-	static void printDailyMealReport(const QString & date, QString * reportfile = NULL);
-
+	static void printReport11A(const QString & date, QString * reportfile = NULL);
+	static void printReport13(QString * reportsdir = NULL);
+	static void printReport13A(const QString & date, QString * reportfile = NULL);
 	static void printSMReport(QString * reportsdir = NULL);
-	static void printKMReport(QString * reportsdir = NULL);
 
 private:
 	static void addVectors(QVector<int> & target, const QVector<int> & source);

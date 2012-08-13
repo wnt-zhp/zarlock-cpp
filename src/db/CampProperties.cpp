@@ -109,7 +109,7 @@ void CampProperties::readCampSettings() {
 				this->leadersNo = csq.value(1).toInt();
 				break;
 			case CampProperties::HAvgCosts:
-				this->avgCosts = csq.value(1).toDouble();
+				this->avgCosts = csq.value(1).toInt();
 				break;
 			case CampProperties::HcampLeader:
 				this->campLeader = csq.value(1).toString();
