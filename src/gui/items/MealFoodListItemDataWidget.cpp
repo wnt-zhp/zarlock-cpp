@@ -61,7 +61,7 @@ MealFoodListItemDataWidget::MealFoodListItemDataWidget(QWidget* parent, QListWid
 
 	batch->setModel(proxy);
 	batch->setModelColumn(BatchTableModel::HSpec);
-	
+
 	batch->setAutoCompletion(true);
 	batch->setAutoCompletionCaseSensitivity(Qt::CaseInsensitive);
 
@@ -303,9 +303,8 @@ void MealFoodListItemDataWidget::buttonUpdate() {
 	// prepare proxy model and prepare table view
 	invalidateProxy();
 	updateView();
-	PR(batch_row);
 	// set proper index of batch combo box
-	int map_row = proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row();PR(map_row);
+	int map_row = proxy->mapFromSource(Database::Instance()->CachedBatch()->index(batch_row, BatchTableModel::HId)).row();
 	batch->setCurrentIndex(map_row);
 
 	// mart as editable and render widget

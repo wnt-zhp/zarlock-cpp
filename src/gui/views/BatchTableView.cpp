@@ -129,7 +129,7 @@ void BatchTableView::initHeader() {
 	hideColumn(BatchTableModel::HEntryDate);
 	hideColumn(BatchTableModel::HNotes);
 	hideColumn(BatchTableModel::HUsedQty);
-	
+
 	horizontalHeader()->setResizeMode(BatchTableModel::HId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HProdId, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HSpec, QHeaderView::Stretch);
@@ -141,7 +141,7 @@ void BatchTableView::initHeader() {
 	horizontalHeader()->setResizeMode(BatchTableModel::HExpiryDate, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HInvoice, QHeaderView::ResizeToContents);
 	horizontalHeader()->setResizeMode(BatchTableModel::HNotes, QHeaderView::ResizeToContents);
-	
+
 	sortByColumn(BatchTableModel::HId, Qt::AscendingOrder);
 	setSortingEnabled(true);
 }

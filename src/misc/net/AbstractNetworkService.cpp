@@ -39,10 +39,10 @@ QNetworkReply * AbstractNetworkService::sendRequest(const QUrl & url) {
 
 	QUrl _url = url;
 	QByteArray iknow = qgetenv("I_KNOW_WHAT_I_AM_DOING");
-	
+
 	if (iknow.size())
 		_url.addQueryItem("test_mode","true");
-	
+
 
 	QNetworkRequest nr;
 	nr.setUrl(_url);

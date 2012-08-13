@@ -156,6 +156,7 @@ private:
 						dbv_AUG11	= 0x0000030,
 						dbv_JAN12	= 0x0000301,
 						dbv_JUL12	= 0x0000302,
+						dbv_AUG12	= 0x0000303,
 						dbv_DUMMY
 	};
 	static const unsigned int DBVERSION = dbv_DUMMY-1;

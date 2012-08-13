@@ -124,18 +124,18 @@ QVariant BatchTableModelProxy::data(const QModelIndex& index, int role) const {
 			case BatchTableModel::HExpiryDate:
 				{
 					QDate expd = this->index(index.row(), BatchTableModel::HExpiryDate).data(Qt::EditRole).toDate();
-					
+				
 					if (!expd.isValid())
 						break;
-					
+				
 					QDate refdate;
 					if (datekey.isValid()) {
 						refdate = datekey;
 					} else
 						refdate = QDate::currentDate();
-					
+				
 					int daystoexp = expd.daysTo(refdate);
-					
+				
 					if (daystoexp > 0) {
 						return QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical);
 					} else if (daystoexp == 0) {

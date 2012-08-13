@@ -344,11 +344,6 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Data ważności</translation>
     </message>
     <message>
-        <location filename="../models/BatchTableModel.cpp" line="220"/>
-        <source>   %1 of %2   </source>
-        <translation>   %1 z %2   </translation>
-    </message>
-    <message>
         <location filename="../models/BatchTableModel.cpp" line="46"/>
         <source>Used</source>
         <translation>Wydane</translation>
@@ -367,11 +362,6 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <location filename="../models/BatchTableModel.cpp" line="50"/>
         <source>Invoice</source>
         <translation>Faktura</translation>
-    </message>
-    <message>
-        <location filename="../models/BatchTableModel.cpp" line="206"/>
-        <source>Parser error!</source>
-        <translation>Błąd przetwarzania!</translation>
     </message>
 </context>
 <context>
@@ -463,33 +453,28 @@ Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz Powszechn
         <translation>Średni dzienny koszt posiłu</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="151"/>
-        <source> zl</source>
-        <translation> zł</translation>
-    </message>
-    <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="164"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="157"/>
         <source>Leaders</source>
         <translation>Komenda</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="170"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="163"/>
         <source>Camp Leader</source>
         <translation>Komendant</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="198"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="191"/>
         <source>Quartermaster</source>
         <translation>Kwatermistrz</translation>
     </message>
     <message>
-        <location filename="../ui/CampSettingsDialog.ui" line="205"/>
+        <location filename="../ui/CampSettingsDialog.ui" line="198"/>
         <source>Other</source>
         <translation>Pozostali</translation>
     </message>
     <message numerus="yes">
-        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="87"/>
-        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="102"/>
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="89"/>
+        <location filename="../gui/dialogs/CampSettingsDialog.cpp" line="104"/>
         <source>%n days</source>
         <translation>
             <numerusform>%n dzień</numerusform>
@@ -1193,7 +1178,7 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="43"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="62"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="509"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="508"/>
         <source>Quantity</source>
         <translation>Ilość</translation>
     </message>
@@ -1205,14 +1190,14 @@ Wciśnij Zamknij aby wyjść.</translation>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="92"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="95"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="511"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="510"/>
         <source>Unit</source>
         <translation>Jednostka</translation>
     </message>
     <message>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="120"/>
         <location filename="../ui/MealFoodListItemDataWidget.ui" line="123"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="510"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="509"/>
         <source>Price</source>
         <translation>Cena</translation>
     </message>
@@ -1237,32 +1222,32 @@ Wciśnij Zamknij aby wyjść.</translation>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="417"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="416"/>
         <source>Add distribution</source>
         <translation>Dodaj wydanie</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="418"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="417"/>
         <source>There are existing distributions of this batch on the meal list. It is recommended to merge your new distribution with existing one. Please select your action from the list below.</source>
         <translation>Na liście wydań partii na posiłek istnieją już wydania tej partii. Wskazane hest aby dołączyć te wydanie do poprzednich. Wybierz akcję do wykonania.</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="434"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="433"/>
         <source>Add new record</source>
         <translation>Dodaj nowy rekord</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="448"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="447"/>
         <source>Merge with %1 ( Qty: %2 )</source>
         <translation>Połącz z %1 ( Ilość: %2 )</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="508"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="507"/>
         <source>Batch</source>
         <translation>Partia</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="541"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="540"/>
         <source>Actions</source>
         <translation>Działania</translation>
     </message>
@@ -1548,10 +1533,12 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../../main.cpp" line="314"/>
-        <location filename="../db/DBReports.cpp" line="79"/>
-        <location filename="../db/DBReports.cpp" line="89"/>
-        <location filename="../db/DBReports.cpp" line="150"/>
-        <location filename="../db/DBReports.cpp" line="160"/>
+        <location filename="../db/DBReports.cpp" line="80"/>
+        <location filename="../db/DBReports.cpp" line="90"/>
+        <location filename="../db/DBReports.cpp" line="151"/>
+        <location filename="../db/DBReports.cpp" line="161"/>
+        <location filename="../db/DBReports.cpp" line="526"/>
+        <location filename="../db/DBReports.cpp" line="536"/>
         <source>Cannot find resources</source>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
@@ -1595,17 +1582,19 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Uruchamianie programu</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="82"/>
-        <location filename="../db/DBReports.cpp" line="92"/>
-        <location filename="../db/DBReports.cpp" line="153"/>
-        <location filename="../db/DBReports.cpp" line="163"/>
+        <location filename="../db/DBReports.cpp" line="83"/>
+        <location filename="../db/DBReports.cpp" line="93"/>
+        <location filename="../db/DBReports.cpp" line="154"/>
+        <location filename="../db/DBReports.cpp" line="164"/>
+        <location filename="../db/DBReports.cpp" line="529"/>
+        <location filename="../db/DBReports.cpp" line="539"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
         <translation>Sprawdź instalację programu i uruchom ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="309"/>
+        <location filename="../db/DBReports.cpp" line="310"/>
         <source>@Article name:@%1 %2 %3@price:@%4
 
 </source>
@@ -1614,23 +1603,28 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="310"/>
+        <location filename="../db/DBReports.cpp" line="311"/>
         <source>No.@Date@Serial number@Income@@Outcome@@Balance@
 </source>
         <translation>Lp.@Data@Symbol i nr. dowodu@Przychód@@Rozchód@@Saldo@
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="311"/>
+        <location filename="../db/DBReports.cpp" line="312"/>
         <source>@@@quantity@value@quantity@value@quantity@value
 </source>
         <translation>@@@ilość@wartość@ilość@wartość@ilość@wartość
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="345"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="192"/>
+        <location filename="../db/DBReports.cpp" line="658"/>
+        <source>&lt;td&gt;Sum: %1.%2 zl&lt;/td&gt;</source>
+        <translation>&lt;td&gt;Suma: %1.%2 zł&lt;/td&gt;</translation>
+    </message>
+    <message>
         <location filename="../misc/DataParser.cpp" line="110"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="192"/>
+        <location filename="../db/DBReports.cpp" line="346"/>
         <source>%1.%2 zl</source>
         <translation>%1.%2 zł</translation>
     </message>
@@ -1642,10 +1636,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Błąd bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="80"/>
-        <location filename="../db/DBReports.cpp" line="90"/>
-        <location filename="../db/DBReports.cpp" line="151"/>
-        <location filename="../db/DBReports.cpp" line="161"/>
+        <location filename="../db/DBReports.cpp" line="81"/>
+        <location filename="../db/DBReports.cpp" line="91"/>
+        <location filename="../db/DBReports.cpp" line="152"/>
+        <location filename="../db/DBReports.cpp" line="162"/>
+        <location filename="../db/DBReports.cpp" line="527"/>
+        <location filename="../db/DBReports.cpp" line="537"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>
@@ -1800,16 +1796,27 @@ Wybierz Zamknij aby wyjść.</translation>
     <message>
         <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="154"/>
         <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="185"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="370"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="369"/>
         <source> of %1.%2</source>
         <translation> z %1.%2</translation>
     </message>
     <message>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="187"/>
-        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="371"/>
         <location filename="../misc/DataParser.cpp" line="70"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="187"/>
+        <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="370"/>
+        <location filename="../models/BatchTableModel.cpp" line="212"/>
         <source>%1.%2</source>
         <translation>%1.%2</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="206"/>
+        <source>Parser error!</source>
+        <translation>Błąd przetwarzania!</translation>
+    </message>
+    <message>
+        <location filename="../models/BatchTableModel.cpp" line="225"/>
+        <source>   %1 of %2   </source>
+        <translation>   %1 z %2   </translation>
     </message>
 </context>
 <context>
@@ -2218,56 +2225,61 @@ Czy chcesz pobrać i zainstalować aktualizcje?</translation>
     </message>
     <message>
         <location filename="../zarlok.cpp" line="84"/>
+        <source>Create reports 11A (ZZ)</source>
+        <translation>Stwórz raporty wz. 11A (ZZ)</translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="85"/>
+        <source>Create reports 13 (KM)</source>
+        <translation>Stwórz raporty wz. 13 (KM)</translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="86"/>
+        <source>Create reports 13A (ZZ+)</source>
+        <translation>Stwórz raporty wz. 13A  (ZZ+)</translation>
+    </message>
+    <message>
+        <location filename="../zarlok.cpp" line="87"/>
         <source>Create SM reports</source>
         <translation>Utwórz raport Stanu Magazynu</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="85"/>
-        <source>Create KM reports</source>
-        <translation>Utwórz raport Kartotek Magazynowych</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="86"/>
-        <source>Create ZZ reports</source>
-        <translation>Utwórz raport Zapotrzebowania Żywieniowego</translation>
-    </message>
-    <message>
-        <location filename="../zarlok.cpp" line="87"/>
+        <location filename="../zarlok.cpp" line="88"/>
         <source>Browse reports directory</source>
         <translation>Przeglądaj katalog raportów</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="140"/>
+        <location filename="../zarlok.cpp" line="146"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="164"/>
+        <location filename="../zarlok.cpp" line="172"/>
         <source>Products</source>
         <translation>Produkty</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="165"/>
+        <location filename="../zarlok.cpp" line="173"/>
         <source>Stock</source>
         <translation>Magazyn</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="166"/>
+        <location filename="../zarlok.cpp" line="174"/>
         <source>Distribute</source>
         <translation>Wydawanie</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="167"/>
+        <location filename="../zarlok.cpp" line="175"/>
         <source>Meal</source>
         <translation>Posiłki</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="233"/>
+        <location filename="../zarlok.cpp" line="242"/>
         <source>Export window</source>
         <translation>Okno eksportu</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="234"/>
+        <location filename="../zarlok.cpp" line="243"/>
         <source>This is experimental version of the database exporter/importer. Here you can easily do backups of your data.
 
 Although we put lot of work to test this module to be safe for users we can&apos;t exclude any possible problems. If you are using this dialog be careful. In case of problems with imported data please contact us. Do not delete files you tried export or import. Information stored there can be very useful to understood your problem. Zarlok provides mechanism which allow us to restore your data.</source>
@@ -2276,23 +2288,26 @@ Although we put lot of work to test this module to be safe for users we can&apos
 Jednakże pomimo, że włożyliśmy sporo pracy aby przetestować ten moduł aby był bezpieczny w użyciu nie możemy wykluczyć żadnych błędów. Jeśli używasz tego modułu bądz ostrożny. W przypadku problemów z importem bazy danych proszę skontaktuj się z nami. Nie usuwaj żadnych plików które próbowałeś wyeksportować albo zaimportować. Informacje zapisane tam są niezwykle użyteczne dla rozwiazania problemu. Zarłok ponadto posiada mechanizmy pozwalające idzyskać Twoje dane.    </translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="270"/>
-        <location filename="../zarlok.cpp" line="391"/>
+        <location filename="../zarlok.cpp" line="279"/>
+        <location filename="../zarlok.cpp" line="422"/>
         <source>Database is not loaded properly.</source>
         <translation>Baza danych nie jest załadowana poprawnie.</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="356"/>
+        <location filename="../zarlok.cpp" line="357"/>
+        <location filename="../zarlok.cpp" line="383"/>
         <source>Printing reports...</source>
         <translation>Drukowanie raportów...</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="356"/>
+        <location filename="../zarlok.cpp" line="357"/>
+        <location filename="../zarlok.cpp" line="383"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Anuluj</translation>
     </message>
     <message>
-        <location filename="../zarlok.cpp" line="365"/>
+        <location filename="../zarlok.cpp" line="366"/>
+        <location filename="../zarlok.cpp" line="392"/>
         <source>Creating report for day: </source>
         <translation>Twórzenie raportu dla dnia: </translation>
     </message>

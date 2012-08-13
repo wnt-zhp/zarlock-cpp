@@ -15,6 +15,19 @@ table {
 	border-style:	solid;
 }
 
+table.celltable {
+	border-width:	0px;
+	border-color:	gray;
+	border-style:	solid;
+}
+
+table.celltable td {
+	padding-top:	0px;
+	padding-right:	0px;
+	padding-bottom:	0px;
+	padding-left:	0px;
+}
+
 #meals {
 	font-size:		small;
 }

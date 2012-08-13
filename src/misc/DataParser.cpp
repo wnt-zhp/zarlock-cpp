@@ -94,11 +94,11 @@ bool DataParser::price(const QString & data, double & netto_parsed, int & vat_pa
 
 bool DataParser::price(const QString & data, int & price_parsed) {
 	double price; int tax;
-	
+
 	bool status = DataParser::price(data, price, tax);
 	// 	price_parsed.sprintf(QObject::tr("%.2f zl").toStdString().c_str(), 333);//0.01*price*(100.0+tax));
 	price_parsed = price*(100+tax) + 0.5;
-	
+
 	return status;
 }
 

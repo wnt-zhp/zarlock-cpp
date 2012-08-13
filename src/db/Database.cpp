@@ -536,6 +536,11 @@ bool Database::doDBUpgrade(unsigned int version) {
 
 		case dbv_JUL12:
 			progress.setValue(dbv_JUL12);
+			execQueryFromFile(":/resources/dbconv_00000302_00000303_part_a.sql");
+// 			return true;
+
+		case dbv_AUG12:
+			progress.setValue(dbv_AUG12);
 			PR("Database up-to-date!");
 			return true;
 	}
@@ -577,7 +582,7 @@ bool Database::execQueryFromFile(const QString& resource) {
 QString Database::getLastExecutedQuery(const QSqlQuery& query) {
 	QString str = query.lastQuery();
 	QMapIterator<QString, QVariant> it(query.boundValues());
-	
+
 	str.replace("?", "\"?\"");
 	while (it.hasNext()) {
 		it.next();

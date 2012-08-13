@@ -8,5 +8,6 @@
 	<file>resources/dbconv_00000030_00000301_part_b.sql</file>
 	<file>resources/dbconv_00000030_00000301_part_c.sql</file>
 	<file>resources/dbconv_00000301_00000302_part_a.sql</file>
+	<file>resources/dbconv_00000302_00000303_part_a.sql</file>
 </qresource>
 </RCC>

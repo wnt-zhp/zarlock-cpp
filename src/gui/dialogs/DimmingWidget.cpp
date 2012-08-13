@@ -53,7 +53,7 @@ void DimmingWidget::setWidget(QWidget * widget) {
 		this->widget = widget;
 		widget->setStyleSheet(".QWidget { color:white; background-color:rgba(0,0,0,200); border: 1px solid rgba(0,0,0,200); border-radius:4px; } QWidget QLabel, .QWidget QGroupBox, QWidget QCheckBox { color:white; }");
 		adjustSize();
-	
+
 		connect(this, SIGNAL(widgetOut()), widget, SLOT(hide()));
 	}
 }

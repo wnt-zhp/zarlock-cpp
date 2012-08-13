@@ -607,6 +607,7 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 
 		QVector<QString> headers;
 		QVector<QString> contents;
+		QVector<QString> footers;
 
 		const QString header_tmp = "<td width=\"auto\">%1 | %2/%3/%4</td>";
 
@@ -619,20 +620,21 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 			sco = q2.value(3).toInt();
 			lea = q2.value(4).toInt();
 			oth = q2.value(5).toInt();
-	
+
 			all_sco += sco;
 			all_lea += lea;
 			all_oth += oth;
-	
+
 			QString h = header_tmp.arg(name).arg(sco).arg(lea).arg(oth);
 			headers.push_back(h);
-	
-			QString content;
-	
+
+			QString content = "<table class=\"celltable\">";
+
 			q3.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
 			q3.bindValue(0, id);
 			q3.exec();
-	
+
+			int pricesum = 0;
 			while (q3.next()) {
 				int batch_id = q3.value(1).toInt();
 				QString spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
@@ -640,18 +642,20 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 				QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
 				int price = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data(Qt::EditRole).toInt();
 				QString price_s = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data().toString();
-		
-				if (!content.isEmpty())
-					content = content % "<br />";
-				content = content % QString("%1").arg(spec);
-				content = content % QString("<span style=\"margin: 0 auto;\">,&nbsp;%1,&nbsp;%2.%3&nbsp;zl,&nbsp;%4, &nbsp;%5.%6&nbsp;zl</span>")
+
+				content = content % QString("<tr><td>%1</td>").arg(spec);
+				content = content % QString("<td>%1</td><td>%2.%3&nbsp;zl</td><td>x %4</td><td>= %5.%6&nbsp;zl</td></tr>")
 					.arg(unit)
 					.arg(qty/100).arg(qty % 100, 2, 10, QChar('0'))
 					.arg(price_s)
 					.arg(qty*price/10000).arg(int(round(((qty*price) % 10000) / 100.0)), 2, 10, QChar('0'))
 					;
+					pricesum += qty*price;
 			}
+			content = content % "</table>";
 			contents.push_back("<td>" % content % "</td>");
+
+			footers.push_back(QObject::tr("<td>Sum: %1.%2 zl</td>").arg(pricesum/10000).arg(int(round(((pricesum) % 10000) / 100.0)), 2, 10, QChar('0')));
 		}
 
 		QString tpl = dailymeal_tstream.readAll();
@@ -668,13 +672,15 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		tpl.replace("@AVGCOSTS@", QString("%1.%2").arg(db->cs()->avgCosts/100).arg(db->cs()->avgCosts % 100, 2, 10, QChar('0')));
 		tpl.replace("@AVG@", QString("%1.%2").arg(costs/10000).arg(int(round((costs % 10000) / 100.0)), 2, 10, QChar('0')));
 
-		QString h, c;
+		QString h, c, f;
 		for (int i = 0; i < headers.size(); ++i) {
 			h = h % headers[i];
 			c = c % contents[i];
+			f = f % footers[i];
 		}
 		tpl.replace("@TABLE_HEADERS@", h);
 		tpl.replace("@TABLE_CONTENTS@", c);
+		tpl.replace("@TABLE_FOOTERS@", f);
 
 		doc.setHtml(tpl);
 
@@ -743,11 +749,11 @@ void DBReports::printSMReport(QString * reportsdir) {
 		QString bidname = "_" % pnames[q.value(0).toInt()].trimmed() % "_" % q.value(1).toString().toUtf8().trimmed() % "_" % bunit % "_";
 		if (!ubatches.contains(bidname)) {
 			int bid = bidnames.size();
-	
+
 			bidnames.push_back(bidname);
 			bnames.push_back(bname);
 			bunits.push_back(bunit);
-	
+
 			ubatches.insert(bidname, bid);
 			bids[q.value(4).toInt()] = bid;
 		} else {
@@ -799,21 +805,21 @@ void DBReports::printSMReport(QString * reportsdir) {
 		//##############################################
 		for (int i = 0; i < /*b_min.daysTo(d_min)*/(totdays+1); ++i) {
 			QString cdate = b_min.addDays(i).toString(Qt::ISODate);
-	
+
 			QString ofile = dbsavepath.absolutePath() % QString("/") % "SM_" % cdate % ".csv";
-	
+
 			QFile file(ofile);
 			if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 				return;
-	
+
 			QString outs;
 			outs = entry1_tmpl
 			.arg(QString::fromUtf8(b_min.addDays(i).toString(Qt::DefaultLocaleLongDate).toUtf8()));
-	
+
 			batches_new.clear();
 			batches_removed.clear();
 			batches_bilans.clear();
-	
+
 			//*************************************************************
 			// in stock
 			// 		std::printf("## batches in database for day %s\n", cdate.toStdString().c_str());
@@ -825,41 +831,41 @@ void DBReports::printSMReport(QString * reportsdir) {
 			// 				out << "--S " << bnames[idx] << " " << bunits[idx].toStdString().c_str() << " " << batches_in_stock_num[idx] << endl;
 			// 			}
 			// 		}
-	
+
 			//*************************************************************
 			// new inserions
 			q.bindValue(0, cdate);
 			q.exec();
-	
+
 			while (q.next()) {
 				DataParser::unit(q.value(BatchTableModel::HUnit).toString(), bunit);
 				// 			DataParser::quantity(q.value(BatchTableModel::HStaQty).toString(), bqty);
 				bqty = q.value(BatchTableModel::HStaQty).toInt();
-		
+	
 				bidname = "_" % pnames[q.value(BatchTableModel::HProdId).toInt()].trimmed() %
 				"_" % q.value(BatchTableModel::HSpec).toString().toUtf8().trimmed() % "_" % bunit % "_";
-		
+	
 				int cbid = -1;
-		
+	
 				if (ubatches.contains(bidname)) {
 					cbid = ubatches.value(bidname);
 				} else {
 					continue;
 				}
-		
+	
 				if (!batches_in_stock.contains(bidname)) {
 					batches_in_stock.insert(bidname, cbid);
 				} else {
 				}
-		
+	
 				if (!batches_new.contains(bidname)) {
 					batches_new.insert(bidname, cbid);
 				} else {
 				}
-		
+	
 				batches_new_num[cbid] = batches_new_num[cbid] + bqty;
 			}
-	
+
 			// 		std::printf("## batches inserted for day %s\n", cdate.toStdString().c_str());
 			// 		out << "## batches inserted for day " << cdate.toStdString().c_str() << "\n";
 			// 		for (QMap<QString, int>::iterator it = batches_new.begin(); it != batches_new.end(); ++it) {
@@ -867,27 +873,27 @@ void DBReports::printSMReport(QString * reportsdir) {
 				// 			std::printf("--A %s (%s) => %.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_new_num[idx]);
 				// 			out << "--A " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_new_num[idx] << endl;
 				// 		}
-		
+	
 				//*************************************************************
 				// removals
 				q2.bindValue(0, cdate);
 				q2.exec();
-		
+	
 				while (q2.next()) {
 					int cbid = bids[q2.value(DistributorTableModel::HBatchId).toInt()];
 					// 			DataParser::quantity(q2.value(DistributorTableModel::HQty).toString(), bqty);
 					bqty = q2.value(DistributorTableModel::HQty).toInt();
-			
+		
 					bidname = bidnames[cbid];
-			
+		
 					if (!batches_removed.contains(bidname)) {
 						batches_removed.insert(bidname, cbid);
 					} else {
 					}
-			
+		
 					batches_removed_num[cbid] += bqty;
 				}
-		
+	
 				// 		std::printf("## batches removed for day %s\n", cdate.toStdString().c_str());
 				// 		out << "## batches removed for day " << cdate.toStdString().c_str() << "\n";
 				// 		for (QMap<QString, int>::iterator it = batches_removed.begin(); it != batches_removed.end(); ++it) {
@@ -895,12 +901,12 @@ void DBReports::printSMReport(QString * reportsdir) {
 					// 			std::printf("--R %s (%s) => -%.2f\n", bnames[idx].toStdString().c_str(), bunits[idx].toStdString().c_str(), batches_removed_num[idx]);
 					// 			out << "--R " << bnames[idx].toStdString().c_str() << " " << bunits[idx].toStdString().c_str() << " " << batches_removed_num[idx] << endl;
 					// 		}
-			
+		
 					addVectors(batches_in_stock_num, batches_new_num);
 					batches_new_num.fill(0);
 					subVectors(batches_in_stock_num, batches_removed_num);
 					batches_removed_num.fill(0);
-			
+		
 					// 		std::printf("## batches bilans for day %s\n", cdate.toStdString().c_str());
 					// 		out << "## batches bilans for day " << cdate.toStdString().c_str() << "\n";
 					for (QMap<QString, int>::iterator kmm_iter = batches_in_stock.begin(); kmm_iter != batches_in_stock.end(); ++kmm_iter) {
@@ -914,14 +920,14 @@ void DBReports::printSMReport(QString * reportsdir) {
 							outs.append(entry);
 						}
 					}
-			
+		
 					QTextStream out(&file);
 					out.setRealNumberNotation(QTextStream::FixedNotation);
 					out.setRealNumberPrecision(2);
 					out.setLocale(QLocale(QLocale::C));
-			
+		
 					out.setCodec(QTextCodec::codecForName(progset->csv_encoding.toUtf8()));
-			
+		
 					out << outs;
 		}
 

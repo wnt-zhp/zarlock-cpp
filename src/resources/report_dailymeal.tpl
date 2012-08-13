@@ -29,6 +29,7 @@ Zapotrzebowanie żywnościowe
 <tr>@TABLE_CONTENTS@</tr>
 </tbody>
 <tfoot>
+<tr>@TABLE_FOOTERS@</tr>
 </tfoot>
 </table>
 <!--

@@ -203,13 +203,13 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 					if (role == Qt::BackgroundRole)
 						return QColor(Qt::red);
 					else
-						return QVariant(tr("Parser error!"));
+						return QVariant(QObject::tr("Parser error!"));
 				}
 			}
 
 			else if (col == HPrice) {
 				int price_n = records[row]->arr[Qt::EditRole][HPrice].toInt();
-				return tr("%1.%2").arg(price_n/100).arg(price_n % 100, 2, 10, QChar('0'));
+				return QObject::tr("%1.%2").arg(price_n/100).arg(price_n % 100, 2, 10, QChar('0'));
 			}
 
 			else if (col == HExpiryDate) {
@@ -222,7 +222,7 @@ QVariant BatchTableModel::display(const QModelIndex & idx, const int role) const
 				int total = records[row]->arr[Qt::EditRole][HStaQty].toInt();
 				int free = total - used;
 				QString qty;
-				return tr("   %1 of %2   ").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
+				return QObject::tr("   %1 of %2   ").arg(free/100.0, 0, 'f', 2).arg(total/100.0, 0, 'f', 2);
 			}
 
 			return records[row]->arr[Qt::DisplayRole][col];

@@ -130,11 +130,11 @@ void ExpandableComboBox::setSearchString(const QString& str) {
 
 void ExpandableComboBox::popupEventCaptured(QEvent * evt) {
 	QString filter_string = ledit->text();
-	
+
 	if (evt->type() == QEvent::KeyPress) {
 		QKeyEvent * kevt = dynamic_cast<QKeyEvent *>(evt);
 		int key = kevt->key();
-		
+	
 		switch (key) {
 			case Qt::Key_Escape:
 				filter_string.clear();
@@ -149,7 +149,7 @@ void ExpandableComboBox::popupEventCaptured(QEvent * evt) {
 					filter_string.append(kevt->text());
 				}
 		}
-		
+	
 		if (filter_string.size() > 0) {
 			ledit->show();
 		}
