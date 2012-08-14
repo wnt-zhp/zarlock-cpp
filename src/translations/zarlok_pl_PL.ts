@@ -1533,12 +1533,12 @@ Wciśnij Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../../main.cpp" line="314"/>
-        <location filename="../db/DBReports.cpp" line="80"/>
-        <location filename="../db/DBReports.cpp" line="90"/>
-        <location filename="../db/DBReports.cpp" line="151"/>
-        <location filename="../db/DBReports.cpp" line="161"/>
-        <location filename="../db/DBReports.cpp" line="526"/>
-        <location filename="../db/DBReports.cpp" line="536"/>
+        <location filename="../db/DBReports.cpp" line="89"/>
+        <location filename="../db/DBReports.cpp" line="99"/>
+        <location filename="../db/DBReports.cpp" line="160"/>
+        <location filename="../db/DBReports.cpp" line="170"/>
+        <location filename="../db/DBReports.cpp" line="535"/>
+        <location filename="../db/DBReports.cpp" line="545"/>
         <source>Cannot find resources</source>
         <translation>Nie można znaleźć zasobów</translation>
     </message>
@@ -1582,19 +1582,19 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Uruchamianie programu</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="83"/>
-        <location filename="../db/DBReports.cpp" line="93"/>
-        <location filename="../db/DBReports.cpp" line="154"/>
-        <location filename="../db/DBReports.cpp" line="164"/>
-        <location filename="../db/DBReports.cpp" line="529"/>
-        <location filename="../db/DBReports.cpp" line="539"/>
+        <location filename="../db/DBReports.cpp" line="92"/>
+        <location filename="../db/DBReports.cpp" line="102"/>
+        <location filename="../db/DBReports.cpp" line="163"/>
+        <location filename="../db/DBReports.cpp" line="173"/>
+        <location filename="../db/DBReports.cpp" line="538"/>
+        <location filename="../db/DBReports.cpp" line="548"/>
         <source>Check your installation and try to run again.
 Click Close to exit.</source>
         <translation>Sprawdź instalację programu i uruchom ponownie.
 Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="310"/>
+        <location filename="../db/DBReports.cpp" line="319"/>
         <source>@Article name:@%1 %2 %3@price:@%4
 
 </source>
@@ -1603,28 +1603,33 @@ Wybierz Zamknij aby wyjść.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="311"/>
+        <location filename="../db/DBReports.cpp" line="320"/>
         <source>No.@Date@Serial number@Income@@Outcome@@Balance@
 </source>
         <translation>Lp.@Data@Symbol i nr. dowodu@Przychód@@Rozchód@@Saldo@
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="312"/>
+        <location filename="../db/DBReports.cpp" line="321"/>
         <source>@@@quantity@value@quantity@value@quantity@value
 </source>
         <translation>@@@ilość@wartość@ilość@wartość@ilość@wartość
 </translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="658"/>
-        <source>&lt;td&gt;Sum: %1.%2 zl&lt;/td&gt;</source>
-        <translation>&lt;td&gt;Suma: %1.%2 zł&lt;/td&gt;</translation>
+        <location filename="../db/DBReports.cpp" line="686"/>
+        <source>&lt;td class=&quot;footer&quot; width=&quot;auto&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Sum:&lt;/td&gt;&lt;td&gt;%1.%2 zl&lt;/td&gt;</source>
+        <translation type="unfinished">&lt;td class=&quot;footer&quot; width=&quot;auto&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Razem:&lt;/td&gt;&lt;td&gt;%1.%2 zł&lt;/td&gt;</translation>
+    </message>
+    <message>
+        <location filename="../db/DBReports.cpp" line="732"/>
+        <source>&lt;td class=&quot;spec&quot; width=&quot;100%&quot;&gt;%1&lt;/td&gt;&lt;td&gt;%2&lt;/td&gt;&lt;td&gt;%3.%4&amp;nbsp;zl&lt;/td&gt;&lt;td&gt;x %5.%6&amp;nbsp;zl&lt;/td&gt;&lt;td&gt;= %7.%8&amp;nbsp;zl&lt;/td&gt;</source>
+        <translation>&lt;td class=&quot;spec&quot; width=&quot;100%&quot;&gt;%1&lt;/td&gt;&lt;td&gt;%2&lt;/td&gt;&lt;td&gt;%3.%4&amp;nbsp;zł&lt;/td&gt;&lt;td&gt;x %5.%6&amp;nbsp;zł&lt;/td&gt;&lt;td&gt;= %7.%8&amp;nbsp;zł&lt;/td&gt;</translation>
     </message>
     <message>
         <location filename="../misc/DataParser.cpp" line="110"/>
         <location filename="../gui/items/MealFoodListItemDataWidget.cpp" line="192"/>
-        <location filename="../db/DBReports.cpp" line="346"/>
+        <location filename="../db/DBReports.cpp" line="355"/>
         <source>%1.%2 zl</source>
         <translation>%1.%2 zł</translation>
     </message>
@@ -1636,12 +1641,12 @@ Wybierz Zamknij aby wyjść.</translation>
         <translation>Błąd bazy danych</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="81"/>
-        <location filename="../db/DBReports.cpp" line="91"/>
-        <location filename="../db/DBReports.cpp" line="152"/>
-        <location filename="../db/DBReports.cpp" line="162"/>
-        <location filename="../db/DBReports.cpp" line="527"/>
-        <location filename="../db/DBReports.cpp" line="537"/>
+        <location filename="../db/DBReports.cpp" line="90"/>
+        <location filename="../db/DBReports.cpp" line="100"/>
+        <location filename="../db/DBReports.cpp" line="161"/>
+        <location filename="../db/DBReports.cpp" line="171"/>
+        <location filename="../db/DBReports.cpp" line="536"/>
+        <location filename="../db/DBReports.cpp" line="546"/>
         <source>Unable to find resources in </source>
         <translation>Nie można znaleźć zasobów w</translation>
     </message>

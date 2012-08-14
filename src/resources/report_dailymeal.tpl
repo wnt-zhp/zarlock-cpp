@@ -21,7 +21,7 @@ Zapotrzebowanie żywnościowe
 
 <br />
 
-<table id="meals" class="maincont" width="100%" border="1">
+<!--<table id="meals" class="maincont" width="100%" border="1">
 <thead><tr>
 	@TABLE_HEADERS@
 </tr></thead>
@@ -31,6 +31,10 @@ Zapotrzebowanie żywnościowe
 <tfoot>
 <tr>@TABLE_FOOTERS@</tr>
 </tfoot>
+</table>-->
+<!--  border="1" -->
+<table id="meals" class="maincont" width="100%" border="0">
+@TABLE@
 </table>
 <!--
 <p>
@@ -42,7 +46,7 @@ Posiłki dodatkowe - wyszczególnienie:<br />
 1. Liczba posiłków dla uczestników obozu: @SCOUTSNO@<br />
 2. Liczba posiłków dla kadry obozowej: @LEADERSNO@<br />
 3. Liczba posiłków dla pozostałych: @OTHERSNO@<br />
-Wydanych posiłków razem: @ALL@
+Wydanych posiłków razem: @ALL@, koszt: @COSTS@
 </p>
 <p>Przeciętny koszt wyżywienia jednej osoby: @AVG@ zł</p>
 <br />

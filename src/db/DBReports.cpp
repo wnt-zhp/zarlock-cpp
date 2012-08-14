@@ -19,6 +19,7 @@
 
 #include <cstdio>
 #include <cmath>
+#include <algorithm>
 
 #include <QDir>
 #include <QFile>
@@ -71,6 +72,14 @@ struct KMDB {
 	QString price_s;
 	int price;
 	QVector<KMDB_entry> batches;
+};
+
+struct Form13AEntry {
+	QString spec;
+	QString unit;
+	int price;
+	int qty;
+// 	int value;
 };
 
 void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
@@ -205,25 +214,25 @@ void DBReports::printReport11A(const QString& date, QString * reportfile) {
 	cur.movePosition(QTextCursor::Start);
 
 	// Products table preparation
-	QSqlQuery q, q2, q3;
+	QSqlQuery q_meal_day, q_meal, q_dist;
 
 // 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
 // 		QSqlDatabase::database().transaction();
 
-	q.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
-	q.bindValue(0, date);
-	if (!q.exec())
-		PR(q.lastError().databaseText().toStdString());
+	q_meal_day.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
+	q_meal_day.bindValue(0, date);
+	if (!q_meal_day.exec())
+		PR(q_meal_day.lastError().databaseText().toStdString());
 
-	if (!q.next())
+	if (!q_meal_day.next())
 		return;
 
-	int costs = q.value(1).toInt();
+	int costs = q_meal_day.value(1).toInt();
 
-	q2.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
-	q2.bindValue(0, q.value(0));
-	if (!q2.exec())
-		PR(q2.lastError().databaseText().toStdString());
+	q_meal.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
+	q_meal.bindValue(0, q_meal_day.value(0));
+	if (!q_meal.exec())
+		PR(q_meal.lastError().databaseText().toStdString());
 
 	int id/*, kind*/;
 	QString name;
@@ -237,13 +246,13 @@ void DBReports::printReport11A(const QString& date, QString * reportfile) {
 
 	BatchTableModel * btm = db->CachedBatch();
 
-	while (q2.next()) {
-		id = q2.value(0).toInt();
-// 		kind = q2.value(1).toInt();
-		name = q2.value(2).toString();
-		sco = q2.value(3).toInt();
-		lea = q2.value(4).toInt();
-		oth = q2.value(5).toInt();
+	while (q_meal.next()) {
+		id = q_meal.value(0).toInt();
+// 		kind = q_meal.value(1).toInt();
+		name = q_meal.value(2).toString();
+		sco = q_meal.value(3).toInt();
+		lea = q_meal.value(4).toInt();
+		oth = q_meal.value(5).toInt();
 
 		all_sco += sco;
 		all_lea += lea;
@@ -254,14 +263,14 @@ void DBReports::printReport11A(const QString& date, QString * reportfile) {
 
 		QString content;
 
-		q3.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
-		q3.bindValue(0, id);
-		q3.exec();
+		q_dist.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
+		q_dist.bindValue(0, id);
+		q_dist.exec();
 
-		while (q3.next()) {
-			int batch_id = q3.value(1).toInt();
+		while (q_dist.next()) {
+			int batch_id = q_dist.value(1).toInt();
 			QString spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
-			double qty = q3.value(2).toInt();
+			double qty = q_dist.value(2).toInt();
 			QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
 
 			if (!content.isEmpty())
@@ -580,25 +589,25 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		cur.movePosition(QTextCursor::Start);
 
 		// Products table preparation
-		QSqlQuery q, q2, q3;
+		QSqlQuery q_meal_day, q_meal, q_dist;
 
 		// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
 		// 		QSqlDatabase::database().transaction();
 
-		q.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
-		q.bindValue(0, date);
-		if (!q.exec())
-			PR(q.lastError().databaseText().toStdString());
+		q_meal_day.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
+		q_meal_day.bindValue(0, date);
+		if (!q_meal_day.exec())
+			PR(q_meal_day.lastError().databaseText().toStdString());
 
-		if (!q.next())
+		if (!q_meal_day.next())
 			return;
 
-		int costs = q.value(1).toInt();
+		int costs = q_meal_day.value(1).toInt();
 
-		q2.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
-		q2.bindValue(0, q.value(0));
-		if (!q2.exec())
-			PR(q2.lastError().databaseText().toStdString());
+		q_meal.prepare("SELECT id, mealkind, name, scouts, leaders, others, cost FROM meal WHERE mealday=? ORDER BY mealkind ASC;");
+		q_meal.bindValue(0, q_meal_day.value(0));
+		if (!q_meal.exec())
+			PR(q_meal.lastError().databaseText().toStdString());
 
 		int id/*, kind*/;
 		QString name;
@@ -609,53 +618,152 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		QVector<QString> contents;
 		QVector<QString> footers;
 
-		const QString header_tmp = "<td width=\"auto\">%1 | %2/%3/%4</td>";
-
 		BatchTableModel * btm = db->CachedBatch();
 
-		while (q2.next()) {
-			id = q2.value(0).toInt();
-			// 		kind = q2.value(1).toInt();
-			name = q2.value(2).toString();
-			sco = q2.value(3).toInt();
-			lea = q2.value(4).toInt();
-			oth = q2.value(5).toInt();
+		QVector< QVector< Form13AEntry > > meals;
+		QVector< int > mealmult;
+		QVector< int > valsum;
+		int sumcosts = 0;
+
+		while (q_meal.next()) {
+			id = q_meal.value(0).toInt();
+			// 		kind = q_meal.value(1).toInt();
+			name = q_meal.value(2).toString();
+			sco = q_meal.value(3).toInt();
+			lea = q_meal.value(4).toInt();
+			oth = q_meal.value(5).toInt();
 
 			all_sco += sco;
 			all_lea += lea;
 			all_oth += oth;
 
-			QString h = header_tmp.arg(name).arg(sco).arg(lea).arg(oth);
+			QString h = QString("%1 | %2/%3/%4").arg(name).arg(sco).arg(lea).arg(oth);
 			headers.push_back(h);
 
-			QString content = "<table class=\"celltable\">";
+// 			QString content = "<table class=\"celltable\">";
 
-			q3.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
-			q3.bindValue(0, id);
-			q3.exec();
+			q_dist.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
+			q_dist.bindValue(0, id);
+			q_dist.exec();
 
 			int pricesum = 0;
-			while (q3.next()) {
-				int batch_id = q3.value(1).toInt();
-				QString spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
-				int qty = q3.value(2).toInt();
-				QString unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
-				int price = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data(Qt::EditRole).toInt();
-				QString price_s = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data().toString();
+			QVector<Form13AEntry> entries;
 
-				content = content % QString("<tr><td>%1</td>").arg(spec);
-				content = content % QString("<td>%1</td><td>%2.%3&nbsp;zl</td><td>x %4</td><td>= %5.%6&nbsp;zl</td></tr>")
-					.arg(unit)
-					.arg(qty/100).arg(qty % 100, 2, 10, QChar('0'))
-					.arg(price_s)
-					.arg(qty*price/10000).arg(int(round(((qty*price) % 10000) / 100.0)), 2, 10, QChar('0'))
-					;
-					pricesum += qty*price;
+			while (q_dist.next()) {
+				Form13AEntry e;
+
+				int batch_id = q_dist.value(1).toInt();
+				e.spec = btm->index(btm->getRowById(batch_id), BatchTableModel::HSpec).data().toString();
+				e.qty = q_dist.value(2).toInt();
+				e.unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
+				e.price = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data(Qt::EditRole).toInt();
+// 				e.value = e.price * e.qty;
+
+// 				content = content % QString("<tr><td>%1</td>").arg(spec);
+// 				content = content % QString("<td>%1</td><td>%2.%3&nbsp;zl</td><td>x %4</td><td>= %5.%6&nbsp;zl</td></tr>")
+// 					.arg(unit)
+// 					.arg(qty/100).arg(qty % 100, 2, 10, QChar('0'))
+// 					.arg(price_s)
+// 					.arg(qty*price/10000).arg(int(round(((qty*price) % 10000) / 100.0)), 2, 10, QChar('0'))
+// 					;
+					pricesum += e.qty*e.price;
+				entries.push_back(e);
+// 				PR(e.spec.toStdString());
 			}
-			content = content % "</table>";
-			contents.push_back("<td>" % content % "</td>");
+// PR(entries.count());
+			meals.push_back(entries);
+			valsum.push_back(pricesum);
+			mealmult.push_back(entries.count());
 
-			footers.push_back(QObject::tr("<td>Sum: %1.%2 zl</td>").arg(pricesum/10000).arg(int(round(((pricesum) % 10000) / 100.0)), 2, 10, QChar('0')));
+			sumcosts += pricesum;
+
+// 			content = content % "</table>";
+// 			contents.push_back("<td>" % content % "</td>");
+
+// 			footers.push_back(QObject::tr("<td>Sum: %1.%2 zl</td>").arg(pricesum/10000).arg(int(round(((pricesum) % 10000) / 100.0)), 2, 10, QChar('0')));
+		}
+
+
+		QString final_table;
+
+		const QString header_tmp = "<th width=\"auto\" colspan=\"5\">%1</th>";
+		const QString footer_tmp = QObject::tr("<td class=\"footer\" width=\"auto\" colspan=\"3\"></td><td>Sum:</td><td>%1.%2 zl</td>");
+		const QString footere_tmp = "<td class=\"footer\" width=\"auto\" colspan=\"5\">&nbsp;</td>";
+
+		const int col_num = 2;
+
+		int col_groups_num = meals.count();
+
+		int col_group_first = 0;
+		int col_group_last = col_num - 1;
+
+// for (int i = 0; i < mealmult.size(); ++i)
+// 	PR(mealmult[i]);
+// PR(col_groups_num);
+		for (; col_group_first < col_groups_num; col_group_first += col_num) {
+			int diff = col_groups_num - col_group_first;
+// PR(diff);
+			col_group_last = diff < col_num ? (col_group_first + diff - 1) : (col_group_first + col_num - 1);
+			int rownum = *(std::max_element(mealmult.begin()+col_group_first, mealmult.begin()+col_group_last+1));
+// PR(rownum);
+			// make header
+			final_table.append("<tr>");
+
+			for (int c = 0; c < col_num; ++c) {
+				QString repstr;
+				if (c < diff)
+					repstr = header_tmp.arg(headers[col_group_first+c]);
+				else
+					repstr = header_tmp.arg("");
+				final_table.append(repstr);
+			}
+
+			final_table.append("</tr>");
+
+			final_table.append("<tbody>");
+
+			for (int r = 0; r < rownum; ++r) {
+				if (r % 2)
+					final_table.append("<tr class=\"alt\">");
+				else
+					final_table.append("<tr class=\"noalt\">");
+
+				for (int c = 0; c < col_num; ++c) {
+					if (c < diff) {
+						if (r < mealmult[col_group_first+c]) {
+							Form13AEntry e = meals[col_group_first+c][r];
+							QString content = QObject::tr("<td class=\"spec\" width=\"100%\">%1</td><td>%2</td><td>%3.%4&nbsp;zl</td><td>x %5.%6&nbsp;zl</td><td>= %7.%8&nbsp;zl</td>")
+								.arg(e.spec)
+								.arg(e.unit)
+								.arg(e.qty/100).arg(e.qty % 100, 2, 10, QChar('0'))
+								.arg(e.price/100).arg(e.price % 100, 2, 10, QChar('0'))
+								.arg(e.qty*e.price/10000).arg(int(round(((e.qty*e.price) % 10000) / 100.0)), 2, 10, QChar('0'))
+								;
+							final_table.append(content);
+						} else {
+							final_table.append("<td></td><td></td><td></td><td></td><td></td>");
+						}
+					} else {
+						final_table.append("<td></td><td></td><td></td><td></td><td></td>");
+					}
+				}
+
+				final_table.append("</tr>");
+			}
+			final_table.append("</tbody>");
+
+			final_table.append("<tfoot><tr>");
+			for (int c = 0; c < col_num; ++c) {
+				QString repstr;
+				if (c < diff)
+					repstr = footer_tmp.arg(valsum[col_group_first+c]/10000).arg(int(round(((valsum[col_group_first+c]) % 10000) / 100.0)), 2, 10, QChar('0'));
+				else
+					repstr = footere_tmp;
+				final_table.append(repstr);
+			}
+			final_table.append("</tr></tfoot>");
+
+			final_table.append("<tr></tr>");
 		}
 
 		QString tpl = dailymeal_tstream.readAll();
@@ -671,16 +779,21 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		tpl.replace("@ALL@", QString("%1").arg(all_sco + all_lea + all_oth));
 		tpl.replace("@AVGCOSTS@", QString("%1.%2").arg(db->cs()->avgCosts/100).arg(db->cs()->avgCosts % 100, 2, 10, QChar('0')));
 		tpl.replace("@AVG@", QString("%1.%2").arg(costs/10000).arg(int(round((costs % 10000) / 100.0)), 2, 10, QChar('0')));
+		tpl.replace("@COSTS@", QString("%1.%2").arg(sumcosts/10000).arg(int(round((sumcosts % 10000) / 100.0)), 2, 10, QChar('0')));
 
-		QString h, c, f;
-		for (int i = 0; i < headers.size(); ++i) {
-			h = h % headers[i];
-			c = c % contents[i];
-			f = f % footers[i];
-		}
-		tpl.replace("@TABLE_HEADERS@", h);
-		tpl.replace("@TABLE_CONTENTS@", c);
-		tpl.replace("@TABLE_FOOTERS@", f);
+// 		QString h, c, f;
+// 		for (int i = 0; i < headers.size(); ++i) {
+// 			h = h % headers[i];
+// 			c = c % contents[i];
+// 			f = f % footers[i];
+// 		}
+// 		tpl.replace("@TABLE_HEADERS@", h);
+// 		tpl.replace("@TABLE_CONTENTS@", c);
+// 		tpl.replace("@TABLE_FOOTERS@", f);
+
+// 		PR(final_table.toStdString());
+
+		tpl.replace("@TABLE@", final_table);
 
 		doc.setHtml(tpl);
 

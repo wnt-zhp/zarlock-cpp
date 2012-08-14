@@ -60,7 +60,49 @@ table.celltable td {
 	border-style:	solid;
 }
 
-.maincont thead td {
+.maincont thead td, .maincont th {
+	text-align:		left;
+	border-color:	black;
+	border-style:	solid;
+	font-weight:	bold;
+}
+
+th {
+	text-align:			left;
+	border-color:		black;
+
+	font-weight:		bold;
+	background-color:	#aaaaaa;
+	padding-top:		5px;
+	padding-bottom:	 	5px;
+}
+
+.maincont tfoot td {
+	font-weight:		bold;
+	background-color: #dddddd;
+}
+
+.spec {
+	font-weight:		bold;
+}
+
+.maincont tbody tr.noalt {
+	background-color: #ffffff;
+}
+
+.maincont tbody tr.alt {
+	background-color: #eeeeee;
+}
+
+/*.maincont tbody td {
+	text-align:		left;
+	border-width:	0px;
+	border-color:	black;
+	border-style:	solid;
+	font-weight:	bold;
+}*/
+
+.maincont tfooter td {
 	text-align:		left;
 	border-color:	black;
 	border-style:	solid;
