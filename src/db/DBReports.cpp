@@ -591,8 +591,8 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		// Products table preparation
 		QSqlQuery q_meal_day, q_meal, q_dist;
 
-		// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
-		// 		QSqlDatabase::database().transaction();
+// 	if (QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions))
+// 		QSqlDatabase::database().transaction();
 
 		q_meal_day.prepare("SELECT id, avcosts FROM meal_day WHERE mealdate=?;");
 		q_meal_day.bindValue(0, date);
@@ -627,7 +627,7 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 
 		while (q_meal.next()) {
 			id = q_meal.value(0).toInt();
-			// 		kind = q_meal.value(1).toInt();
+//			kind = q_meal.value(1).toInt();
 			name = q_meal.value(2).toString();
 			sco = q_meal.value(3).toInt();
 			lea = q_meal.value(4).toInt();
@@ -639,8 +639,6 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 
 			QString h = QString("%1 | %2/%3/%4").arg(name).arg(sco).arg(lea).arg(oth);
 			headers.push_back(h);
-
-// 			QString content = "<table class=\"celltable\">";
 
 			q_dist.prepare("SELECT id, batch_id, quantity FROM distributor WHERE disttype=2 AND disttype_a=? ORDER BY id ASC;");
 			q_dist.bindValue(0, id);
@@ -657,37 +655,22 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 				e.qty = q_dist.value(2).toInt();
 				e.unit = btm->index(btm->getRowById(batch_id), BatchTableModel::HUnit).data().toString();
 				e.price = btm->index(btm->getRowById(batch_id), BatchTableModel::HPrice).data(Qt::EditRole).toInt();
-// 				e.value = e.price * e.qty;
 
-// 				content = content % QString("<tr><td>%1</td>").arg(spec);
-// 				content = content % QString("<td>%1</td><td>%2.%3&nbsp;zl</td><td>x %4</td><td>= %5.%6&nbsp;zl</td></tr>")
-// 					.arg(unit)
-// 					.arg(qty/100).arg(qty % 100, 2, 10, QChar('0'))
-// 					.arg(price_s)
-// 					.arg(qty*price/10000).arg(int(round(((qty*price) % 10000) / 100.0)), 2, 10, QChar('0'))
-// 					;
-					pricesum += e.qty*e.price;
+				pricesum += e.qty*e.price;
 				entries.push_back(e);
-// 				PR(e.spec.toStdString());
 			}
-// PR(entries.count());
+
 			meals.push_back(entries);
 			valsum.push_back(pricesum);
 			mealmult.push_back(entries.count());
 
 			sumcosts += pricesum;
-
-// 			content = content % "</table>";
-// 			contents.push_back("<td>" % content % "</td>");
-
-// 			footers.push_back(QObject::tr("<td>Sum: %1.%2 zl</td>").arg(pricesum/10000).arg(int(round(((pricesum) % 10000) / 100.0)), 2, 10, QChar('0')));
 		}
-
 
 		QString final_table;
 
 		const QString header_tmp = "<th width=\"auto\" colspan=\"5\">%1</th>";
-		const QString footer_tmp = QObject::tr("<td class=\"footer\" width=\"auto\" colspan=\"3\"></td><td>Sum:</td><td>%1.%2 zl</td>");
+		const QString footer_tmp = QObject::tr("<td class=\"footer\" width=\"auto\" colspan=\"3\"></td><td>Sum:</td><td align=\"right\">%1.%2 zl</td>");
 		const QString footere_tmp = "<td class=\"footer\" width=\"auto\" colspan=\"5\">&nbsp;</td>";
 
 		const int col_num = 2;
@@ -697,16 +680,14 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		int col_group_first = 0;
 		int col_group_last = col_num - 1;
 
-// for (int i = 0; i < mealmult.size(); ++i)
-// 	PR(mealmult[i]);
-// PR(col_groups_num);
 		for (; col_group_first < col_groups_num; col_group_first += col_num) {
 			int diff = col_groups_num - col_group_first;
-// PR(diff);
+
 			col_group_last = diff < col_num ? (col_group_first + diff - 1) : (col_group_first + col_num - 1);
 			int rownum = *(std::max_element(mealmult.begin()+col_group_first, mealmult.begin()+col_group_last+1));
-// PR(rownum);
+
 			// make header
+			final_table.append("<thead>");
 			final_table.append("<tr>");
 
 			for (int c = 0; c < col_num; ++c) {
@@ -720,6 +701,17 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 
 			final_table.append("</tr>");
 
+			final_table.append("<tr class=\"header\">");
+			for (int c = 0; c < col_num; ++c) {
+				QString repstr;
+				if (c < diff)
+					final_table.append(QObject::tr("<td width=\"100%\" align=\"center\">Specification</td><td align=\"center\">Unit</td><td align=\"center\">Quantity</td><td align=\"center\">Price</td><td align=\"center\">Costs</td>"));
+				else
+					final_table.append("<td width=\"100%\"></td><td></td><td></td><td></td><td></td>");
+			}
+			final_table.append("</tr>");
+			final_table.append("</thead>");
+
 			final_table.append("<tbody>");
 
 			for (int r = 0; r < rownum; ++r) {
@@ -732,7 +724,7 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 					if (c < diff) {
 						if (r < mealmult[col_group_first+c]) {
 							Form13AEntry e = meals[col_group_first+c][r];
-							QString content = QObject::tr("<td class=\"spec\" width=\"100%\">%1</td><td>%2</td><td>%3.%4&nbsp;zl</td><td>x %5.%6&nbsp;zl</td><td>= %7.%8&nbsp;zl</td>")
+							QString content = QObject::tr("<td class=\"spec\" width=\"100%\">%1</td><td align=\"right\">%2</td><td align=\"right\">%3.%4</td><td align=\"right\">%5.%6&nbsp;zl</td><td align=\"right\">%7.%8&nbsp;zl</td>")
 								.arg(e.spec)
 								.arg(e.unit)
 								.arg(e.qty/100).arg(e.qty % 100, 2, 10, QChar('0'))
@@ -780,19 +772,6 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 		tpl.replace("@AVGCOSTS@", QString("%1.%2").arg(db->cs()->avgCosts/100).arg(db->cs()->avgCosts % 100, 2, 10, QChar('0')));
 		tpl.replace("@AVG@", QString("%1.%2").arg(costs/10000).arg(int(round((costs % 10000) / 100.0)), 2, 10, QChar('0')));
 		tpl.replace("@COSTS@", QString("%1.%2").arg(sumcosts/10000).arg(int(round((sumcosts % 10000) / 100.0)), 2, 10, QChar('0')));
-
-// 		QString h, c, f;
-// 		for (int i = 0; i < headers.size(); ++i) {
-// 			h = h % headers[i];
-// 			c = c % contents[i];
-// 			f = f % footers[i];
-// 		}
-// 		tpl.replace("@TABLE_HEADERS@", h);
-// 		tpl.replace("@TABLE_CONTENTS@", c);
-// 		tpl.replace("@TABLE_FOOTERS@", f);
-
-// 		PR(final_table.toStdString());
-
 		tpl.replace("@TABLE@", final_table);
 
 		doc.setHtml(tpl);

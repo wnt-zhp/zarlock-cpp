@@ -55,56 +55,44 @@ table.celltable td {
 }
 
 .maincont {
-	width:			100%;
-	border-color:	black;
-	border-style:	solid;
+	width:				100%;
+	border-color:		black;
+	border-style:		solid;
+	text-align:			right;
 }
 
-.maincont thead td, .maincont th {
-	text-align:		left;
-	border-color:	black;
-	border-style:	solid;
-	font-weight:	bold;
-}
-
-th {
+.maincont th {
 	text-align:			left;
 	border-color:		black;
-
+	border-style:		solid;
 	font-weight:		bold;
 	background-color:	#aaaaaa;
-	padding-top:		5px;
-	padding-bottom:	 	5px;
+	padding-top:		3px;
+	padding-bottom:	 	3px;
+}
+
+.maincont thead tr.header {
+	background-color: #dddddd;
+}
+
+.maincont tbody .spec {
+	font-weight:		bold;
+	text-align:			left;
+}
+
+.maincont tbody td {
+	text-align:			right;
+}
+
+.maincont tbody tr.noalt {
+	background-color:	#ffffff;
+}
+
+.maincont tbody tr.alt {
+	background-color:	#eeeeee;
 }
 
 .maincont tfoot td {
 	font-weight:		bold;
-	background-color: #dddddd;
-}
-
-.spec {
-	font-weight:		bold;
-}
-
-.maincont tbody tr.noalt {
-	background-color: #ffffff;
-}
-
-.maincont tbody tr.alt {
-	background-color: #eeeeee;
-}
-
-/*.maincont tbody td {
-	text-align:		left;
-	border-width:	0px;
-	border-color:	black;
-	border-style:	solid;
-	font-weight:	bold;
-}*/
-
-.maincont tfooter td {
-	text-align:		left;
-	border-color:	black;
-	border-style:	solid;
-	font-weight:	bold;
+	background-color:	#dddddd;
 }
