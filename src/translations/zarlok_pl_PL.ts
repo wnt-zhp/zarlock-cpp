@@ -1618,18 +1618,18 @@ Wybierz Zamknij aby wyjść.</translation>
     </message>
     <message>
         <location filename="../db/DBReports.cpp" line="673"/>
-        <source>&lt;td class=&quot;footer&quot; width=&quot;auto&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Sum:&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%1.%2 zl&lt;/td&gt;</source>
-        <translation>&lt;td class=&quot;footer&quot; width=&quot;auto&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Razem:&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%1.%2 zł&lt;/td&gt;</translation>
+        <source>&lt;td class=&quot;footer&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Sum:&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%1.%2 zl&lt;/td&gt;</source>
+        <translation>&lt;td class=&quot;footer&quot; colspan=&quot;3&quot;&gt;&lt;/td&gt;&lt;td&gt;Razem:&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%1.%2 zł&lt;/td&gt;</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="708"/>
-        <source>&lt;td width=&quot;100%&quot; align=&quot;center&quot;&gt;Specification&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Unit&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Quantity&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Price&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Costs&lt;/td&gt;</source>
-        <translation type="unfinished">&lt;td width=&quot;100%&quot; align=&quot;center&quot;&gt;Specyfikacja&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Jednostka&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Ilość&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Cena&lt;/td&gt;&lt;td align=&quot;center&quot;&gt;Koszt&lt;/td&gt;</translation>
+        <location filename="../db/DBReports.cpp" line="713"/>
+        <source>&lt;td align=&quot;center&quot; width=&quot;%1&quot;&gt;Specification&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%2&quot;&gt;Unit&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%3&quot;&gt;Quantity&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%4&quot;&gt;Price&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%5&quot;&gt;Costs&lt;/td&gt;</source>
+        <translation>&lt;td align=&quot;center&quot; width=&quot;%1&quot;&gt;Specyfikacja&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%2&quot;&gt;Jednostka&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%3&quot;&gt;Ilość&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%4&quot;&gt;Cena&lt;/td&gt;&lt;td align=&quot;center&quot; width=&quot;%5&quot;&gt;Koszt&lt;/td&gt;</translation>
     </message>
     <message>
-        <location filename="../db/DBReports.cpp" line="727"/>
-        <source>&lt;td class=&quot;spec&quot; width=&quot;100%&quot;&gt;%1&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%2&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%3.%4&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%5.%6&amp;nbsp;zl&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%7.%8&amp;nbsp;zl&lt;/td&gt;</source>
-        <translation>&lt;td class=&quot;spec&quot; width=&quot;100%&quot;&gt;%1&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%2&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%3.%4&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%5.%6&amp;nbsp;zł&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%7.%8&amp;nbsp;zł&lt;/td&gt;</translation>
+        <location filename="../db/DBReports.cpp" line="732"/>
+        <source>&lt;td class=&quot;spec&quot;&gt;%1&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%2&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%3.%4&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%5.%6&amp;nbsp;zl&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%7.%8&amp;nbsp;zl&lt;/td&gt;</source>
+        <translation>&lt;td class=&quot;spec&quot;&gt;%1&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%2&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%3.%4&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%5.%6&amp;nbsp;zł&lt;/td&gt;&lt;td align=&quot;right&quot;&gt;%7.%8&amp;nbsp;zł&lt;/td&gt;</translation>
     </message>
     <message>
         <location filename="../misc/DataParser.cpp" line="110"/>

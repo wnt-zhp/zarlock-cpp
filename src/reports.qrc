@@ -1,7 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 	<file>resources/report_batch.tpl</file>
-	<file>resources/report_dailymeal.tpl</file>
+	<file>resources/report_form11a.tpl</file>
+	<file>resources/report_form13a.tpl</file>
 	<file>resources/report.css</file>
 	<file>resources/report_dailymeal.css</file>
 </qresource>

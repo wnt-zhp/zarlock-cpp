@@ -6,7 +6,7 @@ body {
 }
 
 div {
-	width:			100%;
+/* 	width:			100%; */
 }
 
 table {
@@ -28,24 +28,13 @@ table.celltable td {
 	padding-left:	0px;
 }
 
-#meals {
-	font-size:		small;
-}
-
-#meals td {
-	padding-top:	3px;
-	padding-right:	3px;
-	padding-bottom:	3px;
-	padding-left:	3px;
-}
-
 .date {
 	float:			right;
-	width:			40%;
+/* 	width:			40%; */
 }
 
 .header {
-	width:			100%;
+/* 	width:			100%; */
 }
 
 .title {
@@ -55,7 +44,8 @@ table.celltable td {
 }
 
 .maincont {
-	width:				100%;
+	font-size:			small;
+/* 	width:				100%; */
 	border-color:		black;
 	border-style:		solid;
 	text-align:			right;
@@ -71,13 +61,41 @@ table.celltable td {
 	padding-bottom:	 	3px;
 }
 
+.maincont td {
+	padding-top:	2px;
+	padding-right:	5px;
+	padding-bottom:	2px;
+	padding-left:	5px;
+}
+
 .maincont thead tr.header {
 	background-color: #dddddd;
 }
 
+/*.maincont tbody .h_spec {
+	width:			10%;
+}
+
+.maincont tbody .h_unit {
+	width:			10%;
+}
+
+.maincont tbody .h_qty {
+	width:			10%;
+}
+
+.maincont tbody .h_price {
+	width:			10%;
+}
+
+.maincont tbody .h_costs {
+	width:			10%;
+}*/
+
 .maincont tbody .spec {
 	font-weight:		bold;
 	text-align:			left;
+	padding-right:		1px;
 }
 
 .maincont tbody td {
@@ -95,4 +113,8 @@ table.celltable td {
 .maincont tfoot td {
 	font-weight:		bold;
 	background-color:	#dddddd;
+}
+
+.maincont .empty {
+	background-color:	#ffffff;
 }

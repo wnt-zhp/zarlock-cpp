@@ -155,7 +155,7 @@ void DBReports::printDailyReport(const QString & dbname, const QDate & date) {
 }
 
 void DBReports::printReport11A(const QString& date, QString * reportfile) {
-	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
+	QFile dailymeal_tpl(":/resources/report_form11a.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 			QObject::tr("Unable to find resources in ") +
@@ -530,7 +530,7 @@ void DBReports::printReport13(QString * reportsdir) {
 }
 
 void DBReports::printReport13A(const QString& date, QString * reportfile) {
-	QFile dailymeal_tpl(":/resources/report_dailymeal.tpl");
+	QFile dailymeal_tpl(":/resources/report_13a.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 							  QObject::tr("Unable to find resources in ") +
@@ -669,9 +669,9 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 
 		QString final_table;
 
-		const QString header_tmp = "<th width=\"auto\" colspan=\"5\">%1</th>";
-		const QString footer_tmp = QObject::tr("<td class=\"footer\" width=\"auto\" colspan=\"3\"></td><td>Sum:</td><td align=\"right\">%1.%2 zl</td>");
-		const QString footere_tmp = "<td class=\"footer\" width=\"auto\" colspan=\"5\">&nbsp;</td>";
+		const QString header_tmp = "<th colspan=\"5\" width=\"50%\">%1</th>";
+		const QString footer_tmp = QObject::tr("<td class=\"footer\" colspan=\"3\"></td><td>Sum:</td><td align=\"right\">%1.%2 zl</td>");
+		const QString footere_tmp = "<td class=\"footer\" colspan=\"5\">&nbsp;</td>";
 
 		const int col_num = 2;
 
@@ -687,9 +687,11 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 			int rownum = *(std::max_element(mealmult.begin()+col_group_first, mealmult.begin()+col_group_last+1));
 
 			// make header
+// 			id=\"meals\"
+// 			final_table.append("<table class=\"maincont\" width=\"100%\" border=\"1\" frame=\"box\" rules=\"groups\">");
+			final_table.append("<table class=\"maincont\" width=\"100%\">");
 			final_table.append("<thead>");
 			final_table.append("<tr>");
-
 			for (int c = 0; c < col_num; ++c) {
 				QString repstr;
 				if (c < diff)
@@ -698,16 +700,19 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 					repstr = header_tmp.arg("");
 				final_table.append(repstr);
 			}
-
 			final_table.append("</tr>");
+			final_table.append("</thead>");
+			final_table.append("</table>");
 
+			final_table.append("<table class=\"maincont\" width=\"100%\">");
+			final_table.append("<thead>");
 			final_table.append("<tr class=\"header\">");
 			for (int c = 0; c < col_num; ++c) {
 				QString repstr;
 				if (c < diff)
-					final_table.append(QObject::tr("<td width=\"100%\" align=\"center\">Specification</td><td align=\"center\">Unit</td><td align=\"center\">Quantity</td><td align=\"center\">Price</td><td align=\"center\">Costs</td>"));
+					final_table.append(QObject::tr("<td align=\"center\" width=\"%1\">Specification</td><td align=\"center\" width=\"%2\">Unit</td><td align=\"center\" width=\"%3\">Quantity</td><td align=\"center\" width=\"%4\">Price</td><td align=\"center\" width=\"%5\">Costs</td>").arg("25%").arg("6%").arg("6%").arg("6%").arg("7%"));
 				else
-					final_table.append("<td width=\"100%\"></td><td></td><td></td><td></td><td></td>");
+					final_table.append("<td colspan=\"5\"></td>");
 			}
 			final_table.append("</tr>");
 			final_table.append("</thead>");
@@ -724,7 +729,7 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 					if (c < diff) {
 						if (r < mealmult[col_group_first+c]) {
 							Form13AEntry e = meals[col_group_first+c][r];
-							QString content = QObject::tr("<td class=\"spec\" width=\"100%\">%1</td><td align=\"right\">%2</td><td align=\"right\">%3.%4</td><td align=\"right\">%5.%6&nbsp;zl</td><td align=\"right\">%7.%8&nbsp;zl</td>")
+							QString content = QObject::tr("<td class=\"spec\">%1</td><td align=\"right\">%2</td><td align=\"right\">%3.%4</td><td align=\"right\">%5.%6&nbsp;zl</td><td align=\"right\">%7.%8&nbsp;zl</td>")
 								.arg(e.spec)
 								.arg(e.unit)
 								.arg(e.qty/100).arg(e.qty % 100, 2, 10, QChar('0'))
@@ -733,10 +738,10 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 								;
 							final_table.append(content);
 						} else {
-							final_table.append("<td></td><td></td><td></td><td></td><td></td>");
+							final_table.append("<td colspan=\"5\"></td>");
 						}
 					} else {
-						final_table.append("<td></td><td></td><td></td><td></td><td></td>");
+						final_table.append("<td colspan=\"5\"></td>");
 					}
 				}
 
@@ -755,7 +760,8 @@ void DBReports::printReport13A(const QString& date, QString * reportfile) {
 			}
 			final_table.append("</tr></tfoot>");
 
-			final_table.append("<tr></tr>");
+			final_table.append("</table>");
+			final_table.append("<br />");
 		}
 
 		QString tpl = dailymeal_tstream.readAll();

@@ -3,7 +3,7 @@
 
 <body style="height: 100%;">
 <div align="center" class="title">
-Zapotrzebowanie żywnościowe
+Zapotrzebowanie żywnościowe (Formularz 11A)
 </div>
 <table class="header" width="100%;" border="0">
 <tr>
@@ -21,7 +21,7 @@ Zapotrzebowanie żywnościowe
 
 <br />
 
-<!--<table id="meals" class="maincont" width="100%" border="1">
+<table id="meals" class="maincont" width="100%" border="1">
 <thead><tr>
 	@TABLE_HEADERS@
 </tr></thead>
@@ -29,11 +29,8 @@ Zapotrzebowanie żywnościowe
 <tr>@TABLE_CONTENTS@</tr>
 </tbody>
 <tfoot>
-<tr>@TABLE_FOOTERS@</tr>
 </tfoot>
-</table>-->
-<!--  border="1" -->
-@TABLE@
+</table>
 <!--
 <p>
 Posiłki dodatkowe - wyszczególnienie:<br />
@@ -44,7 +41,7 @@ Posiłki dodatkowe - wyszczególnienie:<br />
 1. Liczba posiłków dla uczestników obozu: @SCOUTSNO@<br />
 2. Liczba posiłków dla kadry obozowej: @LEADERSNO@<br />
 3. Liczba posiłków dla pozostałych: @OTHERSNO@<br />
-Wydanych posiłków razem: @ALL@, koszt: @COSTS@
+Wydanych posiłków razem: @ALL@
 </p>
 <p>Przeciętny koszt wyżywienia jednej osoby: @AVG@ zł</p>
 <br />
