@@ -530,7 +530,7 @@ void DBReports::printReport13(QString * reportsdir) {
 }
 
 void DBReports::printReport13A(const QString& date, QString * reportfile) {
-	QFile dailymeal_tpl(":/resources/report_13a.tpl");
+	QFile dailymeal_tpl(":/resources/report_form13a.tpl");
 	if (!dailymeal_tpl.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::critical(0, QObject::tr("Cannot find resources"),
 							  QObject::tr("Unable to find resources in ") +
